@@ -1,0 +1,1 @@
+INDEX VERSION 1.127+D:\Documents\Eigene Dateien\Programmierung\Java only\Zeiterfassung\.metadata\.plugins\org.eclipse.jdt.core
