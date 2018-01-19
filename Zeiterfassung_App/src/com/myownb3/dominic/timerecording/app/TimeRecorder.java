@@ -5,14 +5,11 @@ package com.myownb3.dominic.timerecording.app;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.myownb3.dominic.export.ContentSelector;
 import com.myownb3.dominic.export.FileExporter;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.callback.actions.CallbackActions;
 import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
 import com.myownb3.dominic.timerecording.work.WorkStates;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
@@ -62,31 +59,25 @@ public class TimeRecorder {
     }
 
     public static void stop(boolean isSilentMode) {
-	Map<String, Object> infoMap = new HashMap<>();
-	infoMap.put(CallbackActions.CALLBACK_TYPE, CallbackActions.STOP);
 	bussinessDay.stopCurrentIncremental(isSilentMode);
 	currentState = WorkStates.NOT_WORKING;
-	callbackHandler.handleCallbacks(() -> infoMap);
+	callbackHandler.onStop();
     }
 
     private static void start() {
 	if (currentState == WorkStates.WORKING) {
 	    return;
 	}
-	Map<String, Object> infoMap = new HashMap<>();
-	infoMap.put(CallbackActions.CALLBACK_TYPE, CallbackActions.START);
 	currentState = WorkStates.WORKING;
 	bussinessDay.startNewIncremental();
-	callbackHandler.handleCallbacks(() -> infoMap);
+	callbackHandler.onStart();
     }
 
     public static void resume() {
-	Map<String, Object> infoMap = new HashMap<>();
-	infoMap.put(CallbackActions.CALLBACK_TYPE, CallbackActions.RESUME);
 
 	currentState = WorkStates.WORKING;
 	bussinessDay.resumeLastIncremental();
-	callbackHandler.handleCallbacks(() -> infoMap);
+	callbackHandler.onResume();
     }
 
     @SuppressWarnings("unused")
@@ -133,11 +124,11 @@ public class TimeRecorder {
     }
 
     /**
-     * Return a String, which represents the current state and shows
-     * informations according to this
+     * Return a String, which represents the current state and shows informations
+     * according to this
      * 
-     * @return a String, which represents the current state and shows
-     *         informations according to this
+     * @return a String, which represents the current state and shows informations
+     *         according to this
      * @see WorkStates
      */
     public static String getInfoStringForState() {
@@ -163,8 +154,7 @@ public class TimeRecorder {
     }
 
     /**
-     * Return true if the {@link TimeRecorder} is currently working, otherwise
-     * false
+     * Return true if the {@link TimeRecorder} is currently working, otherwise false
      * 
      * @return true if the {@link TimeRecorder} is currently working, otherwise
      *         false
@@ -175,11 +165,9 @@ public class TimeRecorder {
     }
 
     /**
-     * Return <code>true</code> if there is any content, <code>false</code> if
-     * not
+     * Return <code>true</code> if there is any content, <code>false</code> if not
      * 
-     * @return <code>true</code> if there is any content, <code>false</code> if
-     *         not
+     * @return <code>true</code> if there is any content, <code>false</code> if not
      */
     public static boolean hasContent() {
 	return bussinessDay.getTotalDuration() > 0f;
