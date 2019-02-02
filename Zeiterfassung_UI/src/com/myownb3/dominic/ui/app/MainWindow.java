@@ -77,22 +77,23 @@ public class MainWindow implements KeyListener {
     }
 
     /**
-     * Lets the current shown window disappears. If the given boolean is true,
-     * the {@link BusinessDay} is checked for redundant entry
+     * Lets the current shown window disappears. If the given boolean is true, the
+     * {@link BusinessDay} is checked for redundant entry
      * 
      * @param done
      */
     public void finishOrAbortAndDispose(boolean done) {
-	TimeRecorder.checkForRedundancy();
-	if (!done) {
+	if (done) {
+	    TimeRecorder.checkForRedundancy();
+	} else {
 	    TimeRecorder.resume();
 	}
 	mainWindow.dispose();
     }
 
     /**
-     * Lets the current shown window disappears. If the given boolean is true,
-     * the {@link BusinessDay} is checked for redundant entry
+     * Lets the current shown window disappears. If the given boolean is true, the
+     * {@link BusinessDay} is checked for redundant entry
      * 
      * @param done
      */
