@@ -5,11 +5,13 @@ package com.myownb3.dominic.timerecording.work.businessday;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.work.date.Date;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
+import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * The {@link BusinessDay} defines an entire day full of work. Such a day may
@@ -92,17 +94,22 @@ public class BusinessDay {
      */
     public void checkForRedundancys() {
 	for (BusinessDayIncremental incToCompareWith : increments) {
-	    for (BusinessDayIncremental anotherIncrement : increments) {
-		// don't check the increment with itself!
-		if (incToCompareWith.equals(anotherIncrement)) {
-		    continue;
-		}
+	    for (BusinessDayIncremental anotherIncrement : getIncrementsToCheck(incToCompareWith)) {
 		if (incToCompareWith.isSame(anotherIncrement)) {
 		    incToCompareWith.transferAllTimeSnipetsToBussinessDayIncrement(anotherIncrement);
 		}
 	    }
 	}
 	deleteEmptyIncrements();
+    }
+
+    /**
+     * don't check the increment with itself!
+     */
+    private List<BusinessDayIncremental> getIncrementsToCheck(BusinessDayIncremental incToCompareWith) {
+	return increments.stream()//
+		.filter(inc -> inc != incToCompareWith)//
+		.collect(Collectors.toList());
     }
 
     /**
@@ -131,6 +138,32 @@ public class BusinessDay {
 	    sum = sum + incremental.getTotalDuration(type);
 	}
 	return Float.parseFloat(TimeRecorder.formater.format(sum));
+    }
+
+    /**
+     * Returns <code>true</code> if this {@link BusinessDay} has at least one
+     * element with a description <code>false</code> if not
+     * 
+     * @return <code>true</code> if this {@link BusinessDay} has at least one
+     *         element with a description <code>false</code> if not
+     */
+    public boolean hasIncrementWithDescription() {
+	return increments//
+		.stream()//
+		.anyMatch(businessDay -> StringUtil.isNotEmptyOrNull(businessDay.getDescription()));
+    }
+
+    /**
+     * Returns the amount of Begin/End Elements this {@link BusinessDay} has
+     * 
+     * @return the amount of Begin/End Elements this {@link BusinessDay} has
+     */
+    public int getAmountOfVonBisElements() {
+	int counter = 0;
+	for (BusinessDayIncremental businessDayIncremental : increments) {
+	    counter = Math.max(counter, businessDayIncremental.getTimeSnippets().size());
+	}
+	return counter;
     }
 
     /**

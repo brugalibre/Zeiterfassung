@@ -20,7 +20,9 @@ public class FileExporter {
     public static void export(List<String> content) {
 	String dateDetails = DateFormat.getDateInstance().format(new Date());
 	String randomNo = String.valueOf(System.currentTimeMillis());
-	File file = new File(System.getProperty("user.home") + "\\Desktop\\" + dateDetails + "_" + randomNo + ".txt");
+	String fileExtension = "csv";
+	File file = new File(
+		System.getProperty("user.home") + "\\Desktop\\" + dateDetails + "_" + randomNo + "." + fileExtension);
 
 	try (FileWriter writer = new FileWriter(file)) {
 	    file.createNewFile();

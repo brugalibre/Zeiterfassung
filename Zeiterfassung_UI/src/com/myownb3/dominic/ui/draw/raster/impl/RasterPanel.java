@@ -79,32 +79,13 @@ public class RasterPanel extends ParentComponent {
 
     private List<Cell> getBeginEndHeader() {
 
-	int counter = getAmountOfVonBisElements();
+	int counter = bussinessDay.getAmountOfVonBisElements();
 	List<Cell> vonBisHeader = new ArrayList<>();
 	for (int i = 0; i < counter; i++) {
 	    vonBisHeader.add(new CellImpl(TextLabel.VON_LABEL, this));
 	    vonBisHeader.add(new CellImpl(TextLabel.BIS_LABEL, this));
 	}
 	return vonBisHeader;
-    }
-
-    /*
-     * Calculates the amount of 'begin' & 'end' cells
-     * 
-     * @return
-     */
-    private int getAmountOfVonBisElements() {
-	int counter = 0;
-	for (BusinessDayIncremental businessDayIncremental : bussinessDay.getIncrements()) {
-	    counter = Math.max(counter, businessDayIncremental.getTimeSnippets().size());
-	}
-	return counter;
-    }
-
-    private boolean isDescriptionTitleNecessary() {
-	return bussinessDay.getIncrements()//
-		.stream()//
-		.anyMatch(businessDay -> StringUtil.isNotEmptyOrNull(businessDay.getDescription()));
     }
 
     private List<Cell> evaluateTitleHeaderCells() {
@@ -114,7 +95,7 @@ public class RasterPanel extends ParentComponent {
 	titleHeaders.add(new CellImpl(TextLabel.AMOUNT_OF_HOURS_LABEL, this));
 	titleHeaders.add(new CellImpl(TextLabel.TICKET, this));
 
-	boolean isDescriptionTitleNecessary = isDescriptionTitleNecessary();
+	boolean isDescriptionTitleNecessary = bussinessDay.hasIncrementWithDescription();
 	if (isDescriptionTitleNecessary) {
 	    titleHeaders.add(new CellImpl(TextLabel.DESCRIPTION_LABEL, this));
 	}
@@ -126,25 +107,19 @@ public class RasterPanel extends ParentComponent {
 	return titleHeaders;
     }
 
-    /**
-     * @param bussinessDayIncremental
-     */
-    private List<Cell> getBusinessDayIncrementalCells(BusinessDayIncremental bussinessDayIncremental, int no) {
-	return getBusinessDayIncrementalIntro(bussinessDayIncremental, no);
-    }
-
     /*
      * Creates a list which contains all Cells that are required to paint a
      * BusinessDayIncremental
      */
-    private List<Cell> getBusinessDayIncrementalIntro(BusinessDayIncremental bussinessDayIncremental, int no) {
+    private List<Cell> getBusinessDayIncrementalCells(BusinessDayIncremental bussinessDayIncremental, int no) {
 	// create Cells for the introduction of a BD-inc.
 	List<Cell> list = new ArrayList<>();
 	list.add(new CellImpl(String.valueOf(no), this));
 	list.add(new CellImpl(String.valueOf(bussinessDayIncremental.getTotalDuration()), this));
 	list.add(new CellImpl(bussinessDayIncremental.getTicketNumber(), this));
 
-	if (isDescriptionTitleNecessary()) {
+	boolean isDescriptionTitleNecessary = bussinessDay.hasIncrementWithDescription();
+	if (isDescriptionTitleNecessary) {
 	    String cellValue = StringUtil.isNotEmptyOrNull(bussinessDayIncremental.getDescription())
 		    ? bussinessDayIncremental.getDescription()
 		    : "";
@@ -187,7 +162,7 @@ public class RasterPanel extends ParentComponent {
      * 
      */
     private void addPlaceHolderForMissingCell(List<Cell> snippetCells, int snippetCellsCounter) {
-	int amountOfEmptyTimeSnippets = getAmountOfVonBisElements() - snippetCellsCounter;
+	int amountOfEmptyTimeSnippets = bussinessDay.getAmountOfVonBisElements() - snippetCellsCounter;
 	for (int i = 0; i < amountOfEmptyTimeSnippets; i++) {
 	    snippetCells.add(new CellImpl("", this));
 	    snippetCells.add(new CellImpl("", this));
@@ -212,10 +187,6 @@ public class RasterPanel extends ParentComponent {
 	drawBusinessDay((Graphics2D) g, raster);
     }
 
-    /**
-     * @param g
-     * @param blah
-     */
     private void drawBusinessDay(Graphics2D g, Raster raster) {
 	// draw the raster and it's cells
 	raster.draw(g);
@@ -223,11 +194,6 @@ public class RasterPanel extends ParentComponent {
 	drawFinalInformation(g, bussinessDay, raster);
     }
 
-    /**
-     * @param g
-     * @param bussinessDay
-     * @param raster2
-     */
     private void drawFinalInformation(Graphics2D g, BusinessDay bussinessDay, Raster raster) {
 	String value = TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + separatorWithDoublePoint
 		+ bussinessDay.getTotalDuration();

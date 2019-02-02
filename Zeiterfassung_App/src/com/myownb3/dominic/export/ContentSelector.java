@@ -30,32 +30,34 @@ public class ContentSelector {
 	builder.append(System.getProperty("line.separator"));
 	builder.append(System.getProperty("line.separator"));
 
+	appendTitleHeaderCells(builder, bussinessDay);
+
 	// = For each 'Ticket' or Increment of an entire Day
 	for (BusinessDayIncremental inc : bussinessDay.getIncrements()) {
 	    builder.append(TextLabel.TICKET + ": ");
 	    builder.append(inc.getTicketNumber());
 	    builder.append(CONTENT_SEPPARATOR);
 	    if (StringUtil.isNotEmptyOrNull(inc.getDescription())) {
-		builder.append(TextLabel.DESCRIPTION_LABEL + ": ");
 		builder.append(inc.getDescription());
 		builder.append(CONTENT_SEPPARATOR);
 	    }
-	    builder.append(TextLabel.AMOUNT_OF_HOURS_LABEL + ": " + inc.getTotalDuration());
+	    builder.append(inc.getTotalDuration());
 	    builder.append(CONTENT_SEPPARATOR);
 
 	    List<TimeSnippet> timeSnippets = inc.getTimeSnippets();
 	    Collections.sort(timeSnippets, new TimeStampComparator());
 
+	    int snippetCounter = 0;
 	    // = For each single work units of a Ticket
 	    for (TimeSnippet snippet : timeSnippets) {
-		builder.append(TextLabel.VON_LABEL + ": ");
 		builder.append(snippet.getBeginTimeStamp());
 		builder.append(CONTENT_SEPPARATOR);
-		builder.append(TextLabel.BIS_LABEL + ": ");
 		builder.append(snippet.getEndTimeStamp());
 		builder.append(CONTENT_SEPPARATOR);
+		snippetCounter++;
 	    }
-	    builder.append(TextLabel.CHARGE_TYPE_LABEL + ": " + inc.getChargeType());
+	    addPlaceHolderForMissingBeginEndElements(builder, bussinessDay, snippetCounter);
+	    builder.append(inc.getChargeType());
 	    builder.append(CONTENT_SEPPARATOR);
 
 	    builder.append(System.getProperty("line.separator"));
@@ -66,5 +68,52 @@ public class ContentSelector {
 	builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + bussinessDay.getTotalDuration());
 	content.add(builder.toString());
 	return content;
+    }
+
+    private static void appendTitleHeaderCells(StringBuilder builder, BusinessDay bussinessDay) {
+
+	builder.append(TextLabel.TICKET);
+	builder.append(CONTENT_SEPPARATOR);
+	builder.append(TextLabel.AMOUNT_OF_HOURS_LABEL);
+	builder.append(CONTENT_SEPPARATOR);
+
+	if (bussinessDay.hasIncrementWithDescription()) {
+	    builder.append(TextLabel.DESCRIPTION_LABEL);
+	    builder.append(CONTENT_SEPPARATOR);
+	}
+
+	appendBeginEndHeader(builder, bussinessDay);
+
+	builder.append(TextLabel.CHARGE_TYPE_LABEL);
+	builder.append(CONTENT_SEPPARATOR);
+	builder.append(System.getProperty("line.separator"));
+    }
+
+    private static void appendBeginEndHeader(StringBuilder builder, BusinessDay bussinessDay) {
+
+	int counter = bussinessDay.getAmountOfVonBisElements();
+	for (int i = 0; i < counter; i++) {
+	    builder.append(TextLabel.VON_LABEL);
+	    builder.append(CONTENT_SEPPARATOR);
+	    builder.append(TextLabel.BIS_LABEL);
+	    builder.append(CONTENT_SEPPARATOR);
+	}
+    }
+
+    /*
+     * All rows must fit with it content to the title header. Thats why we have to
+     * add some placeholders if this row has less TimeSnipets then the maximum
+     * amount of TimeSnippet-Cells
+     * 
+     */
+    private static void addPlaceHolderForMissingBeginEndElements(StringBuilder builder, BusinessDay bussinessDay,
+	    int snippetCellsCounter) {
+	int amountOfEmptyTimeSnippets = bussinessDay.getAmountOfVonBisElements() - snippetCellsCounter;
+	for (int i = 0; i < amountOfEmptyTimeSnippets; i++) {
+	    builder.append("");
+	    builder.append(CONTENT_SEPPARATOR);
+	    builder.append("");
+	    builder.append(CONTENT_SEPPARATOR);
+	}
     }
 }
