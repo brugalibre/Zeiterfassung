@@ -38,7 +38,7 @@ public class InputFieldVerifier extends InputVerifier {
     }
 
     private boolean verifyComboBox(ComboBox c) {
-	boolean isValid = StringUtil.isValid(c.getSelectedItem());
+	boolean isValid = StringUtil.isNotEmptyOrNull(c.getSelectedItem());
 	if (!isValid) {
 	    c.setForeground(Colors.INVALID_INPUT_COLOR);
 	    c.setBackground(Colors.INVALID_INPUT_COLOR);

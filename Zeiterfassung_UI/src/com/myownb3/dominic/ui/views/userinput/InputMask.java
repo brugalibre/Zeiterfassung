@@ -29,9 +29,7 @@ import com.myownb3.dominic.util.utils.StringUtil;
  * 
  */
 public class InputMask extends JPanel {
-    /**
-    * 
-    */
+
     private static final long serialVersionUID = 1L;
 
     private BusinessDayIncremental inc;
@@ -213,15 +211,12 @@ public class InputMask extends JPanel {
      */
     private void addSubmittedTicketText() {
 	// if the maximum is reached, remove the one which was unused the most
-	if (StringUtil.isValid(inc.getDescription())) {
+	if (StringUtil.isNotEmptyOrNull(inc.getDescription())) {
 	    descriptionField.addNewItem(inc.getDescription());
 	}
 	ticketNumberField.addNewItem(inc.getTicketNumber());
     }
 
-    /**
-    * 
-    */
     protected void dispose(boolean success) {
 	mainWindow.finishOrAbortAndDispose(success);
     }

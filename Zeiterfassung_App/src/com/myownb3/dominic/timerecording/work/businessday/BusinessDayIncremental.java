@@ -27,9 +27,6 @@ public class BusinessDayIncremental {
     private String description;
     private String ticketNumber;
     private String chargeType;
-    private boolean isCharged; // true if this BussinessDayIncremental is
-			       // charged and it's data send to the account
-			       // staff
 
     public BusinessDayIncremental(Date date) {
 	this.date = date;
@@ -91,14 +88,6 @@ public class BusinessDayIncremental {
 	    sum = sum + timeSnippet.getDuration(type);
 	}
 	return Float.parseFloat(TimeRecorder.formater.format(sum));
-    }
-
-    public boolean isCharged() {
-	return isCharged;
-    }
-
-    public void setCharged(boolean isCharged) {
-	this.isCharged = isCharged;
     }
 
     public TimeSnippet getCurrentTimeSnippet() {

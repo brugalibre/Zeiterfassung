@@ -100,7 +100,7 @@ public class RasterPanel extends ParentComponent {
 	list.add(new CellImpl(TextLabel.TICKET + separatorWithDoublePoint + bussinessDayIncremental.getTicketNumber(),
 		this));
 
-	String cellValue = StringUtil.isValid(bussinessDayIncremental.getDescription())
+	String cellValue = StringUtil.isNotEmptyOrNull(bussinessDayIncremental.getDescription())
 		? TextLabel.DESCRIPTION_LABEL + separatorWithDoublePoint + bussinessDayIncremental.getDescription()
 		: "";
 	list.add(new CellImpl(cellValue, this));

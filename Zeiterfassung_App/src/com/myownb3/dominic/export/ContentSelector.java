@@ -35,7 +35,7 @@ public class ContentSelector {
 	    builder.append(TextLabel.TICKET + ": ");
 	    builder.append(inc.getTicketNumber());
 	    builder.append(CONTENT_SEPPARATOR);
-	    if (StringUtil.isValid(inc.getDescription())) {
+	    if (StringUtil.isNotEmptyOrNull(inc.getDescription())) {
 		builder.append(TextLabel.DESCRIPTION_LABEL + ": ");
 		builder.append(inc.getDescription());
 		builder.append(CONTENT_SEPPARATOR);

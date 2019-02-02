@@ -51,9 +51,7 @@ public class OverviewView extends JPanel {
 	this.rasterPanel = new RasterPanel();
 	rasterPanel.setSize(rasterPanel.getSize());
 
-	JScrollPane scrollPane = new JScrollPane(rasterPanel);// ,
-							      // JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-							      // JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+	JScrollPane scrollPane = new JScrollPane(rasterPanel);
 	scrollPane.setBorder(BorderFactory.createEmptyBorder());
 	scrollPane.setPreferredSize(new Dimension((int) (WIDTH * 1.65), HEIGHT));
 

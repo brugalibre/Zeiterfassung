@@ -18,10 +18,9 @@ import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
  */
 public class FileExporter {
     public static void export(List<String> content) {
-	File file;
 	String dateDetails = DateFormat.getDateInstance().format(new Date());
 	String randomNo = String.valueOf(System.currentTimeMillis());
-	file = new File(System.getProperty("user.home") + "\\Desktop\\" + dateDetails + "_" + randomNo + ".txt");
+	File file = new File(System.getProperty("user.home") + "\\Desktop\\" + dateDetails + "_" + randomNo + ".txt");
 
 	try (FileWriter writer = new FileWriter(file)) {
 	    file.createNewFile();
@@ -32,11 +31,6 @@ public class FileExporter {
 	}
     }
 
-    /**
-     * @param content
-     * @param writer
-     * @throws IOException
-     */
     private static void writeLines(List<String> content, FileWriter writer) throws IOException {
 	for (String element : content) {
 	    writer.write(element);

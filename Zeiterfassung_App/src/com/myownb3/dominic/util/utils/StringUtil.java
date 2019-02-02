@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 public class StringUtil {
     private static final JComponent fontMetricComp;
 
-    public static boolean isValid(String toCheck) {
+    public static boolean isNotEmptyOrNull(String toCheck) {
 	return toCheck != null && !toCheck.trim().isEmpty();
     }
 
