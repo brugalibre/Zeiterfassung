@@ -3,29 +3,33 @@
  */
 package com.myownb3.dominic.util.parser;
 
-import com.myownb3.dominic.timerecording.work.date.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author Dominic
  *
  */
 public class DateParser {
-    public static long getAmountOfMillisecondsForDate(String date) {
-	long amountOfMillisecondsForDate = 0;
 
-	return amountOfMillisecondsForDate;
-    }
+    public static Date getDate(String input, Date currentSetDate) {
+	try {
+	    SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
+	    df.applyPattern("dd-MM-yyyy hh:mm:ss");
 
-    /**
-     * Calculates the amount of milliseconds for the given date which are passed
-     * since last midnight
-     * 
-     * @param date
-     *            - the date to get the milliseconds of
-     * @return
-     */
-    public static long getAmountOfMillisecondsForDateFromMidnight(Date date) {
-	long amountOfMillisecondsForDate = 0;
-	return amountOfMillisecondsForDate;
+	    // Parse the current Date Value
+	    String currentDateAsString = df.format(currentSetDate);
+	    // Parse the current set Date in order to receive information about year, month
+	    // and day
+	    String yearMonthDayInfo = currentDateAsString.substring(0, currentDateAsString.length() - 8);
+	    // Append the information about hour, minutes and seconds to the given
+	    // information
+	    return df.parse(yearMonthDayInfo + input);
+	} catch (ParseException e) {
+	    System.err.println(e.getMessage());
+	}
+	return currentSetDate;
     }
 }

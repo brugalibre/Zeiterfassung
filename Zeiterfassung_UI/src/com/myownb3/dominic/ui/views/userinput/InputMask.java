@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Date;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -15,11 +16,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.text.JTextComponent;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
+import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.ui.app.MainWindow;
 import com.myownb3.dominic.util.utils.StringUtil;
@@ -148,10 +151,13 @@ public class InputMask extends JPanel {
 	amountOfHoursField = new JTextField();
 	amountOfHoursField.setInputVerifier(inputVerifier);
 
+	BeginAndInputFieldFocusListener beginAndInputFieldFocusListener = new BeginAndInputFieldFocusListener(this);
 	vonField = new JTextField();
 	vonField.setEditable(false);
+	vonField.addFocusListener(beginAndInputFieldFocusListener);
 	bisField = new JTextField();
 	bisField.setEditable(false);
+	bisField.addFocusListener(beginAndInputFieldFocusListener);
 	ticketNumberField = new ComboBox(5);
 	ticketNumberField.setEditable(true);
 	ticketNumberField.setInputVerifier(inputVerifier);
@@ -227,5 +233,50 @@ public class InputMask extends JPanel {
 
     public void setDimension(Dimension dimension) {
 	this.dimension = dimension;
+    }
+
+    /**
+     * @param date
+     */
+    public void handleBeginChanged(Date date) {
+	TimeSnippet currentTimeSnippet = inc.getCurrentTimeSnippet();
+	currentTimeSnippet.setBeginTimeStamp(new Time(date.getTime()));
+	vonField.setText(String.valueOf(currentTimeSnippet.getBeginTimeStamp()));
+
+	float duration = currentTimeSnippet.getDuration();
+	amountOfHoursField.setText(String.valueOf(duration));
+    }
+
+    /**
+     * @param date
+     */
+    public void handleEndChanged(Date date) {
+	TimeSnippet currentTimeSnippet = inc.getCurrentTimeSnippet();
+	currentTimeSnippet.setEndTimeStamp(new Time(date.getTime()));
+	bisField.setText(String.valueOf(currentTimeSnippet.getEndTimeStamp()));
+	
+	float duration = currentTimeSnippet.getDuration();
+	amountOfHoursField.setText(String.valueOf(duration));
+    }
+
+    /**
+     * @return
+     */
+    public TimeSnippet getCurrentTimeSnippet() {
+	return inc.getCurrentTimeSnippet();
+    }
+
+    /**
+     * @return the {@link InputMask#bisField}
+     */
+    public JTextComponent getBisField() {
+	return bisField;
+    }
+
+    /**
+     * @return the {@link InputMask#abField}
+     */
+    public JTextComponent getVonField() {
+	return vonField;
     }
 }
