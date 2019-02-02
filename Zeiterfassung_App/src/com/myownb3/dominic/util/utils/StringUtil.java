@@ -22,6 +22,10 @@ public class StringUtil {
 	return toCheck != null && !toCheck.trim().isEmpty();
     }
 
+    public static boolean isEmptyOrNull(String toCheck) {
+	return toCheck == null || toCheck.trim().isEmpty();
+    }
+
     static {
 	fontMetricComp = new JPanel();
     }

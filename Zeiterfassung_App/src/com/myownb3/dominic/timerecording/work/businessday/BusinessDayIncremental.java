@@ -10,6 +10,7 @@ import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.work.date.Date;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
+import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * A {@link BusinessDay} consist of one or more {@link BusinessDayIncremental}.
@@ -73,6 +74,21 @@ public class BusinessDayIncremental {
 
     public float getTotalDuration() {
 	return getTotalDuration(TimeRecorder.GLOBAL_TIME_TYPE);
+    }
+
+    public boolean isSame(BusinessDayIncremental other) {
+	if (other == null) {
+	    return false;
+	}
+	return this.getTicketNumber().equals(other.getTicketNumber())
+		&& this.getChargeType().equals(other.getChargeType()) && hasSameDescription(other);
+    }
+
+    private boolean hasSameDescription(BusinessDayIncremental other) {
+	return StringUtil.isEmptyOrNull(other.getDescription()) && StringUtil.isEmptyOrNull(this.getDescription())
+		|| (StringUtil.isNotEmptyOrNull(other.getDescription())
+			&& StringUtil.isNotEmptyOrNull(other.getDescription())
+			&& other.getDescription().equals(this.getDescription()));
     }
 
     /**

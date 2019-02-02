@@ -28,23 +28,10 @@ import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
  * 
  */
 public class BusinessDay {
-    private CopyOnWriteArrayList<BusinessDayIncremental> increments; // all
-								     // increments
-								     // of this
-								     // BusinessDay
-								     // (those
-								     // are all
-								     // finished!)
-    private BusinessDayIncremental currentBussinessDayIncremental; // the
-								   // current
-								   // increment
-								   // which has
-								   // been
-								   // started
-								   // but not
-								   // yet
-								   // finished
-								   // so far
+    // all increments of this BusinessDay (those are all finished!)
+    private CopyOnWriteArrayList<BusinessDayIncremental> increments;
+    // the current increment which has been started but not yet finished so far
+    private BusinessDayIncremental currentBussinessDayIncremental;
 
     public BusinessDay() {
 	initialize();
@@ -80,8 +67,8 @@ public class BusinessDay {
 
     /**
      * Stops the current incremental and add the
-     * {@link #currentBussinessDayIncremental} to the list with increments.
-     * After that, a new incremental is created
+     * {@link #currentBussinessDayIncremental} to the list with increments. After
+     * that, a new incremental is created
      */
     public void stopCurrentIncremental(boolean isSilendMode) {
 	Time endTimeStamp = new Time(System.currentTimeMillis());
@@ -100,8 +87,8 @@ public class BusinessDay {
 
     /**
      * If there exist two or more {@link BusinessDayIncremental} with the same
-     * {@link BusinessDayIncremental#getDescription()} the {@link TimeSnippet}
-     * are moved from the first {@link BusinessDayIncremental} to the other
+     * {@link BusinessDayIncremental#getDescription()} the {@link TimeSnippet} are
+     * moved from the first {@link BusinessDayIncremental} to the other
      */
     public void checkForRedundancys() {
 	for (BusinessDayIncremental incToCompareWith : increments) {
@@ -110,7 +97,7 @@ public class BusinessDay {
 		if (incToCompareWith.equals(anotherIncrement)) {
 		    continue;
 		}
-		if (incToCompareWith.getDescription().equals(anotherIncrement.getDescription())) {
+		if (incToCompareWith.isSame(anotherIncrement)) {
 		    incToCompareWith.transferAllTimeSnipetsToBussinessDayIncrement(anotherIncrement);
 		}
 	    }
@@ -119,8 +106,8 @@ public class BusinessDay {
     }
 
     /**
-     * After {@link TimeSnippet} are moved, the {@link BusinessDayIncremental}
-     * with no {@link TimeSnippet} are removed
+     * After {@link TimeSnippet} are moved, the {@link BusinessDayIncremental} with
+     * no {@link TimeSnippet} are removed
      */
     private void deleteEmptyIncrements() {
 	for (BusinessDayIncremental inc : increments) {
@@ -177,8 +164,8 @@ public class BusinessDay {
     /**
      * Returns the {@link Date} of this {@link BusinessDay}. If this
      * {@link BusinessDay} has no <br>
-     * {@link BusinessDayIncremental}, so the {@link #increments} is empty, a
-     * new instance of {@link Date} is returned.
+     * {@link BusinessDayIncremental}, so the {@link #increments} is empty, a new
+     * instance of {@link Date} is returned.
      * 
      * @return the {@link Date} of this BussinessDay.
      */
