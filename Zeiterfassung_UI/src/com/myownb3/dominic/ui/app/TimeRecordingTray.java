@@ -158,6 +158,7 @@ public class TimeRecordingTray {
 	trayIcon.setImage(PictureLibrary.getNotWorkingImageIcon());
 	trayIcon.setToolTip(TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
 	showHoursItem.setEnabled(true);
+	stopCurrentRecord.setEnabled(false);
     }
 
     /**
