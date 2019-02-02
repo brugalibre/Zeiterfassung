@@ -52,7 +52,7 @@ public class BusinessDay {
     public void resumeLastIncremental() {
 
 	increments.remove(currentBussinessDayIncremental);
-	currentBussinessDayIncremental.resmeLastTimeSnippet();
+	currentBussinessDayIncremental.resumeLastTimeSnippet();
     }
 
     /**

@@ -52,7 +52,7 @@ public class BusinessDayIncremental {
 	timeSnippets.add(currentTimeSnippet);
     }
 
-    public void resmeLastTimeSnippet() {
+    public void resumeLastTimeSnippet() {
 	currentTimeSnippet.setEndTimeStamp(null);
 	timeSnippets.remove(currentTimeSnippet);
     }
