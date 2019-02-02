@@ -37,7 +37,6 @@ public class RasterPanel extends ParentComponent {
     */
     private static final long serialVersionUID = 1L;
 
-    private static final String separator = " ";
     private static final String separatorWithDoublePoint = ": ";
     private BusinessDay bussinessDay;
     private BusinessDayIncrementalCells collectedData;
@@ -66,17 +65,65 @@ public class RasterPanel extends ParentComponent {
 	setPreferredSize(getSize());
     }
 
-    /**
-     * @param g
-     */
     private BusinessDayIncrementalCells collectBusinessData() {
 	BusinessDayIncrementalCells businessDayCells = new BusinessDayIncrementalCells();
 	int counter = 1;
+	List<Cell> titleHeaders = evaluateTitleHeaderCells();
+	businessDayCells.add(titleHeaders);
 	for (BusinessDayIncremental bussinessDayIncremental : bussinessDay.getIncrements()) {
 	    businessDayCells.add(getBusinessDayIncrementalCells(bussinessDayIncremental, counter));
 	    counter++;
 	}
 	return businessDayCells;
+    }
+
+    private List<Cell> getBeginEndHeader() {
+
+	int counter = getAmountOfVonBisElements();
+	List<Cell> vonBisHeader = new ArrayList<>();
+	for (int i = 0; i < counter; i++) {
+	    vonBisHeader.add(new CellImpl(TextLabel.VON_LABEL, this));
+	    vonBisHeader.add(new CellImpl(TextLabel.BIS_LABEL, this));
+	}
+	return vonBisHeader;
+    }
+
+    /*
+     * Calculates the amount of 'begin' & 'end' cells
+     * 
+     * @return
+     */
+    private int getAmountOfVonBisElements() {
+	int counter = 0;
+	for (BusinessDayIncremental businessDayIncremental : bussinessDay.getIncrements()) {
+	    counter = Math.max(counter, businessDayIncremental.getTimeSnippets().size());
+	}
+	return counter;
+    }
+
+    private boolean isDescriptionTitleNecessary() {
+	return bussinessDay.getIncrements()//
+		.stream()//
+		.anyMatch(businessDay -> StringUtil.isNotEmptyOrNull(businessDay.getDescription()));
+    }
+
+    private List<Cell> evaluateTitleHeaderCells() {
+
+	List<Cell> titleHeaders = new ArrayList<>();
+	titleHeaders.add(new CellImpl(TextLabel.NUMMER_LABEL, this));
+	titleHeaders.add(new CellImpl(TextLabel.AMOUNT_OF_HOURS_LABEL, this));
+	titleHeaders.add(new CellImpl(TextLabel.TICKET, this));
+
+	boolean isDescriptionTitleNecessary = isDescriptionTitleNecessary();
+	if (isDescriptionTitleNecessary) {
+	    titleHeaders.add(new CellImpl(TextLabel.DESCRIPTION_LABEL, this));
+	}
+
+	List<Cell> beginEndHeaders = getBeginEndHeader();
+	titleHeaders.addAll(beginEndHeaders);
+
+	titleHeaders.add(new CellImpl(TextLabel.CHARGE_TYPE_LABEL, this));
+	return titleHeaders;
     }
 
     /**
@@ -93,23 +140,20 @@ public class RasterPanel extends ParentComponent {
     private List<Cell> getBusinessDayIncrementalIntro(BusinessDayIncremental bussinessDayIncremental, int no) {
 	// create Cells for the introduction of a BD-inc.
 	List<Cell> list = new ArrayList<>();
-	list.add(new CellImpl(TextLabel.NUMMER_LABEL + separator + String.valueOf(no), this));
-	list.add(new CellImpl(
-		TextLabel.AMOUNT_OF_HOURS_LABEL + separatorWithDoublePoint + bussinessDayIncremental.getTotalDuration(),
-		this));
-	list.add(new CellImpl(TextLabel.TICKET + separatorWithDoublePoint + bussinessDayIncremental.getTicketNumber(),
-		this));
+	list.add(new CellImpl(String.valueOf(no), this));
+	list.add(new CellImpl(String.valueOf(bussinessDayIncremental.getTotalDuration()), this));
+	list.add(new CellImpl(bussinessDayIncremental.getTicketNumber(), this));
 
-	String cellValue = StringUtil.isNotEmptyOrNull(bussinessDayIncremental.getDescription())
-		? TextLabel.DESCRIPTION_LABEL + separatorWithDoublePoint + bussinessDayIncremental.getDescription()
-		: "";
-	list.add(new CellImpl(cellValue, this));
+	if (isDescriptionTitleNecessary()) {
+	    String cellValue = StringUtil.isNotEmptyOrNull(bussinessDayIncremental.getDescription())
+		    ? bussinessDayIncremental.getDescription()
+		    : "";
+	    list.add(new CellImpl(cellValue, this));
+	}
 
 	// create Cells for all TimeSnippet's
 	list.addAll(collectTimeSnippetData(bussinessDayIncremental));
-	list.add(new CellImpl(
-		TextLabel.CHARGE_TYPE_LABEL + separatorWithDoublePoint + bussinessDayIncremental.getChargeType(),
-		this));
+	list.add(new CellImpl(bussinessDayIncremental.getChargeType(), this));
 	return list;
     }
 
@@ -120,16 +164,34 @@ public class RasterPanel extends ParentComponent {
     private List<Cell> collectTimeSnippetData(BusinessDayIncremental bussinessDayIncremental) {
 	// = for all time snippet
 	List<Cell> snippetCells = new ArrayList<>();
+	int snippetCellsCounter = 0;
 	Collections.sort(bussinessDayIncremental.getTimeSnippets(), new TimeStampComparator());
 	for (TimeSnippet snippet : bussinessDayIncremental.getTimeSnippets()) {
 	    // start point
-	    String value = TextLabel.VON_LABEL + separatorWithDoublePoint + snippet.getBeginTimeStamp();
+	    String value = String.valueOf(snippet.getBeginTimeStamp());
 	    snippetCells.add(new CellImpl(value, this));
 	    // end point
-	    value = TextLabel.BIS_LABEL + separatorWithDoublePoint + snippet.getEndTimeStamp();
+	    value = String.valueOf(snippet.getEndTimeStamp());
 	    snippetCells.add(new CellImpl(value, this));
+	    snippetCellsCounter++;
 	}
+
+	addPlaceHolderForMissingCell(snippetCells, snippetCellsCounter);
 	return snippetCells;
+    }
+
+    /*
+     * All rows must fit with it content to the title header. Thats why we have to
+     * add some placeholders if this row has less TimeSnipets then the maximum
+     * amount of TimeSnippet-Cells
+     * 
+     */
+    private void addPlaceHolderForMissingCell(List<Cell> snippetCells, int snippetCellsCounter) {
+	int amountOfEmptyTimeSnippets = getAmountOfVonBisElements() - snippetCellsCounter;
+	for (int i = 0; i < amountOfEmptyTimeSnippets; i++) {
+	    snippetCells.add(new CellImpl("", this));
+	    snippetCells.add(new CellImpl("", this));
+	}
     }
 
     /**

@@ -17,71 +17,67 @@ import com.myownb3.dominic.ui.styles.color.Colors;
  * @author Dominic
  * 
  */
-public class CellImpl extends AbstractCell 
-{
-   protected static final JComponent comp;
-   protected boolean                 drawShape;
-   
-   static
-   {
-      comp = new JPanel ();
-   }
-   
-   /**
-    * @param value
-    * @param height
-    * @param width
-    * @param parent
-    */
-   public CellImpl (String value, ParentComponent parent)
-   {
-      super (value, parent);
-      drawShape = true;
-   }
+public class CellImpl extends AbstractCell {
+    protected static final JComponent comp;
+    protected boolean drawShape;
 
-   @Override
-   public void draw (Graphics2D g)
-   {
-      drawValue (g);
-      drawShape (g);
-   }
+    static {
+	comp = new JPanel();
+    }
 
-   /**
-    * @param g
-    */
-   @Override
-   protected void drawValue (Graphics2D g)
-   {
-      setValCoordinates ();
-      g.setColor (color);
-      g.setFont (getFont());
-      g.drawString (value, xValueCoordinate, yValueCoordinate);      
-   }
+    /**
+     * @param value
+     * @param height
+     * @param width
+     * @param parent
+     */
+    public CellImpl(String value, ParentComponent parent) {
+	super(value, parent);
+	drawShape = true;
+    }
 
-   /**
-    * @param g
-    */
-   private void drawShape (Graphics2D g)
-   {
-      if (drawShape)
-      {
-         g.setColor (Colors.VERTICAL_LINE_COLOR);
-         g.setStroke (stroke);
-         g.draw (shape);
-      }
-   }
+    @Override
+    public void draw(Graphics2D g) {
+	drawValue(g);
+	drawShape(g);
+    }
 
-   /**
-    * @param font
-    * @return
-    */
-   public static FontMetrics getFontMetrics (Font font)
-   {
-      return comp.getFontMetrics (font);
-   }
+    /**
+     * @param g
+     */
+    @Override
+    protected void drawValue(Graphics2D g) {
+	setValCoordinates();
+	g.setColor(color);
+	g.setFont(getFont());
+	g.drawString(value, xValueCoordinate, yValueCoordinate);
+    }
 
-   public void setDrawShape (boolean drawShape)
-   {
-      this.drawShape = drawShape;
-   }
+    /**
+     * @param g
+     */
+    private void drawShape(Graphics2D g) {
+	if (drawShape) {
+	    g.setColor(Colors.VERTICAL_LINE_COLOR);
+	    g.setStroke(stroke);
+	    g.draw(shape);
+	}
+    }
+
+    /**
+     * @param font
+     * @return
+     */
+    public static FontMetrics getFontMetrics(Font font) {
+	return comp.getFontMetrics(font);
+    }
+
+    public void setDrawShape(boolean drawShape) {
+	this.drawShape = drawShape;
+    }
+
+    @Override
+    public String toString() {
+	return "CellImpl: " + value;
+    }
 }

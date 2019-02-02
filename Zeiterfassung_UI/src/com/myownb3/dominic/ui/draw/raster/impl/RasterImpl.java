@@ -11,7 +11,6 @@ import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
 import com.myownb3.dominic.ui.draw.impl.ParentComponent;
 import com.myownb3.dominic.ui.draw.raster.cell.Cell;
-import com.myownb3.dominic.ui.draw.raster.cell.impl.CellImpl;
 import com.myownb3.dominic.ui.util.CellUtil;
 import com.myownb3.dominic.ui.util.list.BusinessDayIncrementalCells;
 import com.myownb3.dominic.ui.views.overview.OverviewView;
@@ -66,10 +65,6 @@ public class RasterImpl extends AbstractRaster<Cell> {
 	height = amountOfRows * cellHeigth;
     }
 
-    /**
-     * @param bussinessDay
-     * @param cells2
-     */
     private void initCells(BusinessDayIncrementalCells collectedData, BusinessDay bussinessDay) {
 	int maxRow = calculateMaxRows(collectedData, bussinessDay);
 
@@ -77,15 +72,7 @@ public class RasterImpl extends AbstractRaster<Cell> {
 	    int currentCellWidth = 0;
 	    // get max length
 	    for (List<Cell> businessDayIncrementCells : collectedData) {
-		// this incremental has less cells than the longest increment
-		// --> add an empty cell
-		Cell currentCell;
-		if (businessDayIncrementCells.size() <= i) {
-		    currentCell = new CellImpl("", parent);
-		    businessDayIncrementCells.add(currentCell);
-		} else {
-		    currentCell = businessDayIncrementCells.get(i);
-		}
+		Cell currentCell = businessDayIncrementCells.get(i);
 		currentCellWidth = Math.max(currentCellWidth, currentCell.getWidth());
 	    }
 	    // set max length
@@ -96,11 +83,6 @@ public class RasterImpl extends AbstractRaster<Cell> {
 	}
     }
 
-    /**
-     * @param collectedData
-     * @param bussinessDay
-     * @return
-     */
     private int calculateMaxRows(BusinessDayIncrementalCells collectedData, BusinessDay bussinessDay) {
 
 	int calculatedRows = 0;
@@ -110,10 +92,6 @@ public class RasterImpl extends AbstractRaster<Cell> {
 	return calculatedRows + OverviewView.AMOUNT_OF_FIX_HEADERS;
     }
 
-    /**
-     * @param collectedData
-     * @return
-     */
     private int getMaxLengthForBusinessDay(BusinessDayIncrementalCells collectedData) {
 	int length = 0;
 	for (List<Cell> cells : collectedData) {
@@ -122,13 +100,6 @@ public class RasterImpl extends AbstractRaster<Cell> {
 	return length;
     }
 
-    /**
-     * @param incrementalCells
-     * @param height
-     * @param g
-     * @param y
-     * @param length
-     */
     private void drawBusinessIncrement(Graphics2D g, List<Cell> incrementalCells, int height, int length) {
 	int x = 0;
 	for (Cell cell : incrementalCells) {

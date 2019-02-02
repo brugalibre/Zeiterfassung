@@ -26,9 +26,11 @@ import com.myownb3.dominic.ui.draw.raster.impl.RasterPanel;
 public class OverviewView extends JPanel {
     private static final long serialVersionUID = 1L;
 
-    public static final int AMOUNT_OF_FIX_HEADERS = 4;// 4, number, description,
-						      // max amount of hours &
-						      // charge-type;
+    /**
+     * There are five fix headers: Number, Amount of Hours, Ticket, Decription and
+     * charge-Type
+     */
+    public static final int AMOUNT_OF_FIX_HEADERS = 5;
 
     private static int HEIGHT;
     private static int WIDTH;
@@ -41,7 +43,7 @@ public class OverviewView extends JPanel {
     private JButton exportButton;
 
     static {
-	HEIGHT = 140;
+	HEIGHT = 150;
 	WIDTH = 600;
     }
 
