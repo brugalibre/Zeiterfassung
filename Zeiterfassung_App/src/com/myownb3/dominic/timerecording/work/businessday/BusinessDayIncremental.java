@@ -76,9 +76,24 @@ public class BusinessDayIncremental {
 	return getTotalDuration(TimeRecorder.GLOBAL_TIME_TYPE);
     }
 
+    /**
+     * Returns <code>true</code> if this {@link BusinessDayIncremental} and the
+     * other has the same Ticketnumber, and same charge-type and the same
+     * description. The description can be <code>null</code> for both
+     * {@link BusinessDayIncremental} and this method still returns
+     * <code>true</code>
+     * 
+     * @param other
+     *            the other BusinessDayIncremental
+     * @return <code>true</code> if this {@link BusinessDayIncremental} is the same
+     *         as the other one
+     */
     public boolean isSame(BusinessDayIncremental other) {
 	if (other == null) {
 	    return false;
+	}
+	if (this == other) {
+	    return true;
 	}
 	return this.getTicketNumber().equals(other.getTicketNumber())
 		&& this.getChargeType().equals(other.getChargeType()) && hasSameDescription(other);

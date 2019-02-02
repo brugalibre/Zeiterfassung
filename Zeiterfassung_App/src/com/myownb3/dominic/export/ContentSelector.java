@@ -4,14 +4,12 @@
 package com.myownb3.dominic.export;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
-import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
-import com.myownb3.dominic.util.comparator.TimeStampComparator;
+import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
+import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
+import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
@@ -21,7 +19,7 @@ import com.myownb3.dominic.util.utils.StringUtil;
 public class ContentSelector {
     private static final Object CONTENT_SEPPARATOR = "; ";
 
-    public static List<String> collectContent(BusinessDay bussinessDay) {
+    public static List<String> collectContent(BusinessDay4Export bussinessDay) {
 	StringBuilder builder = new StringBuilder();
 	List<String> content = new ArrayList<>();
 
@@ -33,7 +31,7 @@ public class ContentSelector {
 	appendTitleHeaderCells(builder, bussinessDay);
 
 	// = For each 'Ticket' or Increment of an entire Day
-	for (BusinessDayIncremental inc : bussinessDay.getIncrements()) {
+	for (BusinessDayInc4Export inc : bussinessDay.getBusinessDayIncrements()) {
 	    builder.append(TextLabel.TICKET + ": ");
 	    builder.append(inc.getTicketNumber());
 	    builder.append(CONTENT_SEPPARATOR);
@@ -44,19 +42,16 @@ public class ContentSelector {
 	    builder.append(inc.getTotalDuration());
 	    builder.append(CONTENT_SEPPARATOR);
 
-	    List<TimeSnippet> timeSnippets = inc.getTimeSnippets();
-	    Collections.sort(timeSnippets, new TimeStampComparator());
+	    List<TimeSnippet4Export> timeSnippets = inc.getTimeSnippets();
 
-	    int snippetCounter = 0;
 	    // = For each single work units of a Ticket
-	    for (TimeSnippet snippet : timeSnippets) {
+	    for (TimeSnippet4Export snippet : timeSnippets) {
 		builder.append(snippet.getBeginTimeStamp());
 		builder.append(CONTENT_SEPPARATOR);
 		builder.append(snippet.getEndTimeStamp());
 		builder.append(CONTENT_SEPPARATOR);
-		snippetCounter++;
 	    }
-	    addPlaceHolderForMissingBeginEndElements(builder, bussinessDay, snippetCounter);
+	    addPlaceHolderForMissingBeginEndElements(builder, inc);
 	    builder.append(inc.getChargeType());
 	    builder.append(CONTENT_SEPPARATOR);
 
@@ -70,7 +65,7 @@ public class ContentSelector {
 	return content;
     }
 
-    private static void appendTitleHeaderCells(StringBuilder builder, BusinessDay bussinessDay) {
+    private static void appendTitleHeaderCells(StringBuilder builder, BusinessDay4Export bussinessDay) {
 
 	builder.append(TextLabel.TICKET);
 	builder.append(CONTENT_SEPPARATOR);
@@ -89,7 +84,7 @@ public class ContentSelector {
 	builder.append(System.getProperty("line.separator"));
     }
 
-    private static void appendBeginEndHeader(StringBuilder builder, BusinessDay bussinessDay) {
+    private static void appendBeginEndHeader(StringBuilder builder, BusinessDay4Export bussinessDay) {
 
 	int counter = bussinessDay.getAmountOfVonBisElements();
 	for (int i = 0; i < counter; i++) {
@@ -106,12 +101,10 @@ public class ContentSelector {
      * amount of TimeSnippet-Cells
      * 
      */
-    private static void addPlaceHolderForMissingBeginEndElements(StringBuilder builder, BusinessDay bussinessDay,
-	    int snippetCellsCounter) {
-	int amountOfEmptyTimeSnippets = bussinessDay.getAmountOfVonBisElements() - snippetCellsCounter;
-	for (int i = 0; i < amountOfEmptyTimeSnippets; i++) {
-	    builder.append("");
-	    builder.append(CONTENT_SEPPARATOR);
+    private static void addPlaceHolderForMissingBeginEndElements(StringBuilder builder,
+	    BusinessDayInc4Export inc) {
+	for (int i = 0; i < inc.getTimeSnippetPlaceHolders().size(); i++) {
+
 	    builder.append("");
 	    builder.append(CONTENT_SEPPARATOR);
 	}

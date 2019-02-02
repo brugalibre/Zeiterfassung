@@ -7,8 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.List;
 
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
+import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
+import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
 import com.myownb3.dominic.ui.draw.impl.ParentComponent;
 import com.myownb3.dominic.ui.draw.raster.cell.Cell;
 import com.myownb3.dominic.ui.util.CellUtil;
@@ -27,7 +27,7 @@ public class RasterImpl extends AbstractRaster<Cell> {
      * @param value
      * @param bussinessDay
      */
-    public RasterImpl(BusinessDayIncrementalCells value, BusinessDay bussinessDay, ParentComponent parent) {
+    public RasterImpl(BusinessDayIncrementalCells value, BusinessDay4Export bussinessDay, ParentComponent parent) {
 	super(value, bussinessDay, parent);
 	if (value.isEmpty())
 	    throw new IllegalArgumentException("Given cells must not be empty!");
@@ -51,7 +51,7 @@ public class RasterImpl extends AbstractRaster<Cell> {
      * @param collectedData
      * @param bussinessDay
      */
-    public void initialize(BusinessDayIncrementalCells collectedData, BusinessDay bussinessDay) {
+    public void initialize(BusinessDayIncrementalCells collectedData, BusinessDay4Export bussinessDay) {
 	this.value = collectedData;
 	initCells(collectedData, bussinessDay);
 	amountOfRows = collectedData.size();
@@ -65,7 +65,7 @@ public class RasterImpl extends AbstractRaster<Cell> {
 	height = amountOfRows * cellHeigth;
     }
 
-    private void initCells(BusinessDayIncrementalCells collectedData, BusinessDay bussinessDay) {
+    private void initCells(BusinessDayIncrementalCells collectedData, BusinessDay4Export bussinessDay) {
 	int maxRow = calculateMaxRows(collectedData, bussinessDay);
 
 	for (int i = 0; i < maxRow; i++) {
@@ -83,10 +83,10 @@ public class RasterImpl extends AbstractRaster<Cell> {
 	}
     }
 
-    private int calculateMaxRows(BusinessDayIncrementalCells collectedData, BusinessDay bussinessDay) {
+    private int calculateMaxRows(BusinessDayIncrementalCells collectedData, BusinessDay4Export bussinessDay) {
 
 	int calculatedRows = 0;
-	for (BusinessDayIncremental inc : bussinessDay.getIncrements()) {
+	for (BusinessDayInc4Export inc : bussinessDay.getBusinessDayIncrements()) {
 	    calculatedRows = Math.max(calculatedRows, (2 * inc.getTimeSnippets().size()));
 	}
 	int additionallyValueForDescHeader = bussinessDay.hasIncrementWithDescription() ? 1 : 0;

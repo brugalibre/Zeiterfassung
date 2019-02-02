@@ -9,13 +9,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
-import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
+import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
+import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
+import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export;
 import com.myownb3.dominic.ui.draw.impl.Drawable;
 import com.myownb3.dominic.ui.draw.impl.ParentComponent;
 import com.myownb3.dominic.ui.draw.raster.Raster;
@@ -24,7 +24,6 @@ import com.myownb3.dominic.ui.draw.raster.cell.impl.CellImpl;
 import com.myownb3.dominic.ui.styles.font.Fonts;
 import com.myownb3.dominic.ui.util.CellUtil;
 import com.myownb3.dominic.ui.util.list.BusinessDayIncrementalCells;
-import com.myownb3.dominic.util.comparator.TimeStampComparator;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
@@ -38,7 +37,7 @@ public class RasterPanel extends ParentComponent {
     private static final long serialVersionUID = 1L;
 
     private static final String separatorWithDoublePoint = ": ";
-    private BusinessDay bussinessDay;
+    private BusinessDay4Export bussinessDay;
     private BusinessDayIncrementalCells collectedData;
 
     private Raster raster;
@@ -70,7 +69,7 @@ public class RasterPanel extends ParentComponent {
 	int counter = 1;
 	List<Cell> titleHeaders = evaluateTitleHeaderCells();
 	businessDayCells.add(titleHeaders);
-	for (BusinessDayIncremental bussinessDayIncremental : bussinessDay.getIncrements()) {
+	for (BusinessDayInc4Export bussinessDayIncremental : bussinessDay.getBusinessDayIncrements()) {
 	    businessDayCells.add(getBusinessDayIncrementalCells(bussinessDayIncremental, counter));
 	    counter++;
 	}
@@ -111,7 +110,7 @@ public class RasterPanel extends ParentComponent {
      * Creates a list which contains all Cells that are required to paint a
      * BusinessDayIncremental
      */
-    private List<Cell> getBusinessDayIncrementalCells(BusinessDayIncremental bussinessDayIncremental, int no) {
+    private List<Cell> getBusinessDayIncrementalCells(BusinessDayInc4Export bussinessDayIncremental, int no) {
 	// create Cells for the introduction of a BD-inc.
 	List<Cell> list = new ArrayList<>();
 	list.add(new CellImpl(String.valueOf(no), this));
@@ -136,43 +135,23 @@ public class RasterPanel extends ParentComponent {
      * Creates a list which contains all Cells with the content about each
      * TimeSnippet
      */
-    private List<Cell> collectTimeSnippetData(BusinessDayIncremental bussinessDayIncremental) {
+    private List<Cell> collectTimeSnippetData(BusinessDayInc4Export bussinessDayIncremental) {
 	// = for all time snippet
 	List<Cell> snippetCells = new ArrayList<>();
-	int snippetCellsCounter = 0;
-	Collections.sort(bussinessDayIncremental.getTimeSnippets(), new TimeStampComparator());
-	for (TimeSnippet snippet : bussinessDayIncremental.getTimeSnippets()) {
+	for (TimeSnippet4Export snippet : bussinessDayIncremental.getTimeSnippets()) {
 	    // start point
 	    String value = String.valueOf(snippet.getBeginTimeStamp());
 	    snippetCells.add(new CellImpl(value, this));
 	    // end point
 	    value = String.valueOf(snippet.getEndTimeStamp());
 	    snippetCells.add(new CellImpl(value, this));
-	    snippetCellsCounter++;
 	}
-
-	addPlaceHolderForMissingCell(snippetCells, snippetCellsCounter);
+	for (int i = 0; i < bussinessDayIncremental.getTimeSnippetPlaceHolders().size(); i++) {
+	    snippetCells.add(new CellImpl("", this));
+	}
 	return snippetCells;
     }
 
-    /*
-     * All rows must fit with it content to the title header. Thats why we have to
-     * add some placeholders if this row has less TimeSnipets then the maximum
-     * amount of TimeSnippet-Cells
-     * 
-     */
-    private void addPlaceHolderForMissingCell(List<Cell> snippetCells, int snippetCellsCounter) {
-	int amountOfEmptyTimeSnippets = bussinessDay.getAmountOfVonBisElements() - snippetCellsCounter;
-	for (int i = 0; i < amountOfEmptyTimeSnippets; i++) {
-	    snippetCells.add(new CellImpl("", this));
-	    snippetCells.add(new CellImpl("", this));
-	}
-    }
-
-    /**
-     * @param collectedData
-     * @return
-     */
     private int getMaxLengthForBusinessDay(BusinessDayIncrementalCells collectedData) {
 	int length = 0;
 	for (List<Cell> cells : collectedData) {
@@ -194,7 +173,7 @@ public class RasterPanel extends ParentComponent {
 	drawFinalInformation(g, bussinessDay, raster);
     }
 
-    private void drawFinalInformation(Graphics2D g, BusinessDay bussinessDay, Raster raster) {
+    private void drawFinalInformation(Graphics2D g, BusinessDay4Export bussinessDay, Raster raster) {
 	String value = TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + separatorWithDoublePoint
 		+ bussinessDay.getTotalDuration();
 
@@ -218,7 +197,7 @@ public class RasterPanel extends ParentComponent {
      * @param bussinessDay2
      */
     public void setBussinessDay(BusinessDay bussinessDay) {
-	this.bussinessDay = bussinessDay;
+	this.bussinessDay = new BusinessDay4Export(bussinessDay);
     }
 
     @Override

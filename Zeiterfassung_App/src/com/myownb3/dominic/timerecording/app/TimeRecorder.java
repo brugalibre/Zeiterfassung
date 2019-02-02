@@ -15,6 +15,7 @@ import com.myownb3.dominic.timerecording.work.WorkStates;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
+import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
 
 /**
@@ -119,7 +120,7 @@ public class TimeRecorder {
     * 
     */
     public static void export() {
-	List<String> content = ContentSelector.collectContent(bussinessDay);
+	List<String> content = ContentSelector.collectContent(new BusinessDay4Export(bussinessDay));
 	FileExporter.export(content);
     }
 

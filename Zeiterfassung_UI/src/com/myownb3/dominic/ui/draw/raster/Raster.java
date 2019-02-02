@@ -3,7 +3,7 @@
  */
 package com.myownb3.dominic.ui.draw.raster;
 
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
+import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.ui.draw.Renderer;
 import com.myownb3.dominic.ui.draw.raster.cell.Cell;
 import com.myownb3.dominic.ui.util.list.BusinessDayIncrementalCells;
@@ -50,5 +50,5 @@ public interface Raster extends Renderer {
      * @param collectedData
      * @param bussinessDay
      */
-    void initialize(BusinessDayIncrementalCells collectedData, BusinessDay bussinessDay);
+    void initialize(BusinessDayIncrementalCells collectedData, BusinessDay4Export bussinessDay);
 }
