@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
-import com.myownb3.dominic.timerecording.work.date.Date;
+import java.util.Date;
 
 /**
  * The {@link BusinessDay4Export} is used whenever a {@link BusinessDay} is

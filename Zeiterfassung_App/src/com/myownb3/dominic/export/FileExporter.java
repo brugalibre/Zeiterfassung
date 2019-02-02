@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.util.List;
 
-import com.myownb3.dominic.timerecording.work.date.Date;
+import java.util.Date;
 import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
 /**

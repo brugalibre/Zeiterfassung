@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.work.date.Date;
+import java.util.Date;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.util.utils.StringUtil;
