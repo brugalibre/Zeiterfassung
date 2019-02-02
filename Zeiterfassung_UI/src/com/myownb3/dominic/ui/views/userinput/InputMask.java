@@ -153,10 +153,8 @@ public class InputMask extends JPanel {
 
 	BeginAndInputFieldFocusListener beginAndInputFieldFocusListener = new BeginAndInputFieldFocusListener(this);
 	vonField = new JTextField();
-	vonField.setEditable(false);
 	vonField.addFocusListener(beginAndInputFieldFocusListener);
 	bisField = new JTextField();
-	bisField.setEditable(false);
 	bisField.addFocusListener(beginAndInputFieldFocusListener);
 	ticketNumberField = new ComboBox(5);
 	ticketNumberField.setEditable(true);
@@ -254,7 +252,6 @@ public class InputMask extends JPanel {
 	TimeSnippet currentTimeSnippet = inc.getCurrentTimeSnippet();
 	currentTimeSnippet.setEndTimeStamp(new Time(date.getTime()));
 	bisField.setText(String.valueOf(currentTimeSnippet.getEndTimeStamp()));
-	
 	float duration = currentTimeSnippet.getDuration();
 	amountOfHoursField.setText(String.valueOf(duration));
     }
