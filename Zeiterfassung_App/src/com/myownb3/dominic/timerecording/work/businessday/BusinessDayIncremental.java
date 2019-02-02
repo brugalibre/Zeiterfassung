@@ -14,8 +14,8 @@ import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
 /**
  * A {@link BusinessDay} consist of one or more {@link BusinessDayIncremental}.
  * Where as a {@link BusinessDayIncremental} consist of one or more
- * {@link TimeSnippet}. Two different {@link BusinessDayIncremental} are
- * <i> not </i> dependent!
+ * {@link TimeSnippet}. Two different {@link BusinessDayIncremental} are <i> not
+ * </i> dependent!
  * 
  * @author Dominic
  */
@@ -25,7 +25,7 @@ public class BusinessDayIncremental {
 
     private Date date;
     private String description;
-    private String projectNumber;
+    private String ticketNumber;
     private String chargeType;
     private boolean isCharged; // true if this BussinessDayIncremental is
 			       // charged and it's data send to the account
@@ -34,7 +34,7 @@ public class BusinessDayIncremental {
     public BusinessDayIncremental(Date date) {
 	this.date = date;
 	timeSnippets = new ArrayList<TimeSnippet>();
-	projectNumber = " - ";
+	ticketNumber = "SYRIUS- ";
 	description = " - ";
     }
 
@@ -117,12 +117,12 @@ public class BusinessDayIncremental {
 	this.description = description;
     }
 
-    public String getProjectNumber() {
-	return projectNumber;
+    public String getTicketNumber() {
+	return ticketNumber;
     }
 
-    public void setProjectNumber(String projectNumber) {
-	this.projectNumber = projectNumber;
+    public void setTicketNumber(String ticketNumber) {
+	this.ticketNumber = ticketNumber;
     }
 
     public String getChargeType() {
@@ -134,10 +134,9 @@ public class BusinessDayIncremental {
     }
 
     /**
-     * Moves all {@link TimeSnippet} of the current
-     * {@link BusinessDayIncremental} to the given
-     * {@link BusinessDayIncremental}. The {@link TimeSnippet}s of the current
-     * {@link BusinessDayIncremental} are removed!
+     * Moves all {@link TimeSnippet} of the current {@link BusinessDayIncremental}
+     * to the given {@link BusinessDayIncremental}. The {@link TimeSnippet}s of the
+     * current {@link BusinessDayIncremental} are removed!
      * 
      * @param incrementToAddTimeSnippets
      */

@@ -91,7 +91,7 @@ public class BusinessDay {
 	if (isSilendMode && !increments.isEmpty()) {
 	    BusinessDayIncremental businessDayIncremental = increments.get(0);
 	    currentBussinessDayIncremental.setDescription(businessDayIncremental.getDescription());
-	    currentBussinessDayIncremental.setProjectNumber(businessDayIncremental.getProjectNumber());
+	    currentBussinessDayIncremental.setTicketNumber(businessDayIncremental.getTicketNumber());
 	    currentBussinessDayIncremental.setChargeType(businessDayIncremental.getChargeType());
 	    TimeRecorder.checkForRedundancy();
 	}

@@ -34,7 +34,8 @@ public class ComboBox extends JComboBox<Entry> {
     /**
      * @param description
      */
-    public void addNewItem(Entry item) {
+    public void addNewItem(String itemAsString) {
+	Entry item = new Entry(itemAsString);
 	// Item does not exist at the moment --> add it, and set the amount of
 	// calls to 1
 	if (!listContain(item)) {
@@ -73,11 +74,6 @@ public class ComboBox extends JComboBox<Entry> {
 	    return ((Entry) super.getSelectedItem()).getValue();
 	}
 	return (String) super.getSelectedItem();
-    }
-
-    @Override
-    public void addItem(Entry item) {
-	super.addItem(item);
     }
 
     /**

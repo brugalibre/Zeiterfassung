@@ -22,7 +22,6 @@ import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.ui.app.MainWindow;
-import com.myownb3.dominic.ui.views.userinput.entry.Entry;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
@@ -45,14 +44,14 @@ public class InputMask extends JPanel {
     private JTextField bisField;
     private JTextField vonField;
     private JTextField amountOfHoursField;
-    private JTextField projectNumberField;
+    private ComboBox ticketNumberField;
     private ComboBox descriptionField;
     private JComboBox<String> chargeTypeSelectList;
 
     private JLabel vonLabel;
     private JLabel bisLabel;
     private JLabel amountOfHoursLabel;
-    private JLabel projectNumberLabel;
+    private JLabel ticketNumberLabel;
     private JLabel chargeTypeLabel;
     private JLabel descriptionLabel;
 
@@ -94,9 +93,6 @@ public class InputMask extends JPanel {
 	addKeyListener(mainWindow);
     }
 
-    /**
-    * 
-    */
     private void placeContent() {
 	int minComponentLength = 0;
 	int preferredComponentLength = 100;
@@ -104,13 +100,13 @@ public class InputMask extends JPanel {
 
 	GroupLayout groupLayout = new GroupLayout(this);
 	groupLayout.setHorizontalGroup(groupLayout.createSequentialGroup()
-		.addGroup(groupLayout.createParallelGroup().addComponent(descriptionLabel)
-			.addComponent(projectNumberLabel).addComponent(vonLabel).addComponent(bisLabel)
+		.addGroup(groupLayout.createParallelGroup().addComponent(ticketNumberLabel)
+			.addComponent(descriptionLabel).addComponent(vonLabel).addComponent(bisLabel)
 			.addComponent(amountOfHoursLabel).addComponent(chargeTypeLabel).addComponent(okButton))
 		.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-			.addComponent(descriptionField, minComponentLength, preferredComponentLength,
+			.addComponent(ticketNumberField, minComponentLength, preferredComponentLength,
 				maxComponentLength)
-			.addComponent(projectNumberField, minComponentLength, preferredComponentLength,
+			.addComponent(descriptionField, minComponentLength, preferredComponentLength,
 				maxComponentLength)
 			.addComponent(vonField, minComponentLength, preferredComponentLength, maxComponentLength)
 			.addComponent(bisField, minComponentLength, preferredComponentLength, maxComponentLength)
@@ -121,10 +117,10 @@ public class InputMask extends JPanel {
 	));
 	groupLayout.setVerticalGroup(groupLayout.createSequentialGroup()
 
-	.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(descriptionLabel)
-		.addComponent(descriptionField))
 		.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-			.addComponent(projectNumberLabel).addComponent(projectNumberField))
+			.addComponent(ticketNumberField).addComponent(ticketNumberLabel))
+		.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(descriptionLabel)
+			.addComponent(descriptionField))
 		.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(vonLabel)
 			.addComponent(vonField))
 		.addGroup(groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(bisLabel)
@@ -145,7 +141,7 @@ public class InputMask extends JPanel {
     */
     private void createContent() {
 	amountOfHoursLabel = new JLabel(TextLabel.AMOUNT_OF_HOURS_LABEL);
-	projectNumberLabel = new JLabel(TextLabel.PROJECT_NUMBER_LABEL);
+	ticketNumberLabel = new JLabel(TextLabel.TICKET_NUMBER_LABEL);
 	chargeTypeLabel = new JLabel(TextLabel.CHARGE_TYPE_LABEL);
 	descriptionLabel = new JLabel(TextLabel.DESCRIPTION_LABEL);
 	vonLabel = new JLabel(TextLabel.VON_LABEL);
@@ -158,8 +154,9 @@ public class InputMask extends JPanel {
 	vonField.setEditable(false);
 	bisField = new JTextField();
 	bisField.setEditable(false);
-	projectNumberField = new JTextField();
-	projectNumberField.setEnabled(false);
+	ticketNumberField = new ComboBox(5);
+	ticketNumberField.setEditable(true);
+	ticketNumberField.setInputVerifier(inputVerifier);
 	chargeTypeSelectList = new JComboBox<String>(ChargeType.CHARGE_TYPES);
 	descriptionField = new ComboBox(5);
 	descriptionField.setEditable(true);
@@ -187,34 +184,39 @@ public class InputMask extends JPanel {
 	amountOfHoursField.setText(String.valueOf(inc.getTotalDuration()));
 	bisField.setText(String.valueOf(inc.getCurrentTimeSnippet().getEndTimeStamp()));
 	vonField.setText(String.valueOf(inc.getCurrentTimeSnippet().getBeginTimeStamp()));
-
-	if (StringUtil.isValid(inc.getProjectNumber())) {
-	    projectNumberField.setText(inc.getProjectNumber());
-	}
     }
 
     /**
     * 
     */
     protected void submit() {
-	String value = descriptionField.getSelectedItem();
-	if (inputVerifier.verify(amountOfHoursField) && StringUtil.isValid(value)) {
+	if (isInputValid()) {
 	    inputVerifier.handleValidInput(amountOfHoursField);
-	    inc.setDescription(value);
-	    inc.setProjectNumber(projectNumberField.getText());
+	    inc.setDescription(descriptionField.getSelectedItem());
+	    inc.setTicketNumber(ticketNumberField.getSelectedItem());
 	    inc.setChargeType((String) chargeTypeSelectList.getSelectedItem());
-	    addSubmittedTicketText(inc.getDescription());
+	    addSubmittedTicketText();
 	    dispose(true);
 	}
+    }
+
+    /*
+     * Actually this should happen as soo as the component is about to lose its
+     * focuse. But somehow the verifier is not triggered
+     */
+    private boolean isInputValid() {
+	return inputVerifier.verify(ticketNumberField);
     }
 
     /**
      * @param description
      */
-    private void addSubmittedTicketText(String descriptionAsString) {
-	Entry description = new Entry(descriptionAsString);
+    private void addSubmittedTicketText() {
 	// if the maximum is reached, remove the one which was unused the most
-	descriptionField.addNewItem(description);
+	if (StringUtil.isValid(inc.getDescription())) {
+	    descriptionField.addNewItem(inc.getDescription());
+	}
+	ticketNumberField.addNewItem(inc.getTicketNumber());
     }
 
     /**

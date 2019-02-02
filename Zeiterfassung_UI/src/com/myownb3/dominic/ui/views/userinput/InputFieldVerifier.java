@@ -10,6 +10,7 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 import com.myownb3.dominic.ui.styles.color.Colors;
+import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * @author Dominic
@@ -28,6 +29,26 @@ public class InputFieldVerifier extends InputVerifier {
 
     @Override
     public boolean verify(JComponent c) {
+	if (c instanceof JTextField) {
+	    return verifyTextField((JTextField) c);
+	} else if (c instanceof ComboBox) {
+	    return verifyComboBox((ComboBox) c);
+	}
+	return true;// unknown input
+    }
+
+    private boolean verifyComboBox(ComboBox c) {
+	boolean isValid = StringUtil.isValid(c.getSelectedItem());
+	if (!isValid) {
+	    c.setForeground(Colors.INVALID_INPUT_COLOR);
+	    c.setBackground(Colors.INVALID_INPUT_COLOR);
+	} else {
+	    c.setForeground(Color.BLACK);
+	}
+	return isValid;
+    }
+
+    private boolean verifyTextField(JTextField c) {
 	String text = ((JTextField) c).getText();
 	float val = 0;
 	try {

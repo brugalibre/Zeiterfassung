@@ -17,7 +17,7 @@ public class TextLabel {
     public static final String ABORT_BUTTON_TEXT = "Abbrechen";
     public static final String AMOUNT_OF_HOURS_LABEL = "Anzahl Stunden";
     public static final String TOTAL_AMOUNT_OF_HOURS_LABEL = "Gesamt Anzahl Stunden";
-    public static final String PROJECT_NUMBER_LABEL = "Projekt-Nr.";
+    public static final String TICKET_NUMBER_LABEL = "Ticket-Nr.";
     public static final String CHARGE_TYPE_LABEL = "Leistungsart";
     public static final String IS_CHARGED_LABEL = "Abgebucht";
     public static final String DESCRIPTION_LABEL = "Beschreibung";

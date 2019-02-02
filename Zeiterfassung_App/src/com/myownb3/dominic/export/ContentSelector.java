@@ -12,6 +12,7 @@ import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.util.comparator.TimeStampComparator;
+import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * @author Dominic
@@ -32,8 +33,13 @@ public class ContentSelector {
 	// = For each 'Ticket' or Increment of an entire Day
 	for (BusinessDayIncremental inc : bussinessDay.getIncrements()) {
 	    builder.append(TextLabel.TICKET + ": ");
-	    builder.append(inc.getDescription());
+	    builder.append(inc.getTicketNumber());
 	    builder.append(CONTENT_SEPPARATOR);
+	    if (StringUtil.isValid(inc.getDescription())) {
+		builder.append(TextLabel.DESCRIPTION_LABEL + ": ");
+		builder.append(inc.getDescription());
+		builder.append(CONTENT_SEPPARATOR);
+	    }
 	    builder.append(TextLabel.AMOUNT_OF_HOURS_LABEL + ": " + inc.getTotalDuration());
 	    builder.append(CONTENT_SEPPARATOR);
 

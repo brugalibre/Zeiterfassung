@@ -25,6 +25,7 @@ import com.myownb3.dominic.ui.styles.font.Fonts;
 import com.myownb3.dominic.ui.util.CellUtil;
 import com.myownb3.dominic.ui.util.list.BusinessDayIncrementalCells;
 import com.myownb3.dominic.util.comparator.TimeStampComparator;
+import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * @author Dominic
@@ -96,8 +97,13 @@ public class RasterPanel extends ParentComponent {
 	list.add(new CellImpl(
 		TextLabel.AMOUNT_OF_HOURS_LABEL + separatorWithDoublePoint + bussinessDayIncremental.getTotalDuration(),
 		this));
-	list.add(new CellImpl(TextLabel.TICKET + separatorWithDoublePoint + bussinessDayIncremental.getDescription(),
+	list.add(new CellImpl(TextLabel.TICKET + separatorWithDoublePoint + bussinessDayIncremental.getTicketNumber(),
 		this));
+
+	String cellValue = StringUtil.isValid(bussinessDayIncremental.getDescription())
+		? TextLabel.DESCRIPTION_LABEL + separatorWithDoublePoint + bussinessDayIncremental.getDescription()
+		: "";
+	list.add(new CellImpl(cellValue, this));
 
 	// create Cells for all TimeSnippet's
 	list.addAll(collectTimeSnippetData(bussinessDayIncremental));

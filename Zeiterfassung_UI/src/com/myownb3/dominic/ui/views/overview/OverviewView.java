@@ -42,7 +42,7 @@ public class OverviewView extends JPanel {
 
     static {
 	HEIGHT = 140;
-	WIDTH = 550;
+	WIDTH = 600;
     }
 
     public OverviewView(MainWindow mainView) {
