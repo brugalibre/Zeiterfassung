@@ -27,10 +27,9 @@ public class OverviewView extends JPanel {
     private static final long serialVersionUID = 1L;
 
     /**
-     * There are five fix headers: Number, Amount of Hours, Ticket, Decription and
-     * charge-Type
+     * There are five fix headers: Number, Amount of Hours, Ticket & charge-Type
      */
-    public static final int AMOUNT_OF_FIX_HEADERS = 5;
+    public static final int AMOUNT_OF_FIX_HEADERS = 4;
 
     private static int HEIGHT;
     private static int WIDTH;

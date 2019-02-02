@@ -89,7 +89,8 @@ public class RasterImpl extends AbstractRaster<Cell> {
 	for (BusinessDayIncremental inc : bussinessDay.getIncrements()) {
 	    calculatedRows = Math.max(calculatedRows, (2 * inc.getTimeSnippets().size()));
 	}
-	return calculatedRows + OverviewView.AMOUNT_OF_FIX_HEADERS;
+	int additionallyValueForDescHeader = bussinessDay.hasIncrementWithDescription() ? 1 : 0;
+	return calculatedRows + OverviewView.AMOUNT_OF_FIX_HEADERS + additionallyValueForDescHeader;
     }
 
     private int getMaxLengthForBusinessDay(BusinessDayIncrementalCells collectedData) {
