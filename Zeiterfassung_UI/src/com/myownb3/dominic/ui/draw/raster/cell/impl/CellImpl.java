@@ -72,12 +72,13 @@ public class CellImpl extends AbstractCell {
 	return comp.getFontMetrics(font);
     }
 
+    @Override
     public void setDrawShape(boolean drawShape) {
 	this.drawShape = drawShape;
     }
 
     @Override
     public String toString() {
-	return "CellImpl: " + value;
+	return value;
     }
 }

@@ -58,7 +58,7 @@ public class RasterPanel extends ParentComponent {
 	    raster.initialize(collectedData, bussinessDay);
 	}
 
-	int height = collectedData.size() * (CellUtil.getHeightForCells(collectedData.get(0)));
+	int height = collectedData.size() * CellUtil.getHeightForCells(collectedData.get(0));
 	int width = getMaxLengthForBusinessDay(collectedData);
 	setSize(new Dimension(width, height));
 	setPreferredSize(getSize());
@@ -181,13 +181,13 @@ public class RasterPanel extends ParentComponent {
 
 	Cell space = new CellImpl("", this);
 	space.setBounds(new Rectangle(0, height, space.getWidth(), space.getHeight()));
-	((CellImpl) space).setDrawShape(false);
+	space.setDrawShape(false);
 	space.draw(g);
 
 	Cell finalInformation = new CellImpl(value, this);
 	finalInformation.setBounds(new Rectangle(0, height + space.getHeight(), finalInformation.getWidth(),
 		finalInformation.getHeight()));
-	((CellImpl) finalInformation).setDrawShape(false);
+	finalInformation.setDrawShape(false);
 	finalInformation.draw(g);
     }
 
