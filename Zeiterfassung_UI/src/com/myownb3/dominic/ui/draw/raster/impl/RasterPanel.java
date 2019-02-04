@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
@@ -127,7 +128,7 @@ public class RasterPanel extends ParentComponent {
 
 	// create Cells for all TimeSnippet's
 	list.addAll(collectTimeSnippetData(bussinessDayIncremental));
-	list.add(new CellImpl(bussinessDayIncremental.getChargeType(), this));
+	list.add(new CellImpl(ChargeType.getRepresentation(bussinessDayIncremental.getChargeType()), this));
 	return list;
     }
 

@@ -161,7 +161,7 @@ public class InputMask extends JPanel {
 	ticketNumberField = new ComboBox(5);
 	ticketNumberField.setEditable(true);
 	ticketNumberField.setInputVerifier(inputVerifier);
-	chargeTypeSelectList = new JComboBox<String>(ChargeType.CHARGE_TYPES);
+	chargeTypeSelectList = new JComboBox<String>(ChargeType.getLeistungsartenRepresentation());
 	descriptionField = new ComboBox(5);
 	descriptionField.setEditable(true);
 	okButton = new JButton(TextLabel.OK_BUTTON_TEXT);
@@ -198,7 +198,7 @@ public class InputMask extends JPanel {
 	    inputVerifier.handleValidInput(amountOfHoursField);
 	    inc.setDescription(descriptionField.getSelectedItem());
 	    inc.setTicketNumber(ticketNumberField.getSelectedItem());
-	    inc.setChargeType((String) chargeTypeSelectList.getSelectedItem());
+	    inc.setChargeType(ChargeType.getLeistungsartForRep((String) chargeTypeSelectList.getSelectedItem()));
 	    addSubmittedTicketText();
 	    dispose(true);
 	}

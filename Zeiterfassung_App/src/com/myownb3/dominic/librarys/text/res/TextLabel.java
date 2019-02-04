@@ -41,11 +41,7 @@ public class TextLabel {
     public static final String MINUTES = "Minuten";
     public static final String SECONDS = "Sekunden";
 
-    // types of charges
-    public static final String CHARGE_TYPE_PROGRAMMIERUNG = "113 - Programmierung";
-    public static final String CHARGE_TYPE_MEETING = "111 - Meeting";
-    public static final String CHARGE_TYPE_ALL_VERWALTUNG = "140 - Allg. Verwaltugnsarbeiten";
-    public static final String CHARGE_TYPE_INTERNE_WEITERBILDUNG = "141 - Interne Weiterbildung";
+    // Ticket Stuff
     public static final String TICKET = "Ticket";
 
     public static final String CAPTURING_INACTIVE = "Zeiterfassung inaktiv";

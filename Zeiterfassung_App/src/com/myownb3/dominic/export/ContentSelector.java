@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export;
@@ -52,7 +53,7 @@ public class ContentSelector {
 		builder.append(CONTENT_SEPPARATOR);
 	    }
 	    addPlaceHolderForMissingBeginEndElements(builder, inc);
-	    builder.append(inc.getChargeType());
+	    builder.append(ChargeType.getRepresentation(inc.getChargeType()));
 	    builder.append(CONTENT_SEPPARATOR);
 
 	    builder.append(System.getProperty("line.separator"));

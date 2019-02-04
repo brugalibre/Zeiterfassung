@@ -28,7 +28,7 @@ public class BusinessDayInc4Export {
     private float totalDuration;
     private String description;
     private String ticketNumber;
-    private String chargeType;
+    private int chargeType;
 
     public BusinessDayInc4Export(BusinessDayIncremental businessDayIncremental) {
 	this.description = businessDayIncremental.getDescription();
@@ -91,7 +91,7 @@ public class BusinessDayInc4Export {
 	return this.ticketNumber;
     }
 
-    public final String getChargeType() {
+    public final int getChargeType() {
 	return this.chargeType;
     }
 

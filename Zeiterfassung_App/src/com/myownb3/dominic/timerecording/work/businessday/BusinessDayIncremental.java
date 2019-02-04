@@ -27,7 +27,7 @@ public class BusinessDayIncremental {
     private Date date;
     private String description;
     private String ticketNumber;
-    private String chargeType;
+    private int chargeType;
 
     public BusinessDayIncremental(Date date) {
 	this.date = date;
@@ -96,7 +96,7 @@ public class BusinessDayIncremental {
 	    return true;
 	}
 	return this.getTicketNumber().equals(other.getTicketNumber())
-		&& this.getChargeType().equals(other.getChargeType()) && hasSameDescription(other);
+		&& this.getChargeType() == other.getChargeType() && hasSameDescription(other);
     }
 
     private boolean hasSameDescription(BusinessDayIncremental other) {
@@ -145,11 +145,11 @@ public class BusinessDayIncremental {
 	this.ticketNumber = ticketNumber;
     }
 
-    public String getChargeType() {
+    public int getChargeType() {
 	return chargeType;
     }
 
-    public void setChargeType(String chargeType) {
+    public void setChargeType(int chargeType) {
 	this.chargeType = chargeType;
     }
 
