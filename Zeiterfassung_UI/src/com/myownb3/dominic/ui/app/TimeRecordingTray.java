@@ -29,6 +29,7 @@ public class TimeRecordingTray {
     private MainWindow mainWindow;
     private MenuItem stopCurrentRecord;
     private MenuItem showHoursItem;
+    private MenuItem startTurboBucher;
 
     public void registerSystemtray() {
 
@@ -44,9 +45,10 @@ public class TimeRecordingTray {
 	MenuItem exitItem = new MenuItem(TextLabel.EXIT);
 	showHoursItem = new MenuItem(TextLabel.SHOW_WORKING_HOURS);
 	stopCurrentRecord = new MenuItem(TextLabel.STOP_CURRENT_RECORD);
+	startTurboBucher = new MenuItem(TextLabel.CHARGE_LABEL);
 
+	popup.add(startTurboBucher);
 	popup.add(stopCurrentRecord);
-	popup.addSeparator();
 	popup.add(showHoursItem);
 	popup.addSeparator();
 	popup.add(exitItem);
@@ -101,6 +103,8 @@ public class TimeRecordingTray {
 	showHoursItem.setEnabled(false);
 	stopCurrentRecord.addActionListener(actionEvent -> stopCurrentBussinessDay());
 	stopCurrentRecord.setEnabled(false);
+	startTurboBucher.addActionListener(actionEvent -> startTurboBucher());
+	startTurboBucher.setEnabled(false);
 
 	exitItem.addActionListener(actionEvent -> {
 	    tray.remove(trayIcon);
@@ -108,6 +112,10 @@ public class TimeRecordingTray {
 	});
     }
 
+    private void startTurboBucher() {
+    	mainWindow.chargeOff();
+    }
+    
     private void stopCurrentBussinessDay() {
 	TimeRecorder.stop(true);
 	stopCurrentRecord.setEnabled(false);
@@ -158,6 +166,7 @@ public class TimeRecordingTray {
 	trayIcon.setImage(PictureLibrary.getNotWorkingImageIcon());
 	trayIcon.setToolTip(TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
 	showHoursItem.setEnabled(true);
+	startTurboBucher.setEnabled(true);
 	stopCurrentRecord.setEnabled(false);
     }
 
@@ -172,5 +181,6 @@ public class TimeRecordingTray {
     public void clearBusinessDayContents() {
 	TimeRecorder.clear();
 	showHoursItem.setEnabled(false);
+	startTurboBucher.setEnabled(false);
     }
 }

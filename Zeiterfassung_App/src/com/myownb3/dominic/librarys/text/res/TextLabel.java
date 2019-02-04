@@ -43,6 +43,9 @@ public class TextLabel {
 
     // Ticket Stuff
     public static final String TICKET = "Ticket";
+    public static final String CHARGED = "Abgebucht";
+    public static final String NO = "Nein";
+    public static final String YES = "Ja";
 
     public static final String CAPTURING_INACTIVE = "Zeiterfassung inaktiv";
     public static final String CAPTURING_INCTIVE_SINCE = "Zeiterfassung inaktiv seit:";

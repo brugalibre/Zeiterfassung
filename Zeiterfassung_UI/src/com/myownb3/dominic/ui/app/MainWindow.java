@@ -66,10 +66,9 @@ public class MainWindow implements KeyListener {
     }
 
     public void showOverviewView(BusinessDay bussinessDay) {
-	overviewView.setBussinessDay(bussinessDay);
+	overviewView.initialize(bussinessDay);
 	CardLayout cl = (CardLayout) (content.getLayout());
 	cl.show(content, ViewList.OVERVIEW_VIEW.toString());
-
 	mainWindow.setResizable(true);
 	mainWindow.pack();
 	mainWindow.setVisible(true);
@@ -129,4 +128,13 @@ public class MainWindow implements KeyListener {
     public void export() {
 	TimeRecorder.export();
     }
+
+	public void chargeOff() {
+		TimeRecorder.charge();
+		refresh();
+	}
+
+	private void refresh() {
+		showOverviewView(TimeRecorder.getBussinessDay());
+	}
 }

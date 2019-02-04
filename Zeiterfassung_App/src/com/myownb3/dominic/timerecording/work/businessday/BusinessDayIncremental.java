@@ -28,6 +28,7 @@ public class BusinessDayIncremental {
     private String description;
     private String ticketNumber;
     private int chargeType;
+    private boolean isCharged;
 
     public BusinessDayIncremental(Date date) {
 	this.date = date;
@@ -96,7 +97,9 @@ public class BusinessDayIncremental {
 	    return true;
 	}
 	return this.getTicketNumber().equals(other.getTicketNumber())
-		&& this.getChargeType() == other.getChargeType() && hasSameDescription(other);
+		&& this.getChargeType() == other.getChargeType()//
+		&& this.isCharged == other.isCharged()
+		&& hasSameDescription(other);
     }
 
     private boolean hasSameDescription(BusinessDayIncremental other) {
@@ -106,6 +109,10 @@ public class BusinessDayIncremental {
 			&& other.getDescription().equals(this.getDescription()));
     }
 
+    public void flagAsCharged(){
+    	this.isCharged = true;
+    }
+    
     /**
      * Calculates the total amount of working minuts of all its increments
      * 
@@ -164,4 +171,8 @@ public class BusinessDayIncremental {
 	incrementToAddTimeSnippets.getTimeSnippets().addAll(timeSnippets);
 	timeSnippets.clear();
     }
+
+	public boolean isCharged() {
+		return isCharged;
+	}
 }

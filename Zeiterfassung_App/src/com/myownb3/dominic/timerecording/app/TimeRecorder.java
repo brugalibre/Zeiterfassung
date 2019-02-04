@@ -11,6 +11,7 @@ import com.myownb3.dominic.export.ContentSelector;
 import com.myownb3.dominic.export.FileExporter;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
+import com.myownb3.dominic.timerecording.charge.Charger;
 import com.myownb3.dominic.timerecording.work.WorkStates;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
@@ -173,4 +174,24 @@ public class TimeRecorder {
     public static boolean hasContent() {
 	return bussinessDay.getTotalDuration() > 0f;
     }
+
+	/**
+	 * Returns <code>true</code> if this {@link BusinessDay} has at least one element which is not yed charged. Otherwise returns <code>false</code> 
+	 * @return <code>true</code> if this {@link BusinessDay} has at least one element which is not yed charged. Otherwise returns <code>false</code>
+	 */
+    public static boolean hasNotChargedElements() {
+    	return bussinessDay.hasNotChargedElements();
+    }
+    
+	/**
+	 * Collects and export the necessary data which is used by the TurobBucher to charge
+	 * After the tuber-bucher- app is invoked in order to do actual charge 
+	 * @return the path of the new created file
+	 */
+	public static void charge() {
+		if (bussinessDay.hasNotChargedElements()) {
+			Charger charger = new Charger(bussinessDay);
+			charger.charge();
+		}
+	}
 }

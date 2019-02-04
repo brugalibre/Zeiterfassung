@@ -104,6 +104,7 @@ public class RasterPanel extends ParentComponent {
 	titleHeaders.addAll(beginEndHeaders);
 
 	titleHeaders.add(new CellImpl(TextLabel.CHARGE_TYPE_LABEL, this));
+	titleHeaders.add(new CellImpl(TextLabel.CHARGED, this));
 	return titleHeaders;
     }
 
@@ -129,6 +130,7 @@ public class RasterPanel extends ParentComponent {
 	// create Cells for all TimeSnippet's
 	list.addAll(collectTimeSnippetData(bussinessDayIncremental));
 	list.add(new CellImpl(ChargeType.getRepresentation(bussinessDayIncremental.getChargeType()), this));
+	list.add(new CellImpl(bussinessDayIncremental.isCharged() ? TextLabel.YES : TextLabel.NO, this));
 	return list;
     }
 

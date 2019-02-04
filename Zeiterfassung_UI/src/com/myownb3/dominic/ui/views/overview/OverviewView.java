@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.ui.app.MainWindow;
 import com.myownb3.dominic.ui.draw.raster.impl.RasterPanel;
@@ -27,9 +28,9 @@ public class OverviewView extends JPanel {
     private static final long serialVersionUID = 1L;
 
     /**
-     * There are five fix headers: Number, Amount of Hours, Ticket & charge-Type
+     * There are five fix headers: Number, Amount of Hours, Ticket, charge-Type & is-charged
      */
-    public static final int AMOUNT_OF_FIX_HEADERS = 4;
+    public static final int AMOUNT_OF_FIX_HEADERS = 5;
 
     private static int HEIGHT;
     private static int WIDTH;
@@ -38,7 +39,7 @@ public class OverviewView extends JPanel {
     private RasterPanel rasterPanel;
 
     private JButton clearButton;
-    private JButton chargeButton;
+    private JButton chargeOffButton;
     private JButton exportButton;
 
     static {
@@ -74,6 +75,7 @@ public class OverviewView extends JPanel {
 
 	panel.add(clearButton, FlowLayout.LEFT);
 	panel.add(exportButton);
+	panel.add(chargeOffButton);
 	return panel;
     }
 
@@ -82,9 +84,8 @@ public class OverviewView extends JPanel {
      * 
      */
     private void createChargeButton(ActionListener listener) {
-	chargeButton = new JButton(TextLabel.CHARGE_LABEL);
-	chargeButton.setEnabled(false);
-	chargeButton.addActionListener(listener);
+	chargeOffButton = new JButton(TextLabel.CHARGE_LABEL);
+	chargeOffButton.addActionListener(listener);
     }
 
     /**
@@ -115,9 +116,8 @@ public class OverviewView extends JPanel {
 		if (e.getSource() == clearButton) {
 		    clearBusinessDayContents();
 		    mainView.dispose();
-		} else if (e.getSource() == chargeButton) {
-		    collectTicketData();
-		    sendHTTPRequestForCharging();
+		} else if (e.getSource() == chargeOffButton) {
+		    chargeOffTicketData();
 		} else if (e.getSource() == exportButton) {
 		    export();
 		}
@@ -139,20 +139,12 @@ public class OverviewView extends JPanel {
 	mainView.clearBusinessDayContents();
     }
 
-    /**
-    * 
-    */
-    protected void collectTicketData() {
-
-    }
-
-    /**
-    * 
-    */
-    protected void sendHTTPRequestForCharging() {
-	// TODO create Class for HTTP Access to JIRA and transmit the request /
-	// send the charging
-    }
+	/**
+	* 
+	*/
+	protected void chargeOffTicketData() {
+		mainView.chargeOff();
+	}
 
     /**
      * @return
@@ -161,8 +153,9 @@ public class OverviewView extends JPanel {
 	return new Dimension(WIDTH, HEIGHT);
     }
 
-    public void setBussinessDay(BusinessDay bussinessDay) {
+    public void initialize(BusinessDay bussinessDay) {
 	rasterPanel.setBussinessDay(bussinessDay);
 	rasterPanel.initialize();
+	chargeOffButton.setEnabled(TimeRecorder.hasNotChargedElements());
     }
 }
