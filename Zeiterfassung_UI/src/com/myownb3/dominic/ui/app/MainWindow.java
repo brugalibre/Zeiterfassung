@@ -16,6 +16,7 @@ import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
+import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.ui.views.overview.OverviewView;
 import com.myownb3.dominic.ui.views.userinput.InputMask;
 
@@ -66,7 +67,7 @@ public class MainWindow implements KeyListener {
     }
 
     public void showOverviewView(BusinessDay bussinessDay) {
-	overviewView.initialize(bussinessDay);
+	overviewView.initialize(new BusinessDay4Export(bussinessDay));
 	CardLayout cl = (CardLayout) (content.getLayout());
 	cl.show(content, ViewList.OVERVIEW_VIEW.toString());
 	mainWindow.setResizable(true);

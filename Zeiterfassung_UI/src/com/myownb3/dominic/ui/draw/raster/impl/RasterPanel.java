@@ -13,7 +13,6 @@ import java.util.List;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export;
@@ -199,8 +198,8 @@ public class RasterPanel extends ParentComponent {
      * 
      * @param bussinessDay2
      */
-    public void setBussinessDay(BusinessDay bussinessDay) {
-	this.bussinessDay = new BusinessDay4Export(bussinessDay);
+    public void setBussinessDay(BusinessDay4Export bussinessDay) {
+	this.bussinessDay =bussinessDay;
     }
 
     @Override

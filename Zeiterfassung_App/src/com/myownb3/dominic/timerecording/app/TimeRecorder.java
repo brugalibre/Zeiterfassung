@@ -36,14 +36,14 @@ public class TimeRecorder {
     public static final NumberFormat formater;
     private static WorkStates currentState; // either it is working, or not
 					    // working
-    private static BusinessDay bussinessDay;
+    private static BusinessDay businessDay;
     private static CallbackHandler callbackHandler;
 
     static {
 	formater = new DecimalFormat("0.00");
 	GLOBAL_TIME_TYPE = TIME_TYPE.HOUR;
 	currentState = WorkStates.NOT_WORKING;
-	bussinessDay = new BusinessDay();
+	businessDay = new BusinessDay();
     }
 
     public static boolean handleUserInteraction() {
@@ -61,7 +61,7 @@ public class TimeRecorder {
     }
 
     public static void stop(boolean isSilentMode) {
-	bussinessDay.stopCurrentIncremental(isSilentMode);
+	businessDay.stopCurrentIncremental(isSilentMode);
 	currentState = WorkStates.NOT_WORKING;
 	callbackHandler.onStop();
     }
@@ -71,21 +71,15 @@ public class TimeRecorder {
 	    return;
 	}
 	currentState = WorkStates.WORKING;
-	bussinessDay.startNewIncremental();
+	businessDay.startNewIncremental();
 	callbackHandler.onStart();
     }
 
     public static void resume() {
 
 	currentState = WorkStates.WORKING;
-	bussinessDay.resumeLastIncremental();
+	businessDay.resumeLastIncremental();
 	callbackHandler.onResume();
-    }
-
-    @SuppressWarnings("unused")
-    private static void pause() {
-	// TODO used when the current Increment is paused e.g. by an other
-	// increment such as a meeting
     }
 
     public static void setCallbackHandler(CallbackHandler callbackHandler) {
@@ -96,32 +90,32 @@ public class TimeRecorder {
      * @return
      */
     public static String getTotalAmountOfWork(TIME_TYPE type) {
-	return String.valueOf(bussinessDay.getTotalDuration(type));
+	return String.valueOf(businessDay.getTotalDuration(type));
     }
 
     public static BusinessDay getBussinessDay() {
-	return bussinessDay;
+	return businessDay;
     }
 
     /**
     * 
     */
     public static void checkForRedundancy() {
-	bussinessDay.checkForRedundancys();
+	businessDay.checkForRedundancys();
     }
 
     /**
      * removes all recorded {@link BusinessDayIncremental}
      */
     public static void clear() {
-	bussinessDay.clearFinishedIncrements();
+	businessDay.clearFinishedIncrements();
     }
 
     /**
     * 
     */
     public static void export() {
-	List<String> content = ContentSelector.collectContent(new BusinessDay4Export(bussinessDay));
+	List<String> content = ContentSelector.collectContent(new BusinessDay4Export(businessDay));
 	FileExporter.export(content);
     }
 
@@ -137,7 +131,7 @@ public class TimeRecorder {
 	BusinessDayIncremental currentIncrement = null;
 	switch (currentState) {
 	case NOT_WORKING:
-	    currentIncrement = bussinessDay.getCurrentBussinessDayIncremental();
+	    currentIncrement = businessDay.getCurrentBussinessDayIncremental();
 	    TimeSnippet endPoint = currentIncrement.getCurrentTimeSnippet();
 	    if (endPoint != null) {
 		return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INCTIVE_SINCE + " "
@@ -146,7 +140,7 @@ public class TimeRecorder {
 	    return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE;
 
 	case WORKING:
-	    currentIncrement = bussinessDay.getCurrentBussinessDayIncremental();
+	    currentIncrement = businessDay.getCurrentBussinessDayIncremental();
 	    TimeSnippet startPoint = currentIncrement.getCurrentTimeSnippet();
 	    String time = startPoint.getDuration() > 0 ? " (" + startPoint.getDuration() + "h)" : "";
 	    return TextLabel.CAPTURING_ACTIVE_SINCE + " " + startPoint.getBeginTimeStamp() + time;
@@ -172,7 +166,7 @@ public class TimeRecorder {
      * @return <code>true</code> if there is any content, <code>false</code> if not
      */
     public static boolean hasContent() {
-	return bussinessDay.getTotalDuration() > 0f;
+	return businessDay.getTotalDuration() > 0f;
     }
 
 	/**
@@ -180,7 +174,7 @@ public class TimeRecorder {
 	 * @return <code>true</code> if this {@link BusinessDay} has at least one element which is not yed charged. Otherwise returns <code>false</code>
 	 */
     public static boolean hasNotChargedElements() {
-    	return bussinessDay.hasNotChargedElements();
+    	return businessDay.hasNotChargedElements();
     }
     
 	/**
@@ -189,8 +183,8 @@ public class TimeRecorder {
 	 * @return the path of the new created file
 	 */
 	public static void charge() {
-		if (bussinessDay.hasNotChargedElements()) {
-			Charger charger = new Charger(bussinessDay);
+		if (businessDay.hasNotChargedElements()) {
+			Charger charger = new Charger(businessDay);
 			charger.charge();
 		}
 	}
