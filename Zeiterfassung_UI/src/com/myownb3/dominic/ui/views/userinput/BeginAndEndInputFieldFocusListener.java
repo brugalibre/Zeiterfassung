@@ -14,11 +14,11 @@ import com.myownb3.dominic.util.parser.DateParser;
  * @author Dominic
  *
  */
-public class BeginAndInputFieldFocusListener implements FocusListener {
+public class BeginAndEndInputFieldFocusListener implements FocusListener {
 
     private InputMask inputMask;
 
-    public BeginAndInputFieldFocusListener(InputMask inputMask) {
+    public BeginAndEndInputFieldFocusListener(InputMask inputMask) {
 	this.inputMask = inputMask;
     }
 

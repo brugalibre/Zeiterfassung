@@ -33,20 +33,6 @@ public interface Raster extends Renderer {
     int getHeight();
 
     /**
-     * Returns the amount of rows of this {@link Raster}
-     * 
-     * @return the amount of rows of this {@link Raster}
-     */
-    int getAmountOfRows();
-
-    /**
-     * Returns the amount of columns of this {@link Raster}
-     * 
-     * @return the amount of columns of this {@link Raster}
-     */
-    int getAmountOfColumns();
-
-    /**
      * @param collectedData
      * @param bussinessDay
      */

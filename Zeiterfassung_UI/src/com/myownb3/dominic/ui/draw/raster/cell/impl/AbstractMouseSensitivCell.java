@@ -23,7 +23,7 @@ import com.myownb3.dominic.ui.util.Util;
  * @author Dominic
  * 
  */
-public abstract class AbstractMouseSensitivCell extends DrawableMouseSensitive<String>implements Cell {
+public abstract class AbstractMouseSensitivCell extends DrawableMouseSensitive<String> implements Cell {
     private static final int ADDITIONALLY_HEIGHT;
     private static final int ADDITIONALLY_WIDTH;
     protected static final int CELL_MARGIN; // space between the border of the
@@ -75,8 +75,6 @@ public abstract class AbstractMouseSensitivCell extends DrawableMouseSensitive<S
 	    yValueCoordinate = y + (height / 2) + (Util.getTextHight(this) / 3);
 	    break;
 
-	case LEFT:
-	    // Not supported yet
 	case CENTERED:
 	    xValueCoordinate = x + (width - Util.getTextLength(value, this)) / 2;
 	    ;

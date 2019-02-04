@@ -35,14 +35,4 @@ public abstract class AbstractRaster<T> extends Drawable<TwoDimensionalList<T>> 
     public int getHeight() {
 	return height;
     }
-
-    @Override
-    public int getAmountOfRows() {
-	return amountOfRows;
-    }
-
-    @Override
-    public int getAmountOfColumns() {
-	return amountOfColumns;
-    }
 }
