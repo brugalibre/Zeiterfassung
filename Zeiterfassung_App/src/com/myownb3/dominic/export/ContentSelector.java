@@ -88,6 +88,7 @@ public class ContentSelector {
 
 	builder.append(TextLabel.CHARGE_TYPE_LABEL);
 	builder.append(CONTENT_SEPPARATOR);
+	builder.append(TextLabel.CHARGED);
 	builder.append(System.getProperty("line.separator"));
     }
 
