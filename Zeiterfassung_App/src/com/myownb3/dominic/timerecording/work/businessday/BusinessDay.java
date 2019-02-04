@@ -71,18 +71,9 @@ public class BusinessDay {
      * {@link #currentBussinessDayIncremental} to the list with increments. After
      * that, a new incremental is created
      */
-    public void stopCurrentIncremental(boolean isSilendMode) {
+    public void stopCurrentIncremental() {
 	Time endTimeStamp = new Time(System.currentTimeMillis());
 	increments.add(currentBussinessDayIncremental);
-
-	// Per Default das vom Vorgänger übernehmen
-	if (isSilendMode && !increments.isEmpty()) {
-	    BusinessDayIncremental businessDayIncremental = increments.get(0);
-	    currentBussinessDayIncremental.setDescription(businessDayIncremental.getDescription());
-	    currentBussinessDayIncremental.setTicketNumber(businessDayIncremental.getTicketNumber());
-	    currentBussinessDayIncremental.setChargeType(businessDayIncremental.getChargeType());
-	    TimeRecorder.checkForRedundancy();
-	}
 	currentBussinessDayIncremental.stopCurrentTimeSnippet(endTimeStamp);
     }
 

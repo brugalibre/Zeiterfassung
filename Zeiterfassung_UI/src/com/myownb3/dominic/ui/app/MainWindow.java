@@ -85,6 +85,7 @@ public class MainWindow implements KeyListener {
     public void finishOrAbortAndDispose(boolean done) {
 	if (done) {
 	    TimeRecorder.checkForRedundancy();
+	    timeRecordingTray.updateUIStates(false);
 	} else {
 	    TimeRecorder.resume();
 	}
@@ -136,6 +137,14 @@ public class MainWindow implements KeyListener {
     }
 
     private void refresh() {
-	showOverviewView(TimeRecorder.getBussinessDay());
+	// First check for increments which can be merged (e.g. if there was an charged
+	// and a not charged increment which are equal but still handled separately
+	// (because the one was already charged and the 2nd not). And as soon as the 2nd
+	// one is charged, they can be merged
+	TimeRecorder.checkForRedundancy();
+	if (overviewView.isVisible()) {
+	    showOverviewView(TimeRecorder.getBussinessDay());
+	}
+	timeRecordingTray.updateUIStates(false);
     }
 }

@@ -53,15 +53,15 @@ public class TimeRecorder {
 	    return false;
 
 	case WORKING:
-	    stop(false);
+	    stop();
 	    return true;
 	default:
 	    throw new RuntimeException("Unknowing working state '" + currentState + "'!");
 	}
     }
 
-    public static void stop(boolean isSilentMode) {
-	businessDay.stopCurrentIncremental(isSilentMode);
+    public static void stop() {
+	businessDay.stopCurrentIncremental();
 	currentState = WorkStates.NOT_WORKING;
 	callbackHandler.onStop();
     }

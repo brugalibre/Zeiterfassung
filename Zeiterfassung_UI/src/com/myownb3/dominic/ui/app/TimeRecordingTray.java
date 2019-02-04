@@ -27,7 +27,6 @@ import com.myownb3.dominic.ui.util.ExceptionUtil;
 public class TimeRecordingTray {
     private TrayIcon trayIcon;
     private MainWindow mainWindow;
-    private MenuItem stopCurrentRecord;
     private MenuItem showHoursItem;
     private MenuItem startTurboBucher;
 
@@ -44,11 +43,9 @@ public class TimeRecordingTray {
 	// Create a popup menu components
 	MenuItem exitItem = new MenuItem(TextLabel.EXIT);
 	showHoursItem = new MenuItem(TextLabel.SHOW_WORKING_HOURS);
-	stopCurrentRecord = new MenuItem(TextLabel.STOP_CURRENT_RECORD);
 	startTurboBucher = new MenuItem(TextLabel.CHARGE_LABEL);
 
 	popup.add(startTurboBucher);
-	popup.add(stopCurrentRecord);
 	popup.add(showHoursItem);
 	popup.addSeparator();
 	popup.add(exitItem);
@@ -101,8 +98,6 @@ public class TimeRecordingTray {
 
 	showHoursItem.addActionListener(actionEvent -> showOverviewView());
 	showHoursItem.setEnabled(false);
-	stopCurrentRecord.addActionListener(actionEvent -> stopCurrentBussinessDay());
-	stopCurrentRecord.setEnabled(false);
 	startTurboBucher.addActionListener(actionEvent -> startTurboBucher());
 	startTurboBucher.setEnabled(false);
 
@@ -114,11 +109,6 @@ public class TimeRecordingTray {
 
     private void startTurboBucher() {
 	mainWindow.chargeOff();
-    }
-
-    private void stopCurrentBussinessDay() {
-	TimeRecorder.stop(true);
-	stopCurrentRecord.setEnabled(false);
     }
 
     /**
@@ -152,11 +142,11 @@ public class TimeRecordingTray {
     }
 
     /**
-    * 
-    */
+     * Starts or resume
+     */
     public void startWorking() {
 	trayIcon.setImage(PictureLibrary.getWorkingImageIcon());
-	stopCurrentRecord.setEnabled(TimeRecorder.hasContent());
+	updateUIStates(true);
     }
 
     /**
@@ -165,9 +155,16 @@ public class TimeRecordingTray {
     public void stopWorking() {
 	trayIcon.setImage(PictureLibrary.getNotWorkingImageIcon());
 	trayIcon.setToolTip(TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
-	showHoursItem.setEnabled(true);
-	startTurboBucher.setEnabled(true);
-	stopCurrentRecord.setEnabled(false);
+	showHoursItem.setEnabled(false);
+	startTurboBucher.setEnabled(false);
+    }
+
+    /**
+     * Updates the states of the button & elements
+     */
+    public void updateUIStates(boolean isWorking) {
+	showHoursItem.setEnabled(TimeRecorder.hasContent());
+	startTurboBucher.setEnabled(TimeRecorder.hasNotChargedElements());
     }
 
     /**
