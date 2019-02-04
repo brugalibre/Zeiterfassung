@@ -153,10 +153,8 @@ public class InputMask extends JPanel {
 
 	BeginAndInputFieldFocusListener beginAndInputFieldFocusListener = new BeginAndInputFieldFocusListener(this);
 	vonField = new JTextField();
-	vonField.setEditable(false);
 	vonField.addFocusListener(beginAndInputFieldFocusListener);
 	bisField = new JTextField();
-	bisField.setEditable(false);
 	bisField.addFocusListener(beginAndInputFieldFocusListener);
 	ticketNumberField = new ComboBox(5);
 	ticketNumberField.setEditable(true);
