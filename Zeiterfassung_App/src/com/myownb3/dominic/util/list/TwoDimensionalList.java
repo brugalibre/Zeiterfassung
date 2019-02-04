@@ -8,15 +8,16 @@ import java.util.List;
 
 /**
  * A Simple implementation of a 2-dimensional list
+ * 
  * @author Dominic
- * @param <T>, the value 
+ * @param <T>,
+ *            the value
  *
  */
-public class TwoDimensionalList<T> extends ArrayList<List<T>>
-{
-   /**
+public class TwoDimensionalList<T> extends ArrayList<List<T>> {
+    /**
     * 
     */
-   private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
 }

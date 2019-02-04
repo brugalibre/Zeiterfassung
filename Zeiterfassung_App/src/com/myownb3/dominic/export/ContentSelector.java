@@ -108,8 +108,7 @@ public class ContentSelector {
      * amount of TimeSnippet-Cells
      * 
      */
-    private static void addPlaceHolderForMissingBeginEndElements(StringBuilder builder,
-	    BusinessDayInc4Export inc) {
+    private static void addPlaceHolderForMissingBeginEndElements(StringBuilder builder, BusinessDayInc4Export inc) {
 	for (int i = 0; i < inc.getTimeSnippetPlaceHolders().size(); i++) {
 
 	    builder.append("");
@@ -117,43 +116,44 @@ public class ContentSelector {
 	}
     }
 
-	/**
-	 * Collects all the necessary data in the proper format so the turbo-bucher can charge-off the jira tickets
-	 * 
-	 * @param bussinessDay
-	 * @return
-	 */
-	public static List<String> collectContent4TurboBucher(BusinessDay4Export bussinessDay) {
+    /**
+     * Collects all the necessary data in the proper format so the turbo-bucher can
+     * charge-off the jira tickets
+     * 
+     * @param bussinessDay
+     * @return
+     */
+    public static List<String> collectContent4TurboBucher(BusinessDay4Export bussinessDay) {
 
-		StringBuilder builder = new StringBuilder();
-		List<String> content = new ArrayList<>();
+	StringBuilder builder = new StringBuilder();
+	List<String> content = new ArrayList<>();
 
-		List<BusinessDayInc4Export> notChargedIncrements = getNotChargedIncrements(bussinessDay);
-		for (BusinessDayInc4Export inc : notChargedIncrements) {
-			builder.append(inc.getTicketNumber());
-			builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
-			builder.append(inc.getChargeType());
-			builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
-			builder.append(inc.getTotalDuration());
-			builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
+	List<BusinessDayInc4Export> notChargedIncrements = getNotChargedIncrements(bussinessDay);
+	for (BusinessDayInc4Export inc : notChargedIncrements) {
+	    builder.append(inc.getTicketNumber());
+	    builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
+	    builder.append(inc.getChargeType());
+	    builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
+	    builder.append(inc.getTotalDuration());
+	    builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 
-			SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-			df.applyPattern("dd.MM.yyyy");
-			builder.append(df.format(bussinessDay.getDate()));
-			if (StringUtil.isNotEmptyOrNull(inc.getDescription())) {
-				builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
-				builder.append(inc.getDescription());
-			}
+	    SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
+	    df.applyPattern("dd.MM.yyyy");
+	    builder.append(df.format(bussinessDay.getDate()));
+	    if (StringUtil.isNotEmptyOrNull(inc.getDescription())) {
+		builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
+		builder.append(inc.getDescription());
+	    }
 
-			builder.append(System.getProperty("line.separator"));
-			content.add(builder.toString());
-		}
-		return content;
+	    builder.append(System.getProperty("line.separator"));
+	    content.add(builder.toString());
 	}
+	return content;
+    }
 
-	private static List<BusinessDayInc4Export> getNotChargedIncrements(BusinessDay4Export bussinessDay) {
-		return bussinessDay.getBusinessDayIncrements()//
-				.stream().filter(bDayInc -> !bDayInc.isCharged())//
-				.collect(Collectors.toList());
-	}
+    private static List<BusinessDayInc4Export> getNotChargedIncrements(BusinessDay4Export bussinessDay) {
+	return bussinessDay.getBusinessDayIncrements()//
+		.stream().filter(bDayInc -> !bDayInc.isCharged())//
+		.collect(Collectors.toList());
+    }
 }

@@ -62,8 +62,8 @@ public class DialogManager extends JOptionPane {
     }
 
     /**
-     * Shows a dialog which the user has to confirm or abort befor further steps
-     * are taken
+     * Shows a dialog which the user has to confirm or abort befor further steps are
+     * taken
      * 
      * @param parentWindo
      * @param messageToDisplay

@@ -168,32 +168,42 @@ public class TimeRecorder {
     public static boolean hasContent() {
 	return businessDay.getTotalDuration() > 0f;
     }
-    
+
     /**
-     * Returns <code>true</code> if there is at least one {@link BusinessDayIncremental} which is finished. Otherwise returns <code>false</code>
-     * @return <code>true</code> if there is at least one {@link BusinessDayIncremental} which is finished. Otherwise returns <code>false</code>
+     * Returns <code>true</code> if there is at least one
+     * {@link BusinessDayIncremental} which is finished. Otherwise returns
+     * <code>false</code>
+     * 
+     * @return <code>true</code> if there is at least one
+     *         {@link BusinessDayIncremental} which is finished. Otherwise returns
+     *         <code>false</code>
      */
     public static boolean hasFinishedContent() {
-    	return businessDay.hasFinishedContent();
+	return businessDay.hasFinishedContent();
     }
 
-	/**
-	 * Returns <code>true</code> if this {@link BusinessDay} has at least one element which is not yed charged. Otherwise returns <code>false</code> 
-	 * @return <code>true</code> if this {@link BusinessDay} has at least one element which is not yed charged. Otherwise returns <code>false</code>
-	 */
+    /**
+     * Returns <code>true</code> if this {@link BusinessDay} has at least one
+     * element which is not yed charged. Otherwise returns <code>false</code>
+     * 
+     * @return <code>true</code> if this {@link BusinessDay} has at least one
+     *         element which is not yed charged. Otherwise returns
+     *         <code>false</code>
+     */
     public static boolean hasNotChargedElements() {
-    	return businessDay.hasNotChargedElements();
+	return businessDay.hasNotChargedElements();
     }
-    
-	/**
-	 * Collects and export the necessary data which is used by the TurobBucher to charge
-	 * After the tuber-bucher- app is invoked in order to do actual charge 
-	 * @return the path of the new created file
-	 */
-	public static void charge() {
-		if (businessDay.hasNotChargedElements()) {
-			Charger charger = new Charger(businessDay);
-			charger.charge();
-		}
+
+    /**
+     * Collects and export the necessary data which is used by the TurobBucher to
+     * charge After the tuber-bucher- app is invoked in order to do actual charge
+     * 
+     * @return the path of the new created file
+     */
+    public static void charge() {
+	if (businessDay.hasNotChargedElements()) {
+	    Charger charger = new Charger(businessDay);
+	    charger.charge();
 	}
+    }
 }

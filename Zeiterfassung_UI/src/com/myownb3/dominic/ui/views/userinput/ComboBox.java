@@ -51,9 +51,8 @@ public class ComboBox extends JComboBox<Entry> {
     }
 
     /*
-     * Returns the (existing) Item within the list, for the given one. The given
-     * one may have been created recently but there exist already an identical
-     * one
+     * Returns the (existing) Item within the list, for the given one. The given one
+     * may have been created recently but there exist already an identical one
      */
     private Entry getExistingItemFromList(Entry item) {
 	// = evaluate the index of the existing one in the list
@@ -101,9 +100,8 @@ public class ComboBox extends JComboBox<Entry> {
 
     /*
      * Removes the element which was used the fewest. Therefore each entry is
-     * compared against the next one. The one which was used at a time, which is
-     * the longest away from now, is remembered until the end - and then it's
-     * deleted!
+     * compared against the next one. The one which was used at a time, which is the
+     * longest away from now, is remembered until the end - and then it's deleted!
      */
     private void removeLastRecentlyUsed() {
 	// = sort the list, so the entry which was used most recently is at the

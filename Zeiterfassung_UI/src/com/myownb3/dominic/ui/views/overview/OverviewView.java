@@ -28,7 +28,8 @@ public class OverviewView extends JPanel {
     private static final long serialVersionUID = 1L;
 
     /**
-     * There are five fix headers: Number, Amount of Hours, Ticket, charge-Type & is-charged
+     * There are five fix headers: Number, Amount of Hours, Ticket, charge-Type &
+     * is-charged
      */
     public static final int AMOUNT_OF_FIX_HEADERS = 5;
 
@@ -139,12 +140,12 @@ public class OverviewView extends JPanel {
 	mainView.clearBusinessDayContents();
     }
 
-	/**
-	* 
-	*/
-	protected void chargeOffTicketData() {
-		mainView.chargeOff();
-	}
+    /**
+    * 
+    */
+    protected void chargeOffTicketData() {
+	mainView.chargeOff();
+    }
 
     /**
      * @return

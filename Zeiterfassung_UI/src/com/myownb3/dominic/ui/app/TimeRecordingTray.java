@@ -113,9 +113,9 @@ public class TimeRecordingTray {
     }
 
     private void startTurboBucher() {
-    	mainWindow.chargeOff();
+	mainWindow.chargeOff();
     }
-    
+
     private void stopCurrentBussinessDay() {
 	TimeRecorder.stop(true);
 	stopCurrentRecord.setEnabled(false);

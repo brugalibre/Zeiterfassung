@@ -130,12 +130,12 @@ public class MainWindow implements KeyListener {
 	TimeRecorder.export();
     }
 
-	public void chargeOff() {
-		TimeRecorder.charge();
-		refresh();
-	}
+    public void chargeOff() {
+	TimeRecorder.charge();
+	refresh();
+    }
 
-	private void refresh() {
-		showOverviewView(TimeRecorder.getBussinessDay());
-	}
+    private void refresh() {
+	showOverviewView(TimeRecorder.getBussinessDay());
+    }
 }

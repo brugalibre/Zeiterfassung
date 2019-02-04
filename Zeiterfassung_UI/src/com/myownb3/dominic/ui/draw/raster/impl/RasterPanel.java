@@ -199,7 +199,7 @@ public class RasterPanel extends ParentComponent {
      * @param bussinessDay2
      */
     public void setBussinessDay(BusinessDay4Export bussinessDay) {
-	this.bussinessDay =bussinessDay;
+	this.bussinessDay = bussinessDay;
     }
 
     @Override

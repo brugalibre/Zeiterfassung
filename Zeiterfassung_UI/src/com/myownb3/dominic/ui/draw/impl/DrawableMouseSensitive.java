@@ -164,11 +164,11 @@ public abstract class DrawableMouseSensitive<E> extends Drawable<E>
     }
 
     /**
-     * Returns true if this {@link DrawableMouseSensitive} has been clicked by
-     * the mouse
+     * Returns true if this {@link DrawableMouseSensitive} has been clicked by the
+     * mouse
      * 
-     * @return true if this {@link DrawableMouseSensitive} has been clicked by
-     *         the mouse
+     * @return true if this {@link DrawableMouseSensitive} has been clicked by the
+     *         mouse
      */
     public boolean isSelected() {
 	return isSelected;

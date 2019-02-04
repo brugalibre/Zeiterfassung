@@ -31,7 +31,7 @@ public class BusinessDayInc4Export {
     private int chargeType;
     private boolean isCharged;
 
-	public BusinessDayInc4Export(BusinessDayIncremental businessDayIncremental) {
+    public BusinessDayInc4Export(BusinessDayIncremental businessDayIncremental) {
 	this.description = businessDayIncremental.getDescription();
 	this.ticketNumber = businessDayIncremental.getTicketNumber();
 	this.chargeType = businessDayIncremental.getChargeType();
@@ -101,7 +101,7 @@ public class BusinessDayInc4Export {
 	return this.timeSnippets;
     }
 
-	public boolean isCharged() {
-		return isCharged;
-	}
+    public boolean isCharged() {
+	return isCharged;
+    }
 }

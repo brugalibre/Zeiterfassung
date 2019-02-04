@@ -7,34 +7,28 @@ package com.myownb3.dominic.ui.views.userinput.entry;
  * @author Dominic
  * 
  */
-public class Entry
-{
-   private String value;
-   private long   lastUsage; // defines when this entry was used the last time
+public class Entry {
+    private String value;
+    private long lastUsage; // defines when this entry was used the last time
 
-   public Entry (String value)
-   {
-      this.value = value;
-   }
+    public Entry(String value) {
+	this.value = value;
+    }
 
-   public long getLastUsage ()
-   {
-      return lastUsage;
-   }
+    public long getLastUsage() {
+	return lastUsage;
+    }
 
-   public void setLastUsage ()
-   {
-      this.lastUsage = System.currentTimeMillis ();
-   }
+    public void setLastUsage() {
+	this.lastUsage = System.currentTimeMillis();
+    }
 
-   public String getValue ()
-   {
-      return value;
-   }
+    public String getValue() {
+	return value;
+    }
 
-   @Override
-   public String toString ()
-   {
-      return getValue  ();
-   }
+    @Override
+    public String toString() {
+	return getValue();
+    }
 }

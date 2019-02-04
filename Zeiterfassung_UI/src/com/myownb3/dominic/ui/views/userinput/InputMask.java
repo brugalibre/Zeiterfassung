@@ -151,7 +151,8 @@ public class InputMask extends JPanel {
 	amountOfHoursField = new JTextField();
 	amountOfHoursField.setInputVerifier(inputVerifier);
 
-	BeginAndEndInputFieldFocusListener beginAndInputFieldFocusListener = new BeginAndEndInputFieldFocusListener(this);
+	BeginAndEndInputFieldFocusListener beginAndInputFieldFocusListener = new BeginAndEndInputFieldFocusListener(
+		this);
 	vonField = new JTextField();
 	vonField.addFocusListener(beginAndInputFieldFocusListener);
 	bisField = new JTextField();

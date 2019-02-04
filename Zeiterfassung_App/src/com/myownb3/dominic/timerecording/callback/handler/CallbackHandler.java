@@ -25,6 +25,6 @@ public interface CallbackHandler {
     public void onResume();
 
     public void onRefresh();
-    
+
     public void onException(Throwable throwable, Thread t);
 }
