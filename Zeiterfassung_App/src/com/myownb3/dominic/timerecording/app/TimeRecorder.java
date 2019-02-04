@@ -168,6 +168,14 @@ public class TimeRecorder {
     public static boolean hasContent() {
 	return businessDay.getTotalDuration() > 0f;
     }
+    
+    /**
+     * Returns <code>true</code> if there is at least one {@link BusinessDayIncremental} which is finished. Otherwise returns <code>false</code>
+     * @return <code>true</code> if there is at least one {@link BusinessDayIncremental} which is finished. Otherwise returns <code>false</code>
+     */
+    public static boolean hasFinishedContent() {
+    	return businessDay.hasFinishedContent();
+    }
 
 	/**
 	 * Returns <code>true</code> if this {@link BusinessDay} has at least one element which is not yed charged. Otherwise returns <code>false</code> 

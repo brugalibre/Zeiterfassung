@@ -74,8 +74,8 @@ public class OverviewView extends JPanel {
 	createExportButton(listener);
 
 	panel.add(clearButton, FlowLayout.LEFT);
-	panel.add(exportButton);
-	panel.add(chargeOffButton);
+	panel.add(exportButton, FlowLayout.CENTER);
+	panel.add(chargeOffButton, FlowLayout.RIGHT);
 	return panel;
     }
 

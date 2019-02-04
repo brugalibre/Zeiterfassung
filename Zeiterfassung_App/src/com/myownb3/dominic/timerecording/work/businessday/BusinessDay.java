@@ -137,6 +137,16 @@ public class BusinessDay {
 				.anyMatch(bDayInc -> !bDayInc.isCharged());
 	}
 
+	public boolean hasFinishedContent() {
+		if (increments.isEmpty()){
+			return false;
+		}
+		if (increments.size() == 1 ){
+			return increments.get(0) != currentBussinessDayIncremental ;
+		}
+		return true;
+	}
+	
     /**
     * 
     */
