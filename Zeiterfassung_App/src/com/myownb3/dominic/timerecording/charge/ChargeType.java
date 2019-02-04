@@ -3,7 +3,10 @@
  */
 package com.myownb3.dominic.timerecording.charge;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -20,10 +23,11 @@ public class ChargeType {
     private static final Map<Integer, String> LEISTUNGSARTEN_MAP;
 
     static {
-	Properties chargeTypesPro = new Properties();
 	LEISTUNGSARTEN_MAP = new LinkedHashMap<>();
 	try {
-	    chargeTypesPro.load(ChargeType.class.getClassLoader().getResourceAsStream("leistungsarten.properties"));
+	    InputStream inputStream = getInputStream();
+	    Properties chargeTypesPro = new Properties();
+	    chargeTypesPro.load(inputStream);
 
 	    // Make a list with integers for all numbers of different charge-types in order
 	    // to sort them
@@ -42,6 +46,15 @@ public class ChargeType {
 	} catch (IOException e) {
 	    e.printStackTrace();
 	}
+    }
+
+    private static InputStream getInputStream() throws FileNotFoundException {
+	String fileName = "leistungsarten.properties";
+	InputStream inputStream = ChargeType.class.getClassLoader().getResourceAsStream(fileName);
+	if (inputStream == null) {
+	    inputStream = new FileInputStream(fileName);
+	}
+	return inputStream;
     }
 
     public static String[] getLeistungsartenRepresentation() {
