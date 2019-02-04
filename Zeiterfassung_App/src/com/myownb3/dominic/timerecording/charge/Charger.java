@@ -27,10 +27,8 @@ public class Charger {
 
 	public void charge() {
 		File file2Charge = createContextAndExportFile();
-		if (file2Charge.exists()){
-			chargeInternal(file2Charge);
-			flagBusinessDayIncAsChaged();
-		}
+		chargeInternal(file2Charge);
+		flagBusinessDayIncAsChaged();
 	}
 
 	private void flagBusinessDayIncAsChaged() {
