@@ -28,13 +28,15 @@ public class BusinessDayInc4Export {
     private float totalDuration;
     private String description;
     private String ticketNumber;
-    private String chargeType;
+    private int chargeType;
+    private boolean isCharged;
 
-    public BusinessDayInc4Export(BusinessDayIncremental businessDayIncremental) {
+	public BusinessDayInc4Export(BusinessDayIncremental businessDayIncremental) {
 	this.description = businessDayIncremental.getDescription();
 	this.ticketNumber = businessDayIncremental.getTicketNumber();
 	this.chargeType = businessDayIncremental.getChargeType();
 	this.totalDuration = businessDayIncremental.getTotalDuration();
+	this.isCharged = businessDayIncremental.isCharged();
 
 	timeSnippets = businessDayIncremental.getTimeSnippets()//
 		.stream()//
@@ -91,11 +93,15 @@ public class BusinessDayInc4Export {
 	return this.ticketNumber;
     }
 
-    public final String getChargeType() {
+    public final int getChargeType() {
 	return this.chargeType;
     }
 
     public final List<TimeSnippet4Export> getTimeSnippets() {
 	return this.timeSnippets;
     }
+
+	public boolean isCharged() {
+		return isCharged;
+	}
 }

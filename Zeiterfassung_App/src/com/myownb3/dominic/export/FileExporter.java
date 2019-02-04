@@ -38,4 +38,22 @@ public class FileExporter {
 	    writer.write(element);
 	}
     }
+
+    /**
+     * Exports the 'book.txt' file which is later used by the TurboBucher-app in order to charge-off all necessary Jira-Tickets
+     * After the export, the path of the file is returned
+     * @param content4TurboBucher
+     * @return the path of the new created file
+     */
+	public static File exportAndReturnFile4Charge(List<String> content4TurboBucher) {
+		File file = new File(System.getProperty("user.home") + "\\Desktop\\" + "book.txt");
+		try (FileWriter writer = new FileWriter(file)) {
+			file.createNewFile();
+			writeLines(content4TurboBucher, writer);
+		} catch (IOException e) {
+			e.printStackTrace();
+			GlobalExceptionHandler.handleGlobalException(Thread.currentThread(), e);
+		}
+		return file;
+	}
 }

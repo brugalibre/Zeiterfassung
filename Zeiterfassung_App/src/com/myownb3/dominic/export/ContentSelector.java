@@ -3,10 +3,14 @@
  */
 package com.myownb3.dominic.export;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export;
@@ -18,6 +22,7 @@ import com.myownb3.dominic.util.utils.StringUtil;
  */
 public class ContentSelector {
     private static final Object CONTENT_SEPPARATOR = "; ";
+    private static final Object CONTENT_SEPPARATOR_TURBO_BUCHER = ";";
 
     public static List<String> collectContent(BusinessDay4Export bussinessDay) {
 	StringBuilder builder = new StringBuilder();
@@ -31,7 +36,7 @@ public class ContentSelector {
 	appendTitleHeaderCells(builder, bussinessDay);
 
 	// = For each 'Ticket' or Increment of an entire Day
-	for (BusinessDayInc4Export inc : bussinessDay.getBusinessDayIncrements()) {
+	for (BusinessDayInc4Export inc : getNotChargedIncrements(bussinessDay)) {
 	    builder.append(TextLabel.TICKET + ": ");
 	    builder.append(inc.getTicketNumber());
 	    builder.append(CONTENT_SEPPARATOR);
@@ -52,7 +57,9 @@ public class ContentSelector {
 		builder.append(CONTENT_SEPPARATOR);
 	    }
 	    addPlaceHolderForMissingBeginEndElements(builder, inc);
-	    builder.append(inc.getChargeType());
+	    builder.append(ChargeType.getRepresentation(inc.getChargeType()));
+	    builder.append(CONTENT_SEPPARATOR);
+	    builder.append(inc.isCharged() ? TextLabel.YES : TextLabel.NO);
 	    builder.append(CONTENT_SEPPARATOR);
 
 	    builder.append(System.getProperty("line.separator"));
@@ -109,4 +116,44 @@ public class ContentSelector {
 	    builder.append(CONTENT_SEPPARATOR);
 	}
     }
+
+	/**
+	 * Collects all the necessary data in the proper format so the turbo-bucher can charge-off the jira tickets
+	 * 
+	 * @param bussinessDay
+	 * @return
+	 */
+	public static List<String> collectContent4TurboBucher(BusinessDay4Export bussinessDay) {
+
+		StringBuilder builder = new StringBuilder();
+		List<String> content = new ArrayList<>();
+
+		List<BusinessDayInc4Export> notChargedIncrements = getNotChargedIncrements(bussinessDay);
+		for (BusinessDayInc4Export inc : notChargedIncrements) {
+			builder.append(inc.getTicketNumber());
+			builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
+			builder.append(inc.getChargeType());
+			builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
+			builder.append(inc.getTotalDuration());
+			builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
+
+			SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
+			df.applyPattern("dd.MM.yyyy");
+			builder.append(df.format(bussinessDay.getDate()));
+			if (StringUtil.isNotEmptyOrNull(inc.getDescription())) {
+				builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
+				builder.append(inc.getDescription());
+			}
+
+			builder.append(System.getProperty("line.separator"));
+			content.add(builder.toString());
+		}
+		return content;
+	}
+
+	private static List<BusinessDayInc4Export> getNotChargedIncrements(BusinessDay4Export bussinessDay) {
+		return bussinessDay.getBusinessDayIncrements()//
+				.stream().filter(bDayInc -> !bDayInc.isCharged())//
+				.collect(Collectors.toList());
+	}
 }

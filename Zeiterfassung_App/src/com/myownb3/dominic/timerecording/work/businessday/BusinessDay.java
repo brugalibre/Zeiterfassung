@@ -123,6 +123,30 @@ public class BusinessDay {
 	}
     }
 
+	public void flagBusinessDayIncAsChaged() {
+		increments.stream()//
+				.forEach(BusinessDayIncremental::flagAsCharged);
+	}
+	
+	/**
+	 * Returns <code>true</code> if this {@link BusinessDay} has at least one element which is not yed charged. Otherwise returns <code>false</code> 
+	 * @return <code>true</code> if this {@link BusinessDay} has at least one element which is not yed charged. Otherwise returns <code>false</code>
+	 */
+	public boolean hasNotChargedElements() {
+		return increments.stream()//
+				.anyMatch(bDayInc -> !bDayInc.isCharged());
+	}
+
+	public boolean hasFinishedContent() {
+		if (increments.isEmpty()){
+			return false;
+		}
+		if (increments.size() == 1 ){
+			return increments.get(0) != currentBussinessDayIncremental ;
+		}
+		return true;
+	}
+	
     /**
     * 
     */
@@ -181,4 +205,5 @@ public class BusinessDay {
 	}
 	return increments.get(0).getDate();
     }
+
 }

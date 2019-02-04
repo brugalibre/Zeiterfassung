@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
+import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export;
@@ -103,6 +103,7 @@ public class RasterPanel extends ParentComponent {
 	titleHeaders.addAll(beginEndHeaders);
 
 	titleHeaders.add(new CellImpl(TextLabel.CHARGE_TYPE_LABEL, this));
+	titleHeaders.add(new CellImpl(TextLabel.CHARGED, this));
 	return titleHeaders;
     }
 
@@ -127,7 +128,8 @@ public class RasterPanel extends ParentComponent {
 
 	// create Cells for all TimeSnippet's
 	list.addAll(collectTimeSnippetData(bussinessDayIncremental));
-	list.add(new CellImpl(bussinessDayIncremental.getChargeType(), this));
+	list.add(new CellImpl(ChargeType.getRepresentation(bussinessDayIncremental.getChargeType()), this));
+	list.add(new CellImpl(bussinessDayIncremental.isCharged() ? TextLabel.YES : TextLabel.NO, this));
 	return list;
     }
 
@@ -196,8 +198,8 @@ public class RasterPanel extends ParentComponent {
      * 
      * @param bussinessDay2
      */
-    public void setBussinessDay(BusinessDay bussinessDay) {
-	this.bussinessDay = new BusinessDay4Export(bussinessDay);
+    public void setBussinessDay(BusinessDay4Export bussinessDay) {
+	this.bussinessDay =bussinessDay;
     }
 
     @Override
