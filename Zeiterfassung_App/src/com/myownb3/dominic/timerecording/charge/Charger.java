@@ -28,10 +28,10 @@ public class Charger {
     public void charge() {
 	File file2Charge = createContextAndExportFile();
 	chargeInternal(file2Charge);
-	flagBusinessDayIncAsChaged();
+	flagBusinessDayIncAsCharged();
     }
 
-    private void flagBusinessDayIncAsChaged() {
+    private void flagBusinessDayIncAsCharged() {
 	businessDay.flagBusinessDayIncAsChaged();
     }
 
