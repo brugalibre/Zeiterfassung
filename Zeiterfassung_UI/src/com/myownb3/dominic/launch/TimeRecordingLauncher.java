@@ -59,12 +59,6 @@ public class TimeRecordingLauncher {
 	    public void onException(Throwable thrown, Thread thread) {
 		timeRecordingTray.showException(thread, thrown);
 	    }
-
-	    @Override
-	    public void onRefresh() {
-		// TODO Auto-generated method stub
-
-	    }
 	};
     }
 
