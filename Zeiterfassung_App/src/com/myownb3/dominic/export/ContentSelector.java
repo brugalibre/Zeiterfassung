@@ -145,16 +145,17 @@ public class ContentSelector {
 		builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 		builder.append(inc.getDescription());
 	    }
-
 	    builder.append(System.getProperty("line.separator"));
 	    content.add(builder.toString());
+	    builder.delete(0, builder.capacity());
 	}
 	return content;
     }
 
     private static List<BusinessDayInc4Export> getNotChargedIncrements(BusinessDay4Export bussinessDay) {
 	return bussinessDay.getBusinessDayIncrements()//
-		.stream().filter(bDayInc -> !bDayInc.isCharged())//
+		.stream()//
+	    .filter(bDayInc -> !bDayInc.isCharged())//
 		.collect(Collectors.toList());
     }
 }
