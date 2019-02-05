@@ -45,6 +45,7 @@ public class ChargeType {
 	    }
 	} catch (IOException e) {
 	    e.printStackTrace();
+	    addDefaultLeistungsarten();
 	}
     }
 
@@ -55,6 +56,12 @@ public class ChargeType {
 	    inputStream = new FileInputStream(fileName);
 	}
 	return inputStream;
+    }
+
+    private static void addDefaultLeistungsarten() {
+        LEISTUNGSARTEN_MAP.put(111,"111 - Meeting");        
+        LEISTUNGSARTEN_MAP.put(113,"113 - Programmierung");        
+        LEISTUNGSARTEN_MAP.put(141,"141 - Allg. Verwaltungsarbeiten");        
     }
 
     public static String[] getLeistungsartenRepresentation() {
