@@ -17,7 +17,7 @@ public class DateParser {
     public static Date getDate(String input, Date currentSetDate) {
 	try {
 	    SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-	    df.applyPattern("dd-MM-yyyy hh:mm:ss");
+	    df.applyPattern("dd-MM-yyyy HH:mm:ss");
 
 	    // Parse the current Date Value
 	    String currentDateAsString = df.format(currentSetDate);
