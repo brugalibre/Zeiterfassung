@@ -18,7 +18,7 @@ import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.ui.app.MainWindow;
-import com.myownb3.dominic.ui.draw.raster.impl.TablePanel;
+import com.myownb3.dominic.ui.views.overview.table.TablePanel;
 
 /**
  * @author Dominic
@@ -55,7 +55,7 @@ public class OverviewView extends JPanel {
 
 	JScrollPane scrollPane = new JScrollPane(tablePanel.getTable());
 	scrollPane.setBorder(BorderFactory.createEmptyBorder());
-	scrollPane.setPreferredSize(new Dimension((int) (WIDTH * 1.65), HEIGHT));
+	scrollPane.setPreferredSize(new Dimension((int) (WIDTH * 1.7), HEIGHT));
 
 	add(scrollPane, BorderLayout.CENTER);
 	JPanel controlPanel = createControlPanel();
