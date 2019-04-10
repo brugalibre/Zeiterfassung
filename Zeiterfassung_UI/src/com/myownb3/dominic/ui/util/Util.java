@@ -7,9 +7,6 @@ import java.awt.FontMetrics;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import com.myownb3.dominic.ui.draw.raster.cell.Cell;
-import com.myownb3.dominic.ui.draw.raster.cell.impl.CellImpl;
-
 /**
  * @author Dominic
  * 
@@ -34,20 +31,8 @@ public class Util {
 	return stackTrace.toString();
     }
 
-    public static int getTextLength(String text, Cell c) {
-	return getTextLength(text, CellImpl.getFontMetrics(c.getFont()));
-    }
-
     public static int getTextLength(String text, FontMetrics fm) {
 	return fm.stringWidth(text);
-    }
-
-    /**
-     * @param overviewView
-     * @return
-     */
-    public static int getTextHight(Cell c) {
-	return getTextHight(CellImpl.getFontMetrics(c.getFont()));
     }
 
     public static int getTextHight(FontMetrics fm) {

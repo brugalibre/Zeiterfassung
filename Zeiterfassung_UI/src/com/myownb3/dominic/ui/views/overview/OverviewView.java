@@ -18,7 +18,7 @@ import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.ui.app.MainWindow;
-import com.myownb3.dominic.ui.draw.raster.impl.TablePanel;
+import com.myownb3.dominic.ui.views.overview.table.TablePanel;
 
 /**
  * @author Dominic

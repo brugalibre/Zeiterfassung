@@ -1,4 +1,4 @@
-package com.myownb3.dominic.ui.draw.raster.impl;
+package com.myownb3.dominic.ui.views.overview.table;
 
 import java.util.ArrayList;
 import java.util.List;
