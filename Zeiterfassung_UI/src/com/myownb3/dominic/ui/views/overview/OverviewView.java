@@ -18,7 +18,7 @@ import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.ui.app.MainWindow;
-import com.myownb3.dominic.ui.draw.raster.impl.RasterPanel;
+import com.myownb3.dominic.ui.draw.raster.impl.TablePanel;
 
 /**
  * @author Dominic
@@ -37,7 +37,7 @@ public class OverviewView extends JPanel {
     private static int WIDTH;
 
     private MainWindow mainView;
-    private RasterPanel rasterPanel;
+    private TablePanel tablePanel;
 
     private JButton clearButton;
     private JButton chargeOffButton;
@@ -51,10 +51,9 @@ public class OverviewView extends JPanel {
     public OverviewView(MainWindow mainView) {
 	super(new BorderLayout());
 	this.mainView = mainView;
-	this.rasterPanel = new RasterPanel();
-	rasterPanel.setSize(rasterPanel.getSize());
+	this.tablePanel = new TablePanel();
 
-	JScrollPane scrollPane = new JScrollPane(rasterPanel);
+	JScrollPane scrollPane = new JScrollPane(tablePanel.getTable());
 	scrollPane.setBorder(BorderFactory.createEmptyBorder());
 	scrollPane.setPreferredSize(new Dimension((int) (WIDTH * 1.65), HEIGHT));
 
@@ -155,8 +154,7 @@ public class OverviewView extends JPanel {
     }
 
     public void initialize(BusinessDay4Export bussinessDay) {
-	rasterPanel.setBussinessDay(bussinessDay);
-	rasterPanel.initialize();
+	tablePanel.initialize(bussinessDay);
 	chargeOffButton.setEnabled(TimeRecorder.hasNotChargedElements());
     }
 }
