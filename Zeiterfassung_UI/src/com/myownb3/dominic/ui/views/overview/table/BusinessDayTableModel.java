@@ -8,7 +8,9 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
+import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export;
@@ -20,13 +22,17 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
      * 
      */
     private static final long serialVersionUID = 1L;
+    
+    private BusinessDayChangedCallbackHandler handler;
+    
     private BusinessDay4Export bussinessDay;
     private List<List<String>> colmnValues;
     private List<String> columnNames;
 
-    public BusinessDayTableModel() {
+    public BusinessDayTableModel(BusinessDayChangedCallbackHandler handler) {
 	columnNames = new ArrayList<>();
 	colmnValues = new ArrayList<>();
+	this.handler = handler;
     }
 
     public void init(BusinessDay4Export bussinessDay) {
@@ -117,6 +123,29 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	    snippetCells.add("");
 	}
 	return snippetCells;
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+	List<String> rowValues = colmnValues.get(rowIndex);
+	String newValueAsString = (String) aValue;
+	rowValues.set(columnIndex, newValueAsString);
+	handler.handleBusinessDayChanged(getOrderNumber(rowIndex),newValueAsString,
+		ValueTypes.getValueTypeForIndex(columnNames.get(columnIndex)));
+    }
+
+    private int getOrderNumber(int rowIndex) {
+	List<String> column = colmnValues.get(rowIndex);
+	return Integer.valueOf(column.get(0));
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+
+	// Minus 2 because the last two elements are never editable
+	int obererGrenzwert = columnNames.size() - 2;
+	int untererGrenzwert = 2;
+	return columnIndex >= untererGrenzwert && columnIndex < obererGrenzwert;
     }
 
     @Override

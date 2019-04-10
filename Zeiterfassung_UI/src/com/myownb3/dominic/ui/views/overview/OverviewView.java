@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.ui.app.MainWindow;
 import com.myownb3.dominic.ui.views.overview.table.TablePanel;
@@ -153,8 +154,8 @@ public class OverviewView extends JPanel {
 	return new Dimension(WIDTH, HEIGHT);
     }
 
-    public void initialize(BusinessDay4Export bussinessDay) {
-	tablePanel.initialize(bussinessDay);
+    public void initialize(BusinessDay4Export bussinessDay,BusinessDayChangedCallbackHandler handler) {
+	tablePanel.initialize(bussinessDay, handler);
 	chargeOffButton.setEnabled(TimeRecorder.hasNotChargedElements());
     }
 }

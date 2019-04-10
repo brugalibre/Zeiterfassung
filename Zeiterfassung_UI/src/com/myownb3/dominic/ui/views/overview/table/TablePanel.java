@@ -9,6 +9,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 
 /**
@@ -25,8 +26,8 @@ public class TablePanel {
 	table.setFillsViewportHeight(true);
     }
 
-    public void initialize(BusinessDay4Export bussinessDay) {
-	BusinessDayTableModel businessDayTableModel = new BusinessDayTableModel();
+    public void initialize(BusinessDay4Export bussinessDay,BusinessDayChangedCallbackHandler handler) {
+	BusinessDayTableModel businessDayTableModel = new BusinessDayTableModel(handler);
 	businessDayTableModel.init(bussinessDay);
 	table.setModel(businessDayTableModel);
 	resizeColumnWidth();
