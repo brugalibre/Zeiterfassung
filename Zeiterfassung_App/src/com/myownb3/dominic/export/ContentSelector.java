@@ -3,8 +3,6 @@
  */
 package com.myownb3.dominic.export;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +27,7 @@ public class ContentSelector {
 	List<String> content = new ArrayList<>();
 
 	// First line to mark the date, when the time was recorded
-	builder.append(bussinessDay.getDate());
+	builder.append(bussinessDay.getDateRep());
 	builder.append(System.getProperty("line.separator"));
 	builder.append(System.getProperty("line.separator"));
 
@@ -44,16 +42,16 @@ public class ContentSelector {
 		builder.append(inc.getDescription());
 		builder.append(CONTENT_SEPPARATOR);
 	    }
-	    builder.append(inc.getTotalDuration());
+	    builder.append(inc.getTotalDurationRep());
 	    builder.append(CONTENT_SEPPARATOR);
 
 	    List<TimeSnippet4Export> timeSnippets = inc.getTimeSnippets();
 
 	    // = For each single work units of a Ticket
 	    for (TimeSnippet4Export snippet : timeSnippets) {
-		builder.append(snippet.getBeginTimeStamp());
+		builder.append(snippet.getBeginTimeStampRep());
 		builder.append(CONTENT_SEPPARATOR);
-		builder.append(snippet.getEndTimeStamp());
+		builder.append(snippet.getEndTimeStampRep());
 		builder.append(CONTENT_SEPPARATOR);
 	    }
 	    addPlaceHolderForMissingBeginEndElements(builder, inc);
@@ -67,7 +65,7 @@ public class ContentSelector {
 	    builder.delete(0, builder.capacity());
 	}
 	builder.append(System.getProperty("line.separator"));
-	builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + bussinessDay.getTotalDuration());
+	builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + bussinessDay.getTotalDurationRep());
 	content.add(builder.toString());
 	return content;
     }
@@ -135,12 +133,10 @@ public class ContentSelector {
 	    builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 	    builder.append(inc.getChargeType());
 	    builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
-	    builder.append(inc.getTotalDuration());
+	    builder.append(inc.getTotalDurationRep());
 	    builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 
-	    SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-	    df.applyPattern("dd.MM.yyyy");
-	    builder.append(df.format(bussinessDay.getDate()));
+	    builder.append(bussinessDay.getDateRep());
 	    if (StringUtil.isNotEmptyOrNull(inc.getDescription())) {
 		builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 		builder.append(inc.getDescription());

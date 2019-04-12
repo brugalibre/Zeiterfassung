@@ -81,7 +81,7 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	// create Cells for the introduction of a BD-inc.
 	List<String> list = new ArrayList<>();
 	list.add(String.valueOf(no));
-	list.add(String.valueOf(bussinessDayIncremental.getTotalDuration()));
+	list.add(bussinessDayIncremental.getTotalDurationRep());
 	list.add(bussinessDayIncremental.getTicketNumber());
 
 	boolean isDescriptionTitleNecessary = bussinessDay.hasIncrementWithDescription();
@@ -107,10 +107,10 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	List<String> snippetCells = new ArrayList<>();
 	for (TimeSnippet4Export snippet : bussinessDayIncremental.getTimeSnippets()) {
 	    // start point
-	    String value = String.valueOf(snippet.getBeginTimeStamp());
+	    String value = snippet.getBeginTimeStampRep();
 	    snippetCells.add(value);
 	    // end point
-	    value = String.valueOf(snippet.getEndTimeStamp());
+	    value = snippet.getEndTimeStampRep();
 	    snippetCells.add(value);
 	}
 	for (int i = 0; i < bussinessDayIncremental.getTimeSnippetPlaceHolders().size(); i++) {

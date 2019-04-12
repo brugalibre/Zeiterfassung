@@ -186,8 +186,8 @@ public class InputMask extends JPanel {
     public void initializeFields(BusinessDayIncremental inc) {
 	this.inc = inc;
 	amountOfHoursField.setText(NumberFormat.format(inc.getTotalDuration()));
-	bisField.setText(String.valueOf(inc.getCurrentTimeSnippet().getEndTimeStamp()));
-	vonField.setText(String.valueOf(inc.getCurrentTimeSnippet().getBeginTimeStamp()));
+	bisField.setText(inc.getCurrentTimeSnippet().getEndTimeStampRep());
+	vonField.setText(inc.getCurrentTimeSnippet().getBeginTimeStampRep());
     }
 
     /**
@@ -241,10 +241,9 @@ public class InputMask extends JPanel {
     public void handleBeginChanged(Date date) {
 	TimeSnippet currentTimeSnippet = inc.getCurrentTimeSnippet();
 	currentTimeSnippet.setBeginTimeStamp(new Time(date.getTime()));
-	vonField.setText(String.valueOf(currentTimeSnippet.getBeginTimeStamp()));
+	vonField.setText(currentTimeSnippet.getBeginTimeStampRep());
 
-	float duration = currentTimeSnippet.getDuration();
-	amountOfHoursField.setText(String.valueOf(duration));
+	amountOfHoursField.setText(currentTimeSnippet.getDurationRep());
     }
 
     /**
@@ -253,9 +252,8 @@ public class InputMask extends JPanel {
     public void handleEndChanged(Date date) {
 	TimeSnippet currentTimeSnippet = inc.getCurrentTimeSnippet();
 	currentTimeSnippet.setEndTimeStamp(new Time(date.getTime()));
-	bisField.setText(String.valueOf(currentTimeSnippet.getEndTimeStamp()));
-	float duration = currentTimeSnippet.getDuration();
-	amountOfHoursField.setText(String.valueOf(duration));
+	bisField.setText(currentTimeSnippet.getEndTimeStampRep());
+	amountOfHoursField.setText(currentTimeSnippet.getDurationRep());
     }
 
     /**
