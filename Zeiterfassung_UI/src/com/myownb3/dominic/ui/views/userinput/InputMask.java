@@ -25,6 +25,7 @@ import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.ui.app.MainWindow;
+import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
@@ -173,7 +174,7 @@ public class InputMask extends JPanel {
     protected void changeStateUpTo() {
 	float additionallyTime = 0;
 
-	additionallyTime = Float.parseFloat(amountOfHoursField.getText()) - inc.getTotalDuration();
+	additionallyTime = NumberFormat.parseFloat(amountOfHoursField.getText()) - inc.getTotalDuration();
 
 	long additionallyDuration = (long) (Time.getTimeRefactorValue(TimeRecorder.GLOBAL_TIME_TYPE)
 		* additionallyTime);
@@ -184,7 +185,7 @@ public class InputMask extends JPanel {
 
     public void initializeFields(BusinessDayIncremental inc) {
 	this.inc = inc;
-	amountOfHoursField.setText(String.valueOf(inc.getTotalDuration()));
+	amountOfHoursField.setText(NumberFormat.format(inc.getTotalDuration()));
 	bisField.setText(String.valueOf(inc.getCurrentTimeSnippet().getEndTimeStamp()));
 	vonField.setText(String.valueOf(inc.getCurrentTimeSnippet().getBeginTimeStamp()));
     }

@@ -10,6 +10,7 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 import com.myownb3.dominic.ui.styles.color.Colors;
+import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
@@ -52,7 +53,7 @@ public class InputFieldVerifier extends InputVerifier {
 	String text = ((JTextField) c).getText();
 	float val = 0;
 	try {
-	    val = Float.parseFloat(text);
+	    val = NumberFormat.parseFloat(text);
 	} catch (NumberFormatException e) {
 	    handleInvalidInput(c);
 	    return false;

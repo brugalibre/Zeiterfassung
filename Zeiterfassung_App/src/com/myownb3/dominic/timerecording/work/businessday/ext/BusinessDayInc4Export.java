@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
 import com.myownb3.dominic.util.comparator.TimeStampComparator;
+import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
@@ -79,6 +80,10 @@ public class BusinessDayInc4Export {
 
     public final float getTotalDuration() {
 	return this.totalDuration;
+    }
+
+    public final String getTotalDurationRep() {
+	return NumberFormat.format(this.totalDuration);
     }
 
     public final List<TimeSnippetPlaceHolder> getTimeSnippetPlaceHolders() {

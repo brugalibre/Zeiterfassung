@@ -4,12 +4,13 @@
 package com.myownb3.dominic.timerecording.work.businessday;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import java.util.Date;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
+import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
@@ -123,7 +124,7 @@ public class BusinessDayIncremental {
 	for (TimeSnippet timeSnippet : timeSnippets) {
 	    sum = sum + timeSnippet.getDuration(type);
 	}
-	return Float.parseFloat(TimeRecorder.formater.format(sum));
+	return NumberFormat.parseFloat(TimeRecorder.formater.format(sum));
     }
 
     public TimeSnippet getCurrentTimeSnippet() {
