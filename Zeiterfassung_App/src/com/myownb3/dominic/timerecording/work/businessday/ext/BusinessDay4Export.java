@@ -24,9 +24,24 @@ public class BusinessDay4Export {
     private float totalDuration;
     private Date date;
 
+    /**
+     * Returns the default representation of a date using the pattern 'dd.MM.yyyy'
+     * 
+     * @return the default representation of a date using the pattern 'dd.MM.yyyy'
+     */
     public String getDateRep() {
+	return getDateRep("dd.MM.yyyy");
+    }
+
+    /**
+     * Returns the default representation of a date using the given pattern
+     * 
+     * @param pattern the pattern to use
+     * @return the default representation of a date using the given pattern
+     */
+    public String getDateRep(String pattern) {
 	SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-	df.applyPattern("dd.MM.yyyy");
+	df.applyPattern(pattern);
 	return df.format(date);
     }
 

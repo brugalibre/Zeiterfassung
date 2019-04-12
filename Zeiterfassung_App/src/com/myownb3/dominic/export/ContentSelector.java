@@ -27,7 +27,7 @@ public class ContentSelector {
 	List<String> content = new ArrayList<>();
 
 	// First line to mark the date, when the time was recorded
-	builder.append(bussinessDay.getDateRep());
+	builder.append(bussinessDay.getDateRep("EEEEE, d MMM yyyy HH:mm:ss"));
 	builder.append(System.getProperty("line.separator"));
 	builder.append(System.getProperty("line.separator"));
 
