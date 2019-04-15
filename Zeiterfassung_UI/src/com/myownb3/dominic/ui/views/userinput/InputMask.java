@@ -25,6 +25,7 @@ import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.ui.app.MainWindow;
+import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
@@ -173,7 +174,7 @@ public class InputMask extends JPanel {
     protected void changeStateUpTo() {
 	float additionallyTime = 0;
 
-	additionallyTime = Float.parseFloat(amountOfHoursField.getText()) - inc.getTotalDuration();
+	additionallyTime = NumberFormat.parseFloat(amountOfHoursField.getText()) - inc.getTotalDuration();
 
 	long additionallyDuration = (long) (Time.getTimeRefactorValue(TimeRecorder.GLOBAL_TIME_TYPE)
 		* additionallyTime);
@@ -184,9 +185,9 @@ public class InputMask extends JPanel {
 
     public void initializeFields(BusinessDayIncremental inc) {
 	this.inc = inc;
-	amountOfHoursField.setText(String.valueOf(inc.getTotalDuration()));
-	bisField.setText(String.valueOf(inc.getCurrentTimeSnippet().getEndTimeStamp()));
-	vonField.setText(String.valueOf(inc.getCurrentTimeSnippet().getBeginTimeStamp()));
+	amountOfHoursField.setText(NumberFormat.format(inc.getTotalDuration()));
+	bisField.setText(inc.getCurrentTimeSnippet().getEndTimeStampRep());
+	vonField.setText(inc.getCurrentTimeSnippet().getBeginTimeStampRep());
     }
 
     /**
@@ -240,10 +241,9 @@ public class InputMask extends JPanel {
     public void handleBeginChanged(Date date) {
 	TimeSnippet currentTimeSnippet = inc.getCurrentTimeSnippet();
 	currentTimeSnippet.setBeginTimeStamp(new Time(date.getTime()));
-	vonField.setText(String.valueOf(currentTimeSnippet.getBeginTimeStamp()));
+	vonField.setText(currentTimeSnippet.getBeginTimeStampRep());
 
-	float duration = currentTimeSnippet.getDuration();
-	amountOfHoursField.setText(String.valueOf(duration));
+	amountOfHoursField.setText(currentTimeSnippet.getDurationRep());
     }
 
     /**
@@ -252,9 +252,8 @@ public class InputMask extends JPanel {
     public void handleEndChanged(Date date) {
 	TimeSnippet currentTimeSnippet = inc.getCurrentTimeSnippet();
 	currentTimeSnippet.setEndTimeStamp(new Time(date.getTime()));
-	bisField.setText(String.valueOf(currentTimeSnippet.getEndTimeStamp()));
-	float duration = currentTimeSnippet.getDuration();
-	amountOfHoursField.setText(String.valueOf(duration));
+	bisField.setText(currentTimeSnippet.getEndTimeStampRep());
+	amountOfHoursField.setText(currentTimeSnippet.getDurationRep());
     }
 
     /**

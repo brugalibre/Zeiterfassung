@@ -3,14 +3,15 @@
  */
 package com.myownb3.dominic.timerecording.work.businessday;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import java.util.Date;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
+import com.myownb3.dominic.util.parser.NumberFormat;
 
 /**
  * The {@link BusinessDay} defines an entire day full of work. Such a day may
@@ -155,7 +156,17 @@ public class BusinessDay {
 	for (BusinessDayIncremental incremental : increments) {
 	    sum = sum + incremental.getTotalDuration(type);
 	}
-	return Float.parseFloat(TimeRecorder.formater.format(sum));
+	return NumberFormat.parseFloat(TimeRecorder.formater.format(sum));
+    }
+    
+    /**
+     * Returns the Local sensitive representation of the total duration for the given {@link TIME_TYPE}
+     * @param type the given type of time
+     * @return the Local sensitive representation of the total duration for the given {@link TIME_TYPE}
+     */
+    public String getTotalDurationRep(TIME_TYPE type) {
+	float totalDuration = getTotalDuration(type);
+	return NumberFormat.format(totalDuration);
     }
 
     /**

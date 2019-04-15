@@ -3,6 +3,8 @@
  */
 package com.myownb3.dominic.timerecording.work.businessday.ext;
 
+import java.util.Comparator;
+
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.work.date.Time;
 
@@ -23,11 +25,24 @@ public class TimeSnippet4Export {
     private Time beginTimeStamp;
     private Time endTimeStamp;
 
-    public final Time getBeginTimeStamp() {
-	return this.beginTimeStamp;
+    public String getBeginTimeStampRep() {
+	return String.valueOf(beginTimeStamp);
     }
 
-    public final Time getEndTimeStamp() {
-	return this.endTimeStamp;
+    public final String getEndTimeStamp() {
+	return String.valueOf(endTimeStamp);
+    }
+
+    public String getEndTimeStampRep() {
+	return String.valueOf(endTimeStamp);
+    }
+
+    public static class TimeStampComparator implements Comparator<TimeSnippet4Export> {
+	@Override
+	public int compare(TimeSnippet4Export timeSnippet, TimeSnippet4Export timeSnippet2) {
+	    Time beginTimeStamp1 = timeSnippet.beginTimeStamp;
+	    Time beginTimeStamp2 = timeSnippet2.beginTimeStamp;
+	    return beginTimeStamp1.compareTo(beginTimeStamp2);
+	}
     }
 }

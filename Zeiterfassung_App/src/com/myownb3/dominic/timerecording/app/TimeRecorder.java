@@ -90,7 +90,7 @@ public class TimeRecorder {
      * @return
      */
     public static String getTotalAmountOfWork(TIME_TYPE type) {
-	return String.valueOf(businessDay.getTotalDuration(type));
+	return businessDay.getTotalDurationRep(type);
     }
 
     public static BusinessDay getBussinessDay() {

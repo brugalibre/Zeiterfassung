@@ -19,7 +19,7 @@ import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 public class FileExporter {
     public static void export(List<String> content) {
 	String dateDetails = DateFormat.getDateInstance().format(new Date());
-	String randomNo = String.valueOf(System.currentTimeMillis());
+	float randomNo = System.currentTimeMillis();
 	String fileExtension = "csv";
 	File file = new File(
 		System.getProperty("user.home") + "\\Desktop\\" + dateDetails + "_" + randomNo + "." + fileExtension);

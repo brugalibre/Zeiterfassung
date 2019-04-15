@@ -3,10 +3,12 @@
  */
 package com.myownb3.dominic.timerecording.work.businessday;
 
-import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import java.util.Date;
+
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
+import com.myownb3.dominic.util.parser.NumberFormat;
 
 /**
  * Defines a period, that begin with the {@link #beginTimeStamp} and ends with
@@ -48,6 +50,10 @@ public class TimeSnippet {
     public float getDuration() {
 	return getDuration(TimeRecorder.GLOBAL_TIME_TYPE);
     }
+    
+    public String getDurationRep() {
+	return NumberFormat.format(getDuration());
+    }
 
     /**
      * Return the amount of minutes between the start, and end-point. If there is no
@@ -59,7 +65,8 @@ public class TimeSnippet {
 	Time endTimeSnippet = (endTimeStamp != null ? endTimeStamp : new Time(System.currentTimeMillis()));
 	float time = endTimeSnippet.getTime() - getBeginTimeStamp().getTime();
 	int factor = Time.getTimeRefactorValue(type);
-	return Float.parseFloat(TimeRecorder.formater.format((time = time / factor)));
+	
+	return NumberFormat.parse(time, factor);
     }
 
     public Time getEndTimeStamp() {
@@ -68,5 +75,12 @@ public class TimeSnippet {
 
     public Time getBeginTimeStamp() {
 	return beginTimeStamp;
+    }
+    public String getEndTimeStampRep() {
+	return String.valueOf(endTimeStamp);
+    }
+    
+    public String getBeginTimeStampRep() {
+	return String.valueOf(beginTimeStamp);
     }
 }

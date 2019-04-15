@@ -3,11 +3,13 @@
  */
 package com.myownb3.dominic.timerecording.work.businessday.ext;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
-import java.util.Date;
 
 /**
  * The {@link BusinessDay4Export} is used whenever a {@link BusinessDay} is
@@ -22,8 +24,25 @@ public class BusinessDay4Export {
     private float totalDuration;
     private Date date;
 
-    public final Date getDate() {
-	return this.date;
+    /**
+     * Returns the default representation of a date using the pattern 'dd.MM.yyyy'
+     * 
+     * @return the default representation of a date using the pattern 'dd.MM.yyyy'
+     */
+    public String getDateRep() {
+	return getDateRep("dd.MM.yyyy");
+    }
+
+    /**
+     * Returns the default representation of a date using the given pattern
+     * 
+     * @param pattern the pattern to use
+     * @return the default representation of a date using the given pattern
+     */
+    public String getDateRep(String pattern) {
+	SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
+	df.applyPattern(pattern);
+	return df.format(date);
     }
 
     public BusinessDay4Export(BusinessDay businessDay) {
@@ -69,7 +88,7 @@ public class BusinessDay4Export {
 	return counter;
     }
 
-    public final float getTotalDuration() {
-	return this.totalDuration;
+    public String getTotalDurationRep() {
+	return String.valueOf(totalDuration);
     }
 }
