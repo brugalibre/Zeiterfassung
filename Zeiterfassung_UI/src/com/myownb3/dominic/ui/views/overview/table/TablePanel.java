@@ -10,6 +10,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 
 /**
@@ -58,5 +59,15 @@ public class TablePanel {
 
     public JTable getTable() {
 	return table;
+    }
+
+    /**
+     * Refreshes the given {@link JTable} with the content of the new {@link BusinessDay}
+     * @param bussinessDay the new {@link BusinessDay}
+     */
+    public void refresh(BusinessDay4Export bussinessDay) {
+	BusinessDayTableModel businessDayTableModel = (BusinessDayTableModel) table.getModel();
+	businessDayTableModel.init(bussinessDay);
+	resizeColumnWidth();	
     }
 }

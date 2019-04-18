@@ -1,53 +1,60 @@
 package com.myownb3.dominic.timerecording.callback.handler.impl;
 
+import java.util.Optional;
+
 import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedOwner;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
-import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
 
 public class BusinessDayChangedCallbackHandlerImpl implements BusinessDayChangedCallbackHandler {
 
     private BusinessDay bussinessDay;
+    private BusinessDayChangedOwner businessDayChangedOwner;
 
-    public BusinessDayChangedCallbackHandlerImpl(BusinessDay bussinessDay) {
+    public BusinessDayChangedCallbackHandlerImpl(BusinessDay bussinessDay,
+	    BusinessDayChangedOwner businessDayChangedOwner) {
 	this.bussinessDay = bussinessDay;
+	this.businessDayChangedOwner = businessDayChangedOwner;
     }
 
     @Override
-    public void handleBusinessDayChanged(int orderNr, String newValue, ValueTypes valueTypes) {
+    public void handleBusinessDayChanged(ChangedValue changeValue) {
 
-	BusinessDayIncremental businessDayIncremental = getBusinessInc(orderNr);
-	if (businessDayIncremental != null) {
-	    handleBusinessDayChangedInternal(newValue, valueTypes, businessDayIncremental);
-	}
+	Optional<BusinessDayIncremental> businessDayIncOpt = getBusinessIncrement(changeValue.getSequence());
+	businessDayIncOpt.ifPresent(businessDayIncrement -> {
+	    handleBusinessDayChangedInternal(changeValue, businessDayIncrement);
+	});
     }
 
-    private void handleBusinessDayChangedInternal(String newValue, ValueTypes valueTypes,
+    private void handleBusinessDayChangedInternal(ChangedValue changedValue,
 	    BusinessDayIncremental businessDayIncremental) {
-	switch (valueTypes) {
-	case BEGIN:
-	    break;
+	switch (changedValue.getValueTypes()) {
 	case DESCRIPTION:
-	    businessDayIncremental.setDescription(newValue);
+	    businessDayIncremental.setDescription(changedValue.getNewValue());
+	    break;
+	case BEGIN:
+	    businessDayIncremental.updateBeginTimeSnippetAndCalculate(businessDayIncremental, changedValue.getFromUptoSequence(), changedValue.getNewValue());
 	    break;
 	case END:
+	    businessDayIncremental.updateEndTimeSnippetAndCalculate(businessDayIncremental, changedValue.getFromUptoSequence(), changedValue.getNewValue());
 	    break;
 	case TICKET_NR:
-	    businessDayIncremental.setTicketNumber(newValue);
+	    businessDayIncremental.setTicketNumber(changedValue.getNewValue());
 	    break;
 	default:
 	    break;
-
 	}
+	businessDayChangedOwner.afterBusinessDayChanged(changedValue);
     }
 
-    private BusinessDayIncremental getBusinessInc(int orderNr) {
+    private Optional<BusinessDayIncremental> getBusinessIncrement(int orderNr) {
 	BusinessDayIncremental businessDayIncremental = null;
 	for (int i = 0; i < bussinessDay.getIncrements().size(); i++) {
 	    if (orderNr == i + 1) {
 		businessDayIncremental = bussinessDay.getIncrements().get(i);
 	    }
 	}
-	return businessDayIncremental;
+	return Optional.ofNullable(businessDayIncremental);
     }
 }

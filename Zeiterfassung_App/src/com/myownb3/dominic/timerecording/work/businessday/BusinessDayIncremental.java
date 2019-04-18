@@ -4,12 +4,16 @@
 package com.myownb3.dominic.timerecording.work.businessday;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
+import com.myownb3.dominic.util.parser.DateParser;
 import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
@@ -71,6 +75,7 @@ public class BusinessDayIncremental {
     }
 
     public List<TimeSnippet> getTimeSnippets() {
+	Collections.sort(timeSnippets, new TimeStampComparator());
 	return timeSnippets;
     }
 
@@ -167,11 +172,71 @@ public class BusinessDayIncremental {
      * @param incrementToAddTimeSnippets
      */
     public void transferAllTimeSnipetsToBussinessDayIncrement(BusinessDayIncremental incrementToAddTimeSnippets) {
-	incrementToAddTimeSnippets.getTimeSnippets().addAll(timeSnippets);
+	incrementToAddTimeSnippets.addTimeSnippets(timeSnippets);
 	timeSnippets.clear();
+    }
+
+    private void addTimeSnippets(List<TimeSnippet> newTimeSnippets) {
+	timeSnippets.addAll(newTimeSnippets);
+	Collections.sort(timeSnippets, new TimeStampComparator());
     }
 
     public boolean isCharged() {
 	return isCharged;
+    }
+
+    /**
+     * Returns the {@link TimeSnippet} at the given positions or <code>null</code> if there isn't any at this location
+     */
+    private Optional<TimeSnippet> getTimeSnippet4Index(int fromUptoSequence) {
+	TimeSnippet timeSnippet = null;
+	for (int i = 0; i < timeSnippets.size(); i++) {
+	    if (i == fromUptoSequence) {
+		timeSnippet= timeSnippets.get(i);
+	    }
+	}
+	return Optional.ofNullable(timeSnippet);
+    }
+
+    /**
+     * Updates the {@link TimeSnippet} at the given index and recalulates the
+     * entire {@link BusinessDay}
+     * 
+     * @param newTimeStampValue
+     *            the new value for the time stamp
+     */
+    public void updateBeginTimeSnippetAndCalculate(BusinessDayIncremental businessDayIncremental, int fromUptoSequence,
+	    String newTimeStampValue) {
+	
+	Optional<TimeSnippet> timeSnippetOpt = getTimeSnippet4Index(fromUptoSequence);
+	timeSnippetOpt.ifPresent(timeSnippet -> {
+	    Date date = DateParser.getDate(newTimeStampValue, timeSnippet.getBeginTimeStamp());
+	    timeSnippet.setBeginTimeStamp(new Time(date.getTime()));
+	});
+    }
+    
+    /**
+     * Updates the {@link TimeSnippet} at the given index and recalulates the
+     * entire {@link BusinessDay}
+     * 
+     * @param newTimeStampValue
+     *            the new value for the time stamp
+     */
+    public void updateEndTimeSnippetAndCalculate(BusinessDayIncremental businessDayIncremental, int fromUptoSequence,
+	    String newTimeStampValue) {
+	Optional<TimeSnippet> timeSnippetOpt = getTimeSnippet4Index(fromUptoSequence);
+	timeSnippetOpt.ifPresent(timeSnippet -> {
+	    Date date = DateParser.getDate(newTimeStampValue, timeSnippet.getEndTimeStamp());
+	    timeSnippet.setEndTimeStamp(new Time(date.getTime()));
+	});
+    }
+    
+    public static class TimeStampComparator implements Comparator<TimeSnippet> {
+	@Override
+	public int compare(TimeSnippet timeSnippet, TimeSnippet timeSnippet2) {
+	    Time beginTimeStamp1 = timeSnippet.getBeginTimeStamp();
+	    Time beginTimeStamp2 = timeSnippet2.getBeginTimeStamp();
+	    return beginTimeStamp1.compareTo(beginTimeStamp2);
+	}
     }
 }

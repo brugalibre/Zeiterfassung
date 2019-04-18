@@ -9,6 +9,7 @@ import javax.swing.table.TableModel;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
@@ -26,7 +27,7 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
     private BusinessDayChangedCallbackHandler handler;
     
     private BusinessDay4Export bussinessDay;
-    private List<List<String>> colmnValues;
+    private List<List<TableCellValue>> colmnValues;
     private List<String> columnNames;
 
     public BusinessDayTableModel(BusinessDayChangedCallbackHandler handler) {
@@ -68,11 +69,11 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	return titleHeaders;
     }
 
-    private List<List<String>> getBusinessDayCells() {
-	List<List<String>> businessDayCells = new ArrayList<>();
+    private List<List<TableCellValue>> getBusinessDayCells() {
+	List<List<TableCellValue>> businessDayCells = new ArrayList<>();
 	int counter = 1;
 	for (BusinessDayInc4Export bussinessDayIncremental : bussinessDay.getBusinessDayIncrements()) {
-	    List<String> businessDayIncrementalCells = getBusinessDayIncrementalCells(bussinessDayIncremental, counter);
+	    List<TableCellValue> businessDayIncrementalCells = getBusinessDayIncrementalCells(bussinessDayIncremental, counter);
 	    businessDayCells.add(businessDayIncrementalCells);
 	    counter++;
 	}
@@ -83,24 +84,24 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
      * Creates a list which contains all Cells that are required to paint a
      * BusinessDayIncremental
      */
-    private List<String> getBusinessDayIncrementalCells(BusinessDayInc4Export bussinessDayIncremental, int no) {
+    private List<TableCellValue> getBusinessDayIncrementalCells(BusinessDayInc4Export bussinessDayIncremental, int no) {
 	// create Cells for the introduction of a BD-inc.
-	List<String> list = new ArrayList<>();
-	list.add(String.valueOf(no));
-	list.add(String.valueOf(bussinessDayIncremental.getTotalDurationRep()));
-	list.add(bussinessDayIncremental.getTicketNumber());
+	List<TableCellValue> list = new ArrayList<>();
+	list.add(TableCellValue.of(no));
+	list.add(TableCellValue.of(bussinessDayIncremental.getTotalDurationRep()));
+	list.add(TableCellValue.of(bussinessDayIncremental.getTicketNumber(), true, ValueTypes.TICKET_NR));
 
 	boolean isDescriptionTitleNecessary = bussinessDay.hasIncrementWithDescription();
 	if (isDescriptionTitleNecessary) {
 	    String cellValue = StringUtil.isNotEmptyOrNull(bussinessDayIncremental.getDescription())
 		    ? bussinessDayIncremental.getDescription() : "";
-	    list.add(cellValue);
+	    list.add(TableCellValue.of(cellValue, true, ValueTypes.DESCRIPTION));
 	}
 
 	// create Cells for all TimeSnippet's
 	list.addAll(collectTimeSnippetData(bussinessDayIncremental));
-	list.add(ChargeType.getRepresentation(bussinessDayIncremental.getChargeType()));
-	list.add(bussinessDayIncremental.isCharged() ? TextLabel.YES : TextLabel.NO);
+	list.add(TableCellValue.of(ChargeType.getRepresentation(bussinessDayIncremental.getChargeType())));
+	list.add(bussinessDayIncremental.isCharged() ? TableCellValue.of(TextLabel.YES) : TableCellValue.of(TextLabel.NO));
 	return list;
     }
 
@@ -108,44 +109,56 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
      * Creates a list which contains all Cells with the content about each
      * TimeSnippet
      */
-    private List<String> collectTimeSnippetData(BusinessDayInc4Export bussinessDayIncremental) {
+    private List<TimeSnippetCellValue> collectTimeSnippetData(BusinessDayInc4Export bussinessDayIncremental) {
 	// = for all time snippet
-	List<String> snippetCells = new ArrayList<>();
+	List<TimeSnippetCellValue> snippetCells = new ArrayList<>();
+	int sequence = 0;
 	for (TimeSnippet4Export snippet : bussinessDayIncremental.getTimeSnippets()) {
 	    // start point
 	    String value = String.valueOf(snippet.getBeginTimeStampRep());
-	    snippetCells.add(value);
+	    snippetCells.add(TimeSnippetCellValue.of(value, sequence, ValueTypes.BEGIN));
 	    // end point
 	    value = String.valueOf(snippet.getEndTimeStamp());
-	    snippetCells.add(value);
+	    snippetCells.add(TimeSnippetCellValue.of(value, sequence, ValueTypes.END));
+	    sequence++;
 	}
 	for (int i = 0; i < bussinessDayIncremental.getTimeSnippetPlaceHolders().size(); i++) {
-	    snippetCells.add("");
+	    snippetCells.add(TimeSnippetCellValue.of("", sequence, false, ValueTypes.NONE));
+	    sequence++;
 	}
 	return snippetCells;
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-	List<String> rowValues = colmnValues.get(rowIndex);
+	
+	TableCellValue tableCellValue = getCellAt(rowIndex, columnIndex);
+	
+	List<TableCellValue> rowValues = colmnValues.get(rowIndex);
 	String newValueAsString = (String) aValue;
-	rowValues.set(columnIndex, newValueAsString);
-	handler.handleBusinessDayChanged(getOrderNumber(rowIndex),newValueAsString,
-		ValueTypes.getValueTypeForIndex(columnNames.get(columnIndex)));
+	rowValues.set(columnIndex, TableCellValue.of(newValueAsString, tableCellValue));
+	handler.handleBusinessDayChanged(ChangedValue.of(getOrderNumber(rowIndex), newValueAsString, tableCellValue.getValueType(),
+		getIndexForFromUpto(tableCellValue)));
+    }
+
+    private int getIndexForFromUpto(TableCellValue tableCellValue) {
+	if (tableCellValue instanceof TimeSnippetCellValue) {
+	    return ((TimeSnippetCellValue) tableCellValue).getSequence();
+	}
+	return -1;
     }
 
     private int getOrderNumber(int rowIndex) {
-	List<String> column = colmnValues.get(rowIndex);
-	return Integer.valueOf(column.get(0));
+	List<TableCellValue> column = colmnValues.get(rowIndex);
+	TableCellValue tableCellValue = column.get(0);
+	return Integer.valueOf((String) tableCellValue.getValue());
     }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
 
-	// Minus 2 because the last two elements are never editable
-	int obererGrenzwert = columnNames.size() - 2;
-	int untererGrenzwert = 2;
-	return columnIndex >= untererGrenzwert && columnIndex < obererGrenzwert;
+	TableCellValue tableCellValue = getCellAt(rowIndex, columnIndex);
+	return tableCellValue.isEditable();
     }
 
     @Override
@@ -173,7 +186,13 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
-	List<String> rowValues = colmnValues.get(rowIndex);
-	return rowValues.get(columnIndex);
+	TableCellValue tableCellValue = getCellAt(rowIndex, columnIndex);
+	return tableCellValue.getValue();
+    }
+
+    private TableCellValue getCellAt(int rowIndex, int columnIndex) {
+	List<TableCellValue> rowValues = colmnValues.get(rowIndex);
+	TableCellValue tableCellValue = rowValues.get(columnIndex);
+	return tableCellValue;
     }
 }
