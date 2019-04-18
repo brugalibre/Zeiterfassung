@@ -31,6 +31,14 @@ public class TableCellValue {
     public String getValue() {
         return value;
     }
+
+    /**
+     * Sets the new value
+     * @param value the new value
+     */
+    public void setValue(String value) {
+	this.value = value;
+    }
     
     public ValueTypes getValueType() {
         return valueType;

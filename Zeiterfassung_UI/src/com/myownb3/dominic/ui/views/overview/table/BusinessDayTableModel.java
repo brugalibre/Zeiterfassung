@@ -3,13 +3,13 @@ package com.myownb3.dominic.ui.views.overview.table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
-import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
@@ -24,16 +24,14 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
      */
     private static final long serialVersionUID = 1L;
     
-    private BusinessDayChangedCallbackHandler handler;
-    
     private BusinessDay4Export bussinessDay;
     private List<List<TableCellValue>> colmnValues;
     private List<String> columnNames;
 
-    public BusinessDayTableModel(BusinessDayChangedCallbackHandler handler) {
+    public BusinessDayTableModel(TableModelListener listener) {
 	columnNames = new ArrayList<>();
 	colmnValues = new ArrayList<>();
-	this.handler = handler;
+	this.addTableModelListener(listener);
     }
 
     public void init(BusinessDay4Export bussinessDay) {
@@ -134,31 +132,20 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	
 	TableCellValue tableCellValue = getCellAt(rowIndex, columnIndex);
 	
-	List<TableCellValue> rowValues = colmnValues.get(rowIndex);
 	String newValueAsString = (String) aValue;
-	rowValues.set(columnIndex, TableCellValue.of(newValueAsString, tableCellValue));
-	handler.handleBusinessDayChanged(ChangedValue.of(getOrderNumber(rowIndex), newValueAsString, tableCellValue.getValueType(),
-		getIndexForFromUpto(tableCellValue)));
-    }
-
-    private int getIndexForFromUpto(TableCellValue tableCellValue) {
-	if (tableCellValue instanceof TimeSnippetCellValue) {
-	    return ((TimeSnippetCellValue) tableCellValue).getSequence();
+	if (!StringUtil.isEqual(newValueAsString, tableCellValue.getValue())) {
+	    tableCellValue.setValue(newValueAsString);
+	    fireTableCellUpdated(rowIndex, columnIndex);
 	}
-	return -1;
-    }
-
-    private int getOrderNumber(int rowIndex) {
-	List<TableCellValue> column = colmnValues.get(rowIndex);
-	TableCellValue tableCellValue = column.get(0);
-	return Integer.valueOf((String) tableCellValue.getValue());
     }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
 
-	TableCellValue tableCellValue = getCellAt(rowIndex, columnIndex);
-	return tableCellValue.isEditable();
+	Optional<TableCellValue> tableCellValueOpt = getCellOptionalAt(rowIndex, columnIndex);
+	return tableCellValueOpt
+		.map(TableCellValue::isEditable)
+		.orElse(false);
     }
 
     @Override
@@ -180,19 +167,36 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public Class getColumnClass(int c) {
-	return getValueAt(0, c).getClass();
+	Optional<TableCellValue> valueAt = getCellOptionalAt(0, c);
+	return valueAt
+		.map(TableCellValue::getClass)
+		.orElse((Class) TableCellValue.class);
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
 
-	TableCellValue tableCellValue = getCellAt(rowIndex, columnIndex);
-	return tableCellValue.getValue();
+	Optional<TableCellValue> tableCellValue= getCellOptionalAt(rowIndex, columnIndex);
+	return tableCellValue
+		.map(TableCellValue::getValue)
+		.orElse(null);
     }
 
-    private TableCellValue getCellAt(int rowIndex, int columnIndex) {
-	List<TableCellValue> rowValues = colmnValues.get(rowIndex);
-	TableCellValue tableCellValue = rowValues.get(columnIndex);
-	return tableCellValue;
+    private Optional<TableCellValue> getCellOptionalAt(int rowIndex, int columnIndex) {
+	
+	TableCellValue tableCellValue = getCellAt(rowIndex, columnIndex);
+	return Optional.ofNullable(tableCellValue);
     }
+   
+    /* package */ TableCellValue getCellAt(int rowIndex, int columnIndex) {
+	if (rowIndex >= 0 && rowIndex < colmnValues.size()) {
+	    List<TableCellValue> rowValues = colmnValues.get(rowIndex);
+	    if (columnIndex >= 0 && columnIndex < rowValues.size()) {
+		TableCellValue tableCellValue = rowValues.get(columnIndex);
+		return tableCellValue;
+	    }
+	}
+	return null;
+    }
+       
 }

@@ -5,6 +5,7 @@ package com.myownb3.dominic.timerecording.work.businessday;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -212,4 +213,13 @@ public class BusinessDay {
 	return increments.get(0).getDate();
     }
 
+   /*package*/ Optional<BusinessDayIncremental> getBusinessIncrement(int orderNr) {
+        BusinessDayIncremental businessDayIncremental = null;
+        for (int i = 0; i < increments.size(); i++) {
+            if (orderNr == i + 1) {
+        	businessDayIncremental = increments.get(i);
+            }
+        }
+        return Optional.ofNullable(businessDayIncremental);
+    }
 }

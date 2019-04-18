@@ -14,10 +14,8 @@ import javax.swing.JPanel;
 import com.myownb3.dominic.librarys.PictureLibrary;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedOwner;
-import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayChangedCallbackHandlerImpl;
-import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
+import com.myownb3.dominic.timerecording.work.businessday.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.ui.views.overview.OverviewView;
@@ -27,7 +25,7 @@ import com.myownb3.dominic.ui.views.userinput.InputMask;
  * @author Dominic
  * 
  */
-public class MainWindow  implements BusinessDayChangedOwner, KeyListener {
+public class MainWindow  implements KeyListener {
     private JFrame mainWindow;
     private JPanel content;
     private InputMask inputMask;
@@ -71,7 +69,7 @@ public class MainWindow  implements BusinessDayChangedOwner, KeyListener {
 
     public void showOverviewView(BusinessDay bussinessDay) {
 	overviewView.initialize(new BusinessDay4Export(bussinessDay),
-		new BusinessDayChangedCallbackHandlerImpl(bussinessDay, this));
+		new BusinessDayChangedCallbackHandlerImpl(bussinessDay));
 	CardLayout cl = (CardLayout) (content.getLayout());
 	cl.show(content, ViewList.OVERVIEW_VIEW.toString());
 	mainWindow.setResizable(true);
@@ -150,11 +148,5 @@ public class MainWindow  implements BusinessDayChangedOwner, KeyListener {
 	    showOverviewView(TimeRecorder.getBussinessDay());
 	}
 	timeRecordingTray.updateUIStates(false);
-    }
-
-    @Override
-    public void afterBusinessDayChanged(ChangedValue changeValue) {
-	BusinessDay bussinessDay = TimeRecorder.getBussinessDay();
-	overviewView.refresh(new BusinessDay4Export(bussinessDay));
     }
 }

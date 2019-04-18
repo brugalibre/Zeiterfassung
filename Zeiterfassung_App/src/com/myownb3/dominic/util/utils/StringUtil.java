@@ -30,6 +30,17 @@ public class StringUtil {
 	fontMetricComp = new JPanel();
     }
 
+    public static boolean isEqual(String value, String valueToTest) {
+	if (isNotEmptyOrNull(valueToTest) && isNotEmptyOrNull(value)) {
+	    return value.equals(valueToTest);
+	} else if (valueToTest == null && value == null) {
+	    return true;
+	} else if (value.isEmpty() && valueToTest.isEmpty()) {
+	    return true;
+	}
+	return false;
+    }
+    
     /**
      * @param amount
      * @return a String that consist only of the unicode "\u0020" character
