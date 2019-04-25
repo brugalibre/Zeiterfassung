@@ -116,7 +116,7 @@ public class BusinessDay {
 	}
     }
 
-    public void flagBusinessDayIncAsChaged() {
+    public void flagBusinessDayAsCharged() {
 	increments.stream()//
 		.forEach(BusinessDayIncremental::flagAsCharged);
     }

@@ -76,27 +76,6 @@ public class TableCellValue {
     }
     
     /**
-     * Creates a new {@link TableCellValue} for the given {@link TableCellValue}
-     * and the new value
-     * 
-     * @param value
-     *            the value of this cell
-     * @param tableCellValue
-     *            the existing {@link TableCellValue} whose values are used for
-     *            the new one
-     * 
-     * @return a new non editable {@link TableCellValue} with the given String
-     *         value
-     */
-    public static TableCellValue of(String newValue, TableCellValue tableCellValue) {
-	if (tableCellValue instanceof TimeSnippetCellValue) {
-	    return new TimeSnippetCellValue(newValue, ((TimeSnippetCellValue) tableCellValue).getSequence(),
-		    tableCellValue.isEditable(), tableCellValue.getValueType());
-	}
-	return new TableCellValue(newValue, tableCellValue.isEditable(), tableCellValue.getValueType());
-    }
-    
-    /**
      * Creates a new non editable {@link TableCellValue} with the given int
      * value
      * 

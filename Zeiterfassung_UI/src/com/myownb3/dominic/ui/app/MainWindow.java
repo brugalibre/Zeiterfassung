@@ -134,7 +134,7 @@ public class MainWindow  implements KeyListener {
     }
 
     public void chargeOff() {
-	TimeRecorder.charge();
+	TimeRecorder.book();
 	refresh();
     }
 

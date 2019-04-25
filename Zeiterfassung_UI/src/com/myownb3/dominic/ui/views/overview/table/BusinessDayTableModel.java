@@ -167,10 +167,7 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public Class getColumnClass(int c) {
-	Optional<TableCellValue> valueAt = getCellOptionalAt(0, c);
-	return valueAt
-		.map(TableCellValue::getClass)
-		.orElse((Class) TableCellValue.class);
+	return (Class) String.class;
     }
 
     @Override

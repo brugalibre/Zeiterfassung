@@ -11,7 +11,7 @@ import com.myownb3.dominic.export.ContentSelector;
 import com.myownb3.dominic.export.FileExporter;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
-import com.myownb3.dominic.timerecording.charge.Charger;
+import com.myownb3.dominic.timerecording.charge.BookerHelper;
 import com.myownb3.dominic.timerecording.work.WorkStates;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
@@ -200,10 +200,10 @@ public class TimeRecorder {
      * 
      * @return the path of the new created file
      */
-    public static void charge() {
+    public static void book() {
 	if (businessDay.hasNotChargedElements()) {
-	    Charger charger = new Charger(businessDay);
-	    charger.charge();
+	    BookerHelper helper = new BookerHelper(businessDay);
+	    helper.book();
 	}
     }
 }
