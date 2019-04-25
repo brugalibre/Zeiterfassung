@@ -68,8 +68,10 @@ public class MainWindow  implements KeyListener {
     }
 
     public void showOverviewView(BusinessDay bussinessDay) {
-	overviewView.initialize(new BusinessDay4Export(bussinessDay),
-		new BusinessDayChangedCallbackHandlerImpl(bussinessDay));
+	overviewView.initialize(new BusinessDay4Export(bussinessDay), changeValue -> {
+	    new BusinessDayChangedCallbackHandlerImpl(bussinessDay).handleBusinessDayChanged(changeValue);
+	    showOverviewView(TimeRecorder.getBussinessDay());
+	});
 	CardLayout cl = (CardLayout) (content.getLayout());
 	cl.show(content, ViewList.OVERVIEW_VIEW.toString());
 	mainWindow.setResizable(true);

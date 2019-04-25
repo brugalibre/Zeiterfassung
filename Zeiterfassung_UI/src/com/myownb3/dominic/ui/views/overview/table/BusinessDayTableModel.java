@@ -24,7 +24,6 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
      */
     private static final long serialVersionUID = 1L;
     
-    private BusinessDay4Export bussinessDay;
     private List<List<TableCellValue>> colmnValues;
     private List<String> columnNames;
 
@@ -36,12 +35,11 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 
     public void init(BusinessDay4Export bussinessDay) {
 	Objects.requireNonNull(bussinessDay);
-	this.bussinessDay = bussinessDay;
-	this.colmnValues = getBusinessDayCells();
-	this.columnNames = getTableHeaders();
+	this.colmnValues = getBusinessDayCells(bussinessDay);
+	this.columnNames = getTableHeaders(bussinessDay);
     }
 
-    private List<String> getTableHeaders() {
+    private List<String> getTableHeaders(BusinessDay4Export bussinessDay) {
 	List<String> titleHeaders = new ArrayList<>();
 	titleHeaders.add(TextLabel.NUMMER_LABEL);
 	titleHeaders.add(TextLabel.AMOUNT_OF_HOURS_LABEL);
@@ -67,11 +65,12 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	return titleHeaders;
     }
 
-    private List<List<TableCellValue>> getBusinessDayCells() {
+    private List<List<TableCellValue>> getBusinessDayCells(BusinessDay4Export businessDay) {
 	List<List<TableCellValue>> businessDayCells = new ArrayList<>();
 	int counter = 1;
-	for (BusinessDayInc4Export bussinessDayIncremental : bussinessDay.getBusinessDayIncrements()) {
-	    List<TableCellValue> businessDayIncrementalCells = getBusinessDayIncrementalCells(bussinessDayIncremental, counter);
+	for (BusinessDayInc4Export bussinessDayIncremental : businessDay.getBusinessDayIncrements()) {
+	    List<TableCellValue> businessDayIncrementalCells = getBusinessDayIncrementalCells(bussinessDayIncremental,
+		    businessDay.hasIncrementWithDescription(), counter);
 	    businessDayCells.add(businessDayIncrementalCells);
 	    counter++;
 	}
@@ -82,14 +81,14 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
      * Creates a list which contains all Cells that are required to paint a
      * BusinessDayIncremental
      */
-    private List<TableCellValue> getBusinessDayIncrementalCells(BusinessDayInc4Export bussinessDayIncremental, int no) {
+    private List<TableCellValue> getBusinessDayIncrementalCells(BusinessDayInc4Export bussinessDayIncremental,
+	    boolean isDescriptionTitleNecessary, int no) {
 	// create Cells for the introduction of a BD-inc.
 	List<TableCellValue> list = new ArrayList<>();
 	list.add(TableCellValue.of(no));
 	list.add(TableCellValue.of(bussinessDayIncremental.getTotalDurationRep()));
 	list.add(TableCellValue.of(bussinessDayIncremental.getTicketNumber(), true, ValueTypes.TICKET_NR));
 
-	boolean isDescriptionTitleNecessary = bussinessDay.hasIncrementWithDescription();
 	if (isDescriptionTitleNecessary) {
 	    String cellValue = StringUtil.isNotEmptyOrNull(bussinessDayIncremental.getDescription())
 		    ? bussinessDayIncremental.getDescription() : "";
@@ -130,13 +129,15 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 	
-	TableCellValue tableCellValue = getCellAt(rowIndex, columnIndex);
-	
+	Optional<TableCellValue> tableCellValueOptional = getCellOptionalAt(rowIndex, columnIndex);
 	String newValueAsString = (String) aValue;
-	if (!StringUtil.isEqual(newValueAsString, tableCellValue.getValue())) {
-	    tableCellValue.setValue(newValueAsString);
-	    fireTableCellUpdated(rowIndex, columnIndex);
-	}
+
+	tableCellValueOptional.ifPresent(tableCellValue -> {
+	    if (!StringUtil.isEqual(newValueAsString, tableCellValue.getValue())) {
+		tableCellValue.setValue(newValueAsString);
+		fireTableCellUpdated(rowIndex, columnIndex);
+	    }
+	});
     }
 
     @Override

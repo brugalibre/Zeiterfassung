@@ -11,7 +11,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
@@ -66,16 +65,6 @@ public class TablePanel implements TableModelListener {
 	return table;
     }
 
-    /*
-     * Refreshes the given {@link JTable} with the content of the new {@link BusinessDay}
-     * @param bussinessDay the new {@link BusinessDay}
-     */
-    private void refresh(BusinessDay4Export bussinessDay) {
-	BusinessDayTableModel businessDayTableModel = (BusinessDayTableModel) table.getModel();
-	businessDayTableModel.init(bussinessDay);
-	resizeColumnWidth();	
-    }
-
     @Override
     public void tableChanged(TableModelEvent e) {
 
@@ -85,7 +74,6 @@ public class TablePanel implements TableModelListener {
 	    TableCellValue noTableCellValue = businessDayTableModel.getCellAt(e.getFirstRow(), 0);
 	    handler.handleBusinessDayChanged(ChangedValue.of(Integer.valueOf(noTableCellValue.getValue()), tableCellValue.getValue(), tableCellValue.getValueType(),
 		    getIndexForFromUpto(tableCellValue)));
-	    refresh(new BusinessDay4Export(TimeRecorder.getBussinessDay()));
 	}
     }
 
