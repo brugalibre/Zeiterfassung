@@ -157,7 +157,7 @@ public class BusinessDay {
 	for (BusinessDayIncremental incremental : increments) {
 	    sum = sum + incremental.getTotalDuration(type);
 	}
-	return NumberFormat.parseFloat(TimeRecorder.formater.format(sum));
+	return NumberFormat.parseFloat(NumberFormat.format(sum));
     }
     
     /**

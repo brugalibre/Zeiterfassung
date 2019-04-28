@@ -57,6 +57,6 @@ public class BookerHelper {
      * later used by the Turbo-Bucher
      */
     private List<String> createBookContent() {
-	return ContentSelector.collectContent4TurboBucher(new BusinessDay4Export(businessDay));
+	return ContentSelector.collectContent4TurboBucher(BusinessDay4Export.of(businessDay));
     }
 }

@@ -129,7 +129,7 @@ public class BusinessDayIncremental {
 	for (TimeSnippet timeSnippet : timeSnippets) {
 	    sum = sum + timeSnippet.getDuration(type);
 	}
-	return NumberFormat.parseFloat(TimeRecorder.formater.format(sum));
+	return NumberFormat.parseFloat(NumberFormat.format(sum));
     }
 
     public TimeSnippet getCurrentTimeSnippet() {

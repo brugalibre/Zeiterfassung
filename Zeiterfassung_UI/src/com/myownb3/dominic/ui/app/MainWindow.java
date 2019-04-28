@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import com.myownb3.dominic.librarys.PictureLibrary;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
@@ -68,10 +69,7 @@ public class MainWindow  implements KeyListener {
     }
 
     public void showOverviewView(BusinessDay bussinessDay) {
-	overviewView.initialize(new BusinessDay4Export(bussinessDay), changeValue -> {
-	    new BusinessDayChangedCallbackHandlerImpl(bussinessDay).handleBusinessDayChanged(changeValue);
-	    showOverviewView(TimeRecorder.getBussinessDay());
-	});
+	overviewView.initialize(BusinessDay4Export.of(bussinessDay), getCallbackHandler(bussinessDay));
 	CardLayout cl = (CardLayout) (content.getLayout());
 	cl.show(content, ViewList.OVERVIEW_VIEW.toString());
 	mainWindow.setResizable(true);
@@ -150,5 +148,12 @@ public class MainWindow  implements KeyListener {
 	    showOverviewView(TimeRecorder.getBussinessDay());
 	}
 	timeRecordingTray.updateUIStates(false);
+    }
+    
+    private BusinessDayChangedCallbackHandler getCallbackHandler(BusinessDay bussinessDay) {
+	return changeValue -> {
+	    new BusinessDayChangedCallbackHandlerImpl(bussinessDay).handleBusinessDayChanged(changeValue);
+	    showOverviewView(bussinessDay);
+	};
     }
 }

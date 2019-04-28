@@ -3,8 +3,6 @@
  */
 package com.myownb3.dominic.timerecording.app;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 
 import com.myownb3.dominic.export.ContentSelector;
@@ -33,14 +31,12 @@ public class TimeRecorder {
 						    // TIME_TYPE that defines,
 						    // in what unit the time is
 						    // calculated
-    public static final NumberFormat formater;
     private static WorkStates currentState; // either it is working, or not
 					    // working
     private static BusinessDay businessDay;
     private static CallbackHandler callbackHandler;
 
     static {
-	formater = new DecimalFormat("0.00");
 	GLOBAL_TIME_TYPE = TIME_TYPE.HOUR;
 	currentState = WorkStates.NOT_WORKING;
 	businessDay = new BusinessDay();
@@ -115,7 +111,7 @@ public class TimeRecorder {
     * 
     */
     public static void export() {
-	List<String> content = ContentSelector.collectContent(new BusinessDay4Export(businessDay));
+	List<String> content = ContentSelector.collectContent(BusinessDay4Export.of(businessDay));
 	FileExporter.export(content);
     }
 

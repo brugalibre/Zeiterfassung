@@ -6,7 +6,6 @@ package com.myownb3.dominic.ui.views.overview;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -107,21 +106,15 @@ public class OverviewView extends JPanel{
 	clearButton.addActionListener(listener);
     }
 
-    /**
-    * 
-    */
     private ActionListener createActionListener() {
-	return new ActionListener() {
-	    @Override
-	    public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == clearButton) {
-		    clearBusinessDayContents();
-		    mainView.dispose();
-		} else if (e.getSource() == chargeOffButton) {
-		    chargeOffTicketData();
-		} else if (e.getSource() == exportButton) {
-		    export();
-		}
+	return e -> {
+	    if (e.getSource() == clearButton) {
+		clearBusinessDayContents();
+		mainView.dispose();
+	    } else if (e.getSource() == chargeOffButton) {
+		chargeOffTicketData();
+	    } else if (e.getSource() == exportButton) {
+		export();
 	    }
 	};
     }

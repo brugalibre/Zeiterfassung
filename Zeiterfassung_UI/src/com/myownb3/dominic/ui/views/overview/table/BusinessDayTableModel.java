@@ -23,7 +23,7 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
      * 
      */
     private static final long serialVersionUID = 1L;
-    
+
     private List<List<TableCellValue>> colmnValues;
     private List<String> columnNames;
 
@@ -37,6 +37,56 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	Objects.requireNonNull(bussinessDay);
 	this.colmnValues = getBusinessDayCells(bussinessDay);
 	this.columnNames = getTableHeaders(bussinessDay);
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+
+	Optional<TableCellValue> tableCellValueOptional = getCellOptionalAt(rowIndex, columnIndex);
+	String newValueAsString = (String) aValue;
+
+	tableCellValueOptional.ifPresent(tableCellValue -> {
+	    if (!StringUtil.isEqual(newValueAsString, tableCellValue.getValue())) {
+		tableCellValue.setValue(newValueAsString);
+		fireTableCellUpdated(rowIndex, columnIndex);
+	    }
+	});
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+
+	Optional<TableCellValue> tableCellValueOpt = getCellOptionalAt(rowIndex, columnIndex);
+	return tableCellValueOpt.map(TableCellValue::isEditable).orElse(false);
+    }
+
+    @Override
+    public int getColumnCount() {
+	return columnNames.size();
+    }
+
+    @Override
+    public int getRowCount() {
+
+	return colmnValues.size();
+    }
+
+    @Override
+    public String getColumnName(int col) {
+	return columnNames.get(col);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @Override
+    public Class getColumnClass(int c) {
+	return (Class) String.class;
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+
+	Optional<TableCellValue> tableCellValue = getCellOptionalAt(rowIndex, columnIndex);
+	return tableCellValue.map(TableCellValue::getValue).orElse(null);
     }
 
     private List<String> getTableHeaders(BusinessDay4Export bussinessDay) {
@@ -91,14 +141,16 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 
 	if (isDescriptionTitleNecessary) {
 	    String cellValue = StringUtil.isNotEmptyOrNull(bussinessDayIncremental.getDescription())
-		    ? bussinessDayIncremental.getDescription() : "";
+		    ? bussinessDayIncremental.getDescription()
+		    : "";
 	    list.add(TableCellValue.of(cellValue, true, ValueTypes.DESCRIPTION));
 	}
 
 	// create Cells for all TimeSnippet's
 	list.addAll(collectTimeSnippetData(bussinessDayIncremental));
 	list.add(TableCellValue.of(ChargeType.getRepresentation(bussinessDayIncremental.getChargeType())));
-	list.add(bussinessDayIncremental.isCharged() ? TableCellValue.of(TextLabel.YES) : TableCellValue.of(TextLabel.NO));
+	list.add(bussinessDayIncremental.isCharged() ? TableCellValue.of(TextLabel.YES)
+		: TableCellValue.of(TextLabel.NO));
 	return list;
     }
 
@@ -126,66 +178,12 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	return snippetCells;
     }
 
-    @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-	
-	Optional<TableCellValue> tableCellValueOptional = getCellOptionalAt(rowIndex, columnIndex);
-	String newValueAsString = (String) aValue;
-
-	tableCellValueOptional.ifPresent(tableCellValue -> {
-	    if (!StringUtil.isEqual(newValueAsString, tableCellValue.getValue())) {
-		tableCellValue.setValue(newValueAsString);
-		fireTableCellUpdated(rowIndex, columnIndex);
-	    }
-	});
-    }
-
-    @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-
-	Optional<TableCellValue> tableCellValueOpt = getCellOptionalAt(rowIndex, columnIndex);
-	return tableCellValueOpt
-		.map(TableCellValue::isEditable)
-		.orElse(false);
-    }
-
-    @Override
-    public int getColumnCount() {
-	return columnNames.size();
-    }
-
-    @Override
-    public int getRowCount() {
-
-	return colmnValues.size();
-    }
-
-    @Override
-    public String getColumnName(int col) {
-	return columnNames.get(col);
-    }
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Override
-    public Class getColumnClass(int c) {
-	return (Class) String.class;
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-
-	Optional<TableCellValue> tableCellValue= getCellOptionalAt(rowIndex, columnIndex);
-	return tableCellValue
-		.map(TableCellValue::getValue)
-		.orElse(null);
-    }
-
     private Optional<TableCellValue> getCellOptionalAt(int rowIndex, int columnIndex) {
-	
+
 	TableCellValue tableCellValue = getCellAt(rowIndex, columnIndex);
 	return Optional.ofNullable(tableCellValue);
     }
-   
+
     /* package */ TableCellValue getCellAt(int rowIndex, int columnIndex) {
 	if (rowIndex >= 0 && rowIndex < colmnValues.size()) {
 	    List<TableCellValue> rowValues = colmnValues.get(rowIndex);
@@ -196,5 +194,5 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	}
 	return null;
     }
-       
+
 }

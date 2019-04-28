@@ -1,17 +1,21 @@
 package com.myownb3.dominic.util.parser;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 
-import com.myownb3.dominic.timerecording.app.TimeRecorder;
-
 public class NumberFormat {
+    private static final java.text.NumberFormat decimalFormat;
+
+    static {
+	decimalFormat = new DecimalFormat("0.00");
+    }
 
     public static float parse(float time, int factor) throws NumberFormatException {
 
 	java.text.NumberFormat format = java.text.NumberFormat.getInstance();
 	Number number = Float.valueOf(0);
 	try {
-	    number = format.parse(TimeRecorder.formater.format((time = time / factor)));
+	    number = format.parse(decimalFormat.format((time = time / factor)));
 	} catch (ParseException e) {
 	    e.printStackTrace();
 	    throw new NumberFormatException(e.getLocalizedMessage());

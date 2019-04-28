@@ -45,7 +45,7 @@ public class BusinessDay4Export {
 	return df.format(date);
     }
 
-    public BusinessDay4Export(BusinessDay businessDay) {
+    private BusinessDay4Export(BusinessDay businessDay) {
 
 	totalDuration = businessDay.getTotalDuration();
 	date = businessDay.getDate();
@@ -57,7 +57,7 @@ public class BusinessDay4Export {
 	businessDayIncrements.stream()//
 		.forEach(businessDayInc -> businessDayInc.addPlaceHolderForMissingCell(this));
     }
-
+    
     public final List<BusinessDayInc4Export> getBusinessDayIncrements() {
 	return this.businessDayIncrements;
     }
@@ -90,5 +90,15 @@ public class BusinessDay4Export {
 
     public String getTotalDurationRep() {
 	return String.valueOf(totalDuration);
+    }
+    
+    /**
+     * Creates a new {@link BusinessDay4Export} for the given {@link BusinessDay}
+     * 
+     * @param businessDay the given {@link BusinessDay}
+     * @return a new {@link BusinessDay4Export}
+     */
+    public static BusinessDay4Export of(BusinessDay businessDay) {
+	return new BusinessDay4Export(businessDay);
     }
 }
