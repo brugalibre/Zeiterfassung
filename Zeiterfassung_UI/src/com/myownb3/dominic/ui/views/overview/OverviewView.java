@@ -40,7 +40,7 @@ public class OverviewView extends JPanel{
     private TablePanel tablePanel;
 
     private JButton clearButton;
-    private JButton chargeOffButton;
+    private JButton bookOffButton;
     private JButton exportButton;
 
     static {
@@ -75,7 +75,7 @@ public class OverviewView extends JPanel{
 
 	panel.add(clearButton, FlowLayout.LEFT);
 	panel.add(exportButton, FlowLayout.CENTER);
-	panel.add(chargeOffButton, FlowLayout.RIGHT);
+	panel.add(bookOffButton, FlowLayout.RIGHT);
 	return panel;
     }
 
@@ -84,8 +84,8 @@ public class OverviewView extends JPanel{
      * 
      */
     private void createChargeButton(ActionListener listener) {
-	chargeOffButton = new JButton(TextLabel.CHARGE_LABEL);
-	chargeOffButton.addActionListener(listener);
+	bookOffButton = new JButton(TextLabel.CHARGE_LABEL);
+	bookOffButton.addActionListener(listener);
     }
 
     /**
@@ -111,8 +111,8 @@ public class OverviewView extends JPanel{
 	    if (e.getSource() == clearButton) {
 		clearBusinessDayContents();
 		mainView.dispose();
-	    } else if (e.getSource() == chargeOffButton) {
-		chargeOffTicketData();
+	    } else if (e.getSource() == bookOffButton) {
+		bookTicketData();
 	    } else if (e.getSource() == exportButton) {
 		export();
 	    }
@@ -136,8 +136,8 @@ public class OverviewView extends JPanel{
     /**
     * 
     */
-    protected void chargeOffTicketData() {
-	mainView.chargeOff();
+    protected void bookTicketData() {
+	mainView.book();
     }
 
     /**
@@ -149,6 +149,6 @@ public class OverviewView extends JPanel{
 
     public void initialize(BusinessDay4Export bussinessDay, BusinessDayChangedCallbackHandler handler) {
 	tablePanel.initialize(bussinessDay, handler);
-	chargeOffButton.setEnabled(TimeRecorder.hasNotChargedElements());
+	bookOffButton.setEnabled(TimeRecorder.hasNotChargedElements());
     }
 }

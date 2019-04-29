@@ -133,7 +133,7 @@ public class MainWindow  implements KeyListener {
 	TimeRecorder.export();
     }
 
-    public void chargeOff() {
+    public void book() {
 	TimeRecorder.book();
 	refresh();
     }
