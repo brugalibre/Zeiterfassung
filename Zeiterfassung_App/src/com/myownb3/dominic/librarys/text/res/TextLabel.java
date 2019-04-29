@@ -33,12 +33,6 @@ public class TextLabel {
     public static final String WARN_TITLE = "Achtung!";
     public static final String CHARGE_LABEL = "Abbuchen";
     public static final String EXPORT_LABEL = "Exportieren";
-    public static final String KEINE_ANGABE = "kA";
-
-    // Time
-    public static final String HOUR = "Stunden";
-    public static final String MINUTES = "Minuten";
-    public static final String SECONDS = "Sekunden";
 
     // Ticket Stuff
     public static final String TICKET = "Ticket";
