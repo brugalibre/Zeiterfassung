@@ -9,7 +9,7 @@ package com.myownb3.dominic.librarys.text.res;
  */
 public class TextLabel {
     public static final String SHOW_WORKING_HOURS = "Zeige Arbeitsstunden";
-    public static final String APPLICATION_TITLE = "Bapedi Bupedi Zeiterfassung";
+    public static final String APPLICATION_TITLE = "Champignons-League Zeiterfassung";
     public static final String EXIT = "Beenden";
 
     public static final String OK_BUTTON_TEXT = "OK";
@@ -24,7 +24,7 @@ public class TextLabel {
     public static final String BIS_LABEL = "Bis";
 
     public static final String EXCEPTION_DIALOG_MESSAGE = "Ein unerwarteter Fehler ist aufgetreten:";
-    public static final String EXCEPTION_DIALOG_TITLE = "Error!";
+    public static final String EXCEPTION_DIALOG_TITLE = "Hoppla!";
 
     public static final String NUMMER_LABEL = "Nr.";
     public static final String CLEAR_LABEL = "Alles löschen";
