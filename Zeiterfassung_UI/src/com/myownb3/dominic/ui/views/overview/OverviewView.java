@@ -8,10 +8,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
@@ -51,13 +49,9 @@ public class OverviewView extends JPanel{
     public OverviewView(MainWindow mainView) {
 	super(new BorderLayout());
 	this.mainView = mainView;
-	this.tablePanel = new TablePanel();
+	this.tablePanel = new TablePanel(new Dimension((int) (WIDTH * 1.7), HEIGHT));
 
-	JScrollPane scrollPane = new JScrollPane(tablePanel.getTable());
-	scrollPane.setBorder(BorderFactory.createEmptyBorder());
-	scrollPane.setPreferredSize(new Dimension((int) (WIDTH * 1.7), HEIGHT));
-
-	add(scrollPane, BorderLayout.CENTER);
+	add(tablePanel.getPanel(), BorderLayout.CENTER);
 	JPanel controlPanel = createControlPanel();
 	add(controlPanel, BorderLayout.PAGE_END);
     }
