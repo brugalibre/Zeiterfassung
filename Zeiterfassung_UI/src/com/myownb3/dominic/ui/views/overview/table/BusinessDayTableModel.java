@@ -137,13 +137,13 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	List<TableCellValue> list = new ArrayList<>();
 	list.add(TableCellValue.of(no));
 	list.add(TableCellValue.of(bussinessDayIncremental.getTotalDurationRep()));
-	list.add(TableCellValue.of(bussinessDayIncremental.getTicketNumber(), true, ValueTypes.TICKET_NR));
+	list.add(TableCellValue.of(bussinessDayIncremental.getTicketNumber(), isEditable(bussinessDayIncremental), ValueTypes.TICKET_NR));
 
 	if (isDescriptionTitleNecessary) {
 	    String cellValue = StringUtil.isNotEmptyOrNull(bussinessDayIncremental.getDescription())
 		    ? bussinessDayIncremental.getDescription()
 		    : "";
-	    list.add(TableCellValue.of(cellValue, true, ValueTypes.DESCRIPTION));
+	    list.add(TableCellValue.of(cellValue, isEditable(bussinessDayIncremental), ValueTypes.DESCRIPTION));
 	}
 
 	// create Cells for all TimeSnippet's
@@ -152,6 +152,10 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	list.add(bussinessDayIncremental.isCharged() ? TableCellValue.of(TextLabel.YES)
 		: TableCellValue.of(TextLabel.NO));
 	return list;
+    }
+
+    private boolean isEditable(BusinessDayInc4Export bussinessDayIncremental) {
+	return !bussinessDayIncremental.isCharged();
     }
 
     /*
@@ -165,10 +169,10 @@ public class BusinessDayTableModel extends AbstractTableModel implements TableMo
 	for (TimeSnippet4Export snippet : bussinessDayIncremental.getTimeSnippets()) {
 	    // start point
 	    String value = String.valueOf(snippet.getBeginTimeStampRep());
-	    snippetCells.add(TimeSnippetCellValue.of(value, sequence, ValueTypes.BEGIN));
+	    snippetCells.add(TimeSnippetCellValue.of(value, sequence, isEditable(bussinessDayIncremental), ValueTypes.BEGIN));
 	    // end point
 	    value = String.valueOf(snippet.getEndTimeStamp());
-	    snippetCells.add(TimeSnippetCellValue.of(value, sequence, ValueTypes.END));
+	    snippetCells.add(TimeSnippetCellValue.of(value, sequence, isEditable(bussinessDayIncremental), ValueTypes.END));
 	    sequence++;
 	}
 	for (int i = 0; i < bussinessDayIncremental.getTimeSnippetPlaceHolders().size(); i++) {
