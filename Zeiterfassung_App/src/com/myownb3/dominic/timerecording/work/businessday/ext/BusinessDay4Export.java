@@ -36,7 +36,8 @@ public class BusinessDay4Export {
     /**
      * Returns the default representation of a date using the given pattern
      * 
-     * @param pattern the pattern to use
+     * @param pattern
+     *            the pattern to use
      * @return the default representation of a date using the given pattern
      */
     public String getDateRep(String pattern) {
@@ -52,12 +53,12 @@ public class BusinessDay4Export {
 
 	businessDayIncrements = businessDay.getIncrements()//
 		.stream()//
-		.map(BusinessDayInc4Export::new)//
+		.map(BusinessDayInc4Export::of)//
 		.collect(Collectors.toList());
 	businessDayIncrements.stream()//
 		.forEach(businessDayInc -> businessDayInc.addPlaceHolderForMissingCell(this));
     }
-    
+
     public final List<BusinessDayInc4Export> getBusinessDayIncrements() {
 	return this.businessDayIncrements;
     }
@@ -91,11 +92,12 @@ public class BusinessDay4Export {
     public String getTotalDurationRep() {
 	return String.valueOf(totalDuration);
     }
-    
+
     /**
      * Creates a new {@link BusinessDay4Export} for the given {@link BusinessDay}
      * 
-     * @param businessDay the given {@link BusinessDay}
+     * @param businessDay
+     *            the given {@link BusinessDay}
      * @return a new {@link BusinessDay4Export}
      */
     public static BusinessDay4Export of(BusinessDay businessDay) {

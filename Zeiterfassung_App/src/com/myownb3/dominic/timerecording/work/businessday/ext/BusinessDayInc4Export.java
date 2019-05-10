@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
+import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
@@ -25,13 +26,17 @@ public class BusinessDayInc4Export {
     private List<TimeSnippet4Export> timeSnippets;
     private List<TimeSnippetPlaceHolder> timeSnippetPlaceHolders;
 
+    private TimeSnippet currentTimeSnippet;
+
     private float totalDuration;
     private String description;
     private String ticketNumber;
     private int chargeType;
     private boolean isCharged;
 
-    public BusinessDayInc4Export(BusinessDayIncremental businessDayIncremental) {
+    private BusinessDayInc4Export(BusinessDayIncremental businessDayIncremental) {
+
+	this.currentTimeSnippet = businessDayIncremental.getCurrentTimeSnippet();
 	this.description = businessDayIncremental.getDescription();
 	this.ticketNumber = businessDayIncremental.getTicketNumber();
 	this.chargeType = businessDayIncremental.getChargeType();
@@ -103,5 +108,22 @@ public class BusinessDayInc4Export {
 
     public boolean isCharged() {
 	return isCharged;
+    }
+
+    public final TimeSnippet getCurrentTimeSnippet() {
+	return this.currentTimeSnippet;
+    }
+
+    /**
+     * Returns a new {@link BusinessDayInc4Export} for the given
+     * {@link BusinessDayIncremental}
+     * 
+     * @param currentBussinessDayIncremental
+     * @return a new {@link BusinessDayInc4Export} for the given
+     *         {@link BusinessDayIncremental}
+     */
+    public static BusinessDayInc4Export of(BusinessDayIncremental currentBussinessDayIncremental) {
+	BusinessDayInc4Export businessDayInc4Export = new BusinessDayInc4Export(currentBussinessDayIncremental);
+	return businessDayInc4Export;
     }
 }

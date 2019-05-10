@@ -12,7 +12,6 @@ import com.myownb3.dominic.ui.core.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.core.pages.overview.model.OverviewPageModel;
 import com.myownb3.dominic.ui.core.pages.overview.model.resolver.OverviewPageModelResolver;
 import com.myownb3.dominic.ui.core.pages.overview.model.table.BusinessDayIncTableCellValue;
-import com.myownb3.dominic.ui.core.pages.overview.model.table.BusinessDayTableModel;
 import com.myownb3.dominic.ui.core.pages.overview.view.OverviewPage;
 import com.myownb3.dominic.ui.core.view.Page;
 
@@ -58,7 +57,6 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
 	super.initialize(page);
 	setBinding(dataModel);
-	new BusinessDayTableModel( tableView);
     }
 
     @FXML

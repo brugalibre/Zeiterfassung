@@ -10,6 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.work.businessday.update.BusinessDayIncrementUpdate;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.util.parser.NumberFormat;
@@ -159,11 +160,15 @@ public class BusinessDay {
 	}
 	return NumberFormat.parseFloat(NumberFormat.format(sum));
     }
-    
+
     /**
-     * Returns the Local sensitive representation of the total duration for the given {@link TIME_TYPE}
-     * @param type the given type of time
-     * @return the Local sensitive representation of the total duration for the given {@link TIME_TYPE}
+     * Returns the Local sensitive representation of the total duration for the
+     * given {@link TIME_TYPE}
+     * 
+     * @param type
+     *            the given type of time
+     * @return the Local sensitive representation of the total duration for the
+     *         given {@link TIME_TYPE}
      */
     public String getTotalDurationRep(TIME_TYPE type) {
 	float totalDuration = getTotalDuration(type);
@@ -213,13 +218,21 @@ public class BusinessDay {
 	return increments.get(0).getDate();
     }
 
-   /*package*/ Optional<BusinessDayIncremental> getBusinessIncrement(int orderNr) {
-        BusinessDayIncremental businessDayIncremental = null;
-        for (int i = 0; i < increments.size(); i++) {
-            if (orderNr == i + 1) {
-        	businessDayIncremental = increments.get(i);
-            }
-        }
-        return Optional.ofNullable(businessDayIncremental);
+    /* package */ Optional<BusinessDayIncremental> getBusinessIncrement(int orderNr) {
+	BusinessDayIncremental businessDayIncremental = null;
+	for (int i = 0; i < increments.size(); i++) {
+	    if (orderNr == i + 1) {
+		businessDayIncremental = increments.get(i);
+	    }
+	}
+	return Optional.ofNullable(businessDayIncremental);
+    }
+
+    /**
+     * @param update
+     */
+    public void addBusinessIncrement(BusinessDayIncrementUpdate update) {
+	// TODO Auto-generated method stub
+
     }
 }
