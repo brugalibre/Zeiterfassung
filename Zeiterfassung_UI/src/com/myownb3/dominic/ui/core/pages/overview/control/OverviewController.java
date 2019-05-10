@@ -1,31 +1,32 @@
 /**
  * 
  */
-package com.myownb3.dominic.ui.views.overview;
+package com.myownb3.dominic.ui.core.pages.overview.control;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
+import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
+import com.myownb3.dominic.ui.core.pages.mainpage.control.MainWindowController;
+import com.myownb3.dominic.ui.core.pages.overview.model.OverviewPageModel;
+import com.myownb3.dominic.ui.core.pages.overview.model.resolver.OverviewPageModelResolver;
+import com.myownb3.dominic.ui.core.pages.overview.model.table.BusinessDayIncTableCellValue;
+import com.myownb3.dominic.ui.core.pages.overview.model.table.BusinessDayTableModel;
+import com.myownb3.dominic.ui.core.pages.overview.view.OverviewPage;
+import com.myownb3.dominic.ui.core.view.Page;
 
-import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
-import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
-import com.myownb3.dominic.ui.app.MainWindow;
-import com.myownb3.dominic.ui.views.overview.table.TablePanel;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.BorderPane;
 
 /**
  * @author Dominic
  * 
  */
-public class OverviewView extends JPanel{
-    private static final long serialVersionUID = 1L;
+public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel> {
 
     /**
      * There are five fix headers: Number, Amount of Hours, Ticket, charge-Type &
@@ -33,122 +34,58 @@ public class OverviewView extends JPanel{
      */
     public static final int AMOUNT_OF_FIX_HEADERS = 5;
 
-    private static int HEIGHT;
-    private static int WIDTH;
+    private MainWindowController mainWindowController;
 
-    private MainWindow mainView;
-    private TablePanel tablePanel;
+    @FXML
+    private BorderPane borderPane;
 
-    private JButton clearButton;
-    private JButton chargeOffButton;
-    private JButton exportButton;
+    @FXML
+    private TableView<BusinessDayIncTableCellValue> tableView;
 
-    static {
-	HEIGHT = 150;
-	WIDTH = 600;
+    @FXML
+    private Button clearButton;
+    @FXML
+    private Button chargeOffButton;
+    @FXML
+    private Button exportButton;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+	initialize(new OverviewPage(this, url));
     }
 
-    public OverviewView(MainWindow mainView) {
-	super(new BorderLayout());
-	this.mainView = mainView;
-	this.tablePanel = new TablePanel();
-
-	JScrollPane scrollPane = new JScrollPane(tablePanel.getTable());
-	scrollPane.setBorder(BorderFactory.createEmptyBorder());
-	scrollPane.setPreferredSize(new Dimension((int) (WIDTH * 1.7), HEIGHT));
-
-	add(scrollPane, BorderLayout.CENTER);
-	JPanel controlPanel = createControlPanel();
-	add(controlPanel, BorderLayout.PAGE_END);
+    @Override
+    public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
+	super.initialize(page);
+	setBinding(dataModel);
+	new BusinessDayTableModel( tableView);
     }
 
-    /**
-     * @return
-     */
-    private JPanel createControlPanel() {
-	JPanel panel = new JPanel(new FlowLayout());
+    @FXML
+    private void onAction(ActionEvent actionEvent) {
 
-	ActionListener listener = createActionListener();
-	createChargeButton(listener);
-	createClearButton(listener);
-	createExportButton(listener);
-
-	panel.add(clearButton, FlowLayout.LEFT);
-	panel.add(exportButton, FlowLayout.CENTER);
-	panel.add(chargeOffButton, FlowLayout.RIGHT);
-	return panel;
+	if (actionEvent.getSource() == clearButton) {
+	    mainWindowController.clearBusinessDayContents();
+	    mainWindowController.dispose();
+	} else if (actionEvent.getSource() == chargeOffButton) {
+	    mainWindowController.chargeOff();
+	} else if (actionEvent.getSource() == exportButton) {
+	    mainWindowController.export();
+	}
     }
 
-    /**
-     * @param listener
-     * 
-     */
-    private void createChargeButton(ActionListener listener) {
-	chargeOffButton = new JButton(TextLabel.CHARGE_LABEL);
-	chargeOffButton.addActionListener(listener);
+    @Override
+    protected PageModelResolver<OverviewPageModel, OverviewPageModel> createPageModelResolver() {
+	return new OverviewPageModelResolver();
     }
 
-    /**
-     * @param listener
-     * 
-     */
-    private void createExportButton(ActionListener listener) {
-	exportButton = new JButton(TextLabel.EXPORT_LABEL);
-	exportButton.addActionListener(listener);
+    @Override
+    protected void setBinding(OverviewPageModel pageVO) {
+	// tablePanel.initialize(bussinessDay, handler);
+	chargeOffButton.disableProperty().set(getDataModel().isChargeButtonDisabled().getValue());
     }
 
-    /**
-     * @param listener
-     * 
-     */
-    private void createClearButton(ActionListener listener) {
-	clearButton = new JButton(TextLabel.CLEAR_LABEL);
-	clearButton.addActionListener(listener);
-    }
-
-    private ActionListener createActionListener() {
-	return e -> {
-	    if (e.getSource() == clearButton) {
-		clearBusinessDayContents();
-		mainView.dispose();
-	    } else if (e.getSource() == chargeOffButton) {
-		chargeOffTicketData();
-	    } else if (e.getSource() == exportButton) {
-		export();
-	    }
-	};
-    }
-
-    /**
-    * 
-    */
-    protected void export() {
-	mainView.export();
-    }
-
-    /**
-    * 
-    */
-    protected void clearBusinessDayContents() {
-	mainView.clearBusinessDayContents();
-    }
-
-    /**
-    * 
-    */
-    protected void chargeOffTicketData() {
-	mainView.chargeOff();
-    }
-
-    /**
-     * @return
-     */
-    public Dimension getDimension() {
-	return new Dimension(WIDTH, HEIGHT);
-    }
-
-    public void initialize(BusinessDay4Export bussinessDay, BusinessDayChangedCallbackHandler handler) {
-	tablePanel.initialize(bussinessDay, handler);
-	chargeOffButton.setEnabled(TimeRecorder.hasNotChargedElements());
+    public void setMainWindowController(MainWindowController mainWindowController) {
+	this.mainWindowController = mainWindowController;
     }
 }

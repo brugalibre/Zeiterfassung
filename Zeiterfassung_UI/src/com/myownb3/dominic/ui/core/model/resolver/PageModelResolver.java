@@ -3,8 +3,6 @@
  */
 package com.myownb3.dominic.ui.core.model.resolver;
 
-import java.lang.ModuleLayer.Controller;
-
 import com.myownb3.dominic.ui.core.model.PageModel;
 
 /**
