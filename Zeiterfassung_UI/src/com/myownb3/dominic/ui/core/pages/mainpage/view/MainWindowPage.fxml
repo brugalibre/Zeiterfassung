@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+
+<AnchorPane id="anchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.core.pages.mainpage.control.MainWindowController">
+   <children>
+      <StackPane id="mainPanel" fx:id="mainPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <fx:include fx:id="overviewPanel" source="../../overview/view/OverviewPage.fxml" />
+            <fx:include fx:id="stopBusinessDayIncrementPanel" source="../../userinput/view/StopBusinessDayIncrementPage.fxml" />
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>

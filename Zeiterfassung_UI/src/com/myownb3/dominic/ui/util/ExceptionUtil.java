@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.ui.views.dialog.DialogManager;
+import com.myownb3.dominic.ui.core.dialog.DialogManager;
 
 /**
  * An util-class for usage with {@link Exception}s. E.g is it possible to show
