@@ -31,7 +31,7 @@ public class BookerHelper {
      */
     public void book() {
 	List<String> content2Charge = createBookContent();
-	chargeInternal(content2Charge);
+	bookInternal(content2Charge);
 	flagBusinessDayAsCharged();
     }
 
@@ -42,7 +42,7 @@ public class BookerHelper {
     /*
      * Does the actual charging
      */
-    private void chargeInternal(List<String> content) {
+    private void bookInternal(List<String> content) {
 	try {
 	    Booker booker = new Booker();
 	    booker.bookList(content);

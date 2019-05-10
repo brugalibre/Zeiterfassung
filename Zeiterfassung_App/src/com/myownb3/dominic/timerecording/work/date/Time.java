@@ -24,6 +24,16 @@ public class Time extends java.sql.Time {
      */
     public Time(long time) {
 	super(time);
+	roundSeconds();
+    }
+
+    @SuppressWarnings("deprecation")
+    private void roundSeconds() {
+	if (getSeconds() >= 30) {
+	    setSeconds(60);
+	} else {
+	    setSeconds(0);
+	}
     }
 
     /**

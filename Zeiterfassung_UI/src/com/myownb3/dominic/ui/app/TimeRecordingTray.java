@@ -108,7 +108,7 @@ public class TimeRecordingTray {
     }
 
     private void startTurboBucher() {
-	mainWindow.chargeOff();
+	mainWindow.book();
     }
 
     /**
