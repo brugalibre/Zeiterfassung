@@ -16,11 +16,6 @@ import com.myownb3.dominic.ui.core.model.PageModel;
 public interface Page<IN_VO extends PageModel, OUT_VO extends PageModel> {
 
     /**
-     * Initializes this {@link Page}
-     */
-    public void initialize();
-
-    /**
      * Returns the controller of this Page
      * 
      * @return the controller of this Page
@@ -65,4 +60,14 @@ public interface Page<IN_VO extends PageModel, OUT_VO extends PageModel> {
      * Refreshes this Page
      */
     public void refresh();
+    
+    /**
+     * Shows this {@link Page}
+     */
+    public void show();
+    
+    /**
+     * Hides this {@link Page}
+     */
+    public void hide();
 }

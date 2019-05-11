@@ -19,7 +19,7 @@
       <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <buttons>
             <Button id="clearButton" fx:id="clearButton" mnemonicParsing="false" onAction="#onAction" text="clearButton" />
-          <Button id="chargeOffButton" fx:id="chargeOffButton" mnemonicParsing="false" onAction="#onAction" text="chargeOffButton" />
+          <Button id="chargeOffButton" fx:id="bookButton" mnemonicParsing="false" onAction="#onAction" text="bookButton" />
             <Button id="exportButton" fx:id="exportButton" mnemonicParsing="false" onAction="#onAction" text="exportButton" />
         </buttons>
       </ButtonBar>

@@ -232,7 +232,8 @@ public class BusinessDay {
      * @param update
      */
     public void addBusinessIncrement(BusinessDayIncrementUpdate update) {
-	// TODO Auto-generated method stub
-
+	BusinessDayIncremental incremental = BusinessDayIncremental.of(update);
+	increments.add(incremental);
+	checkForRedundancys();
     }
 }

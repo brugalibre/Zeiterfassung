@@ -3,6 +3,9 @@
  */
 package com.myownb3.dominic.ui.core.pages.overview.model.table;
 
+
+import java.util.List;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -14,18 +17,20 @@ public class BusinessDayIncTableCellValue {
 
     private StringProperty numberProperty;
     private StringProperty totalDurationProperty;
-    private StringProperty ticketNrProperty;
+    private StringProperty ticketNumberProperty;
     private StringProperty descriptionProperty;
     private StringProperty chargeTypeProperty;
     private StringProperty isChargedProperty;
 
+    private List<TimeSnippetCellValue> beginEndValues;
+    
     /**
      * Creates a new empty {@link BusinessDayIncTableCellValue}
      */
     public BusinessDayIncTableCellValue() {
 	numberProperty = new SimpleStringProperty();
 	totalDurationProperty = new SimpleStringProperty();
-	ticketNrProperty = new SimpleStringProperty();
+	ticketNumberProperty = new SimpleStringProperty();
 	descriptionProperty = new SimpleStringProperty();
 	chargeTypeProperty = new SimpleStringProperty();
 	isChargedProperty = new SimpleStringProperty();
@@ -52,11 +57,35 @@ public class BusinessDayIncTableCellValue {
 	totalDurationProperty.set(totalDurationRep);
     }
 
+    public String getNumber() {
+        return numberProperty.get();
+    }
+
+    public String getTotalDuration() {
+        return totalDurationProperty.get();
+    }
+
+    public String getTicketNumber() {
+        return ticketNumberProperty.get();
+    }
+
+    public String getDescription() {
+        return descriptionProperty.get();
+    }
+
+    public String getChargeType() {
+        return chargeTypeProperty.get();
+    }
+
+    public String getIsCharged() {
+        return isChargedProperty.get();
+    }
+
     /**
      * @param ticketNumber
      */
     public void setTicketNumber(String ticketNumber) {
-	ticketNrProperty.set(ticketNumber);
+	ticketNumberProperty.set(ticketNumber);
     }
 
     /**

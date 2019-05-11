@@ -34,6 +34,11 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
 	this(null);
     }
 
+    @Override
+    protected void initialize() {
+	// nothing to do by default
+    }
+    
     /**
      * Creates a new AbstractFXPage
      * 
@@ -45,6 +50,21 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
 	initializeFXMLContent(Optional.ofNullable(stage));
     }
 
+    @Override
+    public void hide() {
+	getStage().ifPresent(stage -> stage.hide());
+    }
+    
+    @Override
+    public void show() {
+	getStage().ifPresent(stage -> stage.show());
+    }
+
+    protected Optional<Stage> getStage() {
+	FXPageContent content = (FXPageContent) getContent();
+	return content.getStage();
+    }
+    
     protected void initializeFXMLContent(Optional<Stage> stage) {
 	FXMLLoader loader = new FXMLLoader();
 	try {

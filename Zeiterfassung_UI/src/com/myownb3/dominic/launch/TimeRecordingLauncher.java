@@ -3,23 +3,25 @@
  */
 package com.myownb3.dominic.launch;
 
-import javax.swing.SwingUtilities;
-
-import com.myownb3.dominic.librarys.PictureLibrary;
+import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
+
 /**
  * @author Dominic
  * @version {@value TimeRecorder#VERSION}
  */
-public class TimeRecordingLauncher {
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
+public class TimeRecordingLauncher extends Application {
+
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
 	Runtime.getRuntime().addShutdownHook(createShutdownHook());
 
 	TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
@@ -29,7 +31,8 @@ public class TimeRecordingLauncher {
 	GlobalExceptionHandler.registerHandler(callbackHandler);
 
 	PictureLibrary.loadPictures();
-	SwingUtilities.invokeLater(() -> timeRecordingTray.registerSystemtray());
+	Platform.setImplicitExit(false);
+	Platform.runLater(() -> timeRecordingTray.registerSystemtray(primaryStage));
     }
 
     /**

@@ -91,7 +91,7 @@ public class InputMask extends JPanel {
 	});
 	abbortButton.addActionListener(actionListener);
 
-	setDimension(new Dimension(320, 260));
+	setDimension(new Dimension(100, 260));
 	addKeyListener(mainWindow);
     }
 

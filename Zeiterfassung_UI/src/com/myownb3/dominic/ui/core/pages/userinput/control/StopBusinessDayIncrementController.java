@@ -97,7 +97,7 @@ public class StopBusinessDayIncrementController
     }
 
     private boolean isInputValid() {
-	return new InputFieldVerifier().verify(amountOfHoursTextField);
+	return new InputFieldVerifier().verify(amountOfHoursTextField) && kindOfServiceComboBox.getSelectionModel().getSelectedItem() != null;
     }
 
     @Override

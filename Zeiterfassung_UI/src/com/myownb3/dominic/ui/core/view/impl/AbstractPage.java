@@ -29,10 +29,7 @@ public abstract class AbstractPage<IN_VO extends PageModel, OUT_VO extends PageM
 	initialize();
     }
 
-    @Override
-    public void initialize() {
-	// So far nothing to initialize
-    }
+    protected abstract void initialize();
 
     /**
      * Defines if the content of a {@link Page} (changed by a user) is valid or not
@@ -54,7 +51,7 @@ public abstract class AbstractPage<IN_VO extends PageModel, OUT_VO extends PageM
      * @param controller
      *            the controller to set
      */
-    public void setController(Controller<IN_VO, OUT_VO> controller) {
+    protected void setController(Controller<IN_VO, OUT_VO> controller) {
 	this.controller = controller;
     }
 

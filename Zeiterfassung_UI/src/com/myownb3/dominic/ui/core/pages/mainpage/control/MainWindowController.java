@@ -6,9 +6,7 @@ package com.myownb3.dominic.ui.core.pages.mainpage.control;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
@@ -48,7 +46,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     public void initialize(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {
 
 	super.initialize(mainWindowPage);
-	overviewPanelController.setMainWindowController(this);
+	overviewPanelController.init(this);
 	stopBusinessDayIncrementPanelController.setMainWindowController(this);
 
 	FXPageContent pageContent = (FXPageContent) mainWindowPage.getContent();
@@ -58,21 +56,26 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	stage.getIcons().add(PictureLibrary.getClockImageIcon());
     }
 
-    public void showInputMask() {
+    public void showInputMask(Stage stage) {
 
 	overviewPanel.setVisible(false);
 	stopBusinessDayIncrementPanel.setVisible(true);
 	mainPanel.getChildren().clear();
 	mainPanel.getChildren().add(stopBusinessDayIncrementPanel);
+	
 	stopBusinessDayIncrementPanelController.show();
 	show();
     }
 
-    public void showOverviewView() {
+    public void showOverviewView(Stage stage) {
 	overviewPanel.setVisible(true);
 	stopBusinessDayIncrementPanel.setVisible(false);
 	mainPanel.getChildren().clear();
 	mainPanel.getChildren().add(overviewPanel);
+
+	stage.sizeToScene();
+
+	overviewPanelController.show();
 	show();
     }
 
@@ -93,7 +96,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     }
 
     public void dispose() {
-	((FXPageContent) page.getContent()).getStage().get().hide();
+	page.hide();
     }
 
     /**
@@ -110,7 +113,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	TimeRecorder.export();
     }
 
-    public void chargeOff() {
+    public void bookOff() {
 	TimeRecorder.book();
 	refresh();
     }
@@ -126,13 +129,6 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	// showOverviewView(TimeRecorder.getBussinessDay());
 	// }
 	timeRecordingTray.updateUIStates(false);
-    }
-
-    private BusinessDayChangedCallbackHandler getCallbackHandler(BusinessDay bussinessDay) {
-	return changeValue -> {
-	    new BusinessDayChangedCallbackHandlerImpl(bussinessDay).handleBusinessDayChanged(changeValue);
-	    showOverviewView();
-	};
     }
 
     @Override

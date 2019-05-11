@@ -18,6 +18,7 @@ public class OverviewPageModel implements PageModel {
 
     private BusinessDay4Export businessDay4Export;
     private Property<Boolean> isChargeButtonDisabled;
+    private Property<Boolean> isClearButtonDisabled;
 
     /**
      * Creates a new {@link OverviewPageModel}
@@ -25,6 +26,7 @@ public class OverviewPageModel implements PageModel {
     public OverviewPageModel(BusinessDay4Export businessDay4Export) {
 	this.businessDay4Export = businessDay4Export;
 	isChargeButtonDisabled = new SimpleBooleanProperty(!TimeRecorder.hasNotChargedElements());
+	isClearButtonDisabled = new SimpleBooleanProperty(isChargeButtonDisabled.getValue());
     }
 
     public final BusinessDay4Export getBusinessDay4Export() {
@@ -34,7 +36,11 @@ public class OverviewPageModel implements PageModel {
     /**
      * @return
      */
-    public Property<Boolean> isChargeButtonDisabled() {
+    public Property<Boolean> getIsChargeButtonDisabled() {
 	return isChargeButtonDisabled;
+    }
+
+    public Property<Boolean> getIsClearButtonDisabled() {
+	return isClearButtonDisabled;
     }
 }

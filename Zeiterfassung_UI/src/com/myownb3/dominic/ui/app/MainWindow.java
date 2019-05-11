@@ -11,7 +11,6 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.myownb3.dominic.librarys.PictureLibrary;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
@@ -19,6 +18,7 @@ import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
+import com.myownb3.dominic.ui.core.pages.mainpage.view.ViewList;
 import com.myownb3.dominic.ui.views.overview.OverviewView;
 import com.myownb3.dominic.ui.views.userinput.InputMask;
 
@@ -41,7 +41,6 @@ public class MainWindow  implements KeyListener {
 	content.add(overviewView, ViewList.OVERVIEW_VIEW.toString());
 
 	mainWindow = new JFrame(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
-	mainWindow.setIconImage(PictureLibrary.getClockImageIcon());
 	setLocation();
 	mainWindow.add(content);
 	mainWindow.addKeyListener(this);
