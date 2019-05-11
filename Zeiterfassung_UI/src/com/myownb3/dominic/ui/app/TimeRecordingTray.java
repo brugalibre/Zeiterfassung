@@ -11,14 +11,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import javax.swing.UIManager;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
-
-import com.myownb3.dominic.librarys.PictureLibrary;
+import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.ui.styles.color.Colors;
+import com.myownb3.dominic.ui.core.pages.mainpage.view.MainWindowPage;
 import com.myownb3.dominic.ui.util.ExceptionUtil;
+
+import javafx.application.Platform;
+import javafx.stage.Stage;
 
 /**
  * @author Dominic
@@ -26,16 +26,11 @@ import com.myownb3.dominic.ui.util.ExceptionUtil;
  */
 public class TimeRecordingTray {
     private TrayIcon trayIcon;
-    private MainWindow mainWindow;
     private MenuItem showHoursItem;
     private MenuItem startTurboBucher;
-
-    public void registerSystemtray() {
-
-	setLookAndFeel();
-	PopupMenu popup = new PopupMenu();
-
-	mainWindow = new MainWindow(this);
+    private MainWindowPage mainWindowPage;
+    
+    public void registerSystemtray(Stage primaryStage) {
 
 	trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(),
 		TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
@@ -45,56 +40,18 @@ public class TimeRecordingTray {
 	showHoursItem = new MenuItem(TextLabel.SHOW_WORKING_HOURS);
 	startTurboBucher = new MenuItem(TextLabel.CHARGE_LABEL);
 
+	PopupMenu popup = new PopupMenu();
 	popup.add(startTurboBucher);
 	popup.add(showHoursItem);
 	popup.addSeparator();
 	popup.add(exitItem);
 	trayIcon.setPopupMenu(popup);
 
-	SystemTray tray = SystemTray.getSystemTray();
-	try {
-	    tray.add(trayIcon);
-	} catch (Exception e) {
-	    throw new RuntimeException("Unable to add tray icon!", e);
-	}
+	mainWindowPage = new MainWindowPage(this, primaryStage);
+	getTrayAndAddTrayIcon();
 
-	trayIcon.addMouseMotionListener(new MouseMotionListener() {
-
-	    @Override
-	    public void mouseMoved(MouseEvent arg0) {
-		trayIcon.setToolTip(TimeRecorder.getInfoStringForState());
-	    }
-
-	    @Override
-	    public void mouseDragged(MouseEvent arg0) {
-	    }
-	});
-	trayIcon.addMouseListener(new MouseListener() {
-	    @Override
-	    public void mouseReleased(MouseEvent e) {
-	    }
-
-	    @Override
-	    public void mousePressed(MouseEvent e) {
-	    }
-
-	    @Override
-	    public void mouseExited(MouseEvent e) {
-	    }
-
-	    @Override
-	    public void mouseEntered(MouseEvent e) {
-	    }
-
-	    @Override
-	    public void mouseClicked(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
-		    if (TimeRecorder.handleUserInteraction()) {
-			showInputMask();
-		    }
-		}
-	    }
-	});
+	trayIcon.addMouseMotionListener(getMouseMotionListener());
+	trayIcon.addMouseListener(getMouseListener());
 
 	showHoursItem.addActionListener(actionEvent -> showOverviewView());
 	showHoursItem.setEnabled(false);
@@ -102,43 +59,21 @@ public class TimeRecordingTray {
 	startTurboBucher.setEnabled(false);
 
 	exitItem.addActionListener(actionEvent -> {
-	    tray.remove(trayIcon);
-	    System.exit(0);
+	    Platform.exit();
 	});
     }
 
     private void startTurboBucher() {
-	mainWindow.book();
+	TimeRecorder.book();
+	mainWindowPage.refresh();
     }
 
-    /**
-    * 
-    */
     protected void showOverviewView() {
-	mainWindow.showOverviewView(TimeRecorder.getBussinessDay());
+	Platform.runLater(() ->	mainWindowPage.showOverviewView());
     }
 
-    /**
-    * 
-    */
     protected void showInputMask() {
-	mainWindow.showInputMask(TimeRecorder.getBussinessDay().getCurrentBussinessDayIncremental());
-    }
-
-    private void setLookAndFeel() {
-	try {
-	    UIManager.setLookAndFeel(new NimbusLookAndFeel());
-	    UIManager.put("control", Colors.BACKGROUND_COLOR); // change the
-							       // color of the
-							       // background of
-							       // Nimbus L&F
-	} catch (Exception ex) {
-	    try {
-		UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-	    } catch (Exception e) {
-		throw new RuntimeException(e);
-	    }
-	}
+	Platform.runLater(() ->	mainWindowPage.showInputMask());
     }
 
     /**
@@ -179,5 +114,57 @@ public class TimeRecordingTray {
 	TimeRecorder.clear();
 	showHoursItem.setEnabled(false);
 	startTurboBucher.setEnabled(false);
+    }
+
+    private void getTrayAndAddTrayIcon() {
+	SystemTray tray = SystemTray.getSystemTray();
+	try {
+	    tray.add(trayIcon);
+	} catch (Exception e) {
+	    throw new RuntimeException("Unable to add tray icon!", e);
+	}
+    }
+
+    private MouseMotionListener getMouseMotionListener() {
+	return new MouseMotionListener() {
+
+	    @Override
+	    public void mouseMoved(MouseEvent arg0) {
+		trayIcon.setToolTip(TimeRecorder.getInfoStringForState());
+	    }
+
+	    @Override
+	    public void mouseDragged(MouseEvent arg0) {
+	    }
+	};
+    }
+
+    private MouseListener getMouseListener() {
+	return new MouseListener() {
+	    @Override
+	    public void mouseReleased(MouseEvent e) {
+	    }
+
+	    @Override
+	    public void mousePressed(MouseEvent e) {
+	    }
+
+	    @Override
+	    public void mouseExited(MouseEvent e) {
+	    }
+
+	    @Override
+	    public void mouseEntered(MouseEvent e) {
+	    }
+
+	    @Override
+	    public void mouseClicked(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON1) {
+		    if (TimeRecorder.handleUserInteraction()) {
+			Platform.runLater(() ->  showInputMask());
+		    }
+		}
+	    }
+	};
     }
 }
