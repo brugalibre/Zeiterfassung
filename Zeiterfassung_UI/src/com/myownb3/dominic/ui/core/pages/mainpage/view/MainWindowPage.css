@@ -14,11 +14,11 @@
 * like "FlatBee theme by karlthebee (https://github.com/karlthebee/flatbee)"
 */
 
-/*
+	/*
 	* These are values you can edit safely.
 	The "color" is your main color (in this case greenish)
 	*/
-* {
+{
 	-color : #2ecc71;
 	-white : #efefef;
 	-adcblue : rgb(0,69,135);
@@ -171,69 +171,6 @@
 	-fx-background-color : -adcblue;
 }
 
-
-/*
- * **********
- * PROGRESSBAR
- * **********
- * 
- */
-.progress-indicator {
-	-fx-indeterminate-segment-count : 12;
-	-fx-progress-color : -adcblue;
-	-fx-spin-enabled : true;
-}
-
-.progress-bar>*.bar{
-	 -fx-background-color : -adcblue;
- }
- 
-.progress-bar>*.track{
-	 -fx-background-color : -adcblue;
- }
- 
-.progress-bar:determinate>*.determinate-indicator>*.track{
-	 -fx-background-color : -adcblue;
- }
-
-.progress-bar:determinate>*.determinate-indicator>*.indicator{
-	 -fx-background-color : -adcblue;
- }
- 
- /*
- * **********
- * DATE PICKER
- * **********
- * 
- */
-.date-picker{
-	-fx-background-color : -white,-adcblue,gray;
-}
-
-.date-picker>*.arrow-button{
-	-fx-background-color : -white,-adcblue,-adcblue;
-}
- 
- .date-picker>*.arrow-button>*.arrow{
-	-fx-background-color : -brightadcblue, -black;
-}
-/*
- * **********
- * SLIDER
- * **********
- * 
- */
- .slider>*.track{
-	 -fx-background-color : -adcblue;
- }
-.slider>*.axis:bottom{
-	-fx-tick-label-font-family : 'Segoe UI';
-}
-
-.slider>*.thumb{
-	-fx-background-color : -adcblue;
-}
-
 /*
  * **********
  * COMBOBOX
@@ -273,41 +210,6 @@
 .check-box>*.box{
 	-fx-background-color : -adcblue;
 }
-
-
-/*
- * **********
- * TABPANE
- * **********
- * 
- */
- .tab-pane>*.tab-header-area{
-	 -fx-padding : 0,0,0,0;
- }
-.tab-pane>*.tab-header-area>*.headers-region>*.tab:selected:top{
-	-fx-padding : 6,6,6,6;
-	-fx-text-fill : -white;
-	-fx-background-color : -adcblue;
-}
-.tab-pane>*.tab-header-area>*.headers-region>*.tab:selected>*.tab-container>*.tab-label{
-	-fx-font-size : 13.0;
-	-fx-font-weight: bold;
-}
-
-.tab-pane>*.tab-header-area>*.headers-region>*.tab:top{
-	-fx-padding : 4,4,4,4;
-	-fx-text-fill : -white;
-	-fx-background-color : -white;
-}
-
-.tab-pane>*.tab-header-area>*.control-buttons-tab>*.container>*.tab-down-button{
-	-fx-background-color : -white;
-}
-
-.tab-pane>*.tab-header-area>*.control-buttons-tab>*.container>*.tab-down-button>*.arrow{
-	-fx-background-color : -brightadcblue;
-}
-
 
 /*
  * **********
@@ -375,28 +277,6 @@
 .spinner>*.decrement-arrow-button{
 	-fx-background-color : -adcblue;
 }
-/*
- * **********
- * Titled Pane
- * **********
- * 
- */
-
-.first-titled-pane:expanded>*.title{
-	-fx-background-color : -adcblue;
-}
-
-.titled-pane:expanded>*.title{
-	-fx-background-color : -adcblue;
-}
-
-.titled-pane:collapsed>*.title{
-	-fx-background-color : -adcblue;
-}
-
-.titled-pane*>*.title>*.arrow-button>*.arrow{
-	-fx-background-color : -black;
-}
 
 /*
  * **********
@@ -417,17 +297,18 @@
 }
 
 .table-view>*.column-header-background>*.nested-column-header>*.table-column{
-	-fx-background-color : -brightadcblue, -white;
+	-fx-background-color : -brightadcblue, -brightadcblue;
+	-fx-text-fill: -white;
 }
 
 .table-view>*.column-header-background>*.filler{
-	-fx-background-color : -brightadcblue, -adcblue;
+	-fx-background-color : -brightadcblue, -brightadcblue;
+	-fx-text-fill: -white;
 }
 
 .table-view>*.column-header-background>*.show-hide-columns-button{
 	-fx-background-color : -adcblue;
 }
-
 
 .tree-table-view:row-selection{
 	-fx-background-color : -adcblue;
@@ -453,15 +334,33 @@
 	-fx-background-color : -adcblue;
 }
 
-
 /*
  * **********
- * Color picker
+ * Any pane
  * **********
  * 
  */
-.color-picker{
-	-fx-background-color : -adcblue;
+.anchorpane{
+    -fx-background-color: -white;
+}
+
+ 
+.pane{
+    -fx-background-color: -white;
+}
+
+/*
+ * **********
+ * H,- und VBox
+ * **********
+ * 
+ */
+.hbox {
+    -fx-background-color: -white;
+}
+
+.vbox {
+    -fx-background-color: -white;
 }
 
 /*
