@@ -155,6 +155,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
 	case BEGIN:
 	    amountOfHoursTextFieldProperty.set(timeSnippet.getDurationRep());
+	    beginTextFieldProperty.set(timeSnippet.getBeginTimeStampRep());
 	    break;
 	case END:
 	    amountOfHoursTextFieldProperty.set(timeSnippet.getDurationRep());
