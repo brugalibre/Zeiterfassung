@@ -14,7 +14,7 @@
       <Insets bottom="5.0" />
    </padding>
    <center>
-      <VBox BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" spacing="5.0" BorderPane.alignment="TOP_CENTER">
          <children>
             <FlowPane hgap="5.0">
                <children>

@@ -5,10 +5,10 @@ import static javafx.collections.FXCollections.observableList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
+import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export;
@@ -82,20 +82,19 @@ public class BusinessDayTableModelHelper {
 
 	    TableColumn<BusinessDayIncTableRowValue, String> beginTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		    TextLabel.VON_LABEL);
-	    beginTableColumn.setCellValueFactory(
-		    getTimeSnippetBeginEndCellValueFactory(i, beginTableColumn, timeSnippet -> timeSnippet.getBegin()));
-	    beginTableColumn.setCellFactory(
-		    getTimeSnippetBeginEndCellFactory(i, beginTableColumn, timeSnippet -> timeSnippet.getBegin()));
 
 	    TableColumn<BusinessDayIncTableRowValue, String> endTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		    TextLabel.BIS_LABEL);
-	    endTableColumn.setCellValueFactory(
-		    getTimeSnippetBeginEndCellValueFactory(i, endTableColumn, timeSnippet -> timeSnippet.getEnd()));
-	    endTableColumn.setCellFactory(
-		    getTimeSnippetBeginEndCellFactory(i, endTableColumn, timeSnippet -> timeSnippet.getEnd()));
 
 	    beginEndHeaders.add(beginTableColumn);
 	    beginEndHeaders.add(endTableColumn);
+	}
+
+	for (int i = 0; i < beginEndHeaders.size(); i++) {
+	    TableColumn<BusinessDayIncTableRowValue, String> tableColumn = beginEndHeaders.get(i);
+
+	    tableColumn.setCellValueFactory(getTimeSnippetBeginEndCellValueFactory(i, tableColumn));
+	    tableColumn.setCellFactory(getTimeSnippetBeginEndCellFactory(i, tableColumn));
 	}
 
 	titleHeaders.addAll(beginEndHeaders);
@@ -112,22 +111,30 @@ public class BusinessDayTableModelHelper {
     }
 
     private Callback<CellDataFeatures<BusinessDayIncTableRowValue, String>, ObservableValue<String>> getTimeSnippetBeginEndCellValueFactory(
-	    final int i, TableColumn<BusinessDayIncTableRowValue, String> tableColumn,
-	    Function<TimeSnippetCellValue, String> timeSnippetFunction) {
+	    final int i, TableColumn<BusinessDayIncTableRowValue, String> tableColumn) {
 	return cellData -> {
 	    BusinessDayIncTableRowValue businessDayIncTableCellValue = cellData.getValue();
+
 	    TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue.getTimeSnippet(i);
-	    return new SimpleStringProperty(timeSnippetFunction.apply(timeSnippet4Index));
+	    System.err.println("Index: " + i + ", ValueType: " + timeSnippet4Index.getValueType() + ", Value: "
+		    + timeSnippet4Index.getBeginOrEnd());
+	    return new SimpleStringProperty(timeSnippet4Index.getBeginOrEnd());
 	};
     }
 
     private Callback<TableColumn<BusinessDayIncTableRowValue, String>, TableCell<BusinessDayIncTableRowValue, String>> getTimeSnippetBeginEndCellFactory(
-	    final int i, TableColumn<BusinessDayIncTableRowValue, String> tableColumn,
-	    Function<TimeSnippetCellValue, String> f) {
+	    final int i, TableColumn<BusinessDayIncTableRowValue, String> tableColumn) {
 	return cellData -> {
-	    tableColumn.editableProperty().set(true);
-	    tableColumn.setOnEditCommit(changeListener);
+	    // XXX Ugly hack: cellData.getCellData(i) is null although there is a value
+	    // visible on the table
+	    if (true || !StringUtil.isEmptyOrNull(cellData.getCellData(i))) {
+		tableColumn.editableProperty().set(true);
+		tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+		tableColumn.setOnEditCommit(changeListener);
+		return new TextFieldTableCell<>(new DefaultStringConverter());
+	    }
 	    return new TextFieldTableCell<>(new DefaultStringConverter());
+	    // return new TableCell<>();
 	};
     }
 
@@ -198,12 +205,13 @@ public class BusinessDayTableModelHelper {
 	int sequence = 0;
 	for (TimeSnippet4Export snippet : bussinessDayIncremental.getTimeSnippets()) {
 	    String begin = String.valueOf(snippet.getBeginTimeStampRep());
+	    snippetCells.add(TimeSnippetCellValue.of(begin, sequence, ValueTypes.BEGIN));
 	    String end = String.valueOf(snippet.getEndTimeStamp());
-	    snippetCells.add(TimeSnippetCellValue.of(begin, end, sequence));
+	    snippetCells.add(TimeSnippetCellValue.of(end, sequence, ValueTypes.END));
 	    sequence++;
 	}
 	for (int i = 0; i < bussinessDayIncremental.getTimeSnippetPlaceHolders().size(); i++) {
-	    snippetCells.add(TimeSnippetCellValue.of("", "", sequence));
+	    snippetCells.add(TimeSnippetCellValue.of("", sequence, ValueTypes.NONE));
 	    sequence++;
 	}
 	return snippetCells;

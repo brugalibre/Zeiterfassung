@@ -99,8 +99,8 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	String newValue = event.getNewValue();
 
 	ValueTypes valueType = businessDayIncTableCellValue.getChangeValueTypeForIndex(tablePosition.getColumn());
-	// Ugly hack TODO
-	if (valueType == null) {
+	// XXX Ugly hack. Since we had to make present values editable
+	if (valueType == ValueTypes.NONE) {
 	    show();
 	    return;
 	}
@@ -120,8 +120,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	    TablePosition<BusinessDayIncTableRowValue, String> tablePosition) {
 	TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue
 		.getTimeSnippe4RowIndex(tablePosition.getColumn());
-	int fromUptoSequence = timeSnippet4Index != null ? timeSnippet4Index.getSequence() : -1;
-	return fromUptoSequence;
+	return timeSnippet4Index != null ? timeSnippet4Index.getSequence() : -1;
     }
 
     @FXML

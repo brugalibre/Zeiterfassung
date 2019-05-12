@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
-import com.myownb3.dominic.util.utils.StringUtil;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -60,14 +59,8 @@ public class BusinessDayIncTableRowValue {
 	    index++;
 	}
 	for (TimeSnippetCellValue timeSnippetCellValue : timeSnippets) {
-	    if (!StringUtil.isEmptyOrNull(timeSnippetCellValue.getBegin())) {
-		valueTypesForIndex.put(index, ValueTypes.BEGIN);
-		index++;
-		valueTypesForIndex.put(index, ValueTypes.END);
-		index++;
-	    } else {
-
-	    }
+	    valueTypesForIndex.put(index, timeSnippetCellValue.getValueType());
+	    index++;
 	}
     }
 
@@ -106,7 +99,7 @@ public class BusinessDayIncTableRowValue {
 	default:
 	    break;
 	}
-	timeSnippetIndex = (index - offset) / 2;
+	timeSnippetIndex = index - offset;
 	if (timeSnippetIndex < timeSnippets.size() && timeSnippetIndex >= 0) {
 	    return timeSnippets.get(timeSnippetIndex);
 	}
