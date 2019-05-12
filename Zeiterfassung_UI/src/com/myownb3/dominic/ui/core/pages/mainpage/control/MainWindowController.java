@@ -108,22 +108,10 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     }
 
     /**
-     * 
+     * Clears all entrys in the BusinessDay and updates the system-tray
      */
     public void clearBusinessDayContents() {
 	timeRecordingTray.clearBusinessDayContents();
-    }
-
-    /**
-     * 
-     */
-    public void export() {
-	TimeRecorder.export();
-    }
-
-    public void bookOff() {
-	TimeRecorder.book();
-	refresh();
     }
 
     @Override

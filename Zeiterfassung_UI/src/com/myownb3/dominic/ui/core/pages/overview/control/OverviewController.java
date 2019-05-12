@@ -6,6 +6,7 @@ package com.myownb3.dominic.ui.core.pages.overview.control;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
@@ -134,9 +135,10 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	    mainWindowController.clearBusinessDayContents();
 	    mainWindowController.dispose();
 	} else if (actionEvent.getSource() == bookButton) {
-	    mainWindowController.bookOff();
+	    TimeRecorder.book();
+	    tableView.refresh();
 	} else if (actionEvent.getSource() == exportButton) {
-	    mainWindowController.export();
+	    TimeRecorder.export();
 	}
     }
 

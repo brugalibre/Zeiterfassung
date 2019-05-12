@@ -116,8 +116,6 @@ public class BusinessDayTableModelHelper {
 	    BusinessDayIncTableRowValue businessDayIncTableCellValue = cellData.getValue();
 
 	    TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue.getTimeSnippet(i);
-	    System.err.println("Index: " + i + ", ValueType: " + timeSnippet4Index.getValueType() + ", Value: "
-		    + timeSnippet4Index.getBeginOrEnd());
 	    return new SimpleStringProperty(timeSnippet4Index.getBeginOrEnd());
 	};
     }
