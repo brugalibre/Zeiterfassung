@@ -1,5 +1,7 @@
 package com.myownb3.dominic.ui.core.pages.overview.model.table;
 
+import static javafx.collections.FXCollections.observableList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,110 +16,140 @@ import com.myownb3.dominic.util.utils.StringUtil;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
+import javafx.util.converter.DefaultStringConverter;
 
 public class BusinessDayTableModelHelper {
 
-    private List<BusinessDayIncTableCellValue> colmnValues;
-    private List<TableColumn<BusinessDayIncTableCellValue, String>> columnNames;
+    private List<BusinessDayIncTableRowValue> colmnValues;
+    private List<TableColumn<BusinessDayIncTableRowValue, String>> columnNames;
+    private EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener;
 
-    private ListChangeListener<? super BusinessDayIncTableCellValue> listChangeListener;
-
-    public BusinessDayTableModelHelper(ListChangeListener<? super BusinessDayIncTableCellValue> listChangeListener) {
+    public BusinessDayTableModelHelper(
+	    EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener) {
 
 	columnNames = new ArrayList<>();
 	colmnValues = new ArrayList<>();
-	this.listChangeListener = listChangeListener;
+	this.changeListener = changeListener;
     }
 
-    public void init(BusinessDay4Export bussinessDay, TableView<BusinessDayIncTableCellValue> tableView) {
+    public void init(BusinessDay4Export bussinessDay, TableView<BusinessDayIncTableRowValue> tableView) {
 	Objects.requireNonNull(bussinessDay);
 	this.colmnValues = getBusinessDayCells(bussinessDay);
 	this.columnNames = getTableHeaders(bussinessDay);
+	tableView.setEditable(true);
+	tableView.getSelectionModel().cellSelectionEnabledProperty().set(true);
 	tableView.getColumns().setAll(columnNames);
-	ObservableList<BusinessDayIncTableCellValue> observableList = FXCollections.observableList(colmnValues);
-	observableList.addListener(listChangeListener);
+	ObservableList<BusinessDayIncTableRowValue> observableList = observableList(colmnValues);
 	tableView.setItems(observableList);
     }
 
-    private List<TableColumn<BusinessDayIncTableCellValue, String>> getTableHeaders(BusinessDay4Export bussinessDay) {
-	List<TableColumn<BusinessDayIncTableCellValue, String>> titleHeaders = new ArrayList<>();
-	TableColumn<BusinessDayIncTableCellValue, String> numberTableColumn = new TableColumn<BusinessDayIncTableCellValue, String>(
+    private List<TableColumn<BusinessDayIncTableRowValue, String>> getTableHeaders(BusinessDay4Export bussinessDay) {
+	List<TableColumn<BusinessDayIncTableRowValue, String>> titleHeaders = new ArrayList<>();
+	TableColumn<BusinessDayIncTableRowValue, String> numberTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.NUMMER_LABEL);
 	setCellValueFactory(numberTableColumn, "number");
 	titleHeaders.add(numberTableColumn);
-	TableColumn<BusinessDayIncTableCellValue, String> amountOfHoursTableColumn = new TableColumn<BusinessDayIncTableCellValue, String>(
+	TableColumn<BusinessDayIncTableRowValue, String> amountOfHoursTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.AMOUNT_OF_HOURS_LABEL);
 	titleHeaders.add(amountOfHoursTableColumn);
 	setCellValueFactory(amountOfHoursTableColumn, "totalDuration");
-	TableColumn<BusinessDayIncTableCellValue, String> ticketTableColumnt = new TableColumn<BusinessDayIncTableCellValue, String>(
+	TableColumn<BusinessDayIncTableRowValue, String> ticketTableColumnt = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.TICKET);
 	titleHeaders.add(ticketTableColumnt);
-	setCellValueFactory(ticketTableColumnt, "ticketNumber");
+	setEditableCellValueFactory(ticketTableColumnt, "ticketNumber", changeListener);
 
 	boolean isDescriptionTitleNecessary = bussinessDay.hasIncrementWithDescription();
 	if (isDescriptionTitleNecessary) {
-	    TableColumn<BusinessDayIncTableCellValue, String> descriptionTableColumn = new TableColumn<BusinessDayIncTableCellValue, String>(
+	    TableColumn<BusinessDayIncTableRowValue, String> descriptionTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		    TextLabel.DESCRIPTION_LABEL);
+	    setEditableCellValueFactory(descriptionTableColumn, "description", changeListener);
 	    titleHeaders.add(descriptionTableColumn);
-	    setCellValueFactory(descriptionTableColumn, "description");
 	}
 
 	int counter = bussinessDay.getAmountOfVonBisElements();
-	List<TableColumn<BusinessDayIncTableCellValue, String>> beginEndHeaders = new ArrayList<>();
+	List<TableColumn<BusinessDayIncTableRowValue, String>> beginEndHeaders = new ArrayList<>();
 	for (int i = 0; i < counter; i++) {
-	    TableColumn<BusinessDayIncTableCellValue, String> beginTableColumn = new TableColumn<BusinessDayIncTableCellValue, String>(
+
+	    TableColumn<BusinessDayIncTableRowValue, String> beginTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		    TextLabel.VON_LABEL);
-	    beginEndHeaders.add(beginTableColumn);
 	    beginTableColumn.setCellValueFactory(
-		    getTimeSnippetBeginEndCellValueFactory(i, timeSnippet -> timeSnippet.getBegin()));
-	    TableColumn<BusinessDayIncTableCellValue, String> endTableColumn = new TableColumn<BusinessDayIncTableCellValue, String>(
+		    getTimeSnippetBeginEndCellValueFactory(i, beginTableColumn, timeSnippet -> timeSnippet.getBegin()));
+	    beginTableColumn.setCellFactory(
+		    getTimeSnippetBeginEndCellFactory(i, beginTableColumn, timeSnippet -> timeSnippet.getBegin()));
+
+	    TableColumn<BusinessDayIncTableRowValue, String> endTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		    TextLabel.BIS_LABEL);
 	    endTableColumn.setCellValueFactory(
-		    getTimeSnippetBeginEndCellValueFactory(i, timeSnippet -> timeSnippet.getEnd()));
+		    getTimeSnippetBeginEndCellValueFactory(i, endTableColumn, timeSnippet -> timeSnippet.getEnd()));
+	    endTableColumn.setCellFactory(
+		    getTimeSnippetBeginEndCellFactory(i, endTableColumn, timeSnippet -> timeSnippet.getEnd()));
+
+	    beginEndHeaders.add(beginTableColumn);
 	    beginEndHeaders.add(endTableColumn);
 	}
 
 	titleHeaders.addAll(beginEndHeaders);
 
-	TableColumn<BusinessDayIncTableCellValue, String> chargeTypeTableColumn = new TableColumn<BusinessDayIncTableCellValue, String>(
+	TableColumn<BusinessDayIncTableRowValue, String> chargeTypeTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.CHARGE_TYPE_LABEL);
 	titleHeaders.add(chargeTypeTableColumn);
 	setCellValueFactory(chargeTypeTableColumn, "chargeType");
-	TableColumn<BusinessDayIncTableCellValue, String> isChargedTableColumn = new TableColumn<BusinessDayIncTableCellValue, String>(
+	TableColumn<BusinessDayIncTableRowValue, String> isChargedTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.CHARGED);
 	titleHeaders.add(isChargedTableColumn);
 	setCellValueFactory(isChargedTableColumn, "isCharged");
 	return titleHeaders;
     }
 
-    private Callback<CellDataFeatures<BusinessDayIncTableCellValue, String>, ObservableValue<String>> getTimeSnippetBeginEndCellValueFactory(
-	    final int i, Function<TimeSnippetCellValue, String> timeSnippetFunction) {
+    private Callback<CellDataFeatures<BusinessDayIncTableRowValue, String>, ObservableValue<String>> getTimeSnippetBeginEndCellValueFactory(
+	    final int i, TableColumn<BusinessDayIncTableRowValue, String> tableColumn,
+	    Function<TimeSnippetCellValue, String> timeSnippetFunction) {
 	return cellData -> {
-	    BusinessDayIncTableCellValue businessDayIncTableCellValue = cellData.getValue();
-	    TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue.getTimeSnippet4Index(i);
+	    BusinessDayIncTableRowValue businessDayIncTableCellValue = cellData.getValue();
+	    TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue.getTimeSnippet(i);
 	    return new SimpleStringProperty(timeSnippetFunction.apply(timeSnippet4Index));
 	};
     }
 
-    private void setCellValueFactory(TableColumn<BusinessDayIncTableCellValue, String> numberTableColumn,
-	    String paramName) {
-	numberTableColumn
-		.setCellValueFactory(new PropertyValueFactory<BusinessDayIncTableCellValue, String>(paramName));
+    private Callback<TableColumn<BusinessDayIncTableRowValue, String>, TableCell<BusinessDayIncTableRowValue, String>> getTimeSnippetBeginEndCellFactory(
+	    final int i, TableColumn<BusinessDayIncTableRowValue, String> tableColumn,
+	    Function<TimeSnippetCellValue, String> f) {
+	return cellData -> {
+	    tableColumn.editableProperty().set(true);
+	    tableColumn.setOnEditCommit(changeListener);
+	    return new TextFieldTableCell<>(new DefaultStringConverter());
+	};
     }
 
-    private List<BusinessDayIncTableCellValue> getBusinessDayCells(BusinessDay4Export businessDay) {
-	List<BusinessDayIncTableCellValue> businessDayCells = new ArrayList<>();
+    private void setCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn, String paramName) {
+	tableColumn.setCellValueFactory(new PropertyValueFactory<BusinessDayIncTableRowValue, String>(paramName));
+    }
+
+    private void setEditableCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn,
+	    String paramName, EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener) {
+	tableColumn.setEditable(true);
+	tableColumn.setOnEditCommit(changeListener);
+	Callback<TableColumn<BusinessDayIncTableRowValue, String>, TableCell<BusinessDayIncTableRowValue, String>> forTableColumn = TextFieldTableCell
+		.forTableColumn();
+	tableColumn.setCellFactory(forTableColumn);
+	setCellValueFactory(tableColumn, paramName);
+    }
+
+    private List<BusinessDayIncTableRowValue> getBusinessDayCells(BusinessDay4Export businessDay) {
+	List<BusinessDayIncTableRowValue> businessDayCells = new ArrayList<>();
 	int counter = 1;
 	for (BusinessDayInc4Export bussinessDayIncremental : businessDay.getBusinessDayIncrements()) {
-	    BusinessDayIncTableCellValue businessDayIncrementalCell = getBusinessDayIncrementalCell(
+	    BusinessDayIncTableRowValue businessDayIncrementalCell = getBusinessDayIncrementalCell(
 		    bussinessDayIncremental, businessDay.hasIncrementWithDescription(), counter);
 	    businessDayCells.add(businessDayIncrementalCell);
 	    counter++;
@@ -129,11 +161,11 @@ public class BusinessDayTableModelHelper {
      * Creates a list which contains all Cells that are required to paint a
      * BusinessDayIncremental
      */
-    private BusinessDayIncTableCellValue getBusinessDayIncrementalCell(BusinessDayInc4Export bussinessDayIncremental,
+    private BusinessDayIncTableRowValue getBusinessDayIncrementalCell(BusinessDayInc4Export bussinessDayIncremental,
 	    boolean isDescriptionTitleNecessary, int no) {
 	// create Cells for the introduction of a BD-inc.
 
-	BusinessDayIncTableCellValue businessDayIncTableCellValue = new BusinessDayIncTableCellValue();
+	BusinessDayIncTableRowValue businessDayIncTableCellValue = new BusinessDayIncTableRowValue();
 
 	businessDayIncTableCellValue.setNumber(String.valueOf(no));
 	businessDayIncTableCellValue.setTotalDuration(bussinessDayIncremental.getTotalDurationRep());
@@ -151,6 +183,8 @@ public class BusinessDayTableModelHelper {
 	businessDayIncTableCellValue
 		.setChargeType(ChargeType.getRepresentation(bussinessDayIncremental.getChargeType()));
 	businessDayIncTableCellValue.setIsCharged(bussinessDayIncremental.isCharged() ? TextLabel.YES : TextLabel.NO);
+
+	businessDayIncTableCellValue.setValueTypes(isDescriptionTitleNecessary);
 	return businessDayIncTableCellValue;
     }
 

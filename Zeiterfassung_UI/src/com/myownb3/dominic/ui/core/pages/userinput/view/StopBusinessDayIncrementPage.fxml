@@ -29,7 +29,7 @@
                   <Insets bottom="5.0" />
                </padding>
             </VBox>
-            <VBox prefWidth="150.0" spacing="5.0">
+            <VBox prefWidth="160.0" spacing="5.0">
                <children>
                   <TextField id="ticketNumberTextField" fx:id="ticketNumberTextField" prefHeight="30.0" />
                   <TextField id="ticketNumberTextField" fx:id="descriptionTextField" prefHeight="30.0" />

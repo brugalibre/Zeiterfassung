@@ -39,10 +39,15 @@ public class TimeSnippetCellValue {
     }
 
     /**
-     * @param value
-     * @param sequence
+     * Creates a new {@link TimeSnippetCellValue}
+     * 
      * @param begin
-     * @return
+     *            begin value
+     * @param end
+     *            end value
+     * @param sequence
+     *            the sequence
+     * @return a new {@link TimeSnippetCellValue}
      */
     public static TimeSnippetCellValue of(String begin, String end, int sequence) {
 	return new TimeSnippetCellValue(sequence, begin, end);

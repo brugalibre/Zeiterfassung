@@ -3,8 +3,6 @@
  */
 package com.myownb3.dominic.ui.core.pages.mainpage.view;
 
-import com.myownb3.dominic.ui.app.MainWindow;
-
 /**
  * A list which contains all views which are used by the {@link MainWindow}
  * 

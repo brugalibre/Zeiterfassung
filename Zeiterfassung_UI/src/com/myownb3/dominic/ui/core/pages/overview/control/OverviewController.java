@@ -7,26 +7,28 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayChangedCallbackHandlerImpl;
+import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 import com.myownb3.dominic.ui.core.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.core.pages.overview.model.OverviewPageModel;
 import com.myownb3.dominic.ui.core.pages.overview.model.resolver.OverviewPageModelResolver;
-import com.myownb3.dominic.ui.core.pages.overview.model.table.BusinessDayIncTableCellValue;
+import com.myownb3.dominic.ui.core.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.myownb3.dominic.ui.core.pages.overview.model.table.BusinessDayTableModelHelper;
+import com.myownb3.dominic.ui.core.pages.overview.model.table.TimeSnippetCellValue;
 import com.myownb3.dominic.ui.core.pages.overview.view.OverviewPage;
 import com.myownb3.dominic.ui.core.view.Page;
 
-import javafx.collections.ListChangeListener;
-import javafx.collections.ListChangeListener.Change;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 
@@ -35,7 +37,7 @@ import javafx.scene.layout.BorderPane;
  * 
  */
 public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel>
-	implements BusinessDayChangedCallbackHandler {
+	implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> {
 
     /**
      * There are five fix headers: Number, Amount of Hours, Ticket, charge-Type &
@@ -49,7 +51,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     private BorderPane borderPane;
 
     @FXML
-    private TableView<BusinessDayIncTableCellValue> tableView;
+    private TableView<BusinessDayIncTableRowValue> tableView;
 
     @FXML
     private Label totalAmountOfTimeLabel;
@@ -63,6 +65,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     @FXML
     private Button exportButton;
 
+    private BusinessDayChangedCallbackHandlerImpl handler;
     private BusinessDayTableModelHelper businessDayTableModel;
 
     @Override
@@ -73,9 +76,8 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     @Override
     public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
 	super.initialize(page);
-	ListChangeListener<? super BusinessDayIncTableCellValue> listener = businessDayCell -> BusinessDayIncTableCellValueChanged(
-		businessDayCell);
-	businessDayTableModel = new BusinessDayTableModelHelper(listener);
+	businessDayTableModel = new BusinessDayTableModelHelper(this);
+	handler = new BusinessDayChangedCallbackHandlerImpl();
 	setBinding(dataModel);
     }
 
@@ -91,11 +93,36 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     }
 
     @Override
-    public void handleBusinessDayChanged(ChangedValue changeValue) {
-	BusinessDayChangedCallbackHandlerImpl businessDayChangedCallbackHandler = new BusinessDayChangedCallbackHandlerImpl(
-		TimeRecorder.getBussinessDay());
-	businessDayChangedCallbackHandler.handleBusinessDayChanged(changeValue);
-	mainWindowController.show();
+    public void handle(CellEditEvent<BusinessDayIncTableRowValue, String> event) {
+
+	BusinessDayIncTableRowValue businessDayIncTableCellValue = event.getRowValue();
+	TablePosition<BusinessDayIncTableRowValue, String> tablePosition = event.getTablePosition();
+	String newValue = event.getNewValue();
+
+	ValueTypes valueType = businessDayIncTableCellValue.getChangeValueTypeForIndex(tablePosition.getColumn());
+	// Ugly hack TODO
+	if (valueType == null) {
+	    show();
+	    return;
+	}
+	int fromUptoSequence = getBeginEndSequence(businessDayIncTableCellValue, tablePosition);
+	int orderNumber = Integer.valueOf(businessDayIncTableCellValue.getNumber());
+	handler.handleBusinessDayChanged(ChangedValue.of(orderNumber, newValue, valueType, fromUptoSequence));
+
+	show();
+    }
+
+    /**
+     * @param businessDayIncTableCellValue
+     * @param tablePosition
+     * @return
+     */
+    private int getBeginEndSequence(BusinessDayIncTableRowValue businessDayIncTableCellValue,
+	    TablePosition<BusinessDayIncTableRowValue, String> tablePosition) {
+	TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue
+		.getTimeSnippe4RowIndex(tablePosition.getColumn());
+	int fromUptoSequence = timeSnippet4Index != null ? timeSnippet4Index.getSequence() : -1;
+	return fromUptoSequence;
     }
 
     @FXML
@@ -109,21 +136,6 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	} else if (actionEvent.getSource() == exportButton) {
 	    mainWindowController.export();
 	}
-    }
-
-    private void BusinessDayIncTableCellValueChanged(Change<? extends BusinessDayIncTableCellValue> businessDayCell) {
-
-	// if (e.getType() == TableModelEvent.UPDATE) {
-	// BusinessDayTableModel businessDayTableModel = (BusinessDayTableModel)
-	// e.getSource();
-	// TableCellValue tableCellValue =
-	// businessDayTableModel.getCellAt(e.getFirstRow(), e.getColumn());
-	// TableCellValue noTableCellValue =
-	// businessDayTableModel.getCellAt(e.getFirstRow(), 0);
-	// handler.handleBusinessDayChanged(ChangedValue.of(Integer.valueOf(noTableCellValue.getValue()),
-	// tableCellValue.getValue(), tableCellValue.getValueType(),
-	// getIndexForFromUpto(tableCellValue)));
-	// }
     }
 
     @Override

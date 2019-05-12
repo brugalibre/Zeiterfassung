@@ -50,7 +50,7 @@ public class BusinessDay {
     }
 
     /**
-     * 
+     * Resumes the {@link #currentBussinessDayIncremental}
      */
     public void resumeLastIncremental() {
 
