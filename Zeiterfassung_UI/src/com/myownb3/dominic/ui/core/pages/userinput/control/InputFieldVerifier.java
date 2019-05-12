@@ -17,8 +17,9 @@ public class InputFieldVerifier {
 	return verifyTextField((TextField) c);
     }
 
-    private boolean verifyTextField(TextField c) {
-	String text = c.getText();
+    private boolean verifyTextField(TextField textField) {
+
+	String text = textField.getText();
 	float val = -1;
 	try {
 	    val = NumberFormat.parseFloat(text);

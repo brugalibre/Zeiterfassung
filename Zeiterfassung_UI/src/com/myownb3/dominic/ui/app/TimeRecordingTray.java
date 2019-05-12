@@ -60,6 +60,7 @@ public class TimeRecordingTray {
 
 	exitItem.addActionListener(actionEvent -> {
 	    Platform.exit();
+	    System.exit(0);
 	});
     }
 

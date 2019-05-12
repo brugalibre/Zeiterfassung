@@ -34,7 +34,7 @@
       </HBox>
    </bottom>
    <center>
-      <FlowPane hgap="5.0" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <FlowPane hgap="5.0" BorderPane.alignment="CENTER">
          <children>
             <Label fx:id="totalAmountOfTimeLabel" text="Label" />
             <Label fx:id="totalAmountOfTimeValue" text="Label" />

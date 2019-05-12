@@ -62,6 +62,8 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 
 	initStage4NewComponent(stage, stopBusinessDayIncrementPanel);
 	stopBusinessDayIncrementPanelController.show();
+
+	stage.toFront();
 	show();
     }
 

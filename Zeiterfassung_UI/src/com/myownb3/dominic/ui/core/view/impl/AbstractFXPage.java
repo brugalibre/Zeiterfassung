@@ -38,7 +38,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
     protected void initialize() {
 	// nothing to do by default
     }
-    
+
     /**
      * Creates a new AbstractFXPage
      * 
@@ -54,7 +54,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
     public void hide() {
 	getStage().ifPresent(stage -> stage.hide());
     }
-    
+
     @Override
     public void show() {
 	getStage().ifPresent(stage -> stage.show());
@@ -64,7 +64,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
 	FXPageContent content = (FXPageContent) getContent();
 	return content.getStage();
     }
-    
+
     protected void initializeFXMLContent(Optional<Stage> stage) {
 	FXMLLoader loader = new FXMLLoader();
 	try {
@@ -139,7 +139,11 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
      * @throws MalformedURLException
      */
     protected void applyStileForResource(String styleResource, Optional<Stage> optionalStage) {
-	File file = new File(styleResource);
+	URL resource = getClass().getResource(styleResource);
+	if (resource == null) {
+	    return;
+	}
+	File file = new File(resource.getFile());
 	try {
 	    if (file.exists()) {
 		URL[] urls = { file.toURI().toURL() };
@@ -179,7 +183,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
      * @return the location for the CSS-file this AbstractFXPage needs
      */
     protected String getUIStyleResource() {
-	return "";
+	return getClass().getSimpleName() + ".css";
     }
 
     @Override

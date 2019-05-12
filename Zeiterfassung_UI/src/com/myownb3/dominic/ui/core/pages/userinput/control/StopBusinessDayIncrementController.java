@@ -3,16 +3,18 @@
  */
 package com.myownb3.dominic.ui.core.pages.userinput.control;
 
+import java.awt.Toolkit;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 import com.myownb3.dominic.ui.core.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.core.pages.userinput.model.StopBusinessDayIncrementPageModel;
 import com.myownb3.dominic.ui.core.pages.userinput.model.resolver.StopBusinessDayIncrementPageModelResolver;
 import com.myownb3.dominic.ui.core.pages.userinput.view.StopBusinessDayIncrementPage;
+import com.myownb3.dominic.ui.core.styles.Styles;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -86,15 +88,28 @@ public class StopBusinessDayIncrementController
     }
 
     private void cancel() {
-	mainWindowController.finishOrAbortAndDispose(false);
+	dispose(false);
+    }
+
+    private void dispose(boolean success) {
+	mainWindowController.finishOrAbortAndDispose(success);
+	amountOfHoursTextField.getStyleClass().remove(Styles.INVALID_INPUT_LABEL);
     }
 
     private void submit() {
 	if (isInputValid()) {
-	    getDataModel().addIncrement2BusinessDay(TimeRecorder.getBussinessDay(),
-		    Integer.valueOf(kindOfServiceComboBox.getSelectionModel().getSelectedItem().substring(0, 3)));
-	    mainWindowController.finishOrAbortAndDispose(true);
+	    getDataModel().addIncrement2BusinessDay(getSelectedLeistungsart());
+	    dispose(true);
+	} else {
+	    Toolkit.getDefaultToolkit().beep();
+	    amountOfHoursTextField.getStyleClass().add(Styles.INVALID_INPUT_LABEL);
+	    amountOfHoursTextField.requestFocus();
 	}
+    }
+
+    private int getSelectedLeistungsart() {
+	String selectedItem = kindOfServiceComboBox.getSelectionModel().getSelectedItem();
+	return ChargeType.getLeistungsartForRep(selectedItem);
     }
 
     private boolean isInputValid() {

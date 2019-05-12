@@ -6,6 +6,7 @@ package com.myownb3.dominic.ui.core.pages.userinput.model;
 import java.util.Date;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.TimeSnippedChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
@@ -172,7 +173,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
      * @param bussinessDay
      * @param kindOfService
      */
-    public void addIncrement2BusinessDay(BusinessDay bussinessDay, int kindOfService) {
+    public void addIncrement2BusinessDay(int kindOfService) {
+
+	BusinessDay bussinessDay = TimeRecorder.getBussinessDay();
 	BusinessDayIncrementUpdate update = new BusinessDayIncrementUpdate();
 	update.setTimeSnippet(timeSnippet);
 	update.setDescription(descriptionTextFieldProperty.get());

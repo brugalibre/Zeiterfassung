@@ -4,6 +4,7 @@
 package com.myownb3.dominic.ui.core.pages.overview.model;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
@@ -69,6 +70,13 @@ public class OverviewPageModel implements PageModel {
 
     public final BusinessDay4Export getBusinessDay4Export() {
 	return this.businessDay4Export;
+    }
+
+    /**
+     * @returns a new {@link BusinessDay4Export}
+     */
+    public BusinessDay4Export getNewBusinessDay4Export() {
+	return BusinessDay4Export.of(TimeRecorder.getBussinessDay());
     }
 
     /**

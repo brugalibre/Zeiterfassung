@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWindowPageModel> {
 
     private ViewList currentView = ViewList.NONE;
-    
+
     /**
      * @param timeRecordingTray
      * @param stage
@@ -33,32 +33,32 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
 	super(stage);
 	((MainWindowController) getController()).setTimeRecordingTray(timeRecordingTray);
     }
-    
+
     @Override
     protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) throws IOException {
-        super.initializeScene(loader, optionalStage);
-        Stage stage = optionalStage.get();
-        stage.setScene(new Scene(loader.getRoot()));
+	super.initializeScene(loader, optionalStage);
+	Stage stage = optionalStage.get();
+	stage.setScene(new Scene(loader.getRoot()));
     }
-    
+
     @Override
     public void show() {
-        super.show();
+	super.show();
 	showInternal();
     }
 
     @Override
     public void refresh() {
-        super.refresh();
-        showInternal();
+	super.refresh();
+	showInternal();
     }
-    
+
     private void showInternal() {
 	Stage stage = getStage().get();
 	stage.setScene(new Scene(getRootParent()));
 	stage.sizeToScene();
 	stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
-	
+
 	switch (currentView) {
 	case INPUT_MASK:
 	    showInputMask();

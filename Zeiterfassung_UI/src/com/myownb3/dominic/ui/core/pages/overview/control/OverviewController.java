@@ -6,7 +6,6 @@ package com.myownb3.dominic.ui.core.pages.overview.control;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
@@ -27,8 +26,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 
@@ -84,7 +83,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     @Override
     public void show() {
 	super.show();
-	BusinessDay4Export businessDay4Export = BusinessDay4Export.of(TimeRecorder.getBussinessDay());
+	BusinessDay4Export businessDay4Export = getDataModel().getNewBusinessDay4Export();
 	businessDayTableModel.init(businessDay4Export, tableView);
     }
 
