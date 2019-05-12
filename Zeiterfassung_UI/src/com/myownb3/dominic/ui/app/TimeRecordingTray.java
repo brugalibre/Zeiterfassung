@@ -181,7 +181,7 @@ public class TimeRecordingTray {
 	    public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
 		    if (TimeRecorder.handleUserInteraction()) {
-			Platform.runLater(() -> showInputMask());
+			showInputMask();
 		    }
 		}
 	    }
@@ -194,6 +194,7 @@ public class TimeRecordingTray {
 	JRadioButtonMenuItem settingsRoundItem1Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_1, true);
 	JRadioButtonMenuItem settingsRoundItem5Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_5);
 	JRadioButtonMenuItem settingsRoundItem10Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_10);
+	JRadioButtonMenuItem settingsRoundItem15Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_15);
 
 	buttonGroup.add(settingsRoundItem1Min);
 	buttonGroup.add(settingsRoundItem5Min);
@@ -202,11 +203,13 @@ public class TimeRecordingTray {
 	settingsRoundItem1Min.addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(RoundMode.ONE_MIN));
 	settingsRoundItem5Min.addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(RoundMode.FIVE_MIN));
 	settingsRoundItem10Min.addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(RoundMode.TEN_MIN));
+	settingsRoundItem15Min.addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(RoundMode.FIFTEEN_MIN));
 
 	JMenu settingsRoundMenu = new JMenu(TextLabel.SETTINGS_ROUND);
 	settingsRoundMenu.add(settingsRoundItem1Min);
 	settingsRoundMenu.add(settingsRoundItem5Min);
 	settingsRoundMenu.add(settingsRoundItem10Min);
+	settingsRoundMenu.add(settingsRoundItem15Min);
 	return settingsRoundMenu;
     }
 

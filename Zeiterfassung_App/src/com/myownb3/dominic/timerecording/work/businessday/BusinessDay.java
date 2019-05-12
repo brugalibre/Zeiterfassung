@@ -64,7 +64,7 @@ public class BusinessDay {
      * and forward that to the
      */
     public void startNewIncremental() {
-	Time time = new Time(System.currentTimeMillis());
+	Time time = new Time(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
 	createNewIncremental();
 	currentBussinessDayIncremental.startCurrentTimeSnippet(time);
     }
@@ -75,8 +75,7 @@ public class BusinessDay {
      * that, a new incremental is created
      */
     public void stopCurrentIncremental() {
-	Time endTimeStamp = new Time((long) (System.currentTimeMillis() + 31750 * Math.random()),
-		TimeRounder.INSTANCE.getRoundMode());
+	Time endTimeStamp = new Time(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
 	currentBussinessDayIncremental.stopCurrentTimeSnippet(endTimeStamp);
     }
 

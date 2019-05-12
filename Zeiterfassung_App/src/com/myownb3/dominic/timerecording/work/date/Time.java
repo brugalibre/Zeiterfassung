@@ -47,9 +47,6 @@ public class Time {
 	round(roundMode);
     }
 
-    /**
-     * @param roundMode
-     */
     private void round(RoundMode roundMode) {
 
 	switch (roundMode) {
@@ -57,9 +54,11 @@ public class Time {
 	    roundSeconds();
 	    break;
 	case FIVE_MIN:
-	    // roundMinutes(roundMode.getAmount());
-	    break;
+	    // Fall through
 	case TEN_MIN:
+	    // Fall through
+	case FIFTEEN_MIN:
+	    roundSecondsAndMinutes(roundMode);
 	    break;
 
 	default:
@@ -67,14 +66,20 @@ public class Time {
 	}
     }
 
-    private void roundMinutes(int amount) {
+    private void roundSecondsAndMinutes(RoundMode roundMode) {
+	roundSeconds();
+	roundMinutes(roundMode);
+    }
 
-	Period period = duration.toPeriod(PeriodType.minutes());
-	int modulo = period.getMinutes() % amount;
-	if (modulo >= (amount / 2)) {
-	    duration.plus((amount - modulo) * getTimeRefactorValue(TIME_TYPE.MIN));
+    private void roundMinutes(RoundMode roundMode) {
+
+	int amount = roundMode.getAmount();
+	Period period = duration.toPeriod(PeriodType.dayTime());
+	float modulo = period.getMinutes() % amount;
+	if (modulo >= amount / 2f) {
+	    duration = duration.plus((amount - (int) modulo) * getTimeRefactorValue(roundMode.getTimeType()));
 	} else {
-	    duration.plus(modulo * getTimeRefactorValue(TIME_TYPE.MIN));
+	    duration = duration.minus((int)modulo * getTimeRefactorValue(roundMode.getTimeType()));
 	}
     }
 

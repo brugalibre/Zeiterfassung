@@ -44,6 +44,7 @@ public class TextLabel {
     public static final String SETTINGS_ROUND_1 = "1 Minute";
     public static final String SETTINGS_ROUND_5 = "5 Minuten";
     public static final String SETTINGS_ROUND_10 = "10 Minuten";
+    public static final String SETTINGS_ROUND_15 = "15 Minuten";
 
     public static final String CAPTURING_INACTIVE = "Zeiterfassung inaktiv";
     public static final String CAPTURING_INCTIVE_SINCE = "Zeiterfassung inaktiv seit:";

@@ -11,7 +11,7 @@ import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
  */
 public enum RoundMode {
 
-    ONE_MIN(TIME_TYPE.MIN, 1), FIVE_MIN(TIME_TYPE.MIN, 5), TEN_MIN(TIME_TYPE.MIN, 10);
+    ONE_MIN(TIME_TYPE.MIN, 1), FIVE_MIN(TIME_TYPE.MIN, 5), TEN_MIN(TIME_TYPE.MIN, 10), FIFTEEN_MIN(TIME_TYPE.MIN, 15);
 
     private TIME_TYPE timeType;
     private int amount;
