@@ -2,10 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<<<<<<< Upstream, based on origin/zeiterfassung/master
-<?import javafx.scene.control.ButtonBar?>
-=======
->>>>>>> c73c5f1 3rd approach redesign gui
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -13,53 +9,18 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 
-<<<<<<< Upstream, based on origin/zeiterfassung/master
-<BorderPane fx:id="borderPane" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.core.pages.overview.control.OverviewController">
-   <bottom>
-      <BorderPane BorderPane.alignment="CENTER">
-         <bottom>
-            <ButtonBar BorderPane.alignment="CENTER">
-              <buttons>
-                  <Button id="clearButton" fx:id="clearButton" mnemonicParsing="false" onAction="#onAction" text="clearButton" />
-                <Button id="chargeOffButton" fx:id="bookButton" mnemonicParsing="false" onAction="#onAction" text="bookButton" />
-                  <Button id="exportButton" fx:id="exportButton" mnemonicParsing="false" onAction="#onAction" text="exportButton" />
-              </buttons>
-               <BorderPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </BorderPane.margin>
-            </ButtonBar>
-         </bottom>
-         <center>
-            <ButtonBar BorderPane.alignment="CENTER">
-              <buttons>
-                  <Label fx:id="totalAmountOfTimeValue" text="Label" />
-                  <Label fx:id="totalAmountOfTimeLabel" text="Label" />
-              </buttons>
-               <BorderPane.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </BorderPane.margin>
-            </ButtonBar>
-         </center>
-      </BorderPane>
-   </bottom>
-   <top>
-      <TableView fx:id="tableView" prefHeight="300.0" prefWidth="700.0" BorderPane.alignment="CENTER">
-=======
 <BorderPane fx:id="borderPane" prefHeight="400.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.core.pages.overview.control.OverviewController">
    <padding>
       <Insets bottom="5.0" />
    </padding>
    <top>
       <TableView fx:id="tableView" maxHeight="300.0" maxWidth="900.0" BorderPane.alignment="CENTER">
->>>>>>> c73c5f1 3rd approach redesign gui
         <columns>
           <TableColumn prefWidth="75.0" text="C1" />
           <TableColumn prefWidth="75.0" text="C2" />
         </columns>
       </TableView>
    </top>
-<<<<<<< Upstream, based on origin/zeiterfassung/master
-=======
    <bottom>
       <HBox spacing="5.0" BorderPane.alignment="CENTER">
          <children>
@@ -80,5 +41,4 @@
          </children>
       </FlowPane>
    </center>
->>>>>>> c73c5f1 3rd approach redesign gui
 </BorderPane>
