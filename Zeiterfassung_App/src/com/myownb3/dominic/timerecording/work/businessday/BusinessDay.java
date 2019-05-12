@@ -10,6 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.timerecording.work.businessday.update.BusinessDayIncrementUpdate;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
@@ -23,10 +24,10 @@ import com.myownb3.dominic.util.parser.NumberFormat;
  * amount of hours <br>
  * 
  * A {@link BusinessDayIncrement} can have several of those snippet's -
- * scattered over the entire day. But each of this
- * {@link BusinessDayIncrement} belongs to the same <br>
- * project. One or more such {@link BusinessDayIncrement} are put together -
- * to a whole {@link BusinessDay}
+ * scattered over the entire day. But each of this {@link BusinessDayIncrement}
+ * belongs to the same <br>
+ * project. One or more such {@link BusinessDayIncrement} are put together - to
+ * a whole {@link BusinessDay}
  * 
  * @author Dominic
  * 
@@ -74,7 +75,8 @@ public class BusinessDay {
      * that, a new incremental is created
      */
     public void stopCurrentIncremental() {
-	Time endTimeStamp = new Time(System.currentTimeMillis());
+	Time endTimeStamp = new Time((long) (System.currentTimeMillis() + 31750 * Math.random()),
+		TimeRounder.INSTANCE.getRoundMode());
 	currentBussinessDayIncremental.stopCurrentTimeSnippet(endTimeStamp);
     }
 
@@ -104,8 +106,8 @@ public class BusinessDay {
     }
 
     /**
-     * After {@link TimeSnippet} are moved, the {@link BusinessDayIncrement} with
-     * no {@link TimeSnippet} are removed
+     * After {@link TimeSnippet} are moved, the {@link BusinessDayIncrement} with no
+     * {@link TimeSnippet} are removed
      */
     private void deleteEmptyIncrements() {
 	for (BusinessDayIncrement inc : increments) {

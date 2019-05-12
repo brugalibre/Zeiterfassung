@@ -8,25 +8,41 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.myownb3.dominic.timerecording.work.date.Time;
+
 /**
  * @author Dominic
  *
  */
 public class DateParser {
 
-    public static Date getDate(String input, Date currentSetDate) {
+    /**
+     * Returns the String representation for the given Time instance
+     * 
+     * @param duration
+     * @return
+     */
+    public static String parse2String(Time time) {
+	SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
+	df.applyPattern("HH:mm:ss");
+	Date date = new Date(time.getTime());
+	return df.format(date);
+    }
+
+    public static Time getTime(String input, Time currentSetDate) {
 	try {
 	    SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
 	    df.applyPattern("dd-MM-yyyy HH:mm:ss");
 
 	    // Parse the current Date Value
-	    String currentDateAsString = df.format(currentSetDate);
+	    String currentDateAsString = df.format(new Date(currentSetDate.getTime()));
 	    // Parse the current set Date in order to receive information about year, month
 	    // and day
 	    String yearMonthDayInfo = currentDateAsString.substring(0, currentDateAsString.length() - 8);
 	    // Append the information about hour, minutes and seconds to the given
 	    // information
-	    return df.parse(yearMonthDayInfo + input);
+	    Date date = df.parse(yearMonthDayInfo + input);
+	    return new Time(date.getTime());
 	} catch (ParseException e) {
 	    System.err.println(e.getMessage());
 	}

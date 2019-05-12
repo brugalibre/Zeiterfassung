@@ -21,4 +21,12 @@ public enum RoundMode {
 	this.amount = amount;
     }
 
+    public final TIME_TYPE getTimeType() {
+	return this.timeType;
+    }
+
+    public final int getAmount() {
+	return this.amount;
+    }
+
 }

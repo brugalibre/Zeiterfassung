@@ -3,7 +3,13 @@
  */
 package com.myownb3.dominic.timerecording.work.date;
 
+import org.joda.time.Duration;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+
+import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
+import com.myownb3.dominic.util.parser.DateParser;
 
 /**
  * The {@link Time} class represents the time, e.g. 18:55:45 It is used to add
@@ -12,27 +18,72 @@ import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
  * 
  * @author Dominic
  */
-public class Time extends java.sql.Time {
+public class Time {
+
+    private Duration duration;
 
     /**
-    * 
-    */
-    private static final long serialVersionUID = 1L;
+     * Create a new {@link Time} object according to the given {@link Time} object
+     * 
+     * @param time
+     */
+    public Time(Time time) {
+	this(time.getTime());
+    }
 
     /**
      * @param time
      */
     public Time(long time) {
-	super(time);
-	roundSeconds();
+	this(time, RoundMode.ONE_MIN);
     }
 
-    @SuppressWarnings("deprecation")
-    private void roundSeconds() {
-	if (getSeconds() >= 30) {
-	    setSeconds(60);
+    /**
+     * @param time
+     * @param roundMode
+     */
+    public Time(long time, RoundMode roundMode) {
+	duration = new Duration(time);
+	round(roundMode);
+    }
+
+    /**
+     * @param roundMode
+     */
+    private void round(RoundMode roundMode) {
+
+	switch (roundMode) {
+	case ONE_MIN:
+	    roundSeconds();
+	    break;
+	case FIVE_MIN:
+	    // roundMinutes(roundMode.getAmount());
+	    break;
+	case TEN_MIN:
+	    break;
+
+	default:
+	    break;
+	}
+    }
+
+    private void roundMinutes(int amount) {
+
+	Period period = duration.toPeriod(PeriodType.minutes());
+	int modulo = period.getMinutes() % amount;
+	if (modulo >= (amount / 2)) {
+	    duration.plus((amount - modulo) * getTimeRefactorValue(TIME_TYPE.MIN));
 	} else {
-	    setSeconds(0);
+	    duration.plus(modulo * getTimeRefactorValue(TIME_TYPE.MIN));
+	}
+    }
+
+    private void roundSeconds() {
+	Period period = duration.toPeriod(PeriodType.dayTime());
+	if (period.getSeconds() >= 30) {
+	    duration = duration.plus((60 - period.getSeconds()) * getTimeRefactorValue(TIME_TYPE.SEC));
+	} else {
+	    duration = duration.minus(period.getSeconds() * getTimeRefactorValue(TIME_TYPE.SEC));
 	}
     }
 
@@ -55,5 +106,23 @@ public class Time extends java.sql.Time {
 	default:
 	    throw new RuntimeException("Unknown TIME_TYPE value '" + type + "'!");
 	}
+    }
+
+    @Override
+    public String toString() {
+	return DateParser.parse2String(this);
+    }
+
+    public int compareTo(Time otherTime) {
+	return duration.compareTo(otherTime.duration);
+    }
+
+    /**
+     * Returns the amount of milliseconds of this {@link Time}
+     * 
+     * @return the amount of milliseconds
+     */
+    public long getTime() {
+	return duration.getMillis();
     }
 }

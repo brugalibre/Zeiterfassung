@@ -59,8 +59,8 @@ public class TimeSnippet {
      */
     public void updateAndSetBeginTimeStamp(String newTimeStampValue) {
 	if (!StringUtil.isEqual(newTimeStampValue, getBeginTimeStampRep())) {
-	    Date date = DateParser.getDate(newTimeStampValue, getBeginTimeStamp());
-	    setBeginTimeStamp(new Time(date.getTime()));
+	    Time time = DateParser.getTime(newTimeStampValue, getBeginTimeStamp());
+	    setBeginTimeStamp(new Time(time));
 	}
     }
 
@@ -74,8 +74,8 @@ public class TimeSnippet {
     public void updateAndSetEndTimeStamp(String newTimeStampValue) {
 
 	if (!StringUtil.isEqual(newTimeStampValue, getEndTimeStampRep())) {
-	    Date date = DateParser.getDate(newTimeStampValue, getEndTimeStamp());
-	    setEndTimeStamp(new Time(date.getTime()));
+	    Time time = DateParser.getTime(newTimeStampValue, getEndTimeStamp());
+	    setEndTimeStamp(new Time(time));
 	}
     }
 

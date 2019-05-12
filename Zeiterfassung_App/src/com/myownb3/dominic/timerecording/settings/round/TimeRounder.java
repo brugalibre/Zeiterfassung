@@ -12,7 +12,7 @@ public class TimeRounder {
     public static final TimeRounder INSTANCE = new TimeRounder();
 
     private TimeRounder() {
-	// private
+	setRoundMode(RoundMode.ONE_MIN);
     }
 
     private RoundMode roundMode;
