@@ -87,7 +87,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     @Override
     public void show() {
 	super.show();
-	BusinessDay4Export businessDay4Export = getDataModel().getNewBusinessDay4Export();
+	BusinessDay4Export businessDay4Export = getDataModel().getBusinessDay4Export();
 	businessDayTableModel.init(businessDay4Export, tableView);
     }
 

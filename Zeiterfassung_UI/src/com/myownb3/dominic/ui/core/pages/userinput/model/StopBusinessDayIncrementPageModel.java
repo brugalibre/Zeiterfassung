@@ -124,7 +124,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     public static StopBusinessDayIncrementPageModel of(StopBusinessDayIncrementPageModel inPageModel,
 	    BusinessDayInc4Export businessDayInc4Export) {
 
-	inPageModel.timeSnippet = businessDayInc4Export.getCurrentTimeSnippet();
+	TimeSnippet timeSnippet = businessDayInc4Export.getCurrentTimeSnippet();
+	inPageModel.timeSnippet = timeSnippet;
 	inPageModel.getTicketNoLabelProperty().set(TextLabel.TICKET_NUMBER_LABEL);
 	inPageModel.getDescriptionLabelProperty().set(TextLabel.DESCRIPTION_LABEL);
 	inPageModel.getBeginLabelProperty().set(TextLabel.VON_LABEL);
@@ -141,7 +142,6 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	inPageModel.getKindOfServiceTextFieldProperty()
 		.setValue(FXCollections.observableArrayList(ChargeType.getLeistungsartenRepresentation()));
 
-	TimeSnippet timeSnippet = businessDayInc4Export.getCurrentTimeSnippet();
 	timeSnippet.setCallbackHandler(inPageModel);
 	inPageModel.getBeginTextFieldProperty().set(timeSnippet.getBeginTimeStampRep());
 	inPageModel.getEndTextFieldProperty().set(timeSnippet.getEndTimeStampRep());
