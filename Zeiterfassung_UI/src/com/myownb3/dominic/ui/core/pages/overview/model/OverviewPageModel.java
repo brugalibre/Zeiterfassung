@@ -55,9 +55,9 @@ public class OverviewPageModel implements PageModel {
      */
     public static OverviewPageModel of(OverviewPageModel inPageModel, BusinessDay4Export businessDay4Export) {
 	inPageModel.businessDay4Export = businessDay4Export;
-	inPageModel.getIsChargeButtonDisabled().setValue(businessDay4Export.hasNotChargedElements());
-	inPageModel.getIsClearButtonDisabled().setValue(businessDay4Export.hasNotChargedElements());
-	inPageModel.getIsExportButtonDisabled().setValue(businessDay4Export.hasNotChargedElements());
+	inPageModel.getIsChargeButtonDisabled().setValue(!businessDay4Export.hasNotChargedElements());
+	inPageModel.getIsClearButtonDisabled().setValue(businessDay4Export.getBusinessDayIncrements().isEmpty());
+	inPageModel.getIsExportButtonDisabled().setValue(businessDay4Export.getBusinessDayIncrements().isEmpty());
 
 	inPageModel.getBookButtonLabel().set(TextLabel.CHARGE_LABEL);
 	inPageModel.getExportButtonLabel().set(TextLabel.EXPORT_LABEL);
