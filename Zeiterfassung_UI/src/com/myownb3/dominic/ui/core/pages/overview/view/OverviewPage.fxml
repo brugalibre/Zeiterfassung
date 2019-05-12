@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="borderPane" prefHeight="350.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.core.pages.overview.control.OverviewController">
+<BorderPane fx:id="borderPane" prefHeight="360.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.core.pages.overview.control.OverviewController">
    <padding>
       <Insets bottom="5.0" />
    </padding>
@@ -21,6 +21,9 @@
                   <Label fx:id="totalAmountOfTimeLabel" text="Label" />
                   <Label fx:id="totalAmountOfTimeValue" text="Label" />
                </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
             </FlowPane>
             <HBox prefHeight="30.0" spacing="5.0">
                <children>
@@ -28,8 +31,14 @@
                 <Button id="chargeOffButton" fx:id="bookButton" mnemonicParsing="false" onAction="#onAction" text="bookButton" />
                   <Button id="exportButton" fx:id="exportButton" mnemonicParsing="false" onAction="#onAction" text="exportButton" />
                </children>
+               <padding>
+                  <Insets bottom="5.0" />
+               </padding>
             </HBox>
          </children>
+         <BorderPane.margin>
+            <Insets left="5.0" />
+         </BorderPane.margin>
       </VBox>
    </center>
    <top>

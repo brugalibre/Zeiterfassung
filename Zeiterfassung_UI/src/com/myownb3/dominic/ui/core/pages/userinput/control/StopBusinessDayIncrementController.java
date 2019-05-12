@@ -17,18 +17,21 @@ import com.myownb3.dominic.ui.core.pages.userinput.view.StopBusinessDayIncrement
 import com.myownb3.dominic.ui.core.styles.Styles;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.WindowEvent;
 
 /**
  * @author Dominic
  *
  */
 public class StopBusinessDayIncrementController
-	extends BaseFXController<StopBusinessDayIncrementPageModel, StopBusinessDayIncrementPageModel> {
+	extends BaseFXController<StopBusinessDayIncrementPageModel, StopBusinessDayIncrementPageModel>
+	implements EventHandler<WindowEvent> {
 
     @FXML
     private Label ticketNumberLabel;
@@ -74,8 +77,16 @@ public class StopBusinessDayIncrementController
     }
 
     @Override
-    protected PageModelResolver<StopBusinessDayIncrementPageModel, StopBusinessDayIncrementPageModel> createPageModelResolver() {
-	return new StopBusinessDayIncrementPageModelResolver();
+    public void show() {
+	super.show();
+	ticketNumberTextField.requestFocus();
+    }
+
+    @Override
+    public void handle(WindowEvent event) {
+	if (event.getEventType() == WindowEvent.WINDOW_CLOSE_REQUEST) {
+	    cancel();
+	}
     }
 
     @FXML
@@ -89,6 +100,11 @@ public class StopBusinessDayIncrementController
 
     private void cancel() {
 	dispose(false);
+    }
+
+    @Override
+    protected PageModelResolver<StopBusinessDayIncrementPageModel, StopBusinessDayIncrementPageModel> createPageModelResolver() {
+	return new StopBusinessDayIncrementPageModelResolver();
     }
 
     private void dispose(boolean success) {

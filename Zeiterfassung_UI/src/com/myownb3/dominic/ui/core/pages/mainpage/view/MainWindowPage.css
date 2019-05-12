@@ -1,4 +1,479 @@
+/*
+*		FLATBEE by KarlTheBee´
+* An javafx css style for a smooth & flat user interface
+* Website : github.com/karlthebee/flatbee
+* Mail    : karlthebee@gmail.com
+*
+*	Version 1.0.0
+*
+* The license is pretty much a CC-BY-NC 4.0 license (https://creativecommons.org/licenses/by-nc/4.0/).
+* In simple (non legal) english : 
+* you can modify and distribute it, ship in in your application, 
+* but not use/sell it commercially.
+* And you have to give credits, 
+* like "FlatBee theme by karlthebee (https://github.com/karlthebee/flatbee)"
+*/
+
+/*
+	* These are values you can edit safely.
+	The "color" is your main color (in this case greenish)
+	*/
+* {
+	-color : #2ecc71;
+	-white : #efefef;
+	-adcblue : rgb(0,69,135);
+	-brightadcblue : derive(-adcblue,+25%);
+	-black : #444444dd;
+	-abort : #e74c3c;
+}
+
+.root{
+	-fx-background-color : -white;
+	-fx-fill-width : true;
+	-fx-color : -adcblue;
+	-fx-fill-height : true;
+	-fx-font-family: 'Segoe UI';
+	/* remove the ugly focus shade */
+	-fx-focus-color : transparent;
+	-fx-faint-focus-color: transparent;
+}
+
 .invalidLabel {
     -fx-border-color: red;
     -fx-border-width: 1 ; 
+    -fx-background-radius:1;
+}
+.boldLabel2 {
+	-fx-font-weight: bold;
+	-fx-font-size : 12.0;
+}
+
+#flatbee-tiny{
+	-fx-font-size : 8.0;	
+}
+
+#flatbee-small{
+	-fx-font-size : 10.0;	
+}
+
+#flatbee-medium{
+	-fx-font-size : 12.0;	
+}
+
+#flatbee-large{
+	-fx-font-size : 18.0;
+}
+
+#flatbee-xlarge{
+	-fx-font-size : 24.0;
+}
+
+#flatbee-xxlarge{
+	-fx-font-size : 32.0;
+	-fx-font-weight: bold;
+}
+
+#flatbee-xxxlarge{
+	-fx-font-size : 40.0;
+	-fx-font-weight: bold;
+}
+
+#flatbee-jumbo{
+	-fx-font-size : 48.0;
+	-fx-font-weight: bold;
+}
+
+#flatbee-card{
+	-fx-spacing : 12.0;
+	-fx-padding : 10;
+	-fx-hgap : 10;
+	-fx-vgap : 10;
+	-fx-background-color : -white;
+	-fx-effect : dropshadow(two-pass-box,-black,10,0,0,0);
+}
+
+#flatbee-container{
+	-fx-spacing : 12.0;
+	-fx-padding : 10;
+	-fx-hgap : 10;
+	-fx-vgap : 10;
+}
+
+#flatbee-panel{
+	-fx-padding : 10;
+}
+
+/*
+ * **********
+ * LABELS
+ * **********
+*/
+.label{
+	 -fx-text-fill : -black;
+ }
+
+/*
+ * **********
+ * BUTTONS
+ * **********
+ * 
+ */
+.button {
+	-fx-background-color : -adcblue,-adcblue,-adcblue,-adcblue;
+}
+.button:pressed {
+    -fx-background-color: -adcblue;
+    -fx-text-fill: white;
+}
+.button:default{
+	-fx-background-color : -adcblue;
+}
+.button:cancel{
+	-fx-background-color : -abort;
+}
+
+.button:focused {
+   -fx-color : -brightadcblue;
+   -fx-focus-color : -brightadcblue;
+   -fx-border-color: -white;
+   -fx-background-color: -brightadcblue;
+   -fx-background-radius:2;
+   -fx-border-width: 1 1 1 1;
+   -fx-background-insets: 1;
+}
+
+.button:armed {
+    -fx-color: -white;				
+}
+
+
+.toggle-button{
+	-fx-background-color : -adcblue;
+}
+
+.toggle-button:selected{
+	-fx-background-color : -brightadcblue;
+}
+
+.menu-button{
+	-fx-background-color : -adcblue;
+}
+
+.split-menu-button{
+	-fx-background-color : -adcblue;
+}
+
+.split-menu-button>*.label{
+	-fx-background-color : -adcblue;
+}
+
+.split-menu-button>*.arrow-button{
+	-fx-background-color : -adcblue;
+}
+
+
+/*
+ * **********
+ * PROGRESSBAR
+ * **********
+ * 
+ */
+.progress-indicator {
+	-fx-indeterminate-segment-count : 12;
+	-fx-progress-color : -adcblue;
+	-fx-spin-enabled : true;
+}
+
+.progress-bar>*.bar{
+	 -fx-background-color : -adcblue;
+ }
+ 
+.progress-bar>*.track{
+	 -fx-background-color : -adcblue;
+ }
+ 
+.progress-bar:determinate>*.determinate-indicator>*.track{
+	 -fx-background-color : -adcblue;
+ }
+
+.progress-bar:determinate>*.determinate-indicator>*.indicator{
+	 -fx-background-color : -adcblue;
+ }
+ 
+ /*
+ * **********
+ * DATE PICKER
+ * **********
+ * 
+ */
+.date-picker{
+	-fx-background-color : -white,-adcblue,gray;
+}
+
+.date-picker>*.arrow-button{
+	-fx-background-color : -white,-adcblue,-adcblue;
+}
+ 
+ .date-picker>*.arrow-button>*.arrow{
+	-fx-background-color : -brightadcblue, -black;
+}
+/*
+ * **********
+ * SLIDER
+ * **********
+ * 
+ */
+ .slider>*.track{
+	 -fx-background-color : -adcblue;
+ }
+.slider>*.axis:bottom{
+	-fx-tick-label-font-family : 'Segoe UI';
+}
+
+.slider>*.thumb{
+	-fx-background-color : -adcblue;
+}
+
+/*
+ * **********
+ * COMBOBOX
+ * **********
+ * 
+ */
+.combo-box {
+	-fx-background-color : -adcblue;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover 
+{
+    -fx-background-color: -adcblue;
+    -fx-text-fill: -white;
+}
+
+.combo-box-base:showing 
+{
+    -fx-color: -fx-pressed-base;
+}
+
+.combo-box-base:focused {
+   -fx-color : -brightadcblue;
+   -fx-focus-color : -brightadcblue;
+   -fx-border-color: -white;
+   -fx-background-color: -brightadcblue;
+   -fx-background-radius:2;
+   -fx-border-width: 1 1 1 1;
+   -fx-background-insets: 1;
+}
+
+.combo-box-base:hover
+{
+    -fx-color: -adcblue;
+}
+
+.check-box>*.box{
+	-fx-background-color : -adcblue;
+}
+
+
+/*
+ * **********
+ * TABPANE
+ * **********
+ * 
+ */
+ .tab-pane>*.tab-header-area{
+	 -fx-padding : 0,0,0,0;
+ }
+.tab-pane>*.tab-header-area>*.headers-region>*.tab:selected:top{
+	-fx-padding : 6,6,6,6;
+	-fx-text-fill : -white;
+	-fx-background-color : -adcblue;
+}
+.tab-pane>*.tab-header-area>*.headers-region>*.tab:selected>*.tab-container>*.tab-label{
+	-fx-font-size : 13.0;
+	-fx-font-weight: bold;
+}
+
+.tab-pane>*.tab-header-area>*.headers-region>*.tab:top{
+	-fx-padding : 4,4,4,4;
+	-fx-text-fill : -white;
+	-fx-background-color : -white;
+}
+
+.tab-pane>*.tab-header-area>*.control-buttons-tab>*.container>*.tab-down-button{
+	-fx-background-color : -white;
+}
+
+.tab-pane>*.tab-header-area>*.control-buttons-tab>*.container>*.tab-down-button>*.arrow{
+	-fx-background-color : -brightadcblue;
+}
+
+
+/*
+ * **********
+ * MENU
+ * **********
+ * 
+ */
+.menu-bar{
+	-fx-background-color : -adcblue;
+}
+ 
+
+/*
+ * **********
+ * Checkbox
+ * **********
+ * 
+ */
+ .check-box>*.box{
+	 -fx-background-color : -adcblue;
+ }
+ 
+ .check-box:selected>*.box>*.mark{
+	 -fx-background-color : -black;
+ }
+.check-box:indeterminate>*.box>*.mark{
+	 -fx-background-color : -black;
+ }
+ 
+ 
+ /*
+ * **********
+ * RADIO BUTTONS
+ * **********
+ * 
+ */
+ .radio-button>*.radio{
+	-fx-background-color : -adcblue; 
+ }
+ 
+ .radio-button:selected>*.radio>*.dot{
+	 -fx-background-color : -black;
+ }
+ 
+/*
+ * **********
+ * Text fields / inputs
+ * **********
+ * 
+ */
+.text-field{
+	-fx-highlight-fill : -adcblue;
+	-fx-highlight-text-fill : -white;
+}
+
+.text-area{
+	-fx-highlight-fill : -adcblue;
+	-fx-highlight-text-fill : -white;
+}
+ 
+.spinner>*.increment-arrow-button{
+	-fx-background-color : -adcblue;
+}
+
+.spinner>*.decrement-arrow-button{
+	-fx-background-color : -adcblue;
+}
+/*
+ * **********
+ * Titled Pane
+ * **********
+ * 
+ */
+
+.first-titled-pane:expanded>*.title{
+	-fx-background-color : -adcblue;
+}
+
+.titled-pane:expanded>*.title{
+	-fx-background-color : -adcblue;
+}
+
+.titled-pane:collapsed>*.title{
+	-fx-background-color : -adcblue;
+}
+
+.titled-pane*>*.title>*.arrow-button>*.arrow{
+	-fx-background-color : -black;
+}
+
+/*
+ * **********
+ * Table
+ * **********
+ * 
+ */
+.table-view:row-selection{
+	-fx-background-color : -adcblue;
+}
+
+.table-view:row-selection>*.column-header-background{
+	-fx-background-color : -white;
+}
+
+.table-view>*.column-resize-line{
+	-fx-background-color : -black;
+}
+
+.table-view>*.column-header-background>*.nested-column-header>*.table-column{
+	-fx-background-color : -brightadcblue, -white;
+}
+
+.table-view>*.column-header-background>*.filler{
+	-fx-background-color : -brightadcblue, -adcblue;
+}
+
+.table-view>*.column-header-background>*.show-hide-columns-button{
+	-fx-background-color : -adcblue;
+}
+
+
+.tree-table-view:row-selection{
+	-fx-background-color : -adcblue;
+}
+
+.tree-table-view:row-selection>*.column-header-background{
+	-fx-background-color : -white;
+}
+
+.tree-table-view>*.column-resize-line{
+	-fx-background-color : -black;
+}
+
+.tree-table-view>*.column-header-background>*.nested-column-header>*.table-column{
+	-fx-background-color : -brightadcblue, -white;
+}
+
+.tree-table-view>*.column-header-background>*.filler{
+	-fx-background-color : -brightadcblue, -adcblue;
+}
+
+.tree-table-view>*.column-header-background>*.show-hide-columns-button{
+	-fx-background-color : -adcblue;
+}
+
+
+/*
+ * **********
+ * Color picker
+ * **********
+ * 
+ */
+.color-picker{
+	-fx-background-color : -adcblue;
+}
+
+/*
+ * **********
+ * Scroll pane
+ * **********
+ * 
+ */
+.scroll-pane>*.scroll-bar{
+	-fx-background-color : -adcblue;
+}
+
+.scroll-pane>*.scroll-bar>*.thumb{
+	-fx-background-color : -adcblue;
 }

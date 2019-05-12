@@ -37,7 +37,7 @@
                   <TextField id="ticketNumberTextField" fx:id="endTextField" prefHeight="30.0" />
                   <TextField id="ticketNumberTextField" fx:id="amountOfHoursTextField" prefHeight="30.0" />
                   <ComboBox fx:id="kindOfServiceComboBox" prefHeight="30.0" />
-                  <GridPane hgap="5.0">
+                  <GridPane hgap="10.0" prefWidth="160.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.333255767822266" minWidth="10.0" prefWidth="47.000003814697266" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="88.33337020874023" minWidth="10.0" prefWidth="82.99999618530273" />
@@ -47,7 +47,7 @@
                      </rowConstraints>
                      <children>
                         <Button fx:id="okButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="100.0" text="okButton" />
-                        <Button fx:id="abortButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="100.0" text="abortButton" GridPane.columnIndex="1" />
+                        <Button fx:id="abortButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="96.0" text="abortButton" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
                </children>

@@ -19,6 +19,7 @@ import com.myownb3.dominic.ui.core.pages.overview.model.table.BusinessDayIncTabl
 import com.myownb3.dominic.ui.core.pages.overview.model.table.BusinessDayTableModelHelper;
 import com.myownb3.dominic.ui.core.pages.overview.model.table.TimeSnippetCellValue;
 import com.myownb3.dominic.ui.core.pages.overview.view.OverviewPage;
+import com.myownb3.dominic.ui.core.styles.Styles;
 import com.myownb3.dominic.ui.core.view.Page;
 
 import javafx.event.ActionEvent;
@@ -78,6 +79,9 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	businessDayTableModel = new BusinessDayTableModelHelper(this);
 	handler = new BusinessDayChangedCallbackHandlerImpl();
 	setBinding(dataModel);
+
+	totalAmountOfTimeLabel.getStyleClass().add(Styles.BOLD_LABEL_12);
+	totalAmountOfTimeValue.getStyleClass().add(Styles.BOLD_LABEL_12);
     }
 
     @Override
