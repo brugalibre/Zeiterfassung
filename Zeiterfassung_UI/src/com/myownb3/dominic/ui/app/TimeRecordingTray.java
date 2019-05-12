@@ -199,6 +199,7 @@ public class TimeRecordingTray {
 	buttonGroup.add(settingsRoundItem1Min);
 	buttonGroup.add(settingsRoundItem5Min);
 	buttonGroup.add(settingsRoundItem10Min);
+	buttonGroup.add(settingsRoundItem15Min);
 
 	settingsRoundItem1Min.addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(RoundMode.ONE_MIN));
 	settingsRoundItem5Min.addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(RoundMode.FIVE_MIN));
