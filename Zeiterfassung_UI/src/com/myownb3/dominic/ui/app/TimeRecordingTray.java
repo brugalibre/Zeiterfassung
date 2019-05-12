@@ -29,7 +29,7 @@ public class TimeRecordingTray {
     private MenuItem showHoursItem;
     private MenuItem startTurboBucher;
     private MainWindowPage mainWindowPage;
-    
+
     public void registerSystemtray(Stage primaryStage) {
 
 	trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(),
@@ -68,12 +68,12 @@ public class TimeRecordingTray {
 	mainWindowPage.refresh();
     }
 
-    protected void showOverviewView() {
-	Platform.runLater(() ->	mainWindowPage.showOverviewView());
+    private void showOverviewView() {
+	Platform.runLater(() -> mainWindowPage.showOverviewView());
     }
 
-    protected void showInputMask() {
-	Platform.runLater(() ->	mainWindowPage.showInputMask());
+    private void showInputMask() {
+	Platform.runLater(() -> mainWindowPage.showInputMask());
     }
 
     /**
@@ -161,7 +161,7 @@ public class TimeRecordingTray {
 	    public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
 		    if (TimeRecorder.handleUserInteraction()) {
-			Platform.runLater(() ->  showInputMask());
+			Platform.runLater(() -> showInputMask());
 		    }
 		}
 	    }

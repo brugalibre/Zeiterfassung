@@ -77,6 +77,17 @@ public class BusinessDay4Export {
     }
 
     /**
+     * @return <code>true</code> if this {@link BusinessDay4Export} has at least one
+     *         {@link BusinessDayInc4Export} which is not charged yet otherwise
+     *         <code>false</code>
+     */
+    public boolean hasNotChargedElements() {
+	return !businessDayIncrements//
+		.stream()//
+		.anyMatch(BusinessDayInc4Export::isCharged);
+    }
+
+    /**
      * Returns the amount of Begin/End Elements this {@link BusinessDay} has
      * 
      * @return the amount of Begin/End Elements this {@link BusinessDay} has

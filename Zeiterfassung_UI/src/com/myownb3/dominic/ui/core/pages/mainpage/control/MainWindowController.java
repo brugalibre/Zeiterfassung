@@ -17,9 +17,8 @@ import com.myownb3.dominic.ui.core.view.Page;
 import com.myownb3.dominic.ui.core.view.impl.FXPageContent;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -34,11 +33,11 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     @FXML
     private OverviewController overviewPanelController;
     @FXML
-    private BorderPane overviewPanel;
+    private Region overviewPanel;
     @FXML
     private StopBusinessDayIncrementController stopBusinessDayIncrementPanelController;
     @FXML
-    private VBox stopBusinessDayIncrementPanel;
+    private Region stopBusinessDayIncrementPanel;
 
     private TimeRecordingTray timeRecordingTray;
 
@@ -58,25 +57,31 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 
     public void showInputMask(Stage stage) {
 
-	overviewPanel.setVisible(false);
-	stopBusinessDayIncrementPanel.setVisible(true);
 	mainPanel.getChildren().clear();
 	mainPanel.getChildren().add(stopBusinessDayIncrementPanel);
-	
+
+	initStage4NewComponent(stage, stopBusinessDayIncrementPanel);
 	stopBusinessDayIncrementPanelController.show();
 	show();
     }
 
     public void showOverviewView(Stage stage) {
-	overviewPanel.setVisible(true);
-	stopBusinessDayIncrementPanel.setVisible(false);
+
 	mainPanel.getChildren().clear();
 	mainPanel.getChildren().add(overviewPanel);
 
-	stage.sizeToScene();
+	initStage4NewComponent(stage, overviewPanel);
 
 	overviewPanelController.show();
 	show();
+    }
+
+    private void initStage4NewComponent(Stage stage, Region region) {
+	mainPanel.setPrefWidth(region.getPrefWidth());
+	mainPanel.setPrefHeight(region.getPrefHeight());
+	stage.setWidth(region.getPrefWidth());
+	stage.setHeight(region.getPrefHeight());
+	stage.setResizable(false);
     }
 
     /**
@@ -87,7 +92,6 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
      */
     public void finishOrAbortAndDispose(boolean done) {
 	if (done) {
-	    TimeRecorder.checkForRedundancy();
 	    timeRecordingTray.updateUIStates(false);
 	} else {
 	    TimeRecorder.resume();
@@ -120,14 +124,6 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 
     @Override
     protected void refresh() {
-	// First check for increments which can be merged (e.g. if there was an charged
-	// and a not charged increment which are equal but still handled separately
-	// (because the one was already charged and the 2nd not). And as soon as the 2nd
-	// one is charged, they can be merged
-	TimeRecorder.checkForRedundancy();
-	// if (overviewController.page.isVisible()) {
-	// showOverviewView(TimeRecorder.getBussinessDay());
-	// }
 	timeRecordingTray.updateUIStates(false);
     }
 

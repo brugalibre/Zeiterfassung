@@ -36,7 +36,7 @@ public class BusinessDayInc4Export {
 
     private BusinessDayInc4Export(BusinessDayIncremental businessDayIncremental) {
 
-	this.currentTimeSnippet = businessDayIncremental.getCurrentTimeSnippet();
+	this.currentTimeSnippet = TimeSnippet.of(businessDayIncremental.getCurrentTimeSnippet());
 	this.description = businessDayIncremental.getDescription();
 	this.ticketNumber = businessDayIncremental.getTicketNumber();
 	this.chargeType = businessDayIncremental.getChargeType();

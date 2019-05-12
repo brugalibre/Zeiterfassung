@@ -13,26 +13,38 @@ import javafx.beans.property.StringProperty;
  * @author Dominic
  *
  */
-public class TimeSnippetCellValue  {
+public class TimeSnippetCellValue {
 
     private IntegerProperty sequenceValueProperty;
-    private StringProperty vonValueProperty;
-    private StringProperty bisValueProperty;
+    private StringProperty beginValueProperty;
+    private StringProperty endValueProperty;
 
-    public TimeSnippetCellValue(int sequence, String von, String bis) {
+    private TimeSnippetCellValue(int sequence, String begin, String end) {
 
-	this.vonValueProperty = new SimpleStringProperty(von); 
-	this.bisValueProperty = new SimpleStringProperty(bis); 
-	this.sequenceValueProperty = new SimpleIntegerProperty(sequence); 
+	this.beginValueProperty = new SimpleStringProperty(begin);
+	this.endValueProperty = new SimpleStringProperty(end);
+	this.sequenceValueProperty = new SimpleIntegerProperty(sequence);
     }
-    
+
     public int getSequence() {
-        return sequenceValueProperty.get();
+	return sequenceValueProperty.get();
     }
-    public String getVon() {
-        return vonValueProperty.get();
+
+    public String getBegin() {
+	return beginValueProperty.get();
     }
-    public String getBis() {
-        return bisValueProperty.get();
+
+    public String getEnd() {
+	return endValueProperty.get();
+    }
+
+    /**
+     * @param value
+     * @param sequence
+     * @param begin
+     * @return
+     */
+    public static TimeSnippetCellValue of(String begin, String end, int sequence) {
+	return new TimeSnippetCellValue(sequence, begin, end);
     }
 }

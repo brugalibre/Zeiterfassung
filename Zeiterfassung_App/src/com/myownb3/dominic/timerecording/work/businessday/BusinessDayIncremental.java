@@ -38,7 +38,7 @@ public class BusinessDayIncremental {
     public BusinessDayIncremental(Date date) {
 	this.date = date;
 	timeSnippets = new ArrayList<TimeSnippet>();
-	ticketNumber = "SYRIUS- ";
+	ticketNumber = "SYRIUS-";
 	description = " - ";
     }
 

@@ -68,6 +68,7 @@ public class StopBusinessDayIncrementController
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 	initialize(new StopBusinessDayIncrementPage(this, url));
+	kindOfServiceComboBox.getSelectionModel().selectFirst();
     }
 
     @Override
@@ -97,13 +98,15 @@ public class StopBusinessDayIncrementController
     }
 
     private boolean isInputValid() {
-	return new InputFieldVerifier().verify(amountOfHoursTextField) && kindOfServiceComboBox.getSelectionModel().getSelectedItem() != null;
+	return new InputFieldVerifier().verify(amountOfHoursTextField)
+		&& kindOfServiceComboBox.getSelectionModel().getSelectedItem() != null;
     }
 
     @Override
     protected void setBinding(StopBusinessDayIncrementPageModel pageModel) {
 	ticketNumberTextField.textProperty().bindBidirectional(pageModel.getTicketNoTextFieldProperty());
-	descriptionTextField.textProperty().bind(pageModel.getDescriptionTextFieldProperty());
+	descriptionTextField.textProperty().bindBidirectional(pageModel.getDescriptionTextFieldProperty());
+
 	beginTextField.textProperty().bindBidirectional(pageModel.getBeginTextFieldProperty());
 	endTextField.textProperty().bindBidirectional(pageModel.getEndTextFieldProperty());
 	amountOfHoursTextField.textProperty().bindBidirectional(pageModel.getAmountOfHoursTextFieldProperty());

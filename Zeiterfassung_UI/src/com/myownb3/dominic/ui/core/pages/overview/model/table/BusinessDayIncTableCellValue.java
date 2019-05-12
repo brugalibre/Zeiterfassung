@@ -3,7 +3,7 @@
  */
 package com.myownb3.dominic.ui.core.pages.overview.model.table;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -22,8 +22,8 @@ public class BusinessDayIncTableCellValue {
     private StringProperty chargeTypeProperty;
     private StringProperty isChargedProperty;
 
-    private List<TimeSnippetCellValue> beginEndValues;
-    
+    private List<TimeSnippetCellValue> timeSnippets;
+
     /**
      * Creates a new empty {@link BusinessDayIncTableCellValue}
      */
@@ -34,71 +34,71 @@ public class BusinessDayIncTableCellValue {
 	descriptionProperty = new SimpleStringProperty();
 	chargeTypeProperty = new SimpleStringProperty();
 	isChargedProperty = new SimpleStringProperty();
+	timeSnippets = new ArrayList<>();
     }
 
     /**
-     * @param no
+     * Returns the {@link TimeSnippetCellValue} for the given index
+     * 
+     * @param index
+     * @return the {@link TimeSnippetCellValue} for the given index
      */
-    public void setNumber(int no) {
-	numberProperty.set(String.valueOf(no));
+    public TimeSnippetCellValue getTimeSnippet4Index(int index) {
+	return timeSnippets.get(index);
     }
 
     /**
-     * @param cellValue
+     * @param timeSnippets
      */
-    public void setDescritpion(String description) {
-	descriptionProperty.set(description);
+    public void setTimeSnippets(List<TimeSnippetCellValue> timeSnippets) {
+	this.timeSnippets = timeSnippets;
     }
 
-    /**
-     * @param totalDurationRep
-     */
-    public void setTotalDuration(String totalDurationRep) {
-	totalDurationProperty.set(totalDurationRep);
+    public final String getNumber() {
+	return this.numberProperty.get();
     }
 
-    public String getNumber() {
-        return numberProperty.get();
+    public final String getTotalDuration() {
+	return this.totalDurationProperty.get();
     }
 
-    public String getTotalDuration() {
-        return totalDurationProperty.get();
+    public final String getTicketNumber() {
+	return this.ticketNumberProperty.get();
     }
 
-    public String getTicketNumber() {
-        return ticketNumberProperty.get();
+    public final String getDescription() {
+	return this.descriptionProperty.get();
     }
 
-    public String getDescription() {
-        return descriptionProperty.get();
+    public final String getChargeType() {
+	return this.chargeTypeProperty.get();
     }
 
-    public String getChargeType() {
-        return chargeTypeProperty.get();
+    public final String getIsCharged() {
+	return this.isChargedProperty.get();
     }
 
-    public String getIsCharged() {
-        return isChargedProperty.get();
+    public final void setIsCharged(String isCharged) {
+	this.isChargedProperty.set(isCharged);
     }
 
-    /**
-     * @param ticketNumber
-     */
-    public void setTicketNumber(String ticketNumber) {
-	ticketNumberProperty.set(ticketNumber);
+    public final void setNumber(String number) {
+	this.numberProperty.set(number);
     }
 
-    /**
-     * @param representation
-     */
-    public void setChargeType(String representation) {
-	chargeTypeProperty.set(representation);
+    public final void setTotalDuration(String totalDuration) {
+	this.totalDurationProperty.set(totalDuration);
     }
 
-    /**
-     * @param object
-     */
-    public void setIsCharged(String isCharged) {
-	isChargedProperty.set(isCharged);
+    public final void setTicketNumber(String ticketNumber) {
+	this.ticketNumberProperty.set(ticketNumber);
+    }
+
+    public final void setDescription(String description) {
+	this.descriptionProperty.set(description);
+    }
+
+    public final void setChargeType(String chargeType) {
+	this.chargeTypeProperty.set(chargeType);
     }
 }

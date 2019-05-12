@@ -5,54 +5,60 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="stopBusinessDayIncrementPanel" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="270.0" spacing="15.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.core.pages.userinput.control.StopBusinessDayIncrementController">
+<AnchorPane prefHeight="280.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.core.pages.userinput.control.StopBusinessDayIncrementController">
    <children>
-      <FlowPane columnHalignment="CENTER" hgap="30.0">
+      <HBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="ticketNumberLabel" text="Label" />
-            <TextField id="ticketNumberTextField" fx:id="ticketNumberTextField" />
-         </children></FlowPane>
-      <FlowPane hgap="30.0">
-         <children>
-            <Label fx:id="descriptionLabel" text="Label" />
-            <TextField id="ticketNumberTextField" fx:id="descriptionTextField" />
+            <VBox prefWidth="100.0" spacing="5.0">
+               <children>
+                  <Label fx:id="ticketNumberLabel" prefHeight="30.0" text="ticketNumberLabel" />
+                  <Label fx:id="descriptionLabel" prefHeight="30.0" text="descriptionLabel" />
+                  <Label fx:id="beginLabel" prefHeight="30.0" text="beginLabel" />
+                  <Label fx:id="endLabel" prefHeight="30.0" text="endLabel" />
+                  <Label fx:id="amountOfHoursLabel" prefHeight="30.0" text="amountOfHoursLabel" />
+                  <Label fx:id="kindOfServiceLabel" prefHeight="30.0" text="kindOfServiceLabel" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" />
+               </padding>
+            </VBox>
+            <VBox prefWidth="150.0" spacing="5.0">
+               <children>
+                  <TextField id="ticketNumberTextField" fx:id="ticketNumberTextField" prefHeight="30.0" />
+                  <TextField id="ticketNumberTextField" fx:id="descriptionTextField" prefHeight="30.0" />
+                  <TextField id="ticketNumberTextField" fx:id="beginTextField" prefHeight="30.0" />
+                  <TextField id="ticketNumberTextField" fx:id="endTextField" prefHeight="30.0" />
+                  <TextField id="ticketNumberTextField" fx:id="amountOfHoursTextField" prefHeight="30.0" />
+                  <ComboBox fx:id="kindOfServiceComboBox" prefHeight="30.0" />
+                  <GridPane hgap="5.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.333255767822266" minWidth="10.0" prefWidth="47.000003814697266" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="88.33337020874023" minWidth="10.0" prefWidth="82.99999618530273" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Button fx:id="okButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="100.0" text="okButton" />
+                        <Button fx:id="abortButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="100.0" text="abortButton" GridPane.columnIndex="1" />
+                     </children>
+                  </GridPane>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" />
+               </padding>
+            </VBox>
          </children>
-      </FlowPane>
-      <FlowPane hgap="30.0">
-         <children>
-            <Label fx:id="beginLabel" text="Label" />
-            <TextField id="ticketNumberTextField" fx:id="beginTextField" />
-         </children>
-      </FlowPane>
-      <FlowPane hgap="30.0">
-         <children>
-            <Label fx:id="endLabel" text="Label" />
-            <TextField id="ticketNumberTextField" fx:id="endTextField" />
-         </children>
-      </FlowPane>
-      <FlowPane hgap="30.0">
-         <children>
-            <Label fx:id="amountOfHoursLabel" text="Label" />
-            <TextField id="ticketNumberTextField" fx:id="amountOfHoursTextField" />
-         </children>
-      </FlowPane>
-      <FlowPane hgap="30.0">
-         <children>
-            <Label fx:id="kindOfServiceLabel" text="Label" />
-            <ComboBox fx:id="kindOfServiceComboBox" prefWidth="150.0" />
-         </children>
-      </FlowPane>
-      <FlowPane hgap="30.0">
-         <children>
-            <Button fx:id="okButton" mnemonicParsing="false" onAction="#onAction" text="Button" />
-            <Button fx:id="abortButton" mnemonicParsing="false" onAction="#onAction" text="Button" />
-         </children>
-      </FlowPane>
+      </HBox>
    </children>
    <padding>
-      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
    </padding>
-</VBox>
+</AnchorPane>

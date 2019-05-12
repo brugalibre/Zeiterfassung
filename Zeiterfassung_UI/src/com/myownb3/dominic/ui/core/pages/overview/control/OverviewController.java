@@ -26,6 +26,7 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 
@@ -33,7 +34,8 @@ import javafx.scene.layout.BorderPane;
  * @author Dominic
  * 
  */
-public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel> implements BusinessDayChangedCallbackHandler{
+public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel>
+	implements BusinessDayChangedCallbackHandler {
 
     /**
      * There are five fix headers: Number, Amount of Hours, Ticket, charge-Type &
@@ -48,6 +50,11 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     @FXML
     private TableView<BusinessDayIncTableCellValue> tableView;
+
+    @FXML
+    private Label totalAmountOfTimeLabel;
+    @FXML
+    private Label totalAmountOfTimeValue;
 
     @FXML
     private Button clearButton;
@@ -74,11 +81,11 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     @Override
     public void show() {
-        super.show();
-        BusinessDay4Export businessDay4Export = BusinessDay4Export.of(TimeRecorder.getBussinessDay());
+	super.show();
+	BusinessDay4Export businessDay4Export = BusinessDay4Export.of(TimeRecorder.getBussinessDay());
 	businessDayTableModel.init(businessDay4Export, tableView);
     }
-    
+
     public void init(MainWindowController mainWindowController) {
 	this.mainWindowController = mainWindowController;
     }
@@ -90,7 +97,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	businessDayChangedCallbackHandler.handleBusinessDayChanged(changeValue);
 	mainWindowController.show();
     }
-    
+
     @FXML
     private void onAction(ActionEvent actionEvent) {
 
@@ -106,21 +113,18 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     private void BusinessDayIncTableCellValueChanged(Change<? extends BusinessDayIncTableCellValue> businessDayCell) {
 
-//	if (e.getType() == TableModelEvent.UPDATE) {
-//	    BusinessDayTableModel businessDayTableModel = (BusinessDayTableModel) e.getSource();
-//	    TableCellValue tableCellValue = businessDayTableModel.getCellAt(e.getFirstRow(), e.getColumn());
-//	    TableCellValue noTableCellValue = businessDayTableModel.getCellAt(e.getFirstRow(), 0);
-//	    handler.handleBusinessDayChanged(ChangedValue.of(Integer.valueOf(noTableCellValue.getValue()), tableCellValue.getValue(), tableCellValue.getValueType(),
-//		    getIndexForFromUpto(tableCellValue)));
-//	}
+	// if (e.getType() == TableModelEvent.UPDATE) {
+	// BusinessDayTableModel businessDayTableModel = (BusinessDayTableModel)
+	// e.getSource();
+	// TableCellValue tableCellValue =
+	// businessDayTableModel.getCellAt(e.getFirstRow(), e.getColumn());
+	// TableCellValue noTableCellValue =
+	// businessDayTableModel.getCellAt(e.getFirstRow(), 0);
+	// handler.handleBusinessDayChanged(ChangedValue.of(Integer.valueOf(noTableCellValue.getValue()),
+	// tableCellValue.getValue(), tableCellValue.getValueType(),
+	// getIndexForFromUpto(tableCellValue)));
+	// }
     }
-//
-//    private int getIndexForFromUpto(TableCellValue tableCellValue) {
-//	if (tableCellValue instanceof TimeSnippetCellValue) {
-//	    return ((TimeSnippetCellValue) tableCellValue).getSequence();
-//	}
-//	return -1;
-//    }
 
     @Override
     protected PageModelResolver<OverviewPageModel, OverviewPageModel> createPageModelResolver() {
@@ -129,9 +133,15 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     @Override
     protected void setBinding(OverviewPageModel pageVO) {
-	// tablePanel.initialize(bussinessDay, handler);
-	bookButton.disableProperty().set(getDataModel().getIsChargeButtonDisabled().getValue());
-	clearButton.disableProperty().set(getDataModel().getIsClearButtonDisabled().getValue());
-	exportButton.disableProperty().set(getDataModel().getIsClearButtonDisabled().getValue());
+	bookButton.disableProperty().bind(getDataModel().getIsChargeButtonDisabled());
+	clearButton.disableProperty().bind(getDataModel().getIsClearButtonDisabled());
+	exportButton.disableProperty().bind(getDataModel().getIsExportButtonDisabled());
+
+	bookButton.textProperty().bind(getDataModel().getBookButtonLabel());
+	clearButton.textProperty().bind(getDataModel().getClearButtonLabel());
+	exportButton.textProperty().bind(getDataModel().getExportButtonLabel());
+
+	totalAmountOfTimeLabel.textProperty().bind(getDataModel().getTotalAmountOfTimeLabel());
+	totalAmountOfTimeValue.textProperty().bind(getDataModel().getTotalAmountOfTimeValue());
     }
 }

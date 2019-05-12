@@ -54,7 +54,6 @@ public class BusinessDay {
      */
     public void resumeLastIncremental() {
 
-	increments.remove(currentBussinessDayIncremental);
 	currentBussinessDayIncremental.resumeLastTimeSnippet();
     }
 
@@ -76,7 +75,6 @@ public class BusinessDay {
      */
     public void stopCurrentIncremental() {
 	Time endTimeStamp = new Time(System.currentTimeMillis());
-	increments.add(currentBussinessDayIncremental);
 	currentBussinessDayIncremental.stopCurrentTimeSnippet(endTimeStamp);
     }
 
@@ -133,16 +131,6 @@ public class BusinessDay {
     public boolean hasNotChargedElements() {
 	return increments.stream()//
 		.anyMatch(bDayInc -> !bDayInc.isCharged());
-    }
-
-    public boolean hasFinishedContent() {
-	if (increments.isEmpty()) {
-	    return false;
-	}
-	if (increments.size() == 1) {
-	    return increments.get(0) != currentBussinessDayIncremental;
-	}
-	return true;
     }
 
     /**
@@ -232,8 +220,8 @@ public class BusinessDay {
      * @param update
      */
     public void addBusinessIncrement(BusinessDayIncrementUpdate update) {
-	BusinessDayIncremental incremental = BusinessDayIncremental.of(update);
-	increments.add(incremental);
+	BusinessDayIncremental newBusinessDayInc = BusinessDayIncremental.of(update);
+	increments.add(newBusinessDayInc);
 	checkForRedundancys();
     }
 }
