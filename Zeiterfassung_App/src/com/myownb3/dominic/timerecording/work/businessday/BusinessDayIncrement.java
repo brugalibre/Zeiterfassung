@@ -18,14 +18,14 @@ import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
- * A {@link BusinessDay} consist of one or more {@link BusinessDayIncremental}.
- * Where as a {@link BusinessDayIncremental} consist of one or more
- * {@link TimeSnippet}. Two different {@link BusinessDayIncremental} are <i> not
+ * A {@link BusinessDay} consist of one or more {@link BusinessDayIncrement}.
+ * Where as a {@link BusinessDayIncrement} consist of one or more
+ * {@link TimeSnippet}. Two different {@link BusinessDayIncrement} are <i> not
  * </i> dependent!
  * 
  * @author Dominic
  */
-public class BusinessDayIncremental {
+public class BusinessDayIncrement {
     private List<TimeSnippet> timeSnippets;
     private TimeSnippet currentTimeSnippet;
 
@@ -35,11 +35,10 @@ public class BusinessDayIncremental {
     private int chargeType;
     private boolean isCharged;
 
-    public BusinessDayIncremental(Date date) {
+    public BusinessDayIncrement(Date date) {
 	this.date = date;
 	timeSnippets = new ArrayList<TimeSnippet>();
 	ticketNumber = "SYRIUS-";
-	description = " - ";
     }
 
     /**
@@ -84,18 +83,17 @@ public class BusinessDayIncremental {
     }
 
     /**
-     * Returns <code>true</code> if this {@link BusinessDayIncremental} and the
-     * other has the same Ticketnumber, and same charge-type and the same
-     * description. The description can be <code>null</code> for both
-     * {@link BusinessDayIncremental} and this method still returns
-     * <code>true</code>
+     * Returns <code>true</code> if this {@link BusinessDayIncrement} and the other
+     * has the same Ticketnumber, and same charge-type and the same description. The
+     * description can be <code>null</code> for both {@link BusinessDayIncrement}
+     * and this method still returns <code>true</code>
      * 
      * @param other
      *            the other BusinessDayIncremental
-     * @return <code>true</code> if this {@link BusinessDayIncremental} is the same
-     *         as the other one
+     * @return <code>true</code> if this {@link BusinessDayIncrement} is the same as
+     *         the other one
      */
-    public boolean isSame(BusinessDayIncremental other) {
+    public boolean isSame(BusinessDayIncrement other) {
 	if (other == null) {
 	    return false;
 	}
@@ -106,7 +104,7 @@ public class BusinessDayIncremental {
 		&& this.isCharged == other.isCharged() && hasSameDescription(other);
     }
 
-    private boolean hasSameDescription(BusinessDayIncremental other) {
+    private boolean hasSameDescription(BusinessDayIncrement other) {
 	return StringUtil.isEmptyOrNull(other.getDescription()) && StringUtil.isEmptyOrNull(this.getDescription())
 		|| (StringUtil.isNotEmptyOrNull(other.getDescription())
 			&& StringUtil.isNotEmptyOrNull(other.getDescription())
@@ -165,13 +163,13 @@ public class BusinessDayIncremental {
     }
 
     /**
-     * Moves all {@link TimeSnippet} of the current {@link BusinessDayIncremental}
-     * to the given {@link BusinessDayIncremental}. The {@link TimeSnippet}s of the
-     * current {@link BusinessDayIncremental} are removed!
+     * Moves all {@link TimeSnippet} of the current {@link BusinessDayIncrement} to
+     * the given {@link BusinessDayIncrement}. The {@link TimeSnippet}s of the
+     * current {@link BusinessDayIncrement} are removed!
      * 
      * @param incrementToAddTimeSnippets
      */
-    public void transferAllTimeSnipetsToBussinessDayIncrement(BusinessDayIncremental incrementToAddTimeSnippets) {
+    public void transferAllTimeSnipetsToBussinessDayIncrement(BusinessDayIncrement incrementToAddTimeSnippets) {
 	incrementToAddTimeSnippets.addTimeSnippets(timeSnippets);
 	timeSnippets.clear();
     }
@@ -206,7 +204,7 @@ public class BusinessDayIncremental {
      * @param newTimeStampValue
      *            the new value for the time stamp
      */
-    public void updateBeginTimeSnippetAndCalculate(BusinessDayIncremental businessDayIncremental, int fromUptoSequence,
+    public void updateBeginTimeSnippetAndCalculate(BusinessDayIncrement businessDayIncremental, int fromUptoSequence,
 	    String newTimeStampValue) {
 
 	Optional<TimeSnippet> timeSnippetOpt = getTimeSnippet4Index(fromUptoSequence);
@@ -222,7 +220,7 @@ public class BusinessDayIncremental {
      * @param newTimeStampValue
      *            the new value for the time stamp
      */
-    public void updateEndTimeSnippetAndCalculate(BusinessDayIncremental businessDayIncremental, int fromUptoSequence,
+    public void updateEndTimeSnippetAndCalculate(BusinessDayIncrement businessDayIncremental, int fromUptoSequence,
 	    String newTimeStampValue) {
 	Optional<TimeSnippet> timeSnippetOpt = getTimeSnippet4Index(fromUptoSequence);
 	timeSnippetOpt.ifPresent(timeSnippet -> {
@@ -240,16 +238,16 @@ public class BusinessDayIncremental {
     }
 
     /**
-     * Creates a new {@link BusinessDayIncremental} for the given
+     * Creates a new {@link BusinessDayIncrement} for the given
      * {@link BusinessDayIncrementUpdate}
      * 
      * @param update
      *            the {@link BusinessDayIncrementUpdate} with the new values
-     * @return a new {@link BusinessDayIncremental}
+     * @return a new {@link BusinessDayIncrement}
      */
-    public static BusinessDayIncremental of(BusinessDayIncrementUpdate update) {
+    public static BusinessDayIncrement of(BusinessDayIncrementUpdate update) {
 
-	BusinessDayIncremental businessDayIncremental = new BusinessDayIncremental(update.getTimeSnippet().getDate());
+	BusinessDayIncrement businessDayIncremental = new BusinessDayIncrement(update.getTimeSnippet().getDate());
 	businessDayIncremental.description = update.getDescription();
 	businessDayIncremental.ticketNumber = update.getTicketNo();
 	businessDayIncremental.chargeType = update.getKindOfService();

@@ -17,15 +17,15 @@ import com.myownb3.dominic.util.parser.NumberFormat;
 
 /**
  * The {@link BusinessDay} defines an entire day full of work. Such a day may
- * consist of several increments, called {@link BusinessDayIncremental}. <br>
+ * consist of several increments, called {@link BusinessDayIncrement}. <br>
  * Each such incremental is defined by several {@link TimeSnippet}s. And each of
  * those snippet's has a begin time-stamp, an end time-stamp and a specific
  * amount of hours <br>
  * 
- * A {@link BusinessDayIncremental} can have several of those snippet's -
+ * A {@link BusinessDayIncrement} can have several of those snippet's -
  * scattered over the entire day. But each of this
- * {@link BusinessDayIncremental} belongs to the same <br>
- * project. One or more such {@link BusinessDayIncremental} are put together -
+ * {@link BusinessDayIncrement} belongs to the same <br>
+ * project. One or more such {@link BusinessDayIncrement} are put together -
  * to a whole {@link BusinessDay}
  * 
  * @author Dominic
@@ -33,9 +33,9 @@ import com.myownb3.dominic.util.parser.NumberFormat;
  */
 public class BusinessDay {
     // all increments of this BusinessDay (those are all finished!)
-    private CopyOnWriteArrayList<BusinessDayIncremental> increments;
+    private CopyOnWriteArrayList<BusinessDayIncrement> increments;
     // the current increment which has been started but not yet finished so far
-    private BusinessDayIncremental currentBussinessDayIncremental;
+    private BusinessDayIncrement currentBussinessDayIncremental;
 
     public BusinessDay() {
 	initialize();
@@ -45,8 +45,8 @@ public class BusinessDay {
     * 
     */
     private void initialize() {
-	increments = new CopyOnWriteArrayList<BusinessDayIncremental>();
-	currentBussinessDayIncremental = new BusinessDayIncremental(new Date());
+	increments = new CopyOnWriteArrayList<BusinessDayIncrement>();
+	currentBussinessDayIncremental = new BusinessDayIncrement(new Date());
     }
 
     /**
@@ -58,7 +58,7 @@ public class BusinessDay {
     }
 
     /**
-     * Starts a new {@link BusinessDayIncremental}. That means to create a new
+     * Starts a new {@link BusinessDayIncrement}. That means to create a new
      * instance of {@link Time} <br>
      * and forward that to the
      */
@@ -79,13 +79,13 @@ public class BusinessDay {
     }
 
     /**
-     * If there exist two or more {@link BusinessDayIncremental} with the same
-     * {@link BusinessDayIncremental#getDescription()} the {@link TimeSnippet} are
-     * moved from the first {@link BusinessDayIncremental} to the other
+     * If there exist two or more {@link BusinessDayIncrement} with the same
+     * {@link BusinessDayIncrement#getDescription()} the {@link TimeSnippet} are
+     * moved from the first {@link BusinessDayIncrement} to the other
      */
     public void checkForRedundancys() {
-	for (BusinessDayIncremental incToCompareWith : increments) {
-	    for (BusinessDayIncremental anotherIncrement : getIncrementsToCheck(incToCompareWith)) {
+	for (BusinessDayIncrement incToCompareWith : increments) {
+	    for (BusinessDayIncrement anotherIncrement : getIncrementsToCheck(incToCompareWith)) {
 		if (incToCompareWith.isSame(anotherIncrement)) {
 		    incToCompareWith.transferAllTimeSnipetsToBussinessDayIncrement(anotherIncrement);
 		}
@@ -97,18 +97,18 @@ public class BusinessDay {
     /**
      * don't check the increment with itself!
      */
-    private List<BusinessDayIncremental> getIncrementsToCheck(BusinessDayIncremental incToCompareWith) {
+    private List<BusinessDayIncrement> getIncrementsToCheck(BusinessDayIncrement incToCompareWith) {
 	return increments.stream()//
 		.filter(inc -> inc != incToCompareWith)//
 		.collect(Collectors.toList());
     }
 
     /**
-     * After {@link TimeSnippet} are moved, the {@link BusinessDayIncremental} with
+     * After {@link TimeSnippet} are moved, the {@link BusinessDayIncrement} with
      * no {@link TimeSnippet} are removed
      */
     private void deleteEmptyIncrements() {
-	for (BusinessDayIncremental inc : increments) {
+	for (BusinessDayIncrement inc : increments) {
 	    if (inc.getTimeSnippets().isEmpty()) {
 		increments.remove(inc);
 	    }
@@ -117,7 +117,7 @@ public class BusinessDay {
 
     public void flagBusinessDayAsCharged() {
 	increments.stream()//
-		.forEach(BusinessDayIncremental::flagAsCharged);
+		.forEach(BusinessDayIncrement::flagAsCharged);
     }
 
     /**
@@ -137,13 +137,13 @@ public class BusinessDay {
     * 
     */
     private void createNewIncremental() {
-	currentBussinessDayIncremental = new BusinessDayIncremental(new Date());
+	currentBussinessDayIncremental = new BusinessDayIncrement(new Date());
     }
 
     public float getTotalDuration(TIME_TYPE type) {
 	float sum = 0;
 
-	for (BusinessDayIncremental incremental : increments) {
+	for (BusinessDayIncrement incremental : increments) {
 	    sum = sum + incremental.getTotalDuration(type);
 	}
 	return NumberFormat.parseFloat(NumberFormat.format(sum));
@@ -164,7 +164,7 @@ public class BusinessDay {
     }
 
     /**
-     * Deletes all {@link BusinessDayIncremental} which are already finished
+     * Deletes all {@link BusinessDayIncrement} which are already finished
      */
     public void clearFinishedIncrements() {
 	increments.clear();
@@ -174,11 +174,11 @@ public class BusinessDay {
 	return getTotalDuration(TimeRecorder.GLOBAL_TIME_TYPE);
     }
 
-    public BusinessDayIncremental getCurrentBussinessDayIncremental() {
+    public BusinessDayIncrement getCurrentBussinessDayIncremental() {
 	return currentBussinessDayIncremental;
     }
 
-    public List<BusinessDayIncremental> getIncrements() {
+    public List<BusinessDayIncrement> getIncrements() {
 	return increments;
     }
 
@@ -194,7 +194,7 @@ public class BusinessDay {
     /**
      * Returns the {@link Date} of this {@link BusinessDay}. If this
      * {@link BusinessDay} has no <br>
-     * {@link BusinessDayIncremental}, so the {@link #increments} is empty, a new
+     * {@link BusinessDayIncrement}, so the {@link #increments} is empty, a new
      * instance of {@link Date} is returned.
      * 
      * @return the {@link Date} of this BussinessDay.
@@ -206,8 +206,8 @@ public class BusinessDay {
 	return increments.get(0).getDate();
     }
 
-    /* package */ Optional<BusinessDayIncremental> getBusinessIncrement(int orderNr) {
-	BusinessDayIncremental businessDayIncremental = null;
+    /* package */ Optional<BusinessDayIncrement> getBusinessIncrement(int orderNr) {
+	BusinessDayIncrement businessDayIncremental = null;
 	for (int i = 0; i < increments.size(); i++) {
 	    if (orderNr == i + 1) {
 		businessDayIncremental = increments.get(i);
@@ -220,7 +220,7 @@ public class BusinessDay {
      * @param update
      */
     public void addBusinessIncrement(BusinessDayIncrementUpdate update) {
-	BusinessDayIncremental newBusinessDayInc = BusinessDayIncremental.of(update);
+	BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(update);
 	increments.add(newBusinessDayInc);
 	checkForRedundancys();
     }

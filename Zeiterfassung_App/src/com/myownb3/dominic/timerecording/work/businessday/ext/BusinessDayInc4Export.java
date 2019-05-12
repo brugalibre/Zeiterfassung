@@ -8,14 +8,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
+import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * The {@link BusinessDayInc4Export} is used whenever a
- * {@link BusinessDayIncremental} is going to be exported. Either on a UI or on
+ * {@link BusinessDayIncrement} is going to be exported. Either on a UI or on
  * a text file
  * 
  * @author Dominic
@@ -34,7 +34,7 @@ public class BusinessDayInc4Export {
     private int chargeType;
     private boolean isCharged;
 
-    private BusinessDayInc4Export(BusinessDayIncremental businessDayIncremental) {
+    private BusinessDayInc4Export(BusinessDayIncrement businessDayIncremental) {
 
 	this.currentTimeSnippet = TimeSnippet.of(businessDayIncremental.getCurrentTimeSnippet());
 	this.description = businessDayIncremental.getDescription();
@@ -52,10 +52,10 @@ public class BusinessDayInc4Export {
     }
 
     /**
-     * Returns <code>true</code> if this {@link BusinessDayIncremental} has a valid
+     * Returns <code>true</code> if this {@link BusinessDayIncrement} has a valid
      * description or <code>false</code> if not
      * 
-     * @return<code>true</code> if this {@link BusinessDayIncremental} has a valid
+     * @return<code>true</code> if this {@link BusinessDayIncrement} has a valid
      *                          description or <code>false</code> if not
      */
     public boolean hasDescription() {
@@ -116,13 +116,13 @@ public class BusinessDayInc4Export {
 
     /**
      * Returns a new {@link BusinessDayInc4Export} for the given
-     * {@link BusinessDayIncremental}
+     * {@link BusinessDayIncrement}
      * 
      * @param currentBussinessDayIncremental
      * @return a new {@link BusinessDayInc4Export} for the given
-     *         {@link BusinessDayIncremental}
+     *         {@link BusinessDayIncrement}
      */
-    public static BusinessDayInc4Export of(BusinessDayIncremental currentBussinessDayIncremental) {
+    public static BusinessDayInc4Export of(BusinessDayIncrement currentBussinessDayIncremental) {
 	BusinessDayInc4Export businessDayInc4Export = new BusinessDayInc4Export(currentBussinessDayIncremental);
 	return businessDayInc4Export;
     }

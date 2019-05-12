@@ -10,7 +10,7 @@ import com.myownb3.dominic.timerecording.callback.handler.TimeSnippedChangedCall
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
+import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
 import com.myownb3.dominic.timerecording.work.businessday.update.BusinessDayIncrementUpdate;
@@ -74,8 +74,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	endTextFieldProperty = new SimpleStringProperty(timeSnippet != null ? timeSnippet.getEndTimeStampRep() : "");
     }
 
-    public BusinessDayIncremental map() {
-	return new BusinessDayIncremental(null);
+    public BusinessDayIncrement map() {
+	return new BusinessDayIncrement(null);
     }
 
     /**

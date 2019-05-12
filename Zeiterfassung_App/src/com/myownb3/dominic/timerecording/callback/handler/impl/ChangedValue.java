@@ -1,11 +1,11 @@
 package com.myownb3.dominic.timerecording.callback.handler.impl;
 
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
+import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
 
 /**
  * The {@link ChangedValue} contains information about a value of a
- * {@link BusinessDayIncremental} which was changed on the UI by a user
+ * {@link BusinessDayIncrement} which was changed on the UI by a user
  * 
  * @author DStalder
  *

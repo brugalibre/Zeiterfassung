@@ -13,7 +13,7 @@ public class BusinessDayChangedCallbackHandlerImpl implements BusinessDayChanged
 
 	BusinessDay businessDay = TimeRecorder.getBussinessDay();
 
-	Optional<BusinessDayIncremental> businessDayIncOpt = businessDay
+	Optional<BusinessDayIncrement> businessDayIncOpt = businessDay
 		.getBusinessIncrement(changeValue.getSequence());
 	businessDayIncOpt.ifPresent(businessDayIncrement -> {
 	    handleBusinessDayChangedInternal(changeValue, businessDay, businessDayIncrement);
@@ -21,7 +21,7 @@ public class BusinessDayChangedCallbackHandlerImpl implements BusinessDayChanged
     }
 
     private void handleBusinessDayChangedInternal(ChangedValue changedValue, BusinessDay businessDay,
-	    BusinessDayIncremental businessDayIncremental) {
+	    BusinessDayIncrement businessDayIncremental) {
 
 	switch (changedValue.getValueTypes()) {
 	case DESCRIPTION:

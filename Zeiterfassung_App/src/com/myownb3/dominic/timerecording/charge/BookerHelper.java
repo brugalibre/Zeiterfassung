@@ -8,7 +8,7 @@ import java.util.List;
 import com.coolguys.turbo.Booker;
 import com.myownb3.dominic.export.ContentSelector;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
+import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 
 /**
@@ -24,8 +24,8 @@ public class BookerHelper {
     }
 
     /**
-     * Collects from each {@link BusinessDayIncremental} the content to book
-     * and calls finally the {@link Booker#bookList(List)}. Additionally all booked {@link BusinessDayIncremental}
+     * Collects from each {@link BusinessDayIncrement} the content to book
+     * and calls finally the {@link Booker#bookList(List)}. Additionally all booked {@link BusinessDayIncrement}
      * are flagged as charged
      * @see Booker#bookList(List)
      */

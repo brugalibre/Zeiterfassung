@@ -12,7 +12,7 @@ import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
 import com.myownb3.dominic.timerecording.charge.BookerHelper;
 import com.myownb3.dominic.timerecording.work.WorkStates;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncremental;
+import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
@@ -20,7 +20,7 @@ import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
 /**
  * Responsible for recording the time. The {@link TimeRecorder} consist of one
  * object, that represent a business day. When the user clicks on the tray-icon,
- * a current {@link BusinessDayIncremental} is either started or terminated -
+ * a current {@link BusinessDayIncrement} is either started or terminated -
  * depending if the user was working before or not
  * 
  * @author Dominic
@@ -101,7 +101,7 @@ public class TimeRecorder {
     }
 
     /**
-     * removes all recorded {@link BusinessDayIncremental}
+     * removes all recorded {@link BusinessDayIncrement}
      */
     public static void clear() {
 	businessDay.clearFinishedIncrements();
@@ -124,7 +124,7 @@ public class TimeRecorder {
      * @see WorkStates
      */
     public static String getInfoStringForState() {
-	BusinessDayIncremental currentIncrement = null;
+	BusinessDayIncrement currentIncrement = null;
 	switch (currentState) {
 	case NOT_WORKING:
 	    currentIncrement = businessDay.getCurrentBussinessDayIncremental();
