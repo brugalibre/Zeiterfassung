@@ -25,7 +25,7 @@ import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
-import com.myownb3.dominic.ui.core.pages.mainpage.view.MainWindowPage;
+import com.myownb3.dominic.ui.app.pages.mainpage.view.MainWindowPage;
 import com.myownb3.dominic.ui.util.ExceptionUtil;
 
 import javafx.application.Platform;
