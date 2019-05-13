@@ -177,7 +177,9 @@ public class StopBusinessDayIncrementController
 	} else if (endTextField == changedTextField) {
 	    getDataModel().updateAndSetEndTimeStamp(changedTextField.getText());
 	} else if (amountOfHoursTextField == changedTextField) {
-	    getDataModel().addAdditionallyTime(changedTextField.getText());
+	    if (new InputFieldVerifier().verify(changedTextField)){
+		getDataModel().addAdditionallyTime(changedTextField.getText());
+	    }
 	}
     }
 
