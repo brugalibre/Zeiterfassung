@@ -111,8 +111,8 @@ public class TimeRecorder {
     * 
     */
     public static void export() {
-	List<String> content = ContentSelector.collectContent(BusinessDay4Export.of(businessDay));
-	FileExporter.export(content);
+	List<String> content = ContentSelector.INSTANCE.collectContent(BusinessDay4Export.of(businessDay));
+	FileExporter.INTANCE.export(content);
     }
 
     /**

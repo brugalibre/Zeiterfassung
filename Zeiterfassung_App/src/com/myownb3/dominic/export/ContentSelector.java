@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.coolguys.turbo.Booker;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
@@ -19,10 +20,22 @@ import com.myownb3.dominic.util.utils.StringUtil;
  *
  */
 public class ContentSelector {
+    
+    public static final ContentSelector INSTANCE = new ContentSelector();
+    
+    private ContentSelector () {
+	// private constructor
+    }
+    
     private static final Object CONTENT_SEPPARATOR = "; ";
     private static final Object CONTENT_SEPPARATOR_TURBO_BUCHER = ";";
 
-    public static List<String> collectContent(BusinessDay4Export bussinessDay) {
+    /**
+     * Selects line by line the content to export for the given {@link BusinessDay4Export}
+     * @param bussinessDay the {@link BusinessDay4Export} which has to be exported
+     * @return a list of {@link String} to export
+     */
+    public List<String> collectContent(BusinessDay4Export bussinessDay) {
 	StringBuilder builder = new StringBuilder();
 	List<String> content = new ArrayList<>();
 
@@ -70,7 +83,7 @@ public class ContentSelector {
 	return content;
     }
 
-    private static void appendTitleHeaderCells(StringBuilder builder, BusinessDay4Export bussinessDay) {
+    private void appendTitleHeaderCells(StringBuilder builder, BusinessDay4Export bussinessDay) {
 
 	builder.append(TextLabel.TICKET);
 	builder.append(CONTENT_SEPPARATOR);
@@ -90,7 +103,7 @@ public class ContentSelector {
 	builder.append(System.getProperty("line.separator"));
     }
 
-    private static void appendBeginEndHeader(StringBuilder builder, BusinessDay4Export bussinessDay) {
+    private void appendBeginEndHeader(StringBuilder builder, BusinessDay4Export bussinessDay) {
 
 	int counter = bussinessDay.getAmountOfVonBisElements();
 	for (int i = 0; i < counter; i++) {
@@ -107,9 +120,8 @@ public class ContentSelector {
      * amount of TimeSnippet-Cells
      * 
      */
-    private static void addPlaceHolderForMissingBeginEndElements(StringBuilder builder, BusinessDayInc4Export inc) {
+    private void addPlaceHolderForMissingBeginEndElements(StringBuilder builder, BusinessDayInc4Export inc) {
 	for (int i = 0; i < inc.getTimeSnippetPlaceHolders().size(); i++) {
-
 	    builder.append("");
 	    builder.append(CONTENT_SEPPARATOR);
 	}
@@ -120,9 +132,9 @@ public class ContentSelector {
      * charge-off the jira tickets
      * 
      * @param bussinessDay
-     * @return
+     * @return the content which is required by the {@link Booker} in order to book
      */
-    public static List<String> collectContent4TurboBucher(BusinessDay4Export bussinessDay) {
+    public List<String> collectContent4TurboBucher(BusinessDay4Export bussinessDay) {
 
 	StringBuilder builder = new StringBuilder();
 	List<String> content = new ArrayList<>();
@@ -148,10 +160,10 @@ public class ContentSelector {
 	return content;
     }
 
-    private static List<BusinessDayInc4Export> getNotChargedIncrements(BusinessDay4Export bussinessDay) {
+    private List<BusinessDayInc4Export> getNotChargedIncrements(BusinessDay4Export bussinessDay) {
 	return bussinessDay.getBusinessDayIncrements()//
 		.stream()//
-	    .filter(bDayInc -> !bDayInc.isCharged())//
+		.filter(bDayInc -> !bDayInc.isCharged())//
 		.collect(Collectors.toList());
     }
 }

@@ -17,7 +17,18 @@ import com.myownb3.dominic.export.exception.FileExportException;
  *
  */
 public class FileExporter {
-    public static void export(List<String> content) {
+    
+    public static final FileExporter INTANCE = new FileExporter();
+    
+    private FileExporter () {
+	// private Constructor
+    }
+    
+    /**
+     * Exports the given list of {@link String} to the Desktop
+     * @param content the content to export
+     */
+    public void export(List<String> content) {
 	String dateDetails = DateFormat.getDateInstance().format(new Date());
 	float randomNo = System.currentTimeMillis();
 	String fileExtension = "csv";
@@ -33,7 +44,7 @@ public class FileExporter {
 	}
     }
 
-    private static void writeLines(List<String> content, FileWriter writer) throws IOException {
+    private void writeLines(List<String> content, FileWriter writer) throws IOException {
 	for (String element : content) {
 	    writer.write(element);
 	}
