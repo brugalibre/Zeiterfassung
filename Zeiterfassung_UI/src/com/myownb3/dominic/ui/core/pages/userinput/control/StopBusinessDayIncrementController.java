@@ -92,11 +92,15 @@ public class StopBusinessDayIncrementController
 
     @FXML
     private void onAction(ActionEvent actionEvent) {
-	if (actionEvent.getSource() == okButton) {
+	if (isFinish(actionEvent)) {
 	    submit();
 	} else if (actionEvent.getSource() == abortButton) {
 	    cancel();
 	}
+    }
+
+    private boolean isFinish(ActionEvent actionEvent) {
+	return actionEvent.getSource() == okButton || actionEvent.getSource() == amountOfHoursTextField;
     }
 
     private void cancel() {
@@ -111,6 +115,7 @@ public class StopBusinessDayIncrementController
     private void dispose(boolean success) {
 	mainWindowController.finishOrAbortAndDispose(success);
 	amountOfHoursTextField.getStyleClass().remove(Styles.INVALID_INPUT_LABEL);
+	amountOfHoursTextField.getStyleClass().remove(Styles.INVALID_INPUT_HOVER_LABEL);
     }
 
     private void submit() {
@@ -120,6 +125,7 @@ public class StopBusinessDayIncrementController
 	} else {
 	    Toolkit.getDefaultToolkit().beep();
 	    amountOfHoursTextField.getStyleClass().add(Styles.INVALID_INPUT_LABEL);
+	    amountOfHoursTextField.getStyleClass().add(Styles.INVALID_INPUT_HOVER_LABEL);
 	    amountOfHoursTextField.requestFocus();
 	}
     }

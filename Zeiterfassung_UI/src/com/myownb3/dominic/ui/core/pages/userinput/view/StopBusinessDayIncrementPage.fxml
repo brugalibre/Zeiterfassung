@@ -35,7 +35,7 @@
                   <TextField id="ticketNumberTextField" fx:id="descriptionTextField" prefHeight="30.0" />
                   <TextField id="ticketNumberTextField" fx:id="beginTextField" prefHeight="30.0" />
                   <TextField id="ticketNumberTextField" fx:id="endTextField" prefHeight="30.0" />
-                  <TextField id="ticketNumberTextField" fx:id="amountOfHoursTextField" prefHeight="30.0" />
+                  <TextField id="ticketNumberTextField" fx:id="amountOfHoursTextField" onAction="#onAction" prefHeight="30.0" />
                   <ComboBox fx:id="kindOfServiceComboBox" prefHeight="30.0" />
                   <GridPane hgap="10.0" prefWidth="160.0">
                      <columnConstraints>
