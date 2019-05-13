@@ -3,6 +3,7 @@
  */
 package com.myownb3.dominic.launch;
 
+import com.myownb3.dominic.launch.exception.ApplicationLaunchException;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
@@ -24,7 +25,7 @@ public class TimeRecordingLauncher extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws ApplicationLaunchException {
 	Runtime.getRuntime().addShutdownHook(createShutdownHook());
 
 	TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
@@ -61,10 +62,10 @@ public class TimeRecordingLauncher extends Application {
 		timeRecordingTray.startWorking();
 	    }
 
-	    @Override
-	    public void onException(Throwable thrown, Thread thread) {
-		timeRecordingTray.showException(thread, thrown);
-	    }
+//	    @Override
+//	    public void onException(Throwable thrown, Thread thread) {
+//		timeRecordingTray.showException(thread, thrown);
+//	    }
 	};
     }
 

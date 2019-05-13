@@ -3,6 +3,7 @@
  */
 package com.myownb3.dominic.ui.app;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
@@ -18,6 +19,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.UIManager;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
+import com.myownb3.dominic.launch.exception.ApplicationLaunchException;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
@@ -40,42 +42,24 @@ public class TimeRecordingTray {
     private MainWindowPage mainWindowPage;
     private JPopupMenu popupMenu;
 
-    public void registerSystemtray(Stage primaryStage) {
+    public void registerSystemtray(Stage primaryStage) throws ApplicationLaunchException {
 
 	setLookAndFeel();
-	trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(),
-		TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
 
+	addTrayIconToSystemTray();
 	JMenu settingsRoundMenu = createSettingsMenu();
 
 	// Create a popup menu components
-	JMenuItem exitItem = new JMenuItem(TextLabel.EXIT);
-	showHoursItem = new JMenuItem(TextLabel.SHOW_WORKING_HOURS);
-	startTurboBucher = new JMenuItem(TextLabel.CHARGE_LABEL);
+	JMenuItem exitItem = createExitMenu();
+	createShowHoursMenuItem();
+	createStartTurboBucherMenuItem();
 
-	popupMenu = new JPopupMenu();
-	popupMenu.add(settingsRoundMenu);
-	popupMenu.addSeparator();
-	popupMenu.add(startTurboBucher);
-	popupMenu.add(showHoursItem);
-	popupMenu.addSeparator();
-	popupMenu.add(exitItem);
+	createPopupMenu(settingsRoundMenu, exitItem);
 
 	mainWindowPage = new MainWindowPage(this, primaryStage);
-	getTrayAndAddTrayIcon();
 
 	trayIcon.addMouseMotionListener(getMouseMotionListener());
 	trayIcon.addMouseListener(getMouseListener());
-
-	showHoursItem.addActionListener(actionEvent -> showOverviewView());
-	showHoursItem.setEnabled(false);
-	startTurboBucher.addActionListener(actionEvent -> TimeRecorder.book());
-	startTurboBucher.setEnabled(false);
-
-	exitItem.addActionListener(actionEvent -> {
-	    Platform.exit();
-	    System.exit(0);
-	});
     }
 
     private void showOverviewView() {
@@ -126,12 +110,42 @@ public class TimeRecordingTray {
 	startTurboBucher.setEnabled(false);
     }
 
-    private void getTrayAndAddTrayIcon() {
-	SystemTray tray = SystemTray.getSystemTray();
-	try {
-	    tray.add(trayIcon);
-	} catch (Exception e) {
-	    throw new RuntimeException("Unable to add tray icon!", e);
+    private JMenuItem createExitMenu() {
+	JMenuItem exitItem = new JMenuItem(TextLabel.EXIT);
+	
+	exitItem.addActionListener(actionEvent -> {
+	    Platform.exit();
+	    System.exit(0);
+	});
+	return exitItem;
+    }
+
+    
+    private void createStartTurboBucherMenuItem() {
+	startTurboBucher = new JMenuItem(TextLabel.CHARGE_LABEL);
+	startTurboBucher.addActionListener(actionEvent -> TimeRecorder.book());
+	startTurboBucher.setEnabled(false);
+    }
+
+    private void createShowHoursMenuItem() {
+	showHoursItem = new JMenuItem(TextLabel.SHOW_WORKING_HOURS);
+	showHoursItem.addActionListener(actionEvent -> showOverviewView());
+	showHoursItem.setEnabled(false);
+    }
+    
+    private void addTrayIconToSystemTray() throws ApplicationLaunchException {
+
+	trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(),
+		TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
+	if (SystemTray.isSupported()) {
+	    try {
+		SystemTray tray = SystemTray.getSystemTray();
+		tray.add(trayIcon);
+	    } catch (AWTException e) {
+		throw new ApplicationLaunchException(e);
+	    }
+	}else{
+	    throw new ApplicationLaunchException("SystemTray auf aktuellem System nicht verfügbar!");
 	}
     }
 
@@ -174,13 +188,21 @@ public class TimeRecordingTray {
 
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
-		    if (TimeRecorder.handleUserInteraction()) {
-			showInputMask();
-		    }
+		if (e.getButton() == MouseEvent.BUTTON1 && TimeRecorder.handleUserInteraction()) {
+		    showInputMask();
 		}
 	    }
 	};
+    }
+    
+    private void createPopupMenu(JMenu settingsRoundMenu, JMenuItem exitItem) {
+	popupMenu = new JPopupMenu();
+	popupMenu.add(settingsRoundMenu);
+	popupMenu.addSeparator();
+	popupMenu.add(startTurboBucher);
+	popupMenu.add(showHoursItem);
+	popupMenu.addSeparator();
+	popupMenu.add(exitItem);
     }
 
     private JMenu createSettingsMenu() {
