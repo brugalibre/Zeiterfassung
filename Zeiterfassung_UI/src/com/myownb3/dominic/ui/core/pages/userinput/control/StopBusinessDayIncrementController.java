@@ -80,6 +80,7 @@ public class StopBusinessDayIncrementController
     public void show() {
 	super.show();
 	ticketNumberTextField.requestFocus();
+	ticketNumberTextField.selectAll();
     }
 
     @Override

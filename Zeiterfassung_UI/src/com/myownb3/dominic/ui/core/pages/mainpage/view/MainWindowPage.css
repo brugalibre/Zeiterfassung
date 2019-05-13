@@ -20,11 +20,12 @@
 	*/
 {
 	-color : #2ecc71;
-	-white : #efefef;
+	-white : #ffffff;
 	-adcblue : rgb(0,69,135);
 	-brightadcblue : derive(-adcblue,+25%);
 	-black : #444444dd;
 	-abort : #e74c3c;
+	-lightslategray: #778899;
 }
 
 .root{
@@ -42,6 +43,11 @@
     -fx-border-color: red;
     -fx-border-width: 1 ; 
     -fx-background-radius:1;
+	
+	-fx-text-box-border: #DBB1B1 ;
+    -fx-control-inner-background: #FFF0F0 ;
+    -fx-focus-color: #FF2020 ;
+    -fx-faint-focus-color: #FF202020 ;
 }
 .boldLabel2 {
 	-fx-font-weight: bold;
@@ -111,7 +117,7 @@
 .label{
 	 -fx-text-fill : -black;
  }
-
+ 
 /*
  * **********
  * BUTTONS
@@ -255,15 +261,24 @@
  }
  
 /*
+ *
  * **********
- * Text fields / inputs
+ * TEXT FIELDS
  * **********
  * 
  */
-.text-field{
+ .text-field {
 	-fx-highlight-fill : -adcblue;
 	-fx-highlight-text-fill : -white;
 }
+
+.text-field:focused {
+	-fx-text-fill: -black;
+	-fx-border-color: -brightadcblue;
+	-fx-border-radius:2;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-insets: 1;
+ }
 
 .text-area{
 	-fx-highlight-fill : -adcblue;
@@ -284,12 +299,21 @@
  * **********
  * 
  */
+ .table-view{
+	-fx-color : -brightadcblue
+}
+.table-view .column-header-background .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+ /*
 .table-view:row-selection{
 	-fx-background-color : -adcblue;
 }
 
 .table-view:row-selection>*.column-header-background{
 	-fx-background-color : -white;
+	-fx-text-fill: -white;
 }
 
 .table-view>*.column-resize-line{
@@ -298,12 +322,14 @@
 
 .table-view>*.column-header-background>*.nested-column-header>*.table-column{
 	-fx-background-color : -brightadcblue, -brightadcblue;
-	-fx-text-fill: -white;
+	-fx-color : -brightadcblue
+	-fx-text-fill: white;
 }
 
 .table-view>*.column-header-background>*.filler{
 	-fx-background-color : -brightadcblue, -brightadcblue;
-	-fx-text-fill: -white;
+	-fx-color : -brightadcblue
+	-fx-text-fill: white;
 }
 
 .table-view>*.column-header-background>*.show-hide-columns-button{
@@ -319,21 +345,23 @@
 }
 
 .tree-table-view>*.column-resize-line{
-	-fx-background-color : -black;
+	-fx-background-color : -white;
 }
 
 .tree-table-view>*.column-header-background>*.nested-column-header>*.table-column{
 	-fx-background-color : -brightadcblue, -white;
+	-fx-text-fill: -white;
 }
 
 .tree-table-view>*.column-header-background>*.filler{
 	-fx-background-color : -brightadcblue, -adcblue;
+	-fx-text-fill: white;
 }
 
 .tree-table-view>*.column-header-background>*.show-hide-columns-button{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -white;
 }
-
+*/
 /*
  * **********
  * Any pane
