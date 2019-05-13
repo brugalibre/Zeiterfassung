@@ -7,10 +7,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
-import java.util.Date;
-import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
+import com.myownb3.dominic.export.exception.FileExportException;
 
 /**
  * @author Dominic
@@ -29,7 +29,7 @@ public class FileExporter {
 	    writeLines(content, writer);
 	} catch (IOException e) {
 	    e.printStackTrace();
-	    GlobalExceptionHandler.handleGlobalException(Thread.currentThread(), e);
+	    throw new FileExportException(e);
 	}
     }
 
@@ -37,25 +37,5 @@ public class FileExporter {
 	for (String element : content) {
 	    writer.write(element);
 	}
-    }
-
-    /**
-     * Exports the 'book.txt' file which is later used by the TurboBucher-app in
-     * order to charge-off all necessary Jira-Tickets After the export, the path of
-     * the file is returned
-     * 
-     * @param content4TurboBucher
-     * @return the path of the new created file
-     */
-    public static File exportAndReturnFile4Charge(List<String> content4TurboBucher) {
-	File file = new File(System.getProperty("user.home") + "\\Desktop\\" + "book.txt");
-	try (FileWriter writer = new FileWriter(file)) {
-	    file.createNewFile();
-	    writeLines(content4TurboBucher, writer);
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    GlobalExceptionHandler.handleGlobalException(Thread.currentThread(), e);
-	}
-	return file;
     }
 }

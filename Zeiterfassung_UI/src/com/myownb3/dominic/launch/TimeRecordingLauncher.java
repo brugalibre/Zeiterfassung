@@ -62,10 +62,10 @@ public class TimeRecordingLauncher extends Application {
 		timeRecordingTray.startWorking();
 	    }
 
-//	    @Override
-//	    public void onException(Throwable thrown, Thread thread) {
-//		timeRecordingTray.showException(thread, thrown);
-//	    }
+	    @Override
+	    public void onException(Throwable thrown, Thread thread) {
+		timeRecordingTray.showException(thread, thrown);
+	    }
 	};
     }
 

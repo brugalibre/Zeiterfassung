@@ -1,6 +1,6 @@
 package com.myownb3.dominic.launch.exception;
 
-public class ApplicationLaunchException extends Exception {
+public class ApplicationLaunchException extends RuntimeException {
 
     public ApplicationLaunchException(Exception e) {
 	super(e);
