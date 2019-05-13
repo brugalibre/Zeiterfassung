@@ -3,6 +3,7 @@
  */
 package com.myownb3.dominic.ui.app;
 
+import java.awt.Color;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.MouseEvent;
@@ -24,7 +25,6 @@ import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.ui.core.pages.mainpage.view.MainWindowPage;
 import com.myownb3.dominic.ui.util.ExceptionUtil;
-import com.sun.prism.paint.Color;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
