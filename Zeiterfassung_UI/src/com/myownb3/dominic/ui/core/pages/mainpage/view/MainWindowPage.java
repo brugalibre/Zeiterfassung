@@ -27,7 +27,7 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
      */
     public MainWindowPage(TimeRecordingTray timeRecordingTray, Stage stage) {
 	super(stage);
-	((MainWindowController) getController()).setTimeRecordingTray(timeRecordingTray);
+	getMainWindowPageController().setTimeRecordingTray(timeRecordingTray);
     }
 
     @Override
@@ -36,12 +36,17 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
 	Stage stage = optionalStage.get();
 	stage.setScene(new Scene(loader.getRoot()));
     }
-
+    
     public void showOverviewView() {
-	((MainWindowController) getController()).showOverviewView(getStage().get());
+	getMainWindowPageController().showOverviewView(getStage().get());
     }
 
     public void showInputMask() {
-	((MainWindowController) getController()).showInputMask(getStage().get());
+	getMainWindowPageController().showInputMask(getStage().get());
     }
+
+    private MainWindowController getMainWindowPageController() {
+	return (MainWindowController) getController();
+    }
+
 }
