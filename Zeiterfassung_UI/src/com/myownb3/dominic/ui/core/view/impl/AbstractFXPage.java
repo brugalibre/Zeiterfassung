@@ -3,7 +3,6 @@
  */
 package com.myownb3.dominic.ui.core.view.impl;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -143,15 +142,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
 	if (resource == null) {
 	    return;
 	}
-	File file = new File(resource.getFile());
-	try {
-	    if (file.exists()) {
-		URL[] urls = { file.toURI().toURL() };
-		optionalStage.ifPresent(stage -> stage.getScene().getStylesheets().addAll(urls[0].toExternalForm()));
-	    }
-	} catch (MalformedURLException e) {
-	    throw new RuntimeException("Unable to load style for page '" + this + "'", e);
-	}
+	optionalStage.ifPresent(stage -> stage.getScene().getStylesheets().addAll(resource.toExternalForm()));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -183,7 +174,8 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
      * @return the location for the CSS-file this AbstractFXPage needs
      */
     protected String getUIStyleResource() {
-	return getClass().getSimpleName() + ".css";
+	String path = "/" + getClass().getPackage().getName() + "/" + getClass().getSimpleName() ;
+	return path.replace(".", "/") + ".css";
     }
 
     @Override
