@@ -40,12 +40,6 @@ import javafx.scene.layout.BorderPane;
 public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel>
 	implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> {
 
-    /**
-     * There are five fix headers: Number, Amount of Hours, Ticket, charge-Type &
-     * is-charged
-     */
-    public static final int AMOUNT_OF_FIX_HEADERS = 5;
-
     private MainWindowController mainWindowController;
 
     @FXML
@@ -136,7 +130,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	    mainWindowController.dispose();
 	} else if (actionEvent.getSource() == bookButton) {
 	    TimeRecorder.book();
-	    tableView.refresh();
+	    show();
 	} else if (actionEvent.getSource() == exportButton) {
 	    TimeRecorder.export();
 	}

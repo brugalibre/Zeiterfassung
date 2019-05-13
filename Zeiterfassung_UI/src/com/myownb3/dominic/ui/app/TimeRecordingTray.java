@@ -69,18 +69,13 @@ public class TimeRecordingTray {
 
 	showHoursItem.addActionListener(actionEvent -> showOverviewView());
 	showHoursItem.setEnabled(false);
-	startTurboBucher.addActionListener(actionEvent -> startTurboBucher());
+	startTurboBucher.addActionListener(actionEvent -> TimeRecorder.book());
 	startTurboBucher.setEnabled(false);
 
 	exitItem.addActionListener(actionEvent -> {
 	    Platform.exit();
 	    System.exit(0);
 	});
-    }
-
-    private void startTurboBucher() {
-	TimeRecorder.book();
-	mainWindowPage.refresh();
     }
 
     private void showOverviewView() {
