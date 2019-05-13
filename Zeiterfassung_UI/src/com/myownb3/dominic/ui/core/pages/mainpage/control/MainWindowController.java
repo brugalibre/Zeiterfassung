@@ -96,7 +96,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
      */
     public void finishOrAbortAndDispose(boolean done) {
 	if (done) {
-	    timeRecordingTray.updateUIStates(false);
+	    timeRecordingTray.updateUIStates();
 	} else {
 	    TimeRecorder.resume();
 	}
@@ -116,7 +116,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 
     @Override
     protected void refresh() {
-	timeRecordingTray.updateUIStates(false);
+	timeRecordingTray.updateUIStates();
     }
 
     @Override

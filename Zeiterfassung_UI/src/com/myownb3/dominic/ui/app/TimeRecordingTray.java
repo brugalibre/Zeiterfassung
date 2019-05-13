@@ -91,7 +91,7 @@ public class TimeRecordingTray {
      */
     public void startWorking() {
 	trayIcon.setImage(PictureLibrary.getWorkingImageIcon());
-	updateUIStates(true);
+	updateUIStates();
     }
 
     /**
@@ -107,7 +107,7 @@ public class TimeRecordingTray {
     /**
      * Updates the states of the button & elements
      */
-    public void updateUIStates(boolean isWorking) {
+    public void updateUIStates() {
 	showHoursItem.setEnabled(TimeRecorder.hasContent());
 	startTurboBucher.setEnabled(TimeRecorder.hasNotChargedElements());
     }
