@@ -17,10 +17,10 @@ import com.myownb3.dominic.timerecording.work.date.Time;
 public class DateParser {
 
     /**
-     * Returns the String representation for the given Time instance
+     * Returns the String representation for the given {@link Time} instance
      * 
      * @param duration
-     * @return
+     * @return  the String representation for the given {@link Time} instance
      */
     public static String parse2String(Time time) {
 	SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);

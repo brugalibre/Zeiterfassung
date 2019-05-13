@@ -41,7 +41,9 @@ public class GlobalExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-    * 
+    * Registers the given {@link CallbackHandler} as the handler which is used to do call backs
+    * if any error occurs
+    * @param callbackHandler the callback handler
     */
     public static void registerHandler(CallbackHandler callbackHandler) {
 	GlobalExceptionHandler.callbackHandler = callbackHandler;
