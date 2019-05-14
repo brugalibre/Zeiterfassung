@@ -4,6 +4,7 @@
 package com.myownb3.dominic.ui.app.pages.overview.model;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
@@ -65,7 +66,7 @@ public class OverviewPageModel implements PageModel {
 	inPageModel.getTotalAmountOfTimeLabel().set(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL);
 	
 	String totalDurationRep = businessDay4Export.getTotalDurationRep();
-	if (businessDay4Export.getBusinessDayIncrements().isEmpty()) {
+	if (!TimeRecorder.hasContent()) {
 	    totalDurationRep = "0h (schaff endli emol!)";
 	}
 	inPageModel.getTotalAmountOfTimeValue().set(totalDurationRep);
