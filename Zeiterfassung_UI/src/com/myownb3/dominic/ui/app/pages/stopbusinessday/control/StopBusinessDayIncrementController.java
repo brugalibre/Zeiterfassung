@@ -64,7 +64,9 @@ public class StopBusinessDayIncrementController
     private ComboBox<String> kindOfServiceComboBox;
 
     @FXML
-    private Button okButton;
+    private Button finishButton;
+    @FXML
+    private Button cancelButton;
     @FXML
     private Button abortButton;
 
@@ -95,16 +97,22 @@ public class StopBusinessDayIncrementController
 	if (isFinish(actionEvent)) {
 	    submit();
 	} else if (actionEvent.getSource() == abortButton) {
+	    abort();
+	} else if (actionEvent.getSource() == cancelButton) {
 	    cancel();
 	}
     }
 
     private boolean isFinish(ActionEvent actionEvent) {
-	return actionEvent.getSource() == okButton || actionEvent.getSource() == amountOfHoursTextField;
+	return actionEvent.getSource() == finishButton || actionEvent.getSource() == amountOfHoursTextField;
+    }
+
+    private void abort() {
+	dispose(false);
     }
 
     private void cancel() {
-	dispose(false);
+	dispose(true);
     }
 
     @Override
@@ -121,7 +129,7 @@ public class StopBusinessDayIncrementController
     private void submit() {
 	if (isInputValid()) {
 	    getDataModel().addIncrement2BusinessDay(getSelectedLeistungsart());
-	    dispose(true);
+	    dispose(false);
 	} else {
 	    Toolkit.getDefaultToolkit().beep();
 	    amountOfHoursTextField.getStyleClass().add(Styles.INVALID_INPUT_LABEL);
@@ -157,8 +165,9 @@ public class StopBusinessDayIncrementController
 	amountOfHoursLabel.textProperty().bindBidirectional(pageModel.getAmountOfHoursLabelProperty());
 	kindOfServiceLabel.textProperty().bindBidirectional(pageModel.getKindOfServiceLabelProperty());
 
-	okButton.textProperty().bindBidirectional(pageModel.getOkButtonText());
+	finishButton.textProperty().bindBidirectional(pageModel.getFinishButtonText());
 	abortButton.textProperty().bindBidirectional(pageModel.getAbortButtonText());
+	cancelButton.textProperty().bindBidirectional(pageModel.getCancelButtonText());
 
 	beginTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
 	    if (oldValue && !newValue) {
@@ -183,7 +192,7 @@ public class StopBusinessDayIncrementController
 	} else if (endTextField == changedTextField) {
 	    getDataModel().updateAndSetEndTimeStamp(changedTextField.getText());
 	} else if (amountOfHoursTextField == changedTextField) {
-	    if (new InputFieldVerifier().verify(changedTextField)){
+	    if (new InputFieldVerifier().verify(changedTextField)) {
 		getDataModel().addAdditionallyTime(changedTextField.getText());
 	    }
 	}

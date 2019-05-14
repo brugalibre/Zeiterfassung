@@ -44,8 +44,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     private StringProperty amountOfHoursLabelProperty;
     private StringProperty kindOfServiceLabelProperty;
 
-    private StringProperty okButtonText;
+    private StringProperty finishButtonText;
     private StringProperty abortButtonText;
+    private StringProperty cancelButtonText;
     public TimeSnippet timeSnippet;
 
     /**
@@ -59,8 +60,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	endLabelProperty = new SimpleStringProperty(TextLabel.BIS_LABEL);
 	amountOfHoursLabelProperty = new SimpleStringProperty(TextLabel.AMOUNT_OF_HOURS_LABEL);
 	kindOfServiceLabelProperty = new SimpleStringProperty(TextLabel.CHARGE_TYPE_LABEL);
-	okButtonText = new SimpleStringProperty(TextLabel.OK_BUTTON_TEXT);
+	finishButtonText = new SimpleStringProperty(TextLabel.FINISH_BUTTON_TEXT);
 	abortButtonText = new SimpleStringProperty(TextLabel.ABORT_BUTTON_TEXT);
+	cancelButtonText = new SimpleStringProperty(TextLabel.CANCEL_BUTTON_TEXT);
 
 	amountOfHoursTextFieldProperty = new SimpleStringProperty(businessDayInc4Export.getTotalDurationRep());
 	ticketNoTextFieldProperty = new SimpleStringProperty(businessDayInc4Export.getTicketNumber());
@@ -83,8 +85,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
      * Trys to parse a new {@link Date} from the given timestamp value and sets this
      * value as new begin-time stamp
      * 
-     * @param newTimeStampValue
-     *            the new begin-time-stamp as String
+     * @param newTimeStampValue the new begin-time-stamp as String
      */
     public void updateAndSetBeginTimeStamp(String newTimeStampValue) {
 	timeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue);
@@ -94,8 +95,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
      * Trys to parse a new {@link Date} from the given timestamp value and sets this
      * value as new end-time stamp
      * 
-     * @param newTimeStampValue
-     *            the new begin-time-stamp as String
+     * @param newTimeStampValue the new begin-time-stamp as String
      */
     public void updateAndSetEndTimeStamp(String newTimeStampValue) {
 	timeSnippet.updateAndSetEndTimeStamp(newTimeStampValue);
@@ -105,10 +105,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
      * Trys to parse the given end time stamp (as String) and summs this value up to
      * the given begin Time Stamp
      * 
-     * @param newEndAsString
-     *            the new End-time stamp as String
-     * @throws NumberFormatException
-     *             if there goes anything wrong while parsing
+     * @param newEndAsString the new End-time stamp as String
+     * @throws NumberFormatException if there goes anything wrong while parsing
      */
     public void addAdditionallyTime(String newEndAsString) {
 	timeSnippet.addAdditionallyTime(newEndAsString);
@@ -117,8 +115,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     /**
      * Updates the value of the given {@link StopBusinessDayIncrementPageModel}
      * 
-     * @param inPageModel
-     *            the given {@link StopBusinessDayIncrementPageModel}
+     * @param inPageModel the given {@link StopBusinessDayIncrementPageModel}
      * @return the given {@link StopBusinessDayIncrementPageModel}
      */
     public static StopBusinessDayIncrementPageModel of(StopBusinessDayIncrementPageModel inPageModel,
@@ -132,8 +129,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	inPageModel.getEndLabelProperty().set(TextLabel.BIS_LABEL);
 	inPageModel.getAmountOfHoursLabelProperty().set(TextLabel.AMOUNT_OF_HOURS_LABEL);
 	inPageModel.getKindOfServiceLabelProperty().set(TextLabel.CHARGE_TYPE_LABEL);
-	inPageModel.getOkButtonText().set(TextLabel.OK_BUTTON_TEXT);
+	inPageModel.getFinishButtonText().set(TextLabel.FINISH_BUTTON_TEXT);
 	inPageModel.getAbortButtonText().set(TextLabel.ABORT_BUTTON_TEXT);
+	inPageModel.getCancelButtonText().set(TextLabel.CANCEL_BUTTON_TEXT);
 
 	inPageModel.getAmountOfHoursTextFieldProperty().set(businessDayInc4Export.getTotalDurationRep());
 	inPageModel.getTicketNoTextFieldProperty().set(businessDayInc4Export.getTicketNumber());
@@ -234,11 +232,15 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	return this.amountOfHoursLabelProperty;
     }
 
-    public final StringProperty getOkButtonText() {
-	return this.okButtonText;
+    public final StringProperty getFinishButtonText() {
+	return this.finishButtonText;
     }
 
     public final StringProperty getAbortButtonText() {
 	return this.abortButtonText;
+    }
+
+    public final StringProperty getCancelButtonText() {
+	return this.cancelButtonText;
     }
 }

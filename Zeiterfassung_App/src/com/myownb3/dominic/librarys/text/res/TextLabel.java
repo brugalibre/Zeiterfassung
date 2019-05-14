@@ -12,8 +12,9 @@ public class TextLabel {
     public static final String APPLICATION_TITLE = "Champignons-League Zeiterfassung";
     public static final String EXIT = "Beenden";
 
-    public static final String OK_BUTTON_TEXT = "OK";
-    public static final String ABORT_BUTTON_TEXT = "Abbrechen";
+    public static final String FINISH_BUTTON_TEXT = "Fertig";
+    public static final String CANCEL_BUTTON_TEXT = "Abbrechen";
+    public static final String ABORT_BUTTON_TEXT = "Alles verwerfen";
     public static final String AMOUNT_OF_HOURS_LABEL = "Anzahl Stunden";
     public static final String TOTAL_AMOUNT_OF_HOURS_LABEL = "Gesamt Anzahl Stunden";
     public static final String TICKET_NUMBER_LABEL = "Ticket-Nr.";

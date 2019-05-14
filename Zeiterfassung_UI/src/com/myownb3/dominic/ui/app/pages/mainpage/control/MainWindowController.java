@@ -92,13 +92,13 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
      * Lets the current shown window disappears. If the given boolean is true, the
      * {@link BusinessDay} is checked for redundant entry
      * 
-     * @param done
+     * @param resume
      */
-    public void finishOrAbortAndDispose(boolean done) {
-	if (done) {
-	    timeRecordingTray.updateUIStates();
-	} else {
+    public void finishOrAbortAndDispose(boolean resume) {
+	if (resume) {
 	    TimeRecorder.resume();
+	} else {
+	    timeRecordingTray.updateUIStates();
 	}
 	dispose();
     }

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="280.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController">
+<AnchorPane prefHeight="310.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController">
    <children>
       <HBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -29,7 +29,7 @@
                   <Insets bottom="5.0" />
                </padding>
             </VBox>
-            <VBox prefWidth="160.0" spacing="5.0">
+            <VBox prefWidth="170.0" spacing="5.0">
                <children>
                   <TextField id="ticketNumberTextField" fx:id="ticketNumberTextField" prefHeight="30.0" />
                   <TextField id="ticketNumberTextField" fx:id="descriptionTextField" prefHeight="30.0" />
@@ -37,17 +37,19 @@
                   <TextField id="ticketNumberTextField" fx:id="endTextField" prefHeight="30.0" />
                   <TextField id="ticketNumberTextField" fx:id="amountOfHoursTextField" onAction="#onAction" prefHeight="30.0" />
                   <ComboBox fx:id="kindOfServiceComboBox" prefHeight="30.0" />
-                  <GridPane hgap="10.0" prefWidth="160.0">
+                  <GridPane hgap="5.0" prefWidth="160.0" vgap="5.0">
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="60.333255767822266" minWidth="10.0" prefWidth="47.000003814697266" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="88.33337020874023" minWidth="10.0" prefWidth="82.99999618530273" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
+                        <RowConstraints percentHeight="50.0" vgrow="ALWAYS" />
                      </rowConstraints>
                      <children>
-                        <Button fx:id="okButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="100.0" text="okButton" />
-                        <Button fx:id="abortButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="96.0" text="abortButton" GridPane.columnIndex="1" />
+                        <Button fx:id="finishButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="90.0" text="finishButton" />
+                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="90.0" text="cancelButton" GridPane.columnIndex="1" />
+                        <Button fx:id="abortButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="247.0" text="abortButton" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>
