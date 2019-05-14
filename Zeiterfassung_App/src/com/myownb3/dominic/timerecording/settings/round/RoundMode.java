@@ -33,8 +33,6 @@ public enum RoundMode {
      * @return the {@link RoundMode} for the given amount
      */
     public static RoundMode getRoundMode(String roundAmountAsString) {
-
-	
 	return Arrays.asList(RoundMode.values())
 		.stream()
 		.filter(isSameAmount(roundAmountAsString))

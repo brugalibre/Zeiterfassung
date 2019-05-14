@@ -94,13 +94,6 @@ public class TimeRecorder {
     }
 
     /**
-    * 
-    */
-    public static void checkForRedundancy() {
-	businessDay.checkForRedundancys();
-    }
-
-    /**
      * removes all recorded {@link BusinessDayIncrement}
      */
     public static void clear() {
