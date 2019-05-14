@@ -6,7 +6,9 @@ package com.myownb3.dominic.ui.app.pages.overview.control;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
@@ -27,10 +29,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
 /**
@@ -38,7 +46,7 @@ import javafx.scene.layout.BorderPane;
  * 
  */
 public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel>
-	implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> {
+	implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>>{
 
     private MainWindowController mainWindowController;
 
@@ -60,7 +68,9 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     @FXML
     private Button exportButton;
 
-    private BusinessDayChangedCallbackHandlerImpl handler;
+    private ContextMenu contextMenu;
+    
+    private BusinessDayChangedCallbackHandler handler;
     private BusinessDayTableModelHelper businessDayTableModel;
 
     @Override
@@ -77,6 +87,25 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
 	totalAmountOfTimeLabel.getStyleClass().add(Styles.BOLD_LABEL_12);
 	totalAmountOfTimeValue.getStyleClass().add(Styles.BOLD_LABEL_12);
+	
+	MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
+	deleteMenue.setOnAction(event -> deleteRow(event));
+	contextMenu = new ContextMenu();
+	contextMenu.getItems().add(deleteMenue);
+	tableView.setOnMousePressed(event -> handle(event));
+    }
+
+    private void deleteRow(ActionEvent event) {
+
+	BusinessDayIncTableRowValue businessDayIncTableRowValue = tableView.getSelectionModel().getSelectedItem();
+	int index= Integer.valueOf(businessDayIncTableRowValue != null ? businessDayIncTableRowValue.getNumber() : "-1");
+	handler.handleBusinessDayIncrementDeleted(index - 1);
+	afterDelete(event);
+    }
+
+    private void afterDelete(ActionEvent event) {
+	event.consume();
+	show();
     }
 
     @Override
@@ -88,6 +117,34 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     public void init(MainWindowController mainWindowController) {
 	this.mainWindowController = mainWindowController;
+    }
+
+    private void handle(MouseEvent event) {
+	if (hasRightClickOnTable(event)) {
+	    TableView<?> tableView = (TableView<?>) event.getSource();
+	    TextFieldTableCell<?, ?> textFieldTableCell = (TextFieldTableCell<?, ?>) event.getTarget();
+	    TableRow<?> tableRow = textFieldTableCell.getTableRow();
+	    setFocusToRow(tableView, tableRow);
+	    contextMenu.show(tableView, event.getScreenX(), event.getScreenY());
+	    event.consume();
+	}else {
+	    contextMenu.hide();
+	}
+    }
+
+    private void setFocusToRow(TableView<?> tableView, TableRow<?> tableRow) {
+//	tableRow.requestFocus();
+//	tableView.requestFocus();
+//	tableView.getSelectionModel().clearSelection();
+//	tableView.getSelectionModel().select(tableRow.getIndex());
+	tableView.getSelectionModel().clearAndSelect(tableRow.getIndex());
+	tableView.getSelectionModel().focus(tableRow.getIndex());
+//	tableView.getFocusModel().focus(tableRow.getIndex());
+    }
+
+    private boolean hasRightClickOnTable(MouseEvent event) {
+	return event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseButton.SECONDARY
+		&& event.getSource() instanceof TableView<?> && event.getTarget() instanceof TextFieldTableCell<?, ?>;
     }
 
     @Override
