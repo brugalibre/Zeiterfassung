@@ -26,6 +26,7 @@ public class TextLabel {
     public static final String EXCEPTION_DIALOG_MESSAGE = "Ein unerwarteter Fehler ist aufgetreten:";
     public static final String EXCEPTION_DIALOG_TITLE = "Hoppla!";
 
+    public static final String DELETE_ROW = "Reihe Löschen";
     public static final String NUMMER_LABEL = "Nr.";
     public static final String CLEAR_LABEL = "Alles löschen";
     public static final String NEIN = "Nein";

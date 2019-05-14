@@ -9,6 +9,12 @@ import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 public class BusinessDayChangedCallbackHandlerImpl implements BusinessDayChangedCallbackHandler {
 
     @Override
+    public void handleBusinessDayIncrementDeleted(int index) {
+        BusinessDay businessDay = TimeRecorder.getBussinessDay();
+        businessDay.removeIncrementAtIndex(index);
+    }
+    
+    @Override
     public void handleBusinessDayChanged(ChangedValue changeValue) {
 
 	BusinessDay businessDay = TimeRecorder.getBussinessDay();

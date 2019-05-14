@@ -218,6 +218,17 @@ public class BusinessDay {
     }
 
     /**
+     * Removes the {@link BusinessDayIncrement} at the given index. If there is no {@link BusinessDayIncrement}
+     * for this index nothing is done
+     * @param index the given index
+     */
+    public void removeIncrementAtIndex(int index) {
+	if (index >= 0 && index < increments.size()){
+	    increments.remove(index);
+	}
+    }
+
+    /**
      * @param update
      */
     public void addBusinessIncrement(BusinessDayIncrementUpdate update) {

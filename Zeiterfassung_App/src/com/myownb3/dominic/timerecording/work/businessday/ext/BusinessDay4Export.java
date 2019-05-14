@@ -82,6 +82,9 @@ public class BusinessDay4Export {
      *         <code>false</code>
      */
     public boolean hasNotChargedElements() {
+	if (businessDayIncrements.isEmpty()) {
+	    return false;
+	}
 	return !businessDayIncrements//
 		.stream()//
 		.anyMatch(BusinessDayInc4Export::isCharged);

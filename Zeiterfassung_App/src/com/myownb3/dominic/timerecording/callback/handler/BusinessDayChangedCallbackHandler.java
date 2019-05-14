@@ -14,4 +14,9 @@ public interface BusinessDayChangedCallbackHandler {
      */
     public void handleBusinessDayChanged(ChangedValue changeValue);
 
+    /**
+     * Removes the {@link BusinessDayIncrement} at the given index
+     * @param index the given index
+     */
+    public void handleBusinessDayIncrementDeleted (int index);
 }
