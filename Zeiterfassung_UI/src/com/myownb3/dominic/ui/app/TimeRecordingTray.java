@@ -10,6 +10,8 @@ import java.awt.TrayIcon;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
@@ -112,7 +114,7 @@ public class TimeRecordingTray {
 
     private JMenuItem createExitMenu() {
 	JMenuItem exitItem = new JMenuItem(TextLabel.EXIT);
-	
+
 	exitItem.addActionListener(actionEvent -> {
 	    Platform.exit();
 	    System.exit(0);
@@ -120,7 +122,6 @@ public class TimeRecordingTray {
 	return exitItem;
     }
 
-    
     private void createStartTurboBucherMenuItem() {
 	startTurboBucher = new JMenuItem(TextLabel.CHARGE_LABEL);
 	startTurboBucher.addActionListener(actionEvent -> TimeRecorder.book());
@@ -132,7 +133,7 @@ public class TimeRecordingTray {
 	showHoursItem.addActionListener(actionEvent -> showOverviewView());
 	showHoursItem.setEnabled(false);
     }
-    
+
     private void addTrayIconToSystemTray() throws ApplicationLaunchException {
 
 	trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(),
@@ -144,7 +145,7 @@ public class TimeRecordingTray {
 	    } catch (AWTException e) {
 		throw new ApplicationLaunchException(e);
 	    }
-	}else{
+	} else {
 	    throw new ApplicationLaunchException("SystemTray auf aktuellem System nicht verfügbar!");
 	}
     }
@@ -194,7 +195,7 @@ public class TimeRecordingTray {
 	    }
 	};
     }
-    
+
     private void createPopupMenu(JMenu settingsRoundMenu, JMenuItem exitItem) {
 	popupMenu = new JPopupMenu();
 	popupMenu.add(settingsRoundMenu);
@@ -206,22 +207,33 @@ public class TimeRecordingTray {
     }
 
     private JMenu createSettingsMenu() {
-	ButtonGroup buttonGroup = new ButtonGroup();
 
-	JRadioButtonMenuItem settingsRoundItem1Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_1, true);
+	JRadioButtonMenuItem settingsRoundItem1Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_1);
 	JRadioButtonMenuItem settingsRoundItem5Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_5);
 	JRadioButtonMenuItem settingsRoundItem10Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_10);
 	JRadioButtonMenuItem settingsRoundItem15Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_15);
 
+	ButtonGroup buttonGroup = new ButtonGroup();
 	buttonGroup.add(settingsRoundItem1Min);
 	buttonGroup.add(settingsRoundItem5Min);
 	buttonGroup.add(settingsRoundItem10Min);
 	buttonGroup.add(settingsRoundItem15Min);
 
-	settingsRoundItem1Min.addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(RoundMode.ONE_MIN));
-	settingsRoundItem5Min.addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(RoundMode.FIVE_MIN));
-	settingsRoundItem10Min.addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(RoundMode.TEN_MIN));
-	settingsRoundItem15Min.addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(RoundMode.FIFTEEN_MIN));
+	Map<RoundMode, JRadioButtonMenuItem> roundMode2ButtonMap = new HashMap<>();
+	roundMode2ButtonMap.put(RoundMode.ONE_MIN, settingsRoundItem1Min);
+	roundMode2ButtonMap.put(RoundMode.FIVE_MIN, settingsRoundItem5Min);
+	roundMode2ButtonMap.put(RoundMode.TEN_MIN, settingsRoundItem10Min);
+	roundMode2ButtonMap.put(RoundMode.FIFTEEN_MIN, settingsRoundItem15Min);
+
+	// Register for reach an action handler
+	for (RoundMode roundMode : roundMode2ButtonMap.keySet()) {
+	    roundMode2ButtonMap.get(roundMode).addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(roundMode));
+	}
+
+	// mark as selected
+	RoundMode currentRoundMode = TimeRounder.INSTANCE.getRoundMode();
+	JRadioButtonMenuItem jRadioButtonMenuItem = roundMode2ButtonMap.get(currentRoundMode);
+	jRadioButtonMenuItem.setSelected(true);
 
 	JMenu settingsRoundMenu = new JMenu(TextLabel.SETTINGS_ROUND);
 	settingsRoundMenu.add(settingsRoundItem1Min);
