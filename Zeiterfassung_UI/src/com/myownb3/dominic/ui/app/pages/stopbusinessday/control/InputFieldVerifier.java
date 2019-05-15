@@ -22,7 +22,7 @@ public class InputFieldVerifier {
 	String text = textField.getText();
 	float val = -1;
 	try {
-	    val = NumberFormat.parseFloat(text);
+	    val = NumberFormat.parseFloat(text.trim());
 	} catch (NumberFormatException e) {
 	    System.err.println(e);
 	}
