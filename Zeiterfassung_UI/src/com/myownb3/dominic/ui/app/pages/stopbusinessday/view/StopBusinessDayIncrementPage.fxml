@@ -31,11 +31,11 @@
             </VBox>
             <VBox prefWidth="170.0" spacing="5.0">
                <children>
-                  <TextField id="ticketNumberTextField" fx:id="ticketNumberTextField" prefHeight="30.0" />
-                  <TextField id="ticketNumberTextField" fx:id="descriptionTextField" prefHeight="30.0" />
-                  <TextField id="ticketNumberTextField" fx:id="beginTextField" prefHeight="30.0" />
-                  <TextField id="ticketNumberTextField" fx:id="endTextField" prefHeight="30.0" />
-                  <TextField id="ticketNumberTextField" fx:id="amountOfHoursTextField" onAction="#onAction" prefHeight="30.0" />
+                  <ComboBox fx:id="ticketNumberComboBox" editable="true" prefHeight="30.0" style="-fx-font-weight: normal;" />
+                  <ComboBox fx:id="descriptionComboBox" editable="true" prefHeight="30.0" style="-fx-font-weight: normal;" />
+                  <TextField id="beginTextField" fx:id="beginTextField" prefHeight="30.0" />
+                  <TextField id="endTextField" fx:id="endTextField" prefHeight="30.0" />
+                  <TextField id="amountOfHoursTextField" fx:id="amountOfHoursTextField" onAction="#onAction" prefHeight="30.0" />
                   <ComboBox fx:id="kindOfServiceComboBox" prefHeight="30.0" />
                   <GridPane hgap="5.0" prefWidth="160.0" vgap="5.0">
                      <columnConstraints>

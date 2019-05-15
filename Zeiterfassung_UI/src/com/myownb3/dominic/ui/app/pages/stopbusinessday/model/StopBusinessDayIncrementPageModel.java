@@ -19,6 +19,7 @@ import com.myownb3.dominic.ui.core.model.PageModel;
 
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -30,8 +31,8 @@ import javafx.collections.ObservableList;
  */
 public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnippedChangedCallbackHandler {
 
-    private StringProperty ticketNoTextFieldProperty;
-    private StringProperty descriptionTextFieldProperty;
+    private Property<String> ticketNoProperty;
+    private Property<String> descriptionProperty;
     private StringProperty beginTextFieldProperty;
     private StringProperty endTextFieldProperty;
     private StringProperty amountOfHoursTextFieldProperty;
@@ -65,8 +66,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	cancelButtonText = new SimpleStringProperty(TextLabel.CANCEL_BUTTON_TEXT);
 
 	amountOfHoursTextFieldProperty = new SimpleStringProperty(businessDayInc4Export.getTotalDurationRep());
-	ticketNoTextFieldProperty = new SimpleStringProperty(businessDayInc4Export.getTicketNumber());
-	descriptionTextFieldProperty = new SimpleStringProperty(businessDayInc4Export.getDescription());
+	ticketNoProperty = new SimpleObjectProperty<String>(businessDayInc4Export.getTicketNumber());
+	descriptionProperty = new SimpleObjectProperty<String>(businessDayInc4Export.getDescription());
 
 	kindOfServiceTextFieldProperty = new SimpleListProperty<>(
 		FXCollections.observableArrayList(ChargeType.getLeistungsartenRepresentation()));
@@ -134,8 +135,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	inPageModel.getCancelButtonText().set(TextLabel.CANCEL_BUTTON_TEXT);
 
 	inPageModel.getAmountOfHoursTextFieldProperty().set(businessDayInc4Export.getTotalDurationRep());
-	inPageModel.getTicketNoTextFieldProperty().set(businessDayInc4Export.getTicketNumber());
-	inPageModel.getDescriptionTextFieldProperty().set(businessDayInc4Export.getDescription());
+	inPageModel.getTicketNoProperty().setValue(businessDayInc4Export.getTicketNumber());
+	inPageModel.getDescriptionProperty().setValue(businessDayInc4Export.getDescription());
 
 	inPageModel.getKindOfServiceTextFieldProperty()
 		.setValue(FXCollections.observableArrayList(ChargeType.getLeistungsartenRepresentation()));
@@ -177,19 +178,19 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	BusinessDay bussinessDay = TimeRecorder.getBussinessDay();
 	BusinessDayIncrementUpdate update = new BusinessDayIncrementUpdate();
 	update.setTimeSnippet(timeSnippet);
-	update.setDescription(descriptionTextFieldProperty.get());
-	update.setTicketNo(ticketNoTextFieldProperty.get());
+	update.setDescription(descriptionProperty.getValue());
+	update.setTicketNo(ticketNoProperty.getValue());
 	update.setKindOfService(kindOfService);
 
 	bussinessDay.addBusinessIncrement(update);
     }
 
-    public final StringProperty getTicketNoTextFieldProperty() {
-	return this.ticketNoTextFieldProperty;
+    public final Property<String> getTicketNoProperty() {
+	return this.ticketNoProperty;
     }
 
-    public final StringProperty getDescriptionTextFieldProperty() {
-	return this.descriptionTextFieldProperty;
+    public final Property<String> getDescriptionProperty() {
+	return this.descriptionProperty;
     }
 
     public final StringProperty getBeginTextFieldProperty() {

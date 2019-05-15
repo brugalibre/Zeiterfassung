@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
+import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.combobox.ComboBoxHelper;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.model.StopBusinessDayIncrementPageModel;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.model.resolver.StopBusinessDayIncrementPageModelResolver;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
@@ -36,12 +37,12 @@ public class StopBusinessDayIncrementController
     @FXML
     private Label ticketNumberLabel;
     @FXML
-    private TextField ticketNumberTextField;
+    private ComboBox<String> ticketNumberComboBox;
 
     @FXML
     private Label descriptionLabel;
     @FXML
-    private TextField descriptionTextField;
+    private ComboBox<String> descriptionComboBox;
 
     @FXML
     private Label beginLabel;
@@ -70,19 +71,22 @@ public class StopBusinessDayIncrementController
     @FXML
     private Button abortButton;
 
+    private ComboBoxHelper ticketNumberComboBoxHelper ;
+    private ComboBoxHelper descriptionComboBoxHelper ;
     private MainWindowController mainWindowController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 	initialize(new StopBusinessDayIncrementPage(this, url));
 	kindOfServiceComboBox.getSelectionModel().selectFirst();
+	ticketNumberComboBoxHelper = new ComboBoxHelper(5, ticketNumberComboBox);
+	descriptionComboBoxHelper = new ComboBoxHelper(5, descriptionComboBox);
     }
 
     @Override
     public void show() {
 	super.show();
-	ticketNumberTextField.requestFocus();
-	ticketNumberTextField.selectAll();
+	ticketNumberComboBoxHelper.setFocusToFirstElement();
     }
 
     @Override
@@ -129,6 +133,7 @@ public class StopBusinessDayIncrementController
     private void submit() {
 	if (isInputValid()) {
 	    getDataModel().addIncrement2BusinessDay(getSelectedLeistungsart());
+	    updateCombobo();
 	    dispose(FinishAction.FINISH);
 	} else {
 	    Toolkit.getDefaultToolkit().beep();
@@ -136,6 +141,13 @@ public class StopBusinessDayIncrementController
 	    amountOfHoursTextField.getStyleClass().add(Styles.INVALID_INPUT_HOVER_LABEL);
 	    amountOfHoursTextField.requestFocus();
 	}
+    }
+
+    private void updateCombobo() {
+	String selectedItem = ticketNumberComboBox.getSelectionModel().getSelectedItem();
+	ticketNumberComboBoxHelper.addNewItem(selectedItem);
+	String selectedDescItem = descriptionComboBox.getSelectionModel().getSelectedItem();
+	descriptionComboBoxHelper.addNewItem(selectedDescItem);
     }
 
     private int getSelectedLeistungsart() {
@@ -150,8 +162,8 @@ public class StopBusinessDayIncrementController
 
     @Override
     protected void setBinding(StopBusinessDayIncrementPageModel pageModel) {
-	ticketNumberTextField.textProperty().bindBidirectional(pageModel.getTicketNoTextFieldProperty());
-	descriptionTextField.textProperty().bindBidirectional(pageModel.getDescriptionTextFieldProperty());
+	descriptionComboBox.valueProperty().bindBidirectional(pageModel.getDescriptionProperty());
+	ticketNumberComboBox.valueProperty().bindBidirectional(pageModel.getTicketNoProperty());
 
 	beginTextField.textProperty().bindBidirectional(pageModel.getBeginTextFieldProperty());
 	endTextField.textProperty().bindBidirectional(pageModel.getEndTextFieldProperty());

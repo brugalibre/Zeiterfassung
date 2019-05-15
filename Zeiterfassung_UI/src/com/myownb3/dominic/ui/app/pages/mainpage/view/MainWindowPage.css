@@ -202,6 +202,12 @@
  * **********
  * 
  */
+.editable_combo-box {
+	-fx-highlight-text-fill : -white;
+	-fx-background-color : -adcblue;
+	-fx-font-size: 12px;
+}
+ 
 .combo-box {
 	-fx-background-color : -adcblue;
 	-fx-font-size: 12px;
