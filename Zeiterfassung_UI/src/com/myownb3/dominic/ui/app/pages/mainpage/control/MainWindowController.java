@@ -100,15 +100,17 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	switch (finishAction) {
 	case ABORT:
 	    timeRecordingTray.updateUIStates();
+	    dispose();
 	    break;
 	case RESUME:
 	    TimeRecorder.resume();
+	    dispose();
 	    break;
 	case FINISH:
 	    timeRecordingTray.updateUIStates();
+	    dispose();
 	    break;
 	default:
-	    dispose();
 	}
     }
 
