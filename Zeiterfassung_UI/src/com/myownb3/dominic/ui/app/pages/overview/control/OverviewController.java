@@ -4,6 +4,7 @@
 package com.myownb3.dominic.ui.app.pages.overview.control;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
@@ -32,11 +33,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TablePosition;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -88,19 +88,18 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	totalAmountOfTimeLabel.getStyleClass().add(Styles.BOLD_LABEL_12);
 	totalAmountOfTimeValue.getStyleClass().add(Styles.BOLD_LABEL_12);
 	
-	MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
-	deleteMenue.setOnAction(event -> deleteRow(event));
-	contextMenu = new ContextMenu();
-	contextMenu.getItems().add(deleteMenue);
-	tableView.setOnMousePressed(event -> handle(event));
+	initContextMenu();
+	initTable();
     }
 
     private void deleteRow(ActionEvent event) {
 
-	BusinessDayIncTableRowValue businessDayIncTableRowValue = tableView.getSelectionModel().getSelectedItem();
-	int index= Integer.valueOf(businessDayIncTableRowValue != null ? businessDayIncTableRowValue.getNumber() : "-1");
-	handler.handleBusinessDayIncrementDeleted(index - 1);
-	afterDelete(event);
+	Optional<BusinessDayIncTableRowValue> optionalBusinessDayIncTableRowValue = Optional
+		.ofNullable(tableView.getSelectionModel().getSelectedItem());
+	optionalBusinessDayIncTableRowValue.ifPresent(businessDayIncTableRowValue -> {
+	    handler.handleBusinessDayIncrementDeleted(businessDayIncTableRowValue.getNumberAsInt() - 1);
+	    afterDelete(event);
+	});
     }
 
     private void afterDelete(ActionEvent event) {
@@ -119,12 +118,11 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	this.mainWindowController = mainWindowController;
     }
 
-    private void handle(MouseEvent event) {
+    private void handleMouseEvent(MouseEvent event) {
 	if (hasRightClickOnTable(event)) {
 	    TableView<?> tableView = (TableView<?>) event.getSource();
-	    TextFieldTableCell<?, ?> textFieldTableCell = (TextFieldTableCell<?, ?>) event.getTarget();
-	    TableRow<?> tableRow = textFieldTableCell.getTableRow();
-	    setFocusToRow(tableView, tableRow);
+	    BusinessDayIncTableRowValue businessDayIncTableRowValue = (BusinessDayIncTableRowValue) tableView.getSelectionModel().getSelectedItem();
+	    setFocusToRow(tableView, businessDayIncTableRowValue.getNumberAsInt() - 1);
 	    contextMenu.show(tableView, event.getScreenX(), event.getScreenY());
 	    event.consume();
 	}else {
@@ -132,19 +130,14 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	}
     }
 
-    private void setFocusToRow(TableView<?> tableView, TableRow<?> tableRow) {
-//	tableRow.requestFocus();
-//	tableView.requestFocus();
-//	tableView.getSelectionModel().clearSelection();
-//	tableView.getSelectionModel().select(tableRow.getIndex());
-	tableView.getSelectionModel().clearAndSelect(tableRow.getIndex());
-	tableView.getSelectionModel().focus(tableRow.getIndex());
-//	tableView.getFocusModel().focus(tableRow.getIndex());
+    private void setFocusToRow(TableView<?> tableView, int selectedRow) {
+	tableView.getSelectionModel().clearSelection();
+	tableView.getSelectionModel().select(selectedRow);
     }
 
     private boolean hasRightClickOnTable(MouseEvent event) {
 	return event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseButton.SECONDARY
-		&& event.getSource() instanceof TableView<?> && event.getTarget() instanceof TextFieldTableCell<?, ?>;
+		&& event.getSource() instanceof TableView<?>/* && event.getTarget() instanceof TextFieldTableCell<?, ?>*/;
     }
 
     @Override
@@ -211,4 +204,17 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	totalAmountOfTimeLabel.textProperty().bind(getDataModel().getTotalAmountOfTimeLabel());
 	totalAmountOfTimeValue.textProperty().bind(getDataModel().getTotalAmountOfTimeValue());
     }
+
+    private void initContextMenu() {
+	MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
+	deleteMenue.setOnAction(event -> deleteRow(event));
+	contextMenu = new ContextMenu();
+	contextMenu.getItems().add(deleteMenue);
+    }
+
+    private void initTable() {
+	tableView.setOnMousePressed(event -> handleMouseEvent(event));
+	tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    }
+
 }

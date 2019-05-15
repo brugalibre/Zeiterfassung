@@ -160,4 +160,8 @@ public class BusinessDayIncTableRowValue {
     public final void setChargeType(String chargeType) {
 	this.chargeTypeProperty.set(chargeType);
     }
+
+    public int getNumberAsInt() {
+	return Integer.valueOf(getNumber());
+    }
 }
