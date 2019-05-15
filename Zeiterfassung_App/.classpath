@@ -8,6 +8,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/turbobucher"/>
-	<classpathentry kind="lib" path="C:/Users/Dominic/Documents/Programmierung/joda-time-2.10.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/joda"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
