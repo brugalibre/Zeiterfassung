@@ -10,6 +10,7 @@ import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.model.MainWindowPageModel;
 import com.myownb3.dominic.ui.app.pages.overview.control.OverviewController;
+import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.FinishAction;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
@@ -92,15 +93,23 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
      * Lets the current shown window disappears. If the given boolean is true, the
      * {@link BusinessDay} is checked for redundant entry
      * 
-     * @param resume
+     * @param finishAction
      */
-    public void finishOrAbortAndDispose(boolean resume) {
-	if (resume) {
-	    TimeRecorder.resume();
-	} else {
+    public void finishOrAbortAndDispose(FinishAction finishAction) {
+	
+	switch (finishAction) {
+	case ABORT:
 	    timeRecordingTray.updateUIStates();
+	    break;
+	case RESUME:
+	    TimeRecorder.resume();
+	    break;
+	case FINISH:
+	    timeRecordingTray.updateUIStates();
+	    break;
+	default:
+	    dispose();
 	}
-	dispose();
     }
 
     public void dispose() {

@@ -3,6 +3,7 @@
  */
 package com.myownb3.dominic.timerecording.work.businessday;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
+import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement.TimeStampComparator;
 import com.myownb3.dominic.timerecording.work.businessday.update.BusinessDayIncrementUpdate;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
@@ -50,6 +52,22 @@ public class BusinessDay {
 	currentBussinessDayIncremental = new BusinessDayIncrement(new Date());
     }
 
+//    /**
+//     * Aborts the {@link #currentBussinessDayIncremental}
+//     */
+//    public void abortLastIncrement() {
+//	Optional<BusinessDayIncrement> optBusinessDayIncrement = getFirstIncrement();
+//	optBusinessDayIncrement.ifPresent(businessDayIncrement -> {
+//	    currentBussinessDayIncremental = new BusinessDayIncrement(businessDayIncrement.getDate());
+//	});
+//    }
+//
+//    private Optional<BusinessDayIncrement> getFirstIncrement() {
+//	return increments.stream()
+//		.filter(bDInc -> !bDInc.isCharged())
+//		.findFirst();
+//    }
+    
     /**
      * Resumes the {@link #currentBussinessDayIncremental}
      */
@@ -235,5 +253,15 @@ public class BusinessDay {
 	BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(update);
 	increments.add(newBusinessDayInc);
 	checkForRedundancys();
+    }
+
+    public TimeSnippet getLastTimeSnippet() {
+	increments.stream()
+	.map(BusinessDayIncrement::getTimeSnippets)
+	.flatMap(List::stream)
+	.sorted(TimeStampComparator::thenComparing)
+	.collect(Collectors.toList());
+	
+	return null;
     }
 }

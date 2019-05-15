@@ -78,6 +78,12 @@ public class TimeRecorder {
 	callbackHandler.onResume();
     }
 
+//    public static void abort() {
+//	
+//	currentState = WorkStates.NOT_WORKING;
+//	businessDay.abortLastIncrement();
+//    }
+
     public static void setCallbackHandler(CallbackHandler callbackHandler) {
 	TimeRecorder.callbackHandler = callbackHandler;
     }
@@ -117,11 +123,9 @@ public class TimeRecorder {
      * @see WorkStates
      */
     public static String getInfoStringForState() {
-	BusinessDayIncrement currentIncrement = null;
 	switch (currentState) {
 	case NOT_WORKING:
-	    currentIncrement = businessDay.getCurrentBussinessDayIncremental();
-	    TimeSnippet endPoint = currentIncrement.getCurrentTimeSnippet();
+	    TimeSnippet endPoint = businessDay.getLastTimeSnippet();
 	    if (endPoint != null) {
 		return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INCTIVE_SINCE + " "
 			+ endPoint.getEndTimeStamp();
@@ -129,7 +133,7 @@ public class TimeRecorder {
 	    return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE;
 
 	case WORKING:
-	    currentIncrement = businessDay.getCurrentBussinessDayIncremental();
+	    BusinessDayIncrement currentIncrement = businessDay.getCurrentBussinessDayIncremental();
 	    TimeSnippet startPoint = currentIncrement.getCurrentTimeSnippet();
 	    String time = startPoint.getDuration() > 0 ? " (" + startPoint.getDuration() + "h)" : "";
 	    return TextLabel.CAPTURING_ACTIVE_SINCE + " " + startPoint.getBeginTimeStamp() + time;

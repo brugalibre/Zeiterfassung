@@ -108,11 +108,11 @@ public class StopBusinessDayIncrementController
     }
 
     private void abort() {
-	dispose(false);
+	dispose(FinishAction.ABORT);
     }
 
     private void cancel() {
-	dispose(true);
+	dispose(FinishAction.RESUME);
     }
 
     @Override
@@ -120,8 +120,8 @@ public class StopBusinessDayIncrementController
 	return new StopBusinessDayIncrementPageModelResolver();
     }
 
-    private void dispose(boolean success) {
-	mainWindowController.finishOrAbortAndDispose(success);
+    private void dispose(FinishAction finishAction) {
+	mainWindowController.finishOrAbortAndDispose(finishAction);
 	amountOfHoursTextField.getStyleClass().remove(Styles.INVALID_INPUT_LABEL);
 	amountOfHoursTextField.getStyleClass().remove(Styles.INVALID_INPUT_HOVER_LABEL);
     }
@@ -129,7 +129,7 @@ public class StopBusinessDayIncrementController
     private void submit() {
 	if (isInputValid()) {
 	    getDataModel().addIncrement2BusinessDay(getSelectedLeistungsart());
-	    dispose(false);
+	    dispose(FinishAction.FINISH);
 	} else {
 	    Toolkit.getDefaultToolkit().beep();
 	    amountOfHoursTextField.getStyleClass().add(Styles.INVALID_INPUT_LABEL);
