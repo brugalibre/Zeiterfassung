@@ -3,7 +3,6 @@
  */
 package com.myownb3.dominic.timerecording.work.businessday;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -255,13 +254,16 @@ public class BusinessDay {
 	checkForRedundancys();
     }
 
+    /**
+     * Returns the last {@link TimeSnippet} which was added to this {@link BusinessDay}
+     * @return the last {@link TimeSnippet}
+     */
     public TimeSnippet getLastTimeSnippet() {
-	increments.stream()
-	.map(BusinessDayIncrement::getTimeSnippets)
-	.flatMap(List::stream)
-	.sorted(TimeStampComparator::thenComparing)
-	.collect(Collectors.toList());
-	
-	return null;
+	return increments.stream()
+		.map(BusinessDayIncrement::getTimeSnippets)
+		.flatMap(List::stream)
+		.sorted(new TimeStampComparator())
+		.findFirst()
+		.orElse(null);
     }
 }
