@@ -114,10 +114,6 @@ public class TimeSnippet {
 	return date;
     }
 
-    public void setDate(Date date) {
-	this.date = date;
-    }
-
     public void setBeginTimeStamp(Time beginTimeStamp) {
 	this.beginTimeStamp = beginTimeStamp;
 	notifyCallbackHandler(ChangedValue.of(-1, getBeginTimeStampRep(), ValueTypes.BEGIN));

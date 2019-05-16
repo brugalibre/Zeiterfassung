@@ -9,10 +9,11 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
+import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement.TimeStampComparator;
-import com.myownb3.dominic.timerecording.work.businessday.update.BusinessDayIncrementUpdate;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.util.parser.NumberFormat;
@@ -51,22 +52,6 @@ public class BusinessDay {
 	currentBussinessDayIncremental = new BusinessDayIncrement(new Date());
     }
 
-//    /**
-//     * Aborts the {@link #currentBussinessDayIncremental}
-//     */
-//    public void abortLastIncrement() {
-//	Optional<BusinessDayIncrement> optBusinessDayIncrement = getFirstIncrement();
-//	optBusinessDayIncrement.ifPresent(businessDayIncrement -> {
-//	    currentBussinessDayIncremental = new BusinessDayIncrement(businessDayIncrement.getDate());
-//	});
-//    }
-//
-//    private Optional<BusinessDayIncrement> getFirstIncrement() {
-//	return increments.stream()
-//		.filter(bDInc -> !bDInc.isCharged())
-//		.findFirst();
-//    }
-    
     /**
      * Resumes the {@link #currentBussinessDayIncremental}
      */
@@ -151,9 +136,6 @@ public class BusinessDay {
 		.anyMatch(bDayInc -> !bDayInc.isCharged());
     }
 
-    /**
-    * 
-    */
     private void createNewIncremental() {
 	currentBussinessDayIncremental = new BusinessDayIncrement(new Date());
     }
@@ -165,20 +147,6 @@ public class BusinessDay {
 	    sum = sum + incremental.getTotalDuration(type);
 	}
 	return NumberFormat.parseFloat(NumberFormat.format(sum));
-    }
-
-    /**
-     * Returns the Local sensitive representation of the total duration for the
-     * given {@link TIME_TYPE}
-     * 
-     * @param type
-     *            the given type of time
-     * @return the Local sensitive representation of the total duration for the
-     *         given {@link TIME_TYPE}
-     */
-    public String getTotalDurationRep(TIME_TYPE type) {
-	float totalDuration = getTotalDuration(type);
-	return NumberFormat.format(totalDuration);
     }
 
     /**
@@ -198,15 +166,6 @@ public class BusinessDay {
 
     public List<BusinessDayIncrement> getIncrements() {
 	return increments;
-    }
-
-    /**
-     * Returns a String representation of {@link #getDate()}
-     * 
-     * @return a String representation of {@link #getDate()}
-     */
-    public String getDateAsString() {
-	return getDate().toString();
     }
 
     /**
@@ -248,7 +207,7 @@ public class BusinessDay {
     /**
      * @param update
      */
-    public void addBusinessIncrement(BusinessDayIncrementUpdate update) {
+    public void addBusinessIncrement(BusinessDayIncrementAdd update) {
 	BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(update);
 	increments.add(newBusinessDayInc);
 	checkForRedundancys();
@@ -256,14 +215,32 @@ public class BusinessDay {
 
     /**
      * Returns the last {@link TimeSnippet} which was added to this {@link BusinessDay}
-     * @return the last {@link TimeSnippet}
      */
-    public TimeSnippet getLastTimeSnippet() {
+    private TimeSnippet getLastTimeSnippet() {
 	return increments.stream()
 		.map(BusinessDayIncrement::getTimeSnippets)
 		.flatMap(List::stream)
 		.sorted(new TimeStampComparator())
 		.findFirst()
 		.orElse(null);
+    }
+
+    /**
+     * Returns a message since when the capturing is active
+     * @return the  message since when the capturing is active
+     */
+    public String getCapturingActiveSinceMsg() {
+        TimeSnippet startPoint = currentBussinessDayIncremental.getCurrentTimeSnippet();
+        String time = startPoint.getDuration() > 0 ? " (" + startPoint.getDuration() + "h)" : "";
+        return TextLabel.CAPTURING_ACTIVE_SINCE + " " + startPoint.getBeginTimeStamp() + time;
+    }
+
+    public String getCapturingInactiveSinceMsg() {
+        TimeSnippet endPoint = getLastTimeSnippet();
+        if (endPoint != null) {
+        return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INCTIVE_SINCE + " "
+        	+ endPoint.getEndTimeStamp();
+        }
+        return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE;
     }
 }

@@ -62,9 +62,6 @@ public class BusinessDayIncrement {
 	timeSnippets.remove(currentTimeSnippet);
     }
 
-    /**
-    * 
-    */
     private void createNewTimeSnippet() {
 	currentTimeSnippet = new TimeSnippet(date);
     }
@@ -134,10 +131,6 @@ public class BusinessDayIncrement {
 	return currentTimeSnippet;
     }
 
-    public void setCurrentTimeSnippet(TimeSnippet currentTimeSnippet) {
-	this.currentTimeSnippet = currentTimeSnippet;
-    }
-
     public String getDescription() {
 	return description;
     }
@@ -158,10 +151,6 @@ public class BusinessDayIncrement {
 	return chargeType;
     }
 
-    public void setChargeType(int chargeType) {
-	this.chargeType = chargeType;
-    }
-
     /**
      * Moves all {@link TimeSnippet} of the current {@link BusinessDayIncrement} to
      * the given {@link BusinessDayIncrement}. The {@link TimeSnippet}s of the
@@ -169,7 +158,7 @@ public class BusinessDayIncrement {
      * 
      * @param incrementToAddTimeSnippets
      */
-    public void transferAllTimeSnipetsToBussinessDayIncrement(BusinessDayIncrement incrementToAddTimeSnippets) {
+    /*package */ void transferAllTimeSnipetsToBussinessDayIncrement(BusinessDayIncrement incrementToAddTimeSnippets) {
 	incrementToAddTimeSnippets.addTimeSnippets(timeSnippets);
 	timeSnippets.clear();
     }

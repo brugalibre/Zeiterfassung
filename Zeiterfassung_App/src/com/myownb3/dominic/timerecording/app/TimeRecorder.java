@@ -7,13 +7,11 @@ import java.util.List;
 
 import com.myownb3.dominic.export.ContentSelector;
 import com.myownb3.dominic.export.FileExporter;
-import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
 import com.myownb3.dominic.timerecording.charge.BookerHelper;
 import com.myownb3.dominic.timerecording.work.WorkStates;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
-import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
 
@@ -33,7 +31,7 @@ public class TimeRecorder {
 						    // calculated
     private static WorkStates currentState; // either it is working, or not
 					    // working
-    private static BusinessDay businessDay;
+    public static BusinessDay businessDay;
     private static CallbackHandler callbackHandler;
 
     static {
@@ -78,21 +76,8 @@ public class TimeRecorder {
 	callbackHandler.onResume();
     }
 
-//    public static void abort() {
-//	
-//	currentState = WorkStates.NOT_WORKING;
-//	businessDay.abortLastIncrement();
-//    }
-
     public static void setCallbackHandler(CallbackHandler callbackHandler) {
 	TimeRecorder.callbackHandler = callbackHandler;
-    }
-
-    /**
-     * @return
-     */
-    public static String getTotalAmountOfWork(TIME_TYPE type) {
-	return businessDay.getTotalDurationRep(type);
     }
 
     public static BusinessDay getBussinessDay() {
@@ -125,32 +110,12 @@ public class TimeRecorder {
     public static String getInfoStringForState() {
 	switch (currentState) {
 	case NOT_WORKING:
-	    TimeSnippet endPoint = businessDay.getLastTimeSnippet();
-	    if (endPoint != null) {
-		return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INCTIVE_SINCE + " "
-			+ endPoint.getEndTimeStamp();
-	    }
-	    return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE;
-
+	    return businessDay.getCapturingInactiveSinceMsg();
 	case WORKING:
-	    BusinessDayIncrement currentIncrement = businessDay.getCurrentBussinessDayIncremental();
-	    TimeSnippet startPoint = currentIncrement.getCurrentTimeSnippet();
-	    String time = startPoint.getDuration() > 0 ? " (" + startPoint.getDuration() + "h)" : "";
-	    return TextLabel.CAPTURING_ACTIVE_SINCE + " " + startPoint.getBeginTimeStamp() + time;
+	    return businessDay.getCapturingActiveSinceMsg();
 	default:
 	    throw new RuntimeException("Unknowing working state '" + currentState + "'!");
 	}
-    }
-
-    /**
-     * Return true if the {@link TimeRecorder} is currently working, otherwise false
-     * 
-     * @return true if the {@link TimeRecorder} is currently working, otherwise
-     *         false
-     * @see WorkStates
-     */
-    public static boolean isRecording() {
-	return currentState == WorkStates.WORKING;
     }
 
     /**
