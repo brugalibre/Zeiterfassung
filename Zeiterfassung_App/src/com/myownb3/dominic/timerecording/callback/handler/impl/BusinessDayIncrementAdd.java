@@ -1,15 +1,18 @@
 /**
  * 
  */
-package com.myownb3.dominic.timerecording.work.businessday.update;
+package com.myownb3.dominic.timerecording.callback.handler.impl;
 
+import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 
 /**
+ * 
+ * The {@link BusinessDayIncrementAdd} is used whenever a new {@link BusinessDayIncrement} is added
  * @author Dominic
  *
  */
-public class BusinessDayIncrementUpdate {
+public class BusinessDayIncrementAdd {
 
     private String ticketNo;
     private String description;

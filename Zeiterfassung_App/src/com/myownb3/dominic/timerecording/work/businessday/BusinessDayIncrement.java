@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.work.businessday.update.BusinessDayIncrementUpdate;
+import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.util.parser.NumberFormat;
@@ -239,13 +239,13 @@ public class BusinessDayIncrement {
 
     /**
      * Creates a new {@link BusinessDayIncrement} for the given
-     * {@link BusinessDayIncrementUpdate}
+     * {@link BusinessDayIncrementAdd}
      * 
      * @param update
-     *            the {@link BusinessDayIncrementUpdate} with the new values
+     *            the {@link BusinessDayIncrementAdd} with the new values
      * @return a new {@link BusinessDayIncrement}
      */
-    public static BusinessDayIncrement of(BusinessDayIncrementUpdate update) {
+    public static BusinessDayIncrement of(BusinessDayIncrementAdd update) {
 
 	BusinessDayIncrement businessDayIncremental = new BusinessDayIncrement(update.getTimeSnippet().getDate());
 	businessDayIncremental.description = update.getDescription();

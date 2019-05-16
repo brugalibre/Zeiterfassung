@@ -6,15 +6,14 @@ package com.myownb3.dominic.ui.app.pages.stopbusinessday.model;
 import java.util.Date;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.TimeSnippedChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
+import com.myownb3.dominic.timerecording.work.businessday.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
-import com.myownb3.dominic.timerecording.work.businessday.update.BusinessDayIncrementUpdate;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
 import javafx.beans.property.Property;
@@ -170,19 +169,18 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     }
 
     /**
-     * @param bussinessDay
-     * @param kindOfService
+     * Adds the recorded informations as new {@link BusinessDayIncrement}
+     * @param kindOfService the kind of service
      */
     public void addIncrement2BusinessDay(int kindOfService) {
 
-	BusinessDay bussinessDay = TimeRecorder.getBussinessDay();
-	BusinessDayIncrementUpdate update = new BusinessDayIncrementUpdate();
+	BusinessDayIncrementAdd update = new BusinessDayIncrementAdd();
 	update.setTimeSnippet(timeSnippet);
 	update.setDescription(descriptionProperty.getValue());
 	update.setTicketNo(ticketNoProperty.getValue());
 	update.setKindOfService(kindOfService);
 
-	bussinessDay.addBusinessIncrement(update);
+	new BusinessDayChangedCallbackHandlerImpl().handleBusinessDayIncrementAdd(update);
     }
 
     public final Property<String> getTicketNoProperty() {
