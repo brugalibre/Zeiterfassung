@@ -14,7 +14,9 @@ public class TextLabel {
 
     public static final String FINISH_BUTTON_TEXT = "Fertig";
     public static final String CANCEL_BUTTON_TEXT = "Abbrechen";
+    public static final String CANCEL_BUTTON_TOOLTIP_TEXT = "Bricht die Eingabe ab und setzt Aufzeichnung fort";
     public static final String ABORT_BUTTON_TEXT = "Alles verwerfen";
+    public static final String ABORT_BUTTON_TOOLTIP_TEXT = "Verwirft die gerade gestoppte Aufzeichnung";
     public static final String AMOUNT_OF_HOURS_LABEL = "Anzahl Stunden";
     public static final String TOTAL_AMOUNT_OF_HOURS_LABEL = "Gesamt Anzahl Stunden: ";
     public static final String TICKET_NUMBER_LABEL = "Ticket-Nr.";

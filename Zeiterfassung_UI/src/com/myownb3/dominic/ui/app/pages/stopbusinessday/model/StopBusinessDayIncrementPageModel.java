@@ -21,8 +21,10 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Tooltip;
 
 /**
  * @author Dominic
@@ -47,6 +49,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     private StringProperty finishButtonText;
     private StringProperty abortButtonText;
     private StringProperty cancelButtonText;
+    private ObservableValue<? extends Tooltip> abortButtonToolTipText;
+    private ObservableValue<? extends Tooltip> cancelButtonToolTipText;
     public TimeSnippet timeSnippet;
 
     /**
@@ -63,6 +67,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	finishButtonText = new SimpleStringProperty(TextLabel.FINISH_BUTTON_TEXT);
 	abortButtonText = new SimpleStringProperty(TextLabel.ABORT_BUTTON_TEXT);
 	cancelButtonText = new SimpleStringProperty(TextLabel.CANCEL_BUTTON_TEXT);
+	abortButtonToolTipText = new SimpleObjectProperty<Tooltip>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
+	cancelButtonToolTipText = new SimpleObjectProperty<Tooltip>(new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
 
 	amountOfHoursTextFieldProperty = new SimpleStringProperty(businessDayInc4Export.getTotalDurationRep());
 	ticketNoProperty = new SimpleObjectProperty<String>(businessDayInc4Export.getTicketNumber());
@@ -132,6 +138,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	inPageModel.getFinishButtonText().set(TextLabel.FINISH_BUTTON_TEXT);
 	inPageModel.getAbortButtonText().set(TextLabel.ABORT_BUTTON_TEXT);
 	inPageModel.getCancelButtonText().set(TextLabel.CANCEL_BUTTON_TEXT);
+	
+	inPageModel.abortButtonToolTipText = new SimpleObjectProperty<Tooltip>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
+	inPageModel.cancelButtonToolTipText =  new SimpleObjectProperty<Tooltip>(new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
 
 	inPageModel.getAmountOfHoursTextFieldProperty().set(businessDayInc4Export.getTotalDurationRep());
 	inPageModel.getTicketNoProperty().setValue(businessDayInc4Export.getTicketNumber());
@@ -241,5 +250,13 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
     public final StringProperty getCancelButtonText() {
 	return this.cancelButtonText;
+    }
+
+    public ObservableValue<? extends Tooltip> getAbortButtonToolTipText() {
+        return abortButtonToolTipText;
+    }
+
+    public ObservableValue<? extends Tooltip> getCancelButtonToolTipText() {
+        return cancelButtonToolTipText;
     }
 }

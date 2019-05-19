@@ -180,6 +180,8 @@ public class StopBusinessDayIncrementController
 	finishButton.textProperty().bindBidirectional(pageModel.getFinishButtonText());
 	abortButton.textProperty().bindBidirectional(pageModel.getAbortButtonText());
 	cancelButton.textProperty().bindBidirectional(pageModel.getCancelButtonText());
+	abortButton.tooltipProperty().bind(pageModel.getAbortButtonToolTipText());
+	cancelButton.tooltipProperty().bind(pageModel.getCancelButtonToolTipText());
 
 	beginTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
 	    if (oldValue && !newValue) {
