@@ -32,6 +32,13 @@ public class Time {
     }
 
     /**
+     * Creates a new Time started right now
+     */
+    public Time() {
+	this (System.currentTimeMillis());
+    }
+
+    /**
      * @param time
      */
     public Time(long time) {
@@ -129,5 +136,12 @@ public class Time {
      */
     public long getTime() {
 	return duration.getMillis();
+    }
+
+    /**
+     * @return the amount of days of this Time instance
+     */
+    public long getDays() {
+	return duration.getStandardDays();
     }
 }

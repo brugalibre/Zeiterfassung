@@ -226,6 +226,20 @@ public class BusinessDay {
     }
 
     /**
+     * Verifies if there is any {@link BusinessDayIncrement} which was recorded e.g.
+     * during a preceding day
+     * 
+     * @return <code>true</code> if there is at least one
+     *         {@link BusinessDayIncrement} which was recorded on a preceding day or
+     *         <code>false</code> if not
+     */
+    public boolean hasElementsFromPreviousDays() {
+	Time now = new Time();
+	return increments.stream()
+		.noneMatch(bDayInc -> bDayInc.isBefore(now));
+    }
+    
+    /**
      * Returns a message since when the capturing is active
      * @return the  message since when the capturing is active
      */

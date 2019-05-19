@@ -7,6 +7,7 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -24,6 +25,7 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import com.myownb3.dominic.launch.exception.ApplicationLaunchException;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.app.MessageType;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
@@ -62,6 +64,12 @@ public class TimeRecordingTray {
 
 	trayIcon.addMouseMotionListener(getMouseMotionListener());
 	trayIcon.addMouseListener(getMouseListener());
+	trayIcon.addActionListener(event-> handleActionEvent (event));
+    }
+
+    private void handleActionEvent(ActionEvent event) {
+	
+	System.err.println();
     }
 
     private void showOverviewView() {
@@ -253,6 +261,33 @@ public class TimeRecordingTray {
 	    } catch (Exception e) {
 		throw new RuntimeException(e);
 	    }
+	}
+    }
+
+    /**
+     * Shows the given message
+     * 
+     * @param messageTitle the title
+     * @param message      the message itself
+     * @param messageType  the type of message
+     */
+    public void displayMessage(String messageTitle, String message, MessageType messageType) {
+
+	trayIcon.addActionListener(event -> handleActionEvent(event));
+	trayIcon.displayMessage(messageTitle, message, getTryIconErrorForMessageType(messageType));
+    }
+    
+    private java.awt.TrayIcon.MessageType getTryIconErrorForMessageType(MessageType messageType) {
+	
+	switch (messageType) {
+	case ERROR:
+	    return TrayIcon.MessageType.ERROR;
+	case WARNING:
+	    return TrayIcon.MessageType.WARNING;
+	case INFORMATION:
+	    return TrayIcon.MessageType.INFO;
+	default:
+	    return TrayIcon.MessageType.NONE;
 	}
     }
 }

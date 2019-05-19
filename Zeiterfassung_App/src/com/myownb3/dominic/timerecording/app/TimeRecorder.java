@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.myownb3.dominic.export.ContentSelector;
 import com.myownb3.dominic.export.FileExporter;
+import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
 import com.myownb3.dominic.timerecording.charge.BookerHelper;
 import com.myownb3.dominic.timerecording.work.WorkStates;
@@ -24,7 +25,7 @@ import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
  * @author Dominic
  */
 public class TimeRecorder {
-    public static final String VERSION = "1.4.2";
+    public static final String VERSION = "1.4.3";
     public static final TIME_TYPE GLOBAL_TIME_TYPE; // application wide use
 						    // TIME_TYPE that defines,
 						    // in what unit the time is
@@ -43,7 +44,7 @@ public class TimeRecorder {
     public static boolean handleUserInteraction() {
 	switch (currentState) {
 	case NOT_WORKING:
-	    start();
+	    tryStartIfPossible();
 	    return false;
 
 	case WORKING:
@@ -51,6 +52,15 @@ public class TimeRecorder {
 	    return true;
 	default:
 	    throw new RuntimeException("Unknowing working state '" + currentState + "'!");
+	}
+    }
+
+    private static void tryStartIfPossible() {
+	if (businessDay.hasElementsFromPreviousDays()) {
+	    callbackHandler
+		    .showMessage(Message.of(MessageType.ERROR, null, TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS));
+	} else {
+	    start();
 	}
     }
 
