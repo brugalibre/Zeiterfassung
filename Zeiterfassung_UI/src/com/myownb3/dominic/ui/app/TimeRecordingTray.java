@@ -132,8 +132,15 @@ public class TimeRecordingTray {
 
     private void createStartTurboBucherMenuItem() {
 	startTurboBucher = new JMenuItem(TextLabel.CHARGE_LABEL);
-	startTurboBucher.addActionListener(actionEvent -> TimeRecorder.book());
+	startTurboBucher.addActionListener(actionEvent -> book());
 	startTurboBucher.setEnabled(false);
+    }
+
+    private void book() {
+	boolean wasBooked = TimeRecorder.book();
+	if (wasBooked){
+	    displayMessage(null, TextLabel.SUCCESSFULLY_CHARGED_TEXT, MessageType.INFORMATION);
+	}
     }
 
     private void createShowHoursMenuItem() {
@@ -235,7 +242,7 @@ public class TimeRecordingTray {
 
 	// Register for reach an action handler
 	for (RoundMode roundMode : roundMode2ButtonMap.keySet()) {
-	    roundMode2ButtonMap.get(roundMode).addActionListener(event -> TimeRounder.INSTANCE.setRoundMode(roundMode));
+	    roundMode2ButtonMap.get(roundMode).addActionListener(event -> safeRoundSettings(roundMode));
 	}
 
 	// mark as selected
@@ -249,6 +256,14 @@ public class TimeRecordingTray {
 	settingsRoundMenu.add(settingsRoundItem10Min);
 	settingsRoundMenu.add(settingsRoundItem15Min);
 	return settingsRoundMenu;
+    }
+
+    private void safeRoundSettings(RoundMode roundMode) {
+	RoundMode currentRoundMode = TimeRounder.INSTANCE.getRoundMode();
+	if (currentRoundMode != roundMode){
+	    TimeRounder.INSTANCE.setRoundMode(roundMode);
+	    displayMessage(null, TextLabel.SETTINGS_ROUND_SAVED, MessageType.INFORMATION);
+	}
     }
 
     private void setLookAndFeel() {

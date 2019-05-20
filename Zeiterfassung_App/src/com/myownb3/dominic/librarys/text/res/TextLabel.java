@@ -40,10 +40,12 @@ public class TextLabel {
 
     // Ticket Stuff
     public static final String TICKET = "Ticket";
+    public static final String SUCCESSFULLY_CHARGED_TEXT = "Erfolgreich abgebucht";
     public static final String CHARGED = "Abgebucht";
     public static final String NO = "Nein";
     public static final String YES = "Ja";
 
+    public static final String SETTINGS_ROUND_SAVED = "Einstellungen wurden gespeichert";
     public static final String SETTINGS_ROUND = "Rundungseinstellungen";
     public static final String SETTINGS_ROUND_1 = "1 Minute";
     public static final String SETTINGS_ROUND_5 = "5 Minuten";

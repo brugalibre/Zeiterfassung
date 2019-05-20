@@ -153,12 +153,14 @@ public class TimeRecorder {
      * Collects and export the necessary data which is used by the TurobBucher to
      * charge After the tuber-bucher- app is invoked in order to do actual charge
      * 
-     * @return the path of the new created file
+     * @return <code>true</code> if there was actually a booking process or <code>false</code> if there wasn't anything to do
      */
-    public static void book() {
+    public static boolean book() {
 	if (businessDay.hasNotChargedElements()) {
 	    BookerHelper helper = new BookerHelper(businessDay);
 	    helper.book();
+	    return true;
 	}
+	return false;
     }
 }
