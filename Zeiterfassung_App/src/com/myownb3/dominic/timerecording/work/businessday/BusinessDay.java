@@ -233,10 +233,10 @@ public class BusinessDay {
      *         {@link BusinessDayIncrement} which was recorded on a preceding day or
      *         <code>false</code> if not
      */
-    public boolean hasElementsFromPreviousDays() {
+    public boolean hasElementsFromPrecedentDays() {
 	Time now = new Time();
 	return increments.stream()
-		.noneMatch(bDayInc -> bDayInc.isBefore(now));
+		.anyMatch(bDayInc -> bDayInc.isBefore(now));
     }
     
     /**
