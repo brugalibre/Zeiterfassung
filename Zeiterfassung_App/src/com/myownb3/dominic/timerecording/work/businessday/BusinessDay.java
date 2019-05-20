@@ -220,7 +220,7 @@ public class BusinessDay {
 	return increments.stream()
 		.map(BusinessDayIncrement::getTimeSnippets)
 		.flatMap(List::stream)
-		.sorted(new TimeStampComparator())
+		.sorted(new TimeStampComparator().reversed())
 		.findFirst()
 		.orElse(null);
     }
