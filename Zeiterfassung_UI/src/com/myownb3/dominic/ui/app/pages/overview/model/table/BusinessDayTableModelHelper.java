@@ -57,12 +57,12 @@ public class BusinessDayTableModelHelper {
 	List<TableColumn<BusinessDayIncTableRowValue, String>> titleHeaders = new ArrayList<>();
 	TableColumn<BusinessDayIncTableRowValue, String> numberTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.NUMMER_LABEL);
-	setCellValueFactory(numberTableColumn, "number");
+	setNonEditableCellValueFactory(numberTableColumn, "number");
 	titleHeaders.add(numberTableColumn);
 	TableColumn<BusinessDayIncTableRowValue, String> amountOfHoursTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.AMOUNT_OF_HOURS_LABEL);
 	titleHeaders.add(amountOfHoursTableColumn);
-	setCellValueFactory(amountOfHoursTableColumn, "totalDuration");
+	setNonEditableCellValueFactory(amountOfHoursTableColumn, "totalDuration");
 	TableColumn<BusinessDayIncTableRowValue, String> ticketTableColumnt = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.TICKET);
 	titleHeaders.add(ticketTableColumnt);
@@ -102,11 +102,11 @@ public class BusinessDayTableModelHelper {
 	TableColumn<BusinessDayIncTableRowValue, String> chargeTypeTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.CHARGE_TYPE_LABEL);
 	titleHeaders.add(chargeTypeTableColumn);
-	setCellValueFactory(chargeTypeTableColumn, "chargeType");
+	setNonEditableCellValueFactory(chargeTypeTableColumn, "chargeType");
 	TableColumn<BusinessDayIncTableRowValue, String> isChargedTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.CHARGED);
 	titleHeaders.add(isChargedTableColumn);
-	setCellValueFactory(isChargedTableColumn, "isCharged");
+	setNonEditableCellValueFactory(isChargedTableColumn, "isCharged");
 	return titleHeaders;
     }
 
@@ -136,7 +136,7 @@ public class BusinessDayTableModelHelper {
 	};
     }
 
-    private void setCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn, String paramName) {
+    private void setNonEditableCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn, String paramName) {
 	tableColumn.setCellValueFactory(new PropertyValueFactory<BusinessDayIncTableRowValue, String>(paramName));
     }
 
@@ -147,7 +147,7 @@ public class BusinessDayTableModelHelper {
 	Callback<TableColumn<BusinessDayIncTableRowValue, String>, TableCell<BusinessDayIncTableRowValue, String>> forTableColumn = TextFieldTableCell
 		.forTableColumn();
 	tableColumn.setCellFactory(forTableColumn);
-	setCellValueFactory(tableColumn, paramName);
+	setNonEditableCellValueFactory(tableColumn, paramName);
     }
 
     private List<BusinessDayIncTableRowValue> getBusinessDayCells(BusinessDay4Export businessDay) {
