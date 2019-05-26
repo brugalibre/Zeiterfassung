@@ -46,7 +46,7 @@ import javafx.scene.layout.BorderPane;
  * 
  */
 public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel>
-	implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>>{
+	implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> {
 
     private MainWindowController mainWindowController;
 
@@ -69,7 +69,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     private Button exportButton;
 
     private ContextMenu contextMenu;
-    
+
     private BusinessDayChangedCallbackHandler handler;
     private BusinessDayTableModelHelper businessDayTableModel;
 
@@ -87,7 +87,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
 	totalAmountOfTimeLabel.getStyleClass().add(Styles.BOLD_LABEL_12);
 	totalAmountOfTimeValue.getStyleClass().add(Styles.BOLD_LABEL_12);
-	
+
 	initContextMenu();
 	initTable();
     }
@@ -121,11 +121,12 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     private void handleMouseEvent(MouseEvent event) {
 	if (hasRightClickOnTable(event)) {
 	    TableView<?> tableView = (TableView<?>) event.getSource();
-	    BusinessDayIncTableRowValue businessDayIncTableRowValue = (BusinessDayIncTableRowValue) tableView.getSelectionModel().getSelectedItem();
+	    BusinessDayIncTableRowValue businessDayIncTableRowValue = (BusinessDayIncTableRowValue) tableView
+		    .getSelectionModel().getSelectedItem();
 	    setFocusToRow(tableView, businessDayIncTableRowValue.getNumberAsInt() - 1);
 	    contextMenu.show(tableView, event.getScreenX(), event.getScreenY());
 	    event.consume();
-	}else {
+	} else {
 	    contextMenu.hide();
 	}
     }
@@ -137,7 +138,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     private boolean hasRightClickOnTable(MouseEvent event) {
 	return event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseButton.SECONDARY
-		&& event.getSource() instanceof TableView<?>/* && event.getTarget() instanceof TextFieldTableCell<?, ?>*/;
+		&& event.getSource() instanceof TableView<?>;
     }
 
     @Override
@@ -160,11 +161,6 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	show();
     }
 
-    /**
-     * @param businessDayIncTableCellValue
-     * @param tablePosition
-     * @return
-     */
     private int getBeginEndSequence(BusinessDayIncTableRowValue businessDayIncTableCellValue,
 	    TablePosition<BusinessDayIncTableRowValue, String> tablePosition) {
 	TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue
