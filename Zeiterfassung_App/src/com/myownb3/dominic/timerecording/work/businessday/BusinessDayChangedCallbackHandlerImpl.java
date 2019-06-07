@@ -6,6 +6,7 @@ import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
+import com.myownb3.dominic.timerecording.charge.InvalidChargeTypeRepresentationException;
 
 public class BusinessDayChangedCallbackHandlerImpl implements BusinessDayChangedCallbackHandler {
 
@@ -51,8 +52,16 @@ public class BusinessDayChangedCallbackHandlerImpl implements BusinessDayChanged
 	case TICKET_NR:
 	    businessDayIncremental.setTicketNumber(changedValue.getNewValue());
 	    break;
-	default:
+	case CHARGE_TYPE:
+	    try {
+		businessDayIncremental.setChargeType(changedValue.getNewValue());
+	    } catch (InvalidChargeTypeRepresentationException e) {
+		e.printStackTrace();
+		// ignore failures
+	    }
 	    break;
+	default:
+	    throw new UnsupportedOperationException ("ChargeType '" + changedValue.getValueTypes() + "' not implemented!");
 	}
 	businessDay.checkForRedundancys();
     }

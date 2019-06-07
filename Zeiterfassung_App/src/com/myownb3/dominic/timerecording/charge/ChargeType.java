@@ -73,13 +73,13 @@ public class ChargeType {
 	return leistungsartenStrings.toArray(new String[leistungsartenStrings.size()]);
     }
 
-    public static int getLeistungsartForRep(String leistungsartRep) {
+    public static int getLeistungsartForRep(String leistungsartRep) throws InvalidChargeTypeRepresentationException {
 	for (Integer leistungsart : LEISTUNGSARTEN_MAP.keySet()) {
 	    if (leistungsartRep.equals(LEISTUNGSARTEN_MAP.get(leistungsart))) {
 		return leistungsart;
 	    }
 	}
-	throw new IllegalStateException("No Leistungsart found for Description '" + leistungsartRep + "'");
+	throw new InvalidChargeTypeRepresentationException("No Leistungsart found for Description '" + leistungsartRep + "'");
     }
 
     /**

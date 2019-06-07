@@ -12,7 +12,8 @@ public enum ValueTypes {
     END,
     /** The total amount of time of a {@link TimeSnippet} */
     AMOUNT_OF_TIME,
-
+    /** The type of charge such as 113, 122 and so on **/
+    CHARGE_TYPE,
     /** no specific value */
     NONE;
 }

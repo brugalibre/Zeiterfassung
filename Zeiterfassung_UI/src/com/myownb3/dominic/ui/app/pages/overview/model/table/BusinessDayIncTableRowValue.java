@@ -62,6 +62,8 @@ public class BusinessDayIncTableRowValue {
 	    valueTypesForIndex.put(index, timeSnippetCellValue.getValueType());
 	    index++;
 	}
+	valueTypesForIndex.put(index, ValueTypes.CHARGE_TYPE);
+	index++;
     }
 
     /**
@@ -131,6 +133,10 @@ public class BusinessDayIncTableRowValue {
 
     public final String getChargeType() {
 	return this.chargeTypeProperty.get();
+    }
+    
+    public StringProperty chargeTypeProperty() {
+	return chargeTypeProperty;
     }
 
     public final String getIsCharged() {

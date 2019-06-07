@@ -23,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
@@ -102,12 +103,20 @@ public class BusinessDayTableModelHelper {
 	TableColumn<BusinessDayIncTableRowValue, String> chargeTypeTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.CHARGE_TYPE_LABEL);
 	titleHeaders.add(chargeTypeTableColumn);
-	setNonEditableCellValueFactory(chargeTypeTableColumn, "chargeType");
+	setEditableColumBoxCellFactory(chargeTypeTableColumn);
 	TableColumn<BusinessDayIncTableRowValue, String> isChargedTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.CHARGED);
 	titleHeaders.add(isChargedTableColumn);
 	setNonEditableCellValueFactory(isChargedTableColumn, "isCharged");
 	return titleHeaders;
+    }
+
+    private void setEditableColumBoxCellFactory(
+	    TableColumn<BusinessDayIncTableRowValue, String> chargeTypeTableColumn) {
+	chargeTypeTableColumn.setCellValueFactory(cellData -> cellData.getValue().chargeTypeProperty());
+	chargeTypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(ChargeType.getLeistungsartenRepresentation()));
+	chargeTypeTableColumn.editableProperty().set(true);
+	chargeTypeTableColumn.setOnEditCommit(changeListener);
     }
 
     private Callback<CellDataFeatures<BusinessDayIncTableRowValue, String>, ObservableValue<String>> getTimeSnippetBeginEndCellValueFactory(
@@ -120,6 +129,7 @@ public class BusinessDayTableModelHelper {
 	};
     }
 
+    @SuppressWarnings("unused")
     private Callback<TableColumn<BusinessDayIncTableRowValue, String>, TableCell<BusinessDayIncTableRowValue, String>> getTimeSnippetBeginEndCellFactory(
 	    final int i, TableColumn<BusinessDayIncTableRowValue, String> tableColumn) {
 	return cellData -> {
@@ -127,8 +137,8 @@ public class BusinessDayTableModelHelper {
 	    // visible on the table
 	    if (true || !StringUtil.isEmptyOrNull(cellData.getCellData(i))) {
 		tableColumn.editableProperty().set(true);
-		tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		tableColumn.setOnEditCommit(changeListener);
+		tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
 		return new TextFieldTableCell<>(new DefaultStringConverter());
 	    }
 	    return new TextFieldTableCell<>(new DefaultStringConverter());

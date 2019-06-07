@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.myownb3.dominic.timerecording.charge.ChargeType;
+import com.myownb3.dominic.timerecording.charge.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.combobox.ComboBoxHelper;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.model.StopBusinessDayIncrementPageModel;
@@ -152,7 +153,13 @@ public class StopBusinessDayIncrementController
 
     private int getSelectedLeistungsart() {
 	String selectedItem = kindOfServiceComboBox.getSelectionModel().getSelectedItem();
-	return ChargeType.getLeistungsartForRep(selectedItem);
+	try {
+	    return ChargeType.getLeistungsartForRep(selectedItem);
+	} catch (InvalidChargeTypeRepresentationException e) {
+	    // This should never happen here, therefore we throw a RuntimeException
+	    e.printStackTrace();
+	    throw new RuntimeException(e);
+	}
     }
 
     private boolean isInputValid() {
