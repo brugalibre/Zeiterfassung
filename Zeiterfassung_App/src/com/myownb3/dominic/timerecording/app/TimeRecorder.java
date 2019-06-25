@@ -25,7 +25,7 @@ import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
  * @author Dominic
  */
 public class TimeRecorder {
-    public static final String VERSION = "1.4.5";
+    public static final String VERSION = "1.4.6";
     public static final TIME_TYPE GLOBAL_TIME_TYPE; // application wide use
 						    // TIME_TYPE that defines,
 						    // in what unit the time is

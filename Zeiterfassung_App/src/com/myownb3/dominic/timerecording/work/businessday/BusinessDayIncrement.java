@@ -258,16 +258,16 @@ public class BusinessDayIncrement {
 
     /**
      * Returns <code>true</code> if this {@link BusinessDayIncrement} has started
-     * before the given date. This method returns <code>true</code> if this {@link BusinessDayIncrement}
+     * before the given date. This method returns <code>false</code> if this {@link BusinessDayIncrement}
      * was created on the same day the given Time instance has.
      * 
      * @param time2Check the {@link Time} to check
-     * @return <code>true</code> if this {@link BusinessDayIncrement} was created. Otherwise return <code>false</code>
+     * @return <code>true</code> if this {@link BusinessDayIncrement} was created bevore the given date. Otherwise return <code>false</code>
       */
     public boolean isBefore(Time time2Check) {
 
 	long days = time2Check.getDays();
 	Time bdTime = new Time(date.getTime());
-	return days < bdTime.getDays();
+	return days > bdTime.getDays();
     }
 }
