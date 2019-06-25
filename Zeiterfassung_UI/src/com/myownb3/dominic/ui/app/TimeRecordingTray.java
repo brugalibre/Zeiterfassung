@@ -7,7 +7,6 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -64,12 +63,6 @@ public class TimeRecordingTray {
 
 	trayIcon.addMouseMotionListener(getMouseMotionListener());
 	trayIcon.addMouseListener(getMouseListener());
-	trayIcon.addActionListener(event-> handleActionEvent (event));
-    }
-
-    private void handleActionEvent(ActionEvent event) {
-	
-	System.err.println();
     }
 
     private void showOverviewView() {
@@ -288,7 +281,6 @@ public class TimeRecordingTray {
      */
     public void displayMessage(String messageTitle, String message, MessageType messageType) {
 
-	trayIcon.addActionListener(event -> handleActionEvent(event));
 	trayIcon.displayMessage(messageTitle, message, getTryIconErrorForMessageType(messageType));
     }
     
