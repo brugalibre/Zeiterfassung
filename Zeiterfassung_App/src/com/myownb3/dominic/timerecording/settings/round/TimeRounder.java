@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import com.myownb3.dominic.timerecording.settings.round.exception.RounderInitException;
+import com.myownb3.dominic.timerecording.settings.round.exception.RounderStoreValueException;
 
 /**
  * @author Dominic
@@ -64,6 +65,7 @@ public class TimeRounder {
 	    prop.store(new FileOutputStream(TURBO_BUCHER_PROPERTIES), null);
 	} catch (Exception e) {
 	    e.printStackTrace();
+	    throw new RounderStoreValueException(e);
 	}
     }
 
