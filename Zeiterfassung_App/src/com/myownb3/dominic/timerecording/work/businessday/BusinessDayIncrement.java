@@ -262,7 +262,7 @@ public class BusinessDayIncrement {
      * was created on the same day the given Time instance has.
      * 
      * @param time2Check the {@link Time} to check
-     * @return <code>true</code> if this {@link BusinessDayIncrement} was created bevore the given date. Otherwise return <code>false</code>
+     * @return <code>true</code> if this {@link BusinessDayIncrement} was created before the given date. Otherwise return <code>false</code>
       */
     public boolean isBefore(Time time2Check) {
 

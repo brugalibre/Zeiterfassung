@@ -100,8 +100,9 @@ public class TimeRecordingTray {
     }
 
     /**
-     * @param thread
-     * @param thrown
+     * Shows the given {@link Throwable}
+     * @param thread the thread which caught the throable
+     * @param thrown the thrown throable
      */
     public void showException(Thread thread, Throwable thrown) {
 	ExceptionUtil.showException(thread, thrown);
