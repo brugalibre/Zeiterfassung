@@ -61,10 +61,6 @@ public class TimeRecordingLauncher extends Application {
 	}
     }
 
-    /**
-     * @param timeRecordingTray
-     * @return
-     */
     private static CallbackHandler getCallbackHandler(TimeRecordingTray timeRecordingTray) {
 
 	return new CallbackHandler() {
