@@ -47,7 +47,7 @@ public class ContentSelector {
 	appendTitleHeaderCells(builder, bussinessDay);
 
 	// = For each 'Ticket' or Increment of an entire Day
-	for (BusinessDayInc4Export inc : getNotChargedIncrements(bussinessDay)) {
+	for (BusinessDayInc4Export inc : bussinessDay.getBusinessDayIncrements()) {
 	    builder.append(TextLabel.TICKET + ": ");
 	    builder.append(inc.getTicketNumber());
 	    builder.append(CONTENT_SEPPARATOR);
