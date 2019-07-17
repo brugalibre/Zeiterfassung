@@ -59,7 +59,7 @@ public class TimeRounder {
 
     private void saveValueToProperties(RoundMode roundMode) {
 	Properties prop = new Properties();
-	try (InputStream resourceStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(TURBO_BUCHER_PROPERTIES)) {
+	try (InputStream resourceStream = new FileInputStream(TURBO_BUCHER_PROPERTIES)) {
 	    prop.load(resourceStream);
 	    prop.put(RoundMode.PROPERTY_KEY, String.valueOf(roundMode.getAmount()));
 	    prop.store(new FileOutputStream(TURBO_BUCHER_PROPERTIES), null);
