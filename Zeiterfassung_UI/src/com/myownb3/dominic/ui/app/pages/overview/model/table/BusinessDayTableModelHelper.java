@@ -187,7 +187,7 @@ public class BusinessDayTableModelHelper {
 	businessDayIncTableCellValue.setTicketNumber(bussinessDayIncremental.getTicketNumber());
 
 	if (isDescriptionTitleNecessary) {
-	    String cellValue = StringUtil.isNotEmptyOrNull(bussinessDayIncremental.getDescription())
+	    String cellValue = bussinessDayIncremental.hasDescription()
 		    ? bussinessDayIncremental.getDescription()
 		    : "";
 	    businessDayIncTableCellValue.setDescription(cellValue);

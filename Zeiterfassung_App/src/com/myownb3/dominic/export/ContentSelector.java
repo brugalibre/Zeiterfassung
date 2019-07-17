@@ -13,7 +13,6 @@ import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
 import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export;
-import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * @author Dominic
@@ -51,7 +50,7 @@ public class ContentSelector {
 	    builder.append(TextLabel.TICKET + ": ");
 	    builder.append(inc.getTicketNumber());
 	    builder.append(CONTENT_SEPPARATOR);
-	    if (StringUtil.isNotEmptyOrNull(inc.getDescription())) {
+	    if (inc.hasDescription()) {
 		builder.append(inc.getDescription());
 		builder.append(CONTENT_SEPPARATOR);
 	    }
@@ -149,7 +148,7 @@ public class ContentSelector {
 	    builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 
 	    builder.append(bussinessDay.getDateRep());
-	    if (StringUtil.isNotEmptyOrNull(inc.getDescription())) {
+	    if (inc.hasDescription()) {
 		builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 		builder.append(inc.getDescription());
 	    }
