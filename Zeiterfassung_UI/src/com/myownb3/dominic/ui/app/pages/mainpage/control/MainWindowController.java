@@ -103,7 +103,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	    dispose();
 	    break;
 	case RESUME:
-	    TimeRecorder.resume();
+	    TimeRecorder.INSTANCE.resume();
 	    dispose();
 	    break;
 	case FINISH:

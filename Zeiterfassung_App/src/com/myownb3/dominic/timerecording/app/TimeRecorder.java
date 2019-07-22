@@ -25,23 +25,29 @@ import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
  * @author Dominic
  */
 public class TimeRecorder {
-    public static final String VERSION = "1.4.6";
-    public static final TIME_TYPE GLOBAL_TIME_TYPE; // application wide use
-						    // TIME_TYPE that defines,
-						    // in what unit the time is
-						    // calculated
-    private static WorkStates currentState; // either it is working, or not
-					    // working
-    public static BusinessDay businessDay;
-    private static CallbackHandler callbackHandler;
 
-    static {
-	GLOBAL_TIME_TYPE = TIME_TYPE.HOUR;
+    /**
+     * The singleton instance of this class
+     */
+    public static final TimeRecorder INSTANCE = new TimeRecorder();
+    
+    /**
+     * The version of the application
+     */
+    public static final String VERSION = "1.4.6";
+  
+    private BusinessDay businessDay;
+    private CallbackHandler callbackHandler;
+    private WorkStates currentState;
+    private TIME_TYPE timeType; 
+
+    private TimeRecorder() {
+	timeType = TIME_TYPE.HOUR;
 	currentState = WorkStates.NOT_WORKING;
 	businessDay = new BusinessDay();
     }
 
-    public static boolean handleUserInteraction() {
+    public boolean handleUserInteraction() {
 	switch (currentState) {
 	case NOT_WORKING:
 	    tryStartIfPossible();
@@ -55,7 +61,7 @@ public class TimeRecorder {
 	}
     }
 
-    private static void tryStartIfPossible() {
+    private void tryStartIfPossible() {
 	if (businessDay.hasElementsFromPrecedentDays()) {
 	    callbackHandler
 		    .showMessage(Message.of(MessageType.ERROR, null, TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS));
@@ -64,13 +70,13 @@ public class TimeRecorder {
 	}
     }
 
-    public static void stop() {
+    public void stop() {
 	businessDay.stopCurrentIncremental();
 	currentState = WorkStates.NOT_WORKING;
 	callbackHandler.onStop();
     }
 
-    private static void start() {
+    private void start() {
 	if (currentState == WorkStates.WORKING) {
 	    return;
 	}
@@ -79,45 +85,45 @@ public class TimeRecorder {
 	callbackHandler.onStart();
     }
 
-    public static void resume() {
+    public void resume() {
 
 	currentState = WorkStates.WORKING;
 	businessDay.resumeLastIncremental();
 	callbackHandler.onResume();
     }
 
-    public static void setCallbackHandler(CallbackHandler callbackHandler) {
-	TimeRecorder.callbackHandler = callbackHandler;
+    public void setCallbackHandler(CallbackHandler callbackHandler) {
+	this.callbackHandler = callbackHandler;
     }
 
-    public static BusinessDay getBussinessDay() {
+    public BusinessDay getBussinessDay() {
 	return businessDay;
     }
 
     /**
      * removes all recorded {@link BusinessDayIncrement}
      */
-    public static void clear() {
+    public void clear() {
 	businessDay.clearFinishedIncrements();
     }
 
     /**
     * 
     */
-    public static void export() {
+    public void export() {
 	List<String> content = ContentSelector.INSTANCE.collectContent(BusinessDay4Export.of(businessDay));
 	FileExporter.INTANCE.export(content);
     }
 
     /**
-     * Return a String, which represents the current state and shows informations
-     * according to this
+     * Return a String, which represents the current state and shows
+     * informations according to this
      * 
-     * @return a String, which represents the current state and shows informations
-     *         according to this
+     * @return a String, which represents the current state and shows
+     *         informations according to this
      * @see WorkStates
      */
-    public static String getInfoStringForState() {
+    public String getInfoStringForState() {
 	switch (currentState) {
 	case NOT_WORKING:
 	    return businessDay.getCapturingInactiveSinceMsg();
@@ -129,11 +135,13 @@ public class TimeRecorder {
     }
 
     /**
-     * Return <code>true</code> if there is any content, <code>false</code> if not
+     * Return <code>true</code> if there is any content, <code>false</code> if
+     * not
      * 
-     * @return <code>true</code> if there is any content, <code>false</code> if not
+     * @return <code>true</code> if there is any content, <code>false</code> if
+     *         not
      */
-    public static boolean hasContent() {
+    public boolean hasContent() {
 	return businessDay.getTotalDuration() > 0f;
     }
 
@@ -145,22 +153,31 @@ public class TimeRecorder {
      *         element which is not yed charged. Otherwise returns
      *         <code>false</code>
      */
-    public static boolean hasNotChargedElements() {
+    public boolean hasNotChargedElements() {
 	return businessDay.hasNotChargedElements();
     }
 
     /**
-     * Collects and export the necessary data which is used by the TurobBucher to
-     * charge After the tuber-bucher- app is invoked in order to do actual charge
+     * Collects and export the necessary data which is used by the TurobBucher
+     * to charge After the tuber-bucher- app is invoked in order to do actual
+     * charge
      * 
-     * @return <code>true</code> if there was actually a booking process or <code>false</code> if there wasn't anything to do
+     * @return <code>true</code> if there was actually a booking process or
+     *         <code>false</code> if there wasn't anything to do
      */
-    public static boolean book() {
+    public boolean book() {
 	if (businessDay.hasNotChargedElements()) {
 	    BookerHelper helper = new BookerHelper(businessDay);
 	    helper.book();
 	    return true;
 	}
 	return false;
+    }
+
+    /**
+     * @return the current {@link TIME_TYPE} of this {@link TimeRecorder}
+     */
+    public TIME_TYPE getTimeType() {
+	return timeType;
     }
 }

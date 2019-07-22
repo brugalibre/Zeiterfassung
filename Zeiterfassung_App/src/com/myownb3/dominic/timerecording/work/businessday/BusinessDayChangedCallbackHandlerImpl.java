@@ -12,20 +12,20 @@ public class BusinessDayChangedCallbackHandlerImpl implements BusinessDayChanged
 
     @Override
     public void handleBusinessDayIncrementAdd(BusinessDayIncrementAdd businessDayIncrementAdd) {
-	BusinessDay businessDay = TimeRecorder.getBussinessDay();
+	BusinessDay businessDay = TimeRecorder.INSTANCE.getBussinessDay();
 	businessDay.addBusinessIncrement(businessDayIncrementAdd);
     }
     
     @Override
     public void handleBusinessDayIncrementDeleted(int index) {
-        BusinessDay businessDay = TimeRecorder.getBussinessDay();
+        BusinessDay businessDay = TimeRecorder.INSTANCE.getBussinessDay();
         businessDay.removeIncrementAtIndex(index);
     }
     
     @Override
     public void handleBusinessDayChanged(ChangedValue changeValue) {
 
-	BusinessDay businessDay = TimeRecorder.getBussinessDay();
+	BusinessDay businessDay = TimeRecorder.INSTANCE.getBussinessDay();
 
 	Optional<BusinessDayIncrement> businessDayIncOpt = businessDay
 		.getBusinessIncrement(changeValue.getSequence());
