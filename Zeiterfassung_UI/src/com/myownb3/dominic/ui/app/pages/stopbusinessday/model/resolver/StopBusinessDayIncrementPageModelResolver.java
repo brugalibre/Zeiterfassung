@@ -19,7 +19,7 @@ public class StopBusinessDayIncrementPageModelResolver
     @Override
     public StopBusinessDayIncrementPageModel resolvePageVO(StopBusinessDayIncrementPageModel inPageModel) {
 
-	BusinessDayIncrement currentBussinessDayIncremental = TimeRecorder.getBussinessDay()
+	BusinessDayIncrement currentBussinessDayIncremental = TimeRecorder.INSTANCE.getBussinessDay()
 		.getCurrentBussinessDayIncremental();
 	if (inPageModel == null) {
 	    return new StopBusinessDayIncrementPageModel(BusinessDayInc4Export.of(currentBussinessDayIncremental));

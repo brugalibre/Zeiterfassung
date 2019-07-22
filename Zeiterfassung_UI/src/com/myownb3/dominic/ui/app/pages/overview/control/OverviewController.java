@@ -175,10 +175,10 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	    mainWindowController.clearBusinessDayContents();
 	    mainWindowController.dispose();
 	} else if (actionEvent.getSource() == bookButton) {
-	    TimeRecorder.book();
+	    TimeRecorder.INSTANCE.book();
 	    show();
 	} else if (actionEvent.getSource() == exportButton) {
-	    TimeRecorder.export();
+	    TimeRecorder.INSTANCE.export();
 	}
     }
 

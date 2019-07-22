@@ -45,7 +45,7 @@ public class TimeSnippet {
     public void addAdditionallyTime(String newEndAsString) throws NumberFormatException {
 	float additionallyTime = NumberFormat.parseFloat(newEndAsString) - getDuration();
 
-	long additionallyDuration = (long) (Time.getTimeRefactorValue(TimeRecorder.GLOBAL_TIME_TYPE)
+	long additionallyDuration = (long) (Time.getTimeRefactorValue(TimeRecorder.INSTANCE.getTimeType())
 		* additionallyTime);
 	setEndTimeStamp(new Time(getEndTimeStamp().getTime() + additionallyDuration));
     }
@@ -83,7 +83,7 @@ public class TimeSnippet {
      * @return the amount of minutes between the start, and end-point
      */
     public float getDuration() {
-	return getDuration(TimeRecorder.GLOBAL_TIME_TYPE);
+	return getDuration(TimeRecorder.INSTANCE.getTimeType());
     }
 
     public String getDurationRep() {

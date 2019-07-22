@@ -17,8 +17,8 @@ public class OverviewPageModelResolver implements PageModelResolver<OverviewPage
     @Override
     public OverviewPageModel resolvePageVO(OverviewPageModel inPageModel) {
 	if (inPageModel == null) {
-	    return new OverviewPageModel(BusinessDay4Export.of(TimeRecorder.getBussinessDay()));
+	    return new OverviewPageModel(BusinessDay4Export.of(TimeRecorder.INSTANCE.getBussinessDay()));
 	}
-	return OverviewPageModel.of(inPageModel, BusinessDay4Export.of(TimeRecorder.getBussinessDay()));
+	return OverviewPageModel.of(inPageModel, BusinessDay4Export.of(TimeRecorder.INSTANCE.getBussinessDay()));
     }
 }

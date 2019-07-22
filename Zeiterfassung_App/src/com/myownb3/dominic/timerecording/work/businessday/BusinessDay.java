@@ -157,7 +157,7 @@ public class BusinessDay {
     }
 
     public float getTotalDuration() {
-	return getTotalDuration(TimeRecorder.GLOBAL_TIME_TYPE);
+	return getTotalDuration(TimeRecorder.INSTANCE.getTimeType());
     }
 
     public BusinessDayIncrement getCurrentBussinessDayIncremental() {

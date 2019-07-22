@@ -95,8 +95,8 @@ public class TimeRecordingTray {
      * Updates the states of the button & elements
      */
     public void updateUIStates() {
-	showHoursItem.setEnabled(TimeRecorder.hasContent());
-	startTurboBucher.setEnabled(TimeRecorder.hasNotChargedElements());
+	showHoursItem.setEnabled(TimeRecorder.INSTANCE.hasContent());
+	startTurboBucher.setEnabled(TimeRecorder.INSTANCE.hasNotChargedElements());
     }
 
     /**
@@ -109,7 +109,7 @@ public class TimeRecordingTray {
     }
 
     public void clearBusinessDayContents() {
-	TimeRecorder.clear();
+	TimeRecorder.INSTANCE.clear();
 	showHoursItem.setEnabled(false);
 	startTurboBucher.setEnabled(false);
     }
@@ -131,7 +131,7 @@ public class TimeRecordingTray {
     }
 
     private void book() {
-	boolean wasBooked = TimeRecorder.book();
+	boolean wasBooked = TimeRecorder.INSTANCE.book();
 	if (wasBooked){
 	    displayMessage(null, TextLabel.SUCCESSFULLY_CHARGED_TEXT, MessageType.INFORMATION);
 	}
@@ -164,7 +164,7 @@ public class TimeRecordingTray {
 
 	    @Override
 	    public void mouseMoved(MouseEvent arg0) {
-		trayIcon.setToolTip(TimeRecorder.getInfoStringForState());
+		trayIcon.setToolTip(TimeRecorder.INSTANCE.getInfoStringForState());
 	    }
 
 	    @Override
@@ -198,7 +198,7 @@ public class TimeRecordingTray {
 
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1 && TimeRecorder.handleUserInteraction()) {
+		if (e.getButton() == MouseEvent.BUTTON1 && TimeRecorder.INSTANCE.handleUserInteraction()) {
 		    showInputMask();
 		}
 	    }
@@ -268,7 +268,7 @@ public class TimeRecordingTray {
 	    try {
 		UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 	    } catch (Exception e) {
-		throw new RuntimeException(e);
+		throw new ApplicationLaunchException(e);
 	    }
 	}
     }

@@ -37,7 +37,7 @@ public class TimeRecordingLauncher extends Application {
 	TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
 	CallbackHandler callbackHandler = getCallbackHandler(timeRecordingTray);
 
-	TimeRecorder.setCallbackHandler(callbackHandler);
+	TimeRecorder.INSTANCE.setCallbackHandler(callbackHandler);
 	GlobalExceptionHandler.registerHandler(callbackHandler);
 
 	initApplication();
@@ -99,8 +99,8 @@ public class TimeRecordingLauncher extends Application {
      */
     private static Thread createShutdownHook() {
 	return new Thread(() -> {
-	    if (TimeRecorder.hasContent()) {
-		TimeRecorder.export();
+	    if (TimeRecorder.INSTANCE.hasContent()) {
+		TimeRecorder.INSTANCE.export();
 	    }
 	});
     }
