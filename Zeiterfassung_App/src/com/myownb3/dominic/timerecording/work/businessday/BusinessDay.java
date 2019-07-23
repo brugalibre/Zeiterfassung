@@ -46,9 +46,6 @@ public class BusinessDay {
 	initialize();
     }
 
-    /**
-    * 
-    */
     private void initialize() {
 	increments = new CopyOnWriteArrayList<BusinessDayIncrement>();
 	currentBussinessDayIncremental = new BusinessDayIncrement(new Date());
@@ -75,49 +72,12 @@ public class BusinessDay {
 
     /**
      * Stops the current incremental and add the
-     * {@link #currentBussinessDayIncremental} to the list with increments. After
-     * that, a new incremental is created
+     * {@link #currentBussinessDayIncremental} to the list with increments.
+     * After that, a new incremental is created
      */
     public void stopCurrentIncremental() {
 	Time endTimeStamp = new Time(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
 	currentBussinessDayIncremental.stopCurrentTimeSnippet(endTimeStamp);
-    }
-
-    /**
-     * If there exist two or more {@link BusinessDayIncrement} with the same
-     * {@link BusinessDayIncrement#getDescription()} the {@link TimeSnippet} are
-     * moved from the first {@link BusinessDayIncrement} to the other
-     */
-    public void checkForRedundancys() {
-	for (BusinessDayIncrement incToCompareWith : increments) {
-	    for (BusinessDayIncrement anotherIncrement : getIncrementsToCheck(incToCompareWith)) {
-		if (incToCompareWith.isSame(anotherIncrement)) {
-		    incToCompareWith.transferAllTimeSnipetsToBussinessDayIncrement(anotherIncrement);
-		}
-	    }
-	}
-	deleteEmptyIncrements();
-    }
-
-    /**
-     * don't check the increment with itself!
-     */
-    private List<BusinessDayIncrement> getIncrementsToCheck(BusinessDayIncrement incToCompareWith) {
-	return increments.stream()//
-		.filter(inc -> inc != incToCompareWith)//
-		.collect(Collectors.toList());
-    }
-
-    /**
-     * After {@link TimeSnippet} are moved, the {@link BusinessDayIncrement} with no
-     * {@link TimeSnippet} are removed
-     */
-    private void deleteEmptyIncrements() {
-	for (BusinessDayIncrement inc : increments) {
-	    if (inc.getTimeSnippets().isEmpty()) {
-		increments.remove(inc);
-	    }
-	}
     }
 
     public void flagBusinessDayAsCharged() {
@@ -136,19 +96,6 @@ public class BusinessDay {
     public boolean hasNotChargedElements() {
 	return increments.stream()//
 		.anyMatch(bDayInc -> !bDayInc.isCharged());
-    }
-
-    private void createNewIncremental() {
-	currentBussinessDayIncremental = new BusinessDayIncrement(new Date());
-    }
-
-    public float getTotalDuration(TIME_TYPE type) {
-	float sum = 0;
-
-	for (BusinessDayIncrement incremental : increments) {
-	    sum = sum + incremental.getTotalDuration(type);
-	}
-	return NumberFormat.parseFloat(NumberFormat.format(sum));
     }
 
     /**
@@ -185,7 +132,123 @@ public class BusinessDay {
 	return increments.get(0).getDate();
     }
 
-    /* package */ Optional<BusinessDayIncrement> getBusinessIncrement(int orderNr) {
+    /**
+     * Removes the {@link BusinessDayIncrement} at the given index. If there is
+     * no {@link BusinessDayIncrement} for this index nothing is done
+     * 
+     * @param index
+     *            the given index
+     */
+    public void removeIncrementAtIndex(int index) {
+	if (index >= 0 && index < increments.size()) {
+	    increments.remove(index);
+	}
+    }
+
+    /**
+     * Creates and adds a new {@link BusinessDayIncrement} for the given
+     * {@link BusinessDayIncrementAdd}
+     * 
+     * @param update
+     *            the {@link BusinessDayIncrementAdd} which defines the new
+     *            {@link BusinessDayIncrement}
+     */
+    public void addBusinessIncrement(BusinessDayIncrementAdd update) {
+	BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(update);
+	increments.add(newBusinessDayInc);
+	checkForRedundancys();
+    }
+
+    /**
+     * According to the given {@link ChangedValue} the corresponding
+     * {@link BusinessDayIncrement} evaluated. If there is one then the value is
+     * changed
+     * 
+     * @param changeValue
+     *            the param which defines what value is changed
+     * @see ValueTypes
+     */
+    public void changeBusinesDayIncrement(ChangedValue changeValue) {
+	Optional<BusinessDayIncrement> businessDayIncOpt = getBusinessIncrement(changeValue.getSequence());
+	businessDayIncOpt.ifPresent(businessDayIncrement -> {
+	    handleBusinessDayChangedInternal(businessDayIncrement, changeValue);
+	});
+    }
+
+    /**
+     * Verifies if there is any {@link BusinessDayIncrement} which was recorded
+     * e.g. during a preceding day
+     * 
+     * @return <code>true</code> if there is at least one
+     *         {@link BusinessDayIncrement} which was recorded on a preceding
+     *         day or <code>false</code> if not
+     */
+    public boolean hasElementsFromPrecedentDays() {
+	Time now = new Time();
+	return increments.stream().anyMatch(bDayInc -> bDayInc.isBefore(now));
+    }
+
+    /**
+     * Returns a message since when the capturing is active
+     * 
+     * @return the message since when the capturing is active
+     */
+    public String getCapturingActiveSinceMsg() {
+	TimeSnippet startPoint = currentBussinessDayIncremental.getCurrentTimeSnippet();
+	String time = startPoint.getDuration() > 0 ? " (" + startPoint.getDuration() + "h)" : "";
+	return TextLabel.CAPTURING_ACTIVE_SINCE + " " + startPoint.getBeginTimeStamp() + time;
+    }
+
+    /**
+     * @return a message since when the capturing is inactive
+     */
+    public String getCapturingInactiveSinceMsg() {
+	TimeSnippet endPoint = getLastTimeSnippet();
+	if (endPoint != null) {
+	    return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INCTIVE_SINCE + " "
+		    + endPoint.getEndTimeStamp();
+	}
+	return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE;
+    }
+
+    /**
+     * If there exist two or more {@link BusinessDayIncrement} with the same
+     * {@link BusinessDayIncrement#getDescription()} the {@link TimeSnippet} are
+     * moved from the first {@link BusinessDayIncrement} to the other
+     */
+    private void checkForRedundancys() {
+	for (BusinessDayIncrement incToCompareWith : increments) {
+	    for (BusinessDayIncrement anotherIncrement : getIncrementsToCheck(incToCompareWith)) {
+		if (incToCompareWith.isSame(anotherIncrement)) {
+		    incToCompareWith.transferAllTimeSnipetsToBussinessDayIncrement(anotherIncrement);
+		}
+	    }
+	}
+	deleteEmptyIncrements();
+    }
+
+    /**
+     * don't check the increment with itself!
+     */
+    private List<BusinessDayIncrement> getIncrementsToCheck(BusinessDayIncrement incToCompareWith) {
+	return increments.stream()//
+		.filter(inc -> inc != incToCompareWith)//
+		.collect(Collectors.toList());
+    }
+
+    /**
+     * After {@link TimeSnippet} are moved, the {@link BusinessDayIncrement}
+     * with no {@link TimeSnippet} are removed
+     */
+    private void deleteEmptyIncrements() {
+	for (BusinessDayIncrement inc : increments) {
+	    if (inc.getTimeSnippets().isEmpty()) {
+		increments.remove(inc);
+	    }
+	}
+    }
+
+    private Optional<BusinessDayIncrement> getBusinessIncrement(int orderNr) {
 	BusinessDayIncrement businessDayIncremental = null;
 	for (int i = 0; i < increments.size(); i++) {
 	    if (orderNr == i + 1) {
@@ -196,85 +259,16 @@ public class BusinessDay {
     }
 
     /**
-     * Removes the {@link BusinessDayIncrement} at the given index. If there is no {@link BusinessDayIncrement}
-     * for this index nothing is done
-     * @param index the given index
-     */
-    public void removeIncrementAtIndex(int index) {
-	if (index >= 0 && index < increments.size()){
-	    increments.remove(index);
-	}
-    }
-
-    /**
-     * Creates and adds a new {@link BusinessDayIncrement} for the given {@link BusinessDayIncrementAdd} 
-     * @param update the {@link BusinessDayIncrementAdd} which defines the new {@link BusinessDayIncrement}
-     */
-    public void addBusinessIncrement(BusinessDayIncrementAdd update) {
-	BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(update);
-	increments.add(newBusinessDayInc);
-	checkForRedundancys();
-    }
-
-    /**
-     * According to the given {@link ChangedValue} the corresponding {@link BusinessDayIncrement} evaluated. If there is one
-     * then the value is changed
-     * @param changeValue the param which defines what value is changed
-     * @see ValueTypes
-     */
-    public void changeBusinesDayIncrement(ChangedValue changeValue) {
-	Optional<BusinessDayIncrement> businessDayIncOpt = getBusinessIncrement(changeValue.getSequence());
-	businessDayIncOpt.ifPresent(businessDayIncrement -> {
-	    handleBusinessDayChangedInternal(businessDayIncrement, changeValue);
-	});
-    }
-    
-    /**
-     * Returns the last {@link TimeSnippet} which was added to this {@link BusinessDay}
+     * Returns the last {@link TimeSnippet} which was added to this
+     * {@link BusinessDay}
      */
     private TimeSnippet getLastTimeSnippet() {
-	return increments.stream()
-		.map(BusinessDayIncrement::getTimeSnippets)
-		.flatMap(List::stream)
-		.sorted(new TimeStampComparator().reversed())
-		.findFirst()
-		.orElse(null);
+	return increments.stream().map(BusinessDayIncrement::getTimeSnippets).flatMap(List::stream)
+		.sorted(new TimeStampComparator().reversed()).findFirst().orElse(null);
     }
 
-    /**
-     * Verifies if there is any {@link BusinessDayIncrement} which was recorded e.g.
-     * during a preceding day
-     * 
-     * @return <code>true</code> if there is at least one
-     *         {@link BusinessDayIncrement} which was recorded on a preceding day or
-     *         <code>false</code> if not
-     */
-    public boolean hasElementsFromPrecedentDays() {
-	Time now = new Time();
-	return increments.stream()
-		.anyMatch(bDayInc -> bDayInc.isBefore(now));
-    }
-    
-    /**
-     * Returns a message since when the capturing is active
-     * @return the  message since when the capturing is active
-     */
-    public String getCapturingActiveSinceMsg() {
-        TimeSnippet startPoint = currentBussinessDayIncremental.getCurrentTimeSnippet();
-        String time = startPoint.getDuration() > 0 ? " (" + startPoint.getDuration() + "h)" : "";
-        return TextLabel.CAPTURING_ACTIVE_SINCE + " " + startPoint.getBeginTimeStamp() + time;
-    }
-
-    public String getCapturingInactiveSinceMsg() {
-        TimeSnippet endPoint = getLastTimeSnippet();
-        if (endPoint != null) {
-        return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INCTIVE_SINCE + " "
-        	+ endPoint.getEndTimeStamp();
-        }
-        return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE;
-    }
-
-    private void handleBusinessDayChangedInternal(BusinessDayIncrement businessDayIncremental,	    ChangedValue changedValue) {
+    private void handleBusinessDayChangedInternal(BusinessDayIncrement businessDayIncremental,
+	    ChangedValue changedValue) {
 
 	switch (changedValue.getValueTypes()) {
 	case DESCRIPTION:
@@ -300,8 +294,22 @@ public class BusinessDay {
 	    }
 	    break;
 	default:
-	    throw new UnsupportedOperationException ("ChargeType '" + changedValue.getValueTypes() + "' not implemented!");
+	    throw new UnsupportedOperationException(
+		    "ChargeType '" + changedValue.getValueTypes() + "' not implemented!");
 	}
 	checkForRedundancys();
+    }
+
+    private void createNewIncremental() {
+	currentBussinessDayIncremental = new BusinessDayIncrement(new Date());
+    }
+
+    private float getTotalDuration(TIME_TYPE type) {
+	float sum = 0;
+
+	for (BusinessDayIncrement incremental : increments) {
+	    sum = sum + incremental.getTotalDuration(type);
+	}
+	return NumberFormat.parseFloat(NumberFormat.format(sum));
     }
 }
