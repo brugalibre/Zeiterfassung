@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementAdd;
+import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
+import com.myownb3.dominic.timerecording.charge.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement.TimeStampComparator;
 import com.myownb3.dominic.timerecording.work.date.Time;
@@ -205,7 +207,8 @@ public class BusinessDay {
     }
 
     /**
-     * @param update
+     * Creates and adds a new {@link BusinessDayIncrement} for the given {@link BusinessDayIncrementAdd} 
+     * @param update the {@link BusinessDayIncrementAdd} which defines the new {@link BusinessDayIncrement}
      */
     public void addBusinessIncrement(BusinessDayIncrementAdd update) {
 	BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(update);
@@ -213,6 +216,19 @@ public class BusinessDay {
 	checkForRedundancys();
     }
 
+    /**
+     * According to the given {@link ChangedValue} the corresponding {@link BusinessDayIncrement} evaluated. If there is one
+     * then the value is changed
+     * @param changeValue the param which defines what value is changed
+     * @see ValueTypes
+     */
+    public void changeBusinesDayIncrement(ChangedValue changeValue) {
+	Optional<BusinessDayIncrement> businessDayIncOpt = getBusinessIncrement(changeValue.getSequence());
+	businessDayIncOpt.ifPresent(businessDayIncrement -> {
+	    handleBusinessDayChangedInternal(businessDayIncrement, changeValue);
+	});
+    }
+    
     /**
      * Returns the last {@link TimeSnippet} which was added to this {@link BusinessDay}
      */
@@ -256,5 +272,36 @@ public class BusinessDay {
         	+ endPoint.getEndTimeStamp();
         }
         return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE;
+    }
+
+    private void handleBusinessDayChangedInternal(BusinessDayIncrement businessDayIncremental,	    ChangedValue changedValue) {
+
+	switch (changedValue.getValueTypes()) {
+	case DESCRIPTION:
+	    businessDayIncremental.setDescription(changedValue.getNewValue());
+	    break;
+	case BEGIN:
+	    businessDayIncremental.updateBeginTimeSnippetAndCalculate(businessDayIncremental,
+		    changedValue.getFromUptoSequence(), changedValue.getNewValue());
+	    break;
+	case END:
+	    businessDayIncremental.updateEndTimeSnippetAndCalculate(businessDayIncremental,
+		    changedValue.getFromUptoSequence(), changedValue.getNewValue());
+	    break;
+	case TICKET_NR:
+	    businessDayIncremental.setTicketNumber(changedValue.getNewValue());
+	    break;
+	case CHARGE_TYPE:
+	    try {
+		businessDayIncremental.setChargeType(changedValue.getNewValue());
+	    } catch (InvalidChargeTypeRepresentationException e) {
+		e.printStackTrace();
+		// ignore failures
+	    }
+	    break;
+	default:
+	    throw new UnsupportedOperationException ("ChargeType '" + changedValue.getValueTypes() + "' not implemented!");
+	}
+	checkForRedundancys();
     }
 }
