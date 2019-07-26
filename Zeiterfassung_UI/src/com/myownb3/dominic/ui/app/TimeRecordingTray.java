@@ -31,6 +31,7 @@ import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
 import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.ui.app.pages.mainpage.view.MainWindowPage;
+import com.myownb3.dominic.ui.app.settings.hotkey.HotKeyManager;
 import com.myownb3.dominic.ui.util.ExceptionUtil;
 import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
@@ -62,6 +63,8 @@ public class TimeRecordingTray {
 
 	createPopupMenu(settingsRoundMenu, exitItem);
 
+	HotKeyManager.INSTANCE.registerHotKey(() -> onHotKeyPressed());
+	
 	mainWindowPage = new MainWindowPage(this, primaryStage);
 
 	trayIcon.addMouseMotionListener(getMouseMotionListener());
@@ -145,6 +148,12 @@ public class TimeRecordingTray {
 	};
     }
 
+    private void onHotKeyPressed() {
+	if (TimeRecorder.INSTANCE.handleUserInteraction()) {
+	    showInputMask();
+	}
+    }
+    
     private void book() {
 	boolean wasBooked = TimeRecorder.INSTANCE.book();
 	if (wasBooked){
