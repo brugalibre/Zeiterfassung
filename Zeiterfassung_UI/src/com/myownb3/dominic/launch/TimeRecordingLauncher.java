@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import com.myownb3.dominic.launch.exception.ApplicationLaunchException;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
-import com.myownb3.dominic.timerecording.app.Message;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
@@ -35,7 +34,7 @@ public class TimeRecordingLauncher extends Application {
 	Runtime.getRuntime().addShutdownHook(createShutdownHook());
 
 	TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
-	CallbackHandler callbackHandler = getCallbackHandler(timeRecordingTray);
+	CallbackHandler callbackHandler = timeRecordingTray.getCallbackHandler();
 
 	TimeRecorder.INSTANCE.setCallbackHandler(callbackHandler);
 	GlobalExceptionHandler.registerHandler(callbackHandler);
@@ -59,38 +58,6 @@ public class TimeRecordingLauncher extends Application {
 		throw new ApplicationLaunchException(e);
 	    }
 	}
-    }
-
-    private static CallbackHandler getCallbackHandler(TimeRecordingTray timeRecordingTray) {
-
-	return new CallbackHandler() {
-	    
-	    @Override
-	    public void onStop() {
-		timeRecordingTray.stopWorking();
-	    }
-
-	    @Override
-	    public void onStart() {
-		timeRecordingTray.startWorking();
-	    }
-
-	    @Override
-	    public void onResume() {
-		timeRecordingTray.startWorking();
-	    }
-
-	    @Override
-	    public void onException(Throwable thrown, Thread thread) {
-		timeRecordingTray.showException(thread, thrown);
-	    }
-
-	    @Override
-	    public void showMessage(Message message) {
-		timeRecordingTray.displayMessage(message.getMessageTitle(),
-                        message.getMessage(), message.getMessageType());		
-	    }
-	};
     }
 
     /*

@@ -24,12 +24,15 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import com.myownb3.dominic.launch.exception.ApplicationLaunchException;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.app.Message;
 import com.myownb3.dominic.timerecording.app.MessageType;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
 import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.ui.app.pages.mainpage.view.MainWindowPage;
 import com.myownb3.dominic.ui.util.ExceptionUtil;
+import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -73,18 +76,12 @@ public class TimeRecordingTray {
 	Platform.runLater(() -> mainWindowPage.showInputMask());
     }
 
-    /**
-     * Starts or resume
-     */
-    public void startWorking() {
+    private void startWorking() {
 	trayIcon.setImage(PictureLibrary.getWorkingImageIcon());
 	updateUIStates();
     }
 
-    /**
-    * 
-    */
-    public void stopWorking() {
+    private void stopWorking() {
 	trayIcon.setImage(PictureLibrary.getNotWorkingImageIcon());
 	trayIcon.setToolTip(TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
 	showHoursItem.setEnabled(false);
@@ -104,7 +101,7 @@ public class TimeRecordingTray {
      * @param thread the thread which caught the throable
      * @param thrown the thrown throable
      */
-    public void showException(Thread thread, Throwable thrown) {
+    private void showException(Thread thread, Throwable thrown) {
 	ExceptionUtil.showException(thread, thrown);
     }
 
@@ -114,6 +111,56 @@ public class TimeRecordingTray {
 	startTurboBucher.setEnabled(false);
     }
 
+    /**
+     * @return the {@link CallbackHandler} which handles interaction between the {@link TimeRecordingTray} and the {@link TimeRecorder} or the {@link GlobalExceptionHandler}
+     */
+    public CallbackHandler getCallbackHandler() {
+
+	return new CallbackHandler() {
+
+	    @Override
+	    public void onStop() {
+		stopWorking();
+	    }
+
+	    @Override
+	    public void onStart() {
+		startWorking();
+	    }
+
+	    @Override
+	    public void onResume() {
+		startWorking();
+	    }
+
+	    @Override
+	    public void onException(Throwable thrown, Thread thread) {
+		showException(thread, thrown);
+	    }
+
+	    @Override
+	    public void showMessage(Message message) {
+		displayMessage(message.getMessageTitle(), message.getMessage(), message.getMessageType());
+	    }
+	};
+    }
+
+    private void book() {
+	boolean wasBooked = TimeRecorder.INSTANCE.book();
+	if (wasBooked){
+	    displayMessage(null, TextLabel.SUCCESSFULLY_CHARGED_TEXT, MessageType.INFORMATION);
+	}
+    }
+    
+    private void displayMessage(String messageTitle, String message, MessageType messageType) {
+
+	trayIcon.displayMessage(messageTitle, message, getTryIconErrorForMessageType(messageType));
+    }
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Create Content for UI
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
     private JMenuItem createExitMenu() {
 	JMenuItem exitItem = new JMenuItem(TextLabel.EXIT);
 
@@ -128,13 +175,6 @@ public class TimeRecordingTray {
 	startTurboBucher = new JMenuItem(TextLabel.CHARGE_LABEL);
 	startTurboBucher.addActionListener(actionEvent -> book());
 	startTurboBucher.setEnabled(false);
-    }
-
-    private void book() {
-	boolean wasBooked = TimeRecorder.INSTANCE.book();
-	if (wasBooked){
-	    displayMessage(null, TextLabel.SUCCESSFULLY_CHARGED_TEXT, MessageType.INFORMATION);
-	}
     }
 
     private void createShowHoursMenuItem() {
@@ -273,18 +313,6 @@ public class TimeRecordingTray {
 	}
     }
 
-    /**
-     * Shows the given message
-     * 
-     * @param messageTitle the title
-     * @param message      the message itself
-     * @param messageType  the type of message
-     */
-    public void displayMessage(String messageTitle, String message, MessageType messageType) {
-
-	trayIcon.displayMessage(messageTitle, message, getTryIconErrorForMessageType(messageType));
-    }
-    
     private java.awt.TrayIcon.MessageType getTryIconErrorForMessageType(MessageType messageType) {
 	
 	switch (messageType) {
