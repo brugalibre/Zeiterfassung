@@ -115,6 +115,8 @@ public class Time {
 	    return 60000;
 	case SEC:
 	    return 1000;
+	case MILI_SEC:
+	    return 1;
 	default:
 	    throw new RuntimeException("Unknown TIME_TYPE value '" + type + "'!");
 	}

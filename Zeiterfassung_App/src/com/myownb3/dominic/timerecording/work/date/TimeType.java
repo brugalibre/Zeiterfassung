@@ -11,6 +11,6 @@ package com.myownb3.dominic.timerecording.work.date;
  */
 public class TimeType {
     public enum TIME_TYPE {
-	HOUR, MIN, SEC,
+	HOUR, MIN, SEC, MILI_SEC,
     }
 }

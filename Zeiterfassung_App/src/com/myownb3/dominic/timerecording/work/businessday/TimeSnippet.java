@@ -145,6 +145,29 @@ public class TimeSnippet {
     }
 
     /**
+     * Creates a new {@link TimeSnippet} with the given {@link Time} as a begin
+     * time stamp. The duration of this new created {@link TimeSnippet} is the
+     * total duration of this current TimeSnipped divided by the given divisor
+     * 
+     * @param beginTimeStamp
+     *            the begin time stamp
+     * @param divisor
+     *            the divisor
+     * @return a new created {@link TimeSnippet}
+     */
+    public TimeSnippet createTimeStampForIncrement(Time beginTimeStamp, int divisor) {
+
+	float totalDuration = getDuration(TIME_TYPE.MILI_SEC);
+	long newDuration4Increment = (long) (totalDuration / divisor);
+
+	TimeSnippet currentTimeSnippet = new TimeSnippet(date);
+	Time currentEndTimeStamp = new Time(newDuration4Increment + beginTimeStamp.getTime());
+	currentTimeSnippet.setBeginTimeStamp(beginTimeStamp);
+	currentTimeSnippet.setEndTimeStamp(currentEndTimeStamp);
+	return currentTimeSnippet;
+    }
+
+    /**
      * Creates a copy of the given timeSnippet
      * 
      * @param otherTimeSnippet

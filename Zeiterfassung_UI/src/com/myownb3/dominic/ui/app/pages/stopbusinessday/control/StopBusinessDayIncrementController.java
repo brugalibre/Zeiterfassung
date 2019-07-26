@@ -3,6 +3,8 @@
  */
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.control;
 
+import static com.myownb3.dominic.ui.app.pages.stopbusinessday.util.StopBusinessDayUtil.areMultipleTicketsEntered;
+
 import java.awt.Toolkit;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -128,7 +130,6 @@ public class StopBusinessDayIncrementController
     private void dispose(FinishAction finishAction) {
 	mainWindowController.finishOrAbortAndDispose(finishAction);
 	amountOfHoursTextField.getStyleClass().remove(Styles.INVALID_INPUT_LABEL);
-	amountOfHoursTextField.getStyleClass().remove(Styles.INVALID_INPUT_HOVER_LABEL);
     }
 
     private void submit() {
@@ -138,9 +139,6 @@ public class StopBusinessDayIncrementController
 	    dispose(FinishAction.FINISH);
 	} else {
 	    Toolkit.getDefaultToolkit().beep();
-	    amountOfHoursTextField.getStyleClass().add(Styles.INVALID_INPUT_LABEL);
-	    amountOfHoursTextField.getStyleClass().add(Styles.INVALID_INPUT_HOVER_LABEL);
-	    amountOfHoursTextField.requestFocus();
 	}
     }
 
@@ -163,8 +161,17 @@ public class StopBusinessDayIncrementController
     }
 
     private boolean isInputValid() {
-	return new InputFieldVerifier().verify(amountOfHoursTextField)
+	boolean isBaseInputValid = new InputFieldVerifier().verify(amountOfHoursTextField)
 		&& kindOfServiceComboBox.getSelectionModel().getSelectedItem() != null;
+	String ticketsAsString = ticketNumberComboBox.getSelectionModel().getSelectedItem();
+	
+	boolean multipleTicketsEntered = areMultipleTicketsEntered(ticketsAsString);
+	if (multipleTicketsEntered) {
+
+	    boolean isDescriptionValid =  new InputFieldVerifier().verifyNotNull(descriptionComboBox);
+	    return isBaseInputValid && isDescriptionValid;
+	}
+	return isBaseInputValid;
     }
 
     @Override
