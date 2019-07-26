@@ -42,6 +42,7 @@
 .invalidLabel {
     -fx-border-color: red;
     -fx-background-radius:2;
+	-fx-border-radius:2;
     -fx-border-width: 1 1 1 1;
     -fx-background-insets: 1;
 	
@@ -54,6 +55,7 @@
 .invalidLabel:focused {
     -fx-border-color: red;
     -fx-background-radius:2;
+	-fx-border-radius:2;
     -fx-border-width: 1 1 1 1;
     -fx-background-insets: 1;
 	

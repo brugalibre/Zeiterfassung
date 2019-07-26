@@ -3,6 +3,8 @@
  */
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.model;
 
+import static com.myownb3.dominic.ui.app.pages.stopbusinessday.util.StopBusinessDayUtil.areMultipleTicketsEntered;
+
 import java.util.Date;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
@@ -14,6 +16,7 @@ import com.myownb3.dominic.timerecording.work.businessday.BusinessDayChangedCall
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
+import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
 import javafx.beans.property.Property;
@@ -179,14 +182,40 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
     /**
      * Adds the recorded informations as new {@link BusinessDayIncrement}
-     * @param kindOfService the kind of service
+     * 
+     * @param kindOfService
+     *            the kind of service
      */
     public void addIncrement2BusinessDay(int kindOfService) {
 
+	String ticketNoPropValue = ticketNoProperty.getValue();
+	boolean multipleTicketsEntered = areMultipleTicketsEntered(ticketNoPropValue);
+	if (multipleTicketsEntered) {
+	    addMultipleaIncrement2BusinessDay(kindOfService, ticketNoPropValue);
+	} else {
+	    addIncrement2BusinessDayInternal(kindOfService, ticketNoProperty.getValue(), timeSnippet);
+	}
+    }
+
+    private void addMultipleaIncrement2BusinessDay(int kindOfService, String ticketNoPropValue) {
+
+	String[] tickets = ticketNoPropValue.split(";");
+	Time currentBeginTimeStamp = timeSnippet.getBeginTimeStamp();
+
+	for (String ticket : tickets) {
+
+	    TimeSnippet currentTimeSnippet = timeSnippet.createTimeStampForIncrement(currentBeginTimeStamp, tickets.length);
+	    addIncrement2BusinessDayInternal(kindOfService, ticket, currentTimeSnippet);
+
+	    currentBeginTimeStamp = currentTimeSnippet.getEndTimeStamp();
+	}
+    }
+
+    private void addIncrement2BusinessDayInternal(int kindOfService, String ticketNr, TimeSnippet timeSnippet) {
 	BusinessDayIncrementAdd update = new BusinessDayIncrementAdd();
 	update.setTimeSnippet(timeSnippet);
 	update.setDescription(descriptionProperty.getValue());
-	update.setTicketNo(ticketNoProperty.getValue());
+	update.setTicketNo(ticketNr);
 	update.setKindOfService(kindOfService);
 
 	new BusinessDayChangedCallbackHandlerImpl().handleBusinessDayIncrementAdd(update);
