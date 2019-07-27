@@ -9,8 +9,8 @@ import java.util.Properties;
 
 import javax.swing.KeyStroke;
 
-import com.myownb3.dominic.timerecording.settings.round.exception.RounderInitException;
 import com.myownb3.dominic.ui.app.callback.UiCallbackHandler;
+import com.myownb3.dominic.ui.app.settings.hotkey.exception.HotKeyRegisterException;
 import com.tulskiy.keymaster.common.Provider;
 
 public class HotKeyManager {
@@ -27,10 +27,9 @@ public class HotKeyManager {
      * Registers the hot key to start or stop a recording with a combination of key pressing
      */
     public void registerHotKey(UiCallbackHandler callbackHandler) {
-
 	String hotKeyAsString = evalHotKey();
 	if (hotKeyAsString != null){
-	    Provider provider = Provider.getCurrentProvider(true);
+	    Provider provider = Provider.getCurrentProvider(false);
 	    provider.register(KeyStroke.getKeyStroke(hotKeyAsString),
 		    hotKey -> callbackHandler.onHotKeyPressed());
 	}
@@ -42,7 +41,7 @@ public class HotKeyManager {
  	   hotKey = evalHotKeyFromProperties(resourceStream);
  	} catch (IOException e) {
  	    e.printStackTrace();
- 	    throw new RounderInitException(e);
+ 	    throw new HotKeyRegisterException(e);
  	}
  	return hotKey;
      }

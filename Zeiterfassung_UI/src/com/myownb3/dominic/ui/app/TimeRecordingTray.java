@@ -54,21 +54,19 @@ public class TimeRecordingTray {
 	setLookAndFeel();
 
 	addTrayIconToSystemTray();
-	JMenu settingsRoundMenu = createSettingsMenu();
 
 	// Create a popup menu components
+	JMenu settingsRoundMenu = createSettingsMenu();
 	JMenuItem exitItem = createExitMenu();
 	createShowHoursMenuItem();
 	createStartTurboBucherMenuItem();
-
 	createPopupMenu(settingsRoundMenu, exitItem);
 
-	HotKeyManager.INSTANCE.registerHotKey(() -> onHotKeyPressed());
-	
 	mainWindowPage = new MainWindowPage(this, primaryStage);
 
 	trayIcon.addMouseMotionListener(getMouseMotionListener());
 	trayIcon.addMouseListener(getMouseListener());
+	HotKeyManager.INSTANCE.registerHotKey(() -> handleUserInteractionAndShowInputIfStopped());
     }
 
     private void showOverviewView() {
@@ -148,7 +146,7 @@ public class TimeRecordingTray {
 	};
     }
 
-    private void onHotKeyPressed() {
+    private void handleUserInteractionAndShowInputIfStopped() {
 	if (TimeRecorder.INSTANCE.handleUserInteraction()) {
 	    showInputMask();
 	}
@@ -247,8 +245,8 @@ public class TimeRecordingTray {
 
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1 && TimeRecorder.INSTANCE.handleUserInteraction()) {
-		    showInputMask();
+		if (e.getButton() == MouseEvent.BUTTON1) {
+		    handleUserInteractionAndShowInputIfStopped();
 		}
 	    }
 	};
