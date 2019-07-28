@@ -134,7 +134,7 @@ public class BusinessDayIncTableRowValue {
     public final String getChargeType() {
 	return this.chargeTypeProperty.get();
     }
-    
+
     public StringProperty chargeTypeProperty() {
 	return chargeTypeProperty;
     }

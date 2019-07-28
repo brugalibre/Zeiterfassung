@@ -72,8 +72,8 @@ public class BusinessDay {
 
     /**
      * Stops the current incremental and add the
-     * {@link #currentBussinessDayIncremental} to the list with increments.
-     * After that, a new incremental is created
+     * {@link #currentBussinessDayIncremental} to the list with increments. After
+     * that, a new incremental is created
      */
     public void stopCurrentIncremental() {
 	Time endTimeStamp = new Time(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
@@ -133,11 +133,10 @@ public class BusinessDay {
     }
 
     /**
-     * Removes the {@link BusinessDayIncrement} at the given index. If there is
-     * no {@link BusinessDayIncrement} for this index nothing is done
+     * Removes the {@link BusinessDayIncrement} at the given index. If there is no
+     * {@link BusinessDayIncrement} for this index nothing is done
      * 
-     * @param index
-     *            the given index
+     * @param index the given index
      */
     public void removeIncrementAtIndex(int index) {
 	if (index >= 0 && index < increments.size()) {
@@ -149,9 +148,8 @@ public class BusinessDay {
      * Creates and adds a new {@link BusinessDayIncrement} for the given
      * {@link BusinessDayIncrementAdd}
      * 
-     * @param update
-     *            the {@link BusinessDayIncrementAdd} which defines the new
-     *            {@link BusinessDayIncrement}
+     * @param update the {@link BusinessDayIncrementAdd} which defines the new
+     *               {@link BusinessDayIncrement}
      */
     public void addBusinessIncrement(BusinessDayIncrementAdd update) {
 	BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(update);
@@ -164,8 +162,7 @@ public class BusinessDay {
      * {@link BusinessDayIncrement} evaluated. If there is one then the value is
      * changed
      * 
-     * @param changeValue
-     *            the param which defines what value is changed
+     * @param changeValue the param which defines what value is changed
      * @see ValueTypes
      */
     public void changeBusinesDayIncrement(ChangedValue changeValue) {
@@ -176,12 +173,12 @@ public class BusinessDay {
     }
 
     /**
-     * Verifies if there is any {@link BusinessDayIncrement} which was recorded
-     * e.g. during a preceding day
+     * Verifies if there is any {@link BusinessDayIncrement} which was recorded e.g.
+     * during a preceding day
      * 
      * @return <code>true</code> if there is at least one
-     *         {@link BusinessDayIncrement} which was recorded on a preceding
-     *         day or <code>false</code> if not
+     *         {@link BusinessDayIncrement} which was recorded on a preceding day or
+     *         <code>false</code> if not
      */
     public boolean hasElementsFromPrecedentDays() {
 	Time now = new Time();
@@ -237,8 +234,8 @@ public class BusinessDay {
     }
 
     /**
-     * After {@link TimeSnippet} are moved, the {@link BusinessDayIncrement}
-     * with no {@link TimeSnippet} are removed
+     * After {@link TimeSnippet} are moved, the {@link BusinessDayIncrement} with no
+     * {@link TimeSnippet} are removed
      */
     private void deleteEmptyIncrements() {
 	for (BusinessDayIncrement inc : increments) {

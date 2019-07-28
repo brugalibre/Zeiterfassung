@@ -8,7 +8,9 @@ import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 
 /**
  * 
- * The {@link BusinessDayIncrementAdd} is used whenever a new {@link BusinessDayIncrement} is added
+ * The {@link BusinessDayIncrementAdd} is used whenever a new
+ * {@link BusinessDayIncrement} is added
+ * 
  * @author Dominic
  *
  */

@@ -7,7 +7,7 @@ public class ApplicationLaunchException extends RuntimeException {
     }
 
     public ApplicationLaunchException(String message) {
-	super (message);
+	super(message);
     }
 
     /**

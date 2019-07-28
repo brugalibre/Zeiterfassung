@@ -59,10 +59,10 @@ public class ChargeType {
     }
 
     private static void addDefaultLeistungsarten() {
-        LEISTUNGSARTEN_MAP.put(111,"111 - Meeting");        
-        LEISTUNGSARTEN_MAP.put(113,"113 - Umsetzung/Dokumentation");        
-        LEISTUNGSARTEN_MAP.put(122,"122 - Qualtitätssicherung");        
-        LEISTUNGSARTEN_MAP.put(141,"141 - Allg. Verwaltungsarbeiten");        
+	LEISTUNGSARTEN_MAP.put(111, "111 - Meeting");
+	LEISTUNGSARTEN_MAP.put(113, "113 - Umsetzung/Dokumentation");
+	LEISTUNGSARTEN_MAP.put(122, "122 - Qualtitätssicherung");
+	LEISTUNGSARTEN_MAP.put(141, "141 - Allg. Verwaltungsarbeiten");
     }
 
     public static String[] getLeistungsartenRepresentation() {
@@ -79,7 +79,8 @@ public class ChargeType {
 		return leistungsart;
 	    }
 	}
-	throw new InvalidChargeTypeRepresentationException("No Leistungsart found for Description '" + leistungsartRep + "'");
+	throw new InvalidChargeTypeRepresentationException(
+		"No Leistungsart found for Description '" + leistungsartRep + "'");
     }
 
     /**

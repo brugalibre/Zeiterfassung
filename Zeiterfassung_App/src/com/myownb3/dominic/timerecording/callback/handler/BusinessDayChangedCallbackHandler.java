@@ -8,23 +8,25 @@ import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
 public interface BusinessDayChangedCallbackHandler {
 
     /**
-     * Informs any listener that the {@link BusinessDayIncrement} for the given order no.
-     * has changed
+     * Informs any listener that the {@link BusinessDayIncrement} for the given
+     * order no. has changed
      * 
-     * @param changeValue
-     *            the changed Value
+     * @param changeValue the changed Value
      */
     public void handleBusinessDayChanged(ChangedValue changeValue);
 
     /**
      * Removes the {@link BusinessDayIncrement} at the given index
+     * 
      * @param index the given index
      */
-    public void handleBusinessDayIncrementDeleted (int index);
-    
+    public void handleBusinessDayIncrementDeleted(int index);
+
     /**
-     * Adds the given {@link BusinessDayIncrement} to the current {@link BusinessDay}
+     * Adds the given {@link BusinessDayIncrement} to the current
+     * {@link BusinessDay}
+     * 
      * @param businessDayIncrementAdd the {@link BusinessDayIncrement} to add
      */
-    public void handleBusinessDayIncrementAdd (BusinessDayIncrementAdd businessDayIncrementAdd);
+    public void handleBusinessDayIncrementAdd(BusinessDayIncrementAdd businessDayIncrementAdd);
 }

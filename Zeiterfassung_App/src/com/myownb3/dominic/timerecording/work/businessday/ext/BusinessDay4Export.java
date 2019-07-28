@@ -36,8 +36,7 @@ public class BusinessDay4Export {
     /**
      * Returns the default representation of a date using the given pattern
      * 
-     * @param pattern
-     *            the pattern to use
+     * @param pattern the pattern to use
      * @return the default representation of a date using the given pattern
      */
     public String getDateRep(String pattern) {
@@ -110,8 +109,7 @@ public class BusinessDay4Export {
     /**
      * Creates a new {@link BusinessDay4Export} for the given {@link BusinessDay}
      * 
-     * @param businessDay
-     *            the given {@link BusinessDay}
+     * @param businessDay the given {@link BusinessDay}
      * @return a new {@link BusinessDay4Export}
      */
     public static BusinessDay4Export of(BusinessDay businessDay) {

@@ -18,8 +18,7 @@ public interface Controller<IN_VO extends PageModel, OUT_VO extends PageModel> {
     /**
      * Initializes this Controller with it's main page to show
      * 
-     * @param page
-     *            - the main page
+     * @param page - the main page
      */
     public void initialize(Page<IN_VO, OUT_VO> page);
 

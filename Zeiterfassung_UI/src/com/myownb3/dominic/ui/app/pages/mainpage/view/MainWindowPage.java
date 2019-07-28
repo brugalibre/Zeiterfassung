@@ -36,7 +36,7 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
 	Stage stage = optionalStage.get();
 	stage.setScene(new Scene(loader.getRoot()));
     }
-    
+
     public void showOverviewView() {
 	getMainWindowPageController().showOverviewView(getStage().get());
     }

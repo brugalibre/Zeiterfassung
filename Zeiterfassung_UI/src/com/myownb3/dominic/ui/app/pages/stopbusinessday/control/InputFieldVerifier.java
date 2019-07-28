@@ -20,9 +20,9 @@ public class InputFieldVerifier {
     public boolean verify(TextField c) {
 	return verifyTextField((TextField) c);
     }
-    
+
     public boolean verifyNotNull(ComboBox<String> comboBox) {
-	return verifyComboBoxValueNotNull( comboBox);
+	return verifyComboBoxValueNotNull(comboBox);
     }
 
     private boolean verifyTextField(TextField textField) {
@@ -37,7 +37,7 @@ public class InputFieldVerifier {
 	addOrRemoveErrorStyle(textField, val > 0);
 	return val > 0;
     }
-    
+
     private boolean verifyComboBoxValueNotNull(ComboBox<String> comboBox) {
 
 	String text = comboBox.getSelectionModel().getSelectedItem();

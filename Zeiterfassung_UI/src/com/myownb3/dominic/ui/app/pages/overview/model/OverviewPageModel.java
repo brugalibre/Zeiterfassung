@@ -64,7 +64,7 @@ public class OverviewPageModel implements PageModel {
 	inPageModel.getClearButtonLabel().set(TextLabel.CLEAR_LABEL);
 
 	inPageModel.getTotalAmountOfTimeLabel().set(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL);
-	
+
 	String totalDurationRep = businessDay4Export.getTotalDurationRep();
 	if (!TimeRecorder.INSTANCE.hasContent()) {
 	    totalDurationRep = "0h (schaff endli emol!)";

@@ -96,7 +96,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
      * @param finishAction
      */
     public void finishOrAbortAndDispose(FinishAction finishAction) {
-	
+
 	switch (finishAction) {
 	case ABORT:
 	    timeRecordingTray.updateUIStates();

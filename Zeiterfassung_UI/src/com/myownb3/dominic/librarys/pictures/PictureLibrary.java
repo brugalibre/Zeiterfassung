@@ -19,16 +19,16 @@ public class PictureLibrary {
     private static Image notWorkingImageIcon;
     private static javafx.scene.image.Image clockImageIcon;
 
-    private PictureLibrary(){
+    private PictureLibrary() {
 	// Private constructor
     }
-    
+
     /**
      * Loads the pictures. Therefore it creates an entity of itself to load the
      * pictures in a none static method
      */
     public static void loadPictures() {
-	if (loaded){
+	if (loaded) {
 	    return;
 	}
 	new PictureLibrary().getPictures();

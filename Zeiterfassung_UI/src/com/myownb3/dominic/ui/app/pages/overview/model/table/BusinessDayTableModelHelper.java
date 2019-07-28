@@ -114,7 +114,8 @@ public class BusinessDayTableModelHelper {
     private void setEditableColumBoxCellFactory(
 	    TableColumn<BusinessDayIncTableRowValue, String> chargeTypeTableColumn) {
 	chargeTypeTableColumn.setCellValueFactory(cellData -> cellData.getValue().chargeTypeProperty());
-	chargeTypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(ChargeType.getLeistungsartenRepresentation()));
+	chargeTypeTableColumn
+		.setCellFactory(ComboBoxTableCell.forTableColumn(ChargeType.getLeistungsartenRepresentation()));
 	chargeTypeTableColumn.editableProperty().set(true);
 	chargeTypeTableColumn.setOnEditCommit(changeListener);
     }
@@ -146,7 +147,8 @@ public class BusinessDayTableModelHelper {
 	};
     }
 
-    private void setNonEditableCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn, String paramName) {
+    private void setNonEditableCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn,
+	    String paramName) {
 	tableColumn.setCellValueFactory(new PropertyValueFactory<BusinessDayIncTableRowValue, String>(paramName));
     }
 
@@ -187,9 +189,7 @@ public class BusinessDayTableModelHelper {
 	businessDayIncTableCellValue.setTicketNumber(bussinessDayIncremental.getTicketNumber());
 
 	if (isDescriptionTitleNecessary) {
-	    String cellValue = bussinessDayIncremental.hasDescription()
-		    ? bussinessDayIncremental.getDescription()
-		    : "";
+	    String cellValue = bussinessDayIncremental.hasDescription() ? bussinessDayIncremental.getDescription() : "";
 	    businessDayIncTableCellValue.setDescription(cellValue);
 	}
 

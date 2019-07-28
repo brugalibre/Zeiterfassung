@@ -15,13 +15,14 @@ public class ComboBoxHelper {
 
     private int counter;
     private int maxAmountOfEntries;
-    // Map to store the actual value to its entry (which has information about usage) since the ComboBoxes works with Strings!
+    // Map to store the actual value to its entry (which has information about
+    // usage) since the ComboBoxes works with Strings!
     private Map<String, Entry> value2EntryMap;
     private ComboBox<String> comboBox;
 
     public ComboBoxHelper(int amountOfEntries, ComboBox<String> comboBox) {
 	super();
-	
+
 	value2EntryMap = new HashMap<>();
 	this.maxAmountOfEntries = amountOfEntries;
 	counter = 0;

@@ -27,10 +27,8 @@ public class ExceptionUtil {
     /**
      * Creates and returns a {@link String} from a given Stack trace.
      * 
-     * @param thread,
-     *            the {@link Thread} which caused the {@link Throwable}
-     * @param thrown,
-     *            the thrown {@link Throwable}
+     * @param thread, the {@link Thread} which caused the {@link Throwable}
+     * @param thrown, the thrown {@link Throwable}
      * @return a {@link String} that includes the print-stack-trace
      */
     public static String getStackTracesAsString(String thread, Throwable thrown) {
