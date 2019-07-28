@@ -63,8 +63,8 @@ public class TimeRecorder {
 
     private void tryStartIfPossible() {
 	if (businessDay.hasElementsFromPrecedentDays()) {
-	    callbackHandler
-		    .showMessage(Message.of(MessageType.ERROR, null, TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS));
+	    callbackHandler.showMessageDialog(Message.of(MessageType.ERROR,
+		    TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS, TextLabel.EXCEPTION_DIALOG_TITLE));
 	} else {
 	    start();
 	}
