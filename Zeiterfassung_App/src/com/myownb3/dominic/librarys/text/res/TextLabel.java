@@ -55,5 +55,5 @@ public class TextLabel {
     public static final String CAPTURING_INACTIVE = "Zeiterfassung inaktiv";
     public static final String CAPTURING_INCTIVE_SINCE = "Zeiterfassung inaktiv seit:";
     public static final String CAPTURING_ACTIVE_SINCE = "Zeiterfassung aktiv seit:";
-    public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS = "Start einer neuen Aufzeichnung nicht möglich, da noch elemente von vergangenen Tagen vorhanden sind.\nBitte zuerst diese Abbuchen";
+    public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS = "Start einer neuen Aufzeichnung nicht möglich, da noch Elemente von vergangenen Tagen vorhanden sind.\nBitte zuerst diese Abbuchen und anschliessend löschen.";
 }
