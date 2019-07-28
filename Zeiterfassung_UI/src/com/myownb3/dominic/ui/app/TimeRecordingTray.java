@@ -32,6 +32,7 @@ import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.ui.app.pages.mainpage.view.MainWindowPage;
 import com.myownb3.dominic.ui.app.settings.hotkey.HotKeyManager;
+import com.myownb3.dominic.ui.core.dialog.DialogManager;
 import com.myownb3.dominic.ui.util.ExceptionUtil;
 import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
@@ -140,8 +141,13 @@ public class TimeRecordingTray {
 	    }
 
 	    @Override
-	    public void showMessage(Message message) {
-		displayMessage(message.getMessageTitle(), message.getMessage(), message.getMessageType());
+	    public void displayMessage(Message message) {
+		TimeRecordingTray.this.displayMessage(message.getMessageTitle(), message.getMessage(), message.getMessageType());
+	    }
+	    
+	    @Override
+	    public void showMessageDialog(Message message) {
+		DialogManager.showMessageDialog(message.getMessageTitle(), message.getMessage(), message.getMessageType());
 	    }
 	};
     }
