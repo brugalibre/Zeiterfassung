@@ -19,18 +19,20 @@ import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export
  *
  */
 public class ContentSelector {
-    
+
     public static final ContentSelector INSTANCE = new ContentSelector();
-    
-    private ContentSelector () {
+
+    private ContentSelector() {
 	// private constructor
     }
-    
+
     private static final Object CONTENT_SEPPARATOR = "; ";
     private static final Object CONTENT_SEPPARATOR_TURBO_BUCHER = ";";
 
     /**
-     * Selects line by line the content to export for the given {@link BusinessDay4Export}
+     * Selects line by line the content to export for the given
+     * {@link BusinessDay4Export}
+     * 
      * @param bussinessDay the {@link BusinessDay4Export} which has to be exported
      * @return a list of {@link String} to export
      */

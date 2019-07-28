@@ -27,17 +27,16 @@ public class DialogManager extends JOptionPane {
      * called, when a fatal error occurs, such as unable to load the pictures or
      * language files
      * 
-     * @param component,
-     *            an additionally component such as {@link TextArea}s and so on
-     * @param title,
-     *            the title of the dialog
+     * @param component, an additionally component such as {@link TextArea}s and so
+     *        on
+     * @param title, the title of the dialog
      */
     public static void showException(String printStackTrace, String title) {
 	Toolkit.getDefaultToolkit().beep();
 	showConfirmDialog(null, SwingUtil.getDisplayArea(TextLabel.EXCEPTION_DIALOG_MESSAGE, printStackTrace), title,
 		CLOSED_OPTION, ERROR_MESSAGE);
     }
-    
+
     public static void showMessageDialog(String title, String message, MessageType messageType) {
 	Toolkit.getDefaultToolkit().beep();
 	showMessageDialog(null, message, title, getMessageType(messageType));

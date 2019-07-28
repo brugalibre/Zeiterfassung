@@ -36,9 +36,8 @@ public interface Page<IN_VO extends PageModel, OUT_VO extends PageModel> {
     /**
      * Defines weather this Page is dirty or not
      * 
-     * @param isDirty
-     *            - this value is <code>true</code> if the page is set to dirty or
-     *            <code>false</code> if not.
+     * @param isDirty - this value is <code>true</code> if the page is set to dirty
+     *                or <code>false</code> if not.
      */
     public void setDirty(boolean isDirty);
 
@@ -60,12 +59,12 @@ public interface Page<IN_VO extends PageModel, OUT_VO extends PageModel> {
      * Refreshes this Page
      */
     public void refresh();
-    
+
     /**
      * Shows this {@link Page}
      */
     public void show();
-    
+
     /**
      * Hides this {@link Page}
      */

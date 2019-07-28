@@ -81,8 +81,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
      * is set according the given String and calls the {@link FXMLLoader#load()} in
      * order to load the content
      * 
-     * @param loader
-     *            - the FXMLLoader
+     * @param loader - the FXMLLoader
      * @throws IOException
      */
     protected void initializeFXMLoader(FXMLLoader loader) throws IOException {
@@ -97,10 +96,8 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
      * the FXMLLoaders content, create a new Scene and a new FXPageContent for the
      * current page
      * 
-     * @param loader
-     *            - the FXMLLoader which loads the FXML-file
-     * @param optionalStage
-     *            the optional {@link Stage}
+     * @param loader        - the FXMLLoader which loads the FXML-file
+     * @param optionalStage the optional {@link Stage}
      * @throws IOException
      */
     protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) throws IOException {
@@ -111,8 +108,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
     /**
      * Initializes the {@link Controller} of this {@link Page}
      * 
-     * @param loader
-     *            - the FXMLLoader
+     * @param loader - the FXMLLoader
      */
     protected void initializeController(FXMLLoader loader) {
 	Controller<IN_VO, OUT_VO> controller = loader.getController();
@@ -123,8 +119,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
     /**
      * Apply the css-file for the current page if there is such a file available
      * 
-     * @param optionalStage
-     *            the optional {@link Stage}
+     * @param optionalStage the optional {@link Stage}
      */
     protected void applyStyle(Optional<Stage> optionalStage) {
 	String styleResource = getUIStyleResource();
@@ -133,8 +128,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
 
     /**
      * @param styleResource
-     * @param optionalStage
-     *            the optional {@link Stage}
+     * @param optionalStage the optional {@link Stage}
      * @throws MalformedURLException
      */
     protected void applyStileForResource(String styleResource, Optional<Stage> optionalStage) {
@@ -174,7 +168,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
      * @return the location for the CSS-file this AbstractFXPage needs
      */
     protected String getUIStyleResource() {
-	String path = "/" + getClass().getPackage().getName() + "/" + getClass().getSimpleName() ;
+	String path = "/" + getClass().getPackage().getName() + "/" + getClass().getSimpleName();
 	return path.replace(".", "/") + ".css";
     }
 

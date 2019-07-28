@@ -141,9 +141,11 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	inPageModel.getFinishButtonText().set(TextLabel.FINISH_BUTTON_TEXT);
 	inPageModel.getAbortButtonText().set(TextLabel.ABORT_BUTTON_TEXT);
 	inPageModel.getCancelButtonText().set(TextLabel.CANCEL_BUTTON_TEXT);
-	
-	inPageModel.abortButtonToolTipText = new SimpleObjectProperty<Tooltip>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
-	inPageModel.cancelButtonToolTipText =  new SimpleObjectProperty<Tooltip>(new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
+
+	inPageModel.abortButtonToolTipText = new SimpleObjectProperty<Tooltip>(
+		new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
+	inPageModel.cancelButtonToolTipText = new SimpleObjectProperty<Tooltip>(
+		new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
 
 	inPageModel.getAmountOfHoursTextFieldProperty().set(businessDayInc4Export.getTotalDurationRep());
 	inPageModel.getTicketNoProperty().setValue(businessDayInc4Export.getTicketNumber());
@@ -183,8 +185,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     /**
      * Adds the recorded informations as new {@link BusinessDayIncrement}
      * 
-     * @param kindOfService
-     *            the kind of service
+     * @param kindOfService the kind of service
      */
     public void addIncrement2BusinessDay(int kindOfService) {
 
@@ -204,7 +205,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
 	for (String ticket : tickets) {
 
-	    TimeSnippet currentTimeSnippet = timeSnippet.createTimeStampForIncrement(currentBeginTimeStamp, tickets.length);
+	    TimeSnippet currentTimeSnippet = timeSnippet.createTimeStampForIncrement(currentBeginTimeStamp,
+		    tickets.length);
 	    addIncrement2BusinessDayInternal(kindOfService, ticket, currentTimeSnippet);
 
 	    currentBeginTimeStamp = currentTimeSnippet.getEndTimeStamp();
@@ -282,10 +284,10 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     }
 
     public ObservableValue<? extends Tooltip> getAbortButtonToolTipText() {
-        return abortButtonToolTipText;
+	return abortButtonToolTipText;
     }
 
     public ObservableValue<? extends Tooltip> getCancelButtonToolTipText() {
-        return cancelButtonToolTipText;
+	return cancelButtonToolTipText;
     }
 }

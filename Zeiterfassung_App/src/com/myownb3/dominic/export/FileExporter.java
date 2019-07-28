@@ -17,15 +17,16 @@ import com.myownb3.dominic.export.exception.FileExportException;
  *
  */
 public class FileExporter {
-    
+
     public static final FileExporter INTANCE = new FileExporter();
-    
-    private FileExporter () {
+
+    private FileExporter() {
 	// private Constructor
     }
-    
+
     /**
      * Exports the given list of {@link String} to the Desktop
+     * 
      * @param content the content to export
      */
     public void export(List<String> content) {

@@ -87,8 +87,7 @@ public class BusinessDayIncrement {
      * description can be <code>null</code> for both {@link BusinessDayIncrement}
      * and this method still returns <code>true</code>
      * 
-     * @param other
-     *            the other BusinessDayIncremental
+     * @param other the other BusinessDayIncremental
      * @return <code>true</code> if this {@link BusinessDayIncrement} is the same as
      *         the other one
      */
@@ -142,9 +141,10 @@ public class BusinessDayIncrement {
     }
 
     /**
-     * Sets the charge-type as int from the given representation. 
+     * Sets the charge-type as int from the given representation.
+     * 
      * @param chargeTypeRep the new representation of a charge type
-     * @throws InvalidChargeTypeRepresentationException 
+     * @throws InvalidChargeTypeRepresentationException
      */
     public void setChargeType(String chargeTypeRep) throws InvalidChargeTypeRepresentationException {
 	this.chargeType = ChargeType.getLeistungsartForRep(chargeTypeRep);
@@ -169,7 +169,7 @@ public class BusinessDayIncrement {
      * 
      * @param incrementToAddTimeSnippets
      */
-    /*package */ void transferAllTimeSnipetsToBussinessDayIncrement(BusinessDayIncrement incrementToAddTimeSnippets) {
+    /* package */ void transferAllTimeSnipetsToBussinessDayIncrement(BusinessDayIncrement incrementToAddTimeSnippets) {
 	incrementToAddTimeSnippets.addTimeSnippets(timeSnippets);
 	timeSnippets.clear();
     }
@@ -201,8 +201,7 @@ public class BusinessDayIncrement {
      * Updates the {@link TimeSnippet} at the given index and recalulates the entire
      * {@link BusinessDay}
      * 
-     * @param newTimeStampValue
-     *            the new value for the time stamp
+     * @param newTimeStampValue the new value for the time stamp
      */
     public void updateBeginTimeSnippetAndCalculate(BusinessDayIncrement businessDayIncremental, int fromUptoSequence,
 	    String newTimeStampValue) {
@@ -217,8 +216,7 @@ public class BusinessDayIncrement {
      * Updates the {@link TimeSnippet} at the given index and recalulates the entire
      * {@link BusinessDay}
      * 
-     * @param newTimeStampValue
-     *            the new value for the time stamp
+     * @param newTimeStampValue the new value for the time stamp
      */
     public void updateEndTimeSnippetAndCalculate(BusinessDayIncrement businessDayIncremental, int fromUptoSequence,
 	    String newTimeStampValue) {
@@ -241,8 +239,7 @@ public class BusinessDayIncrement {
      * Creates a new {@link BusinessDayIncrement} for the given
      * {@link BusinessDayIncrementAdd}
      * 
-     * @param update
-     *            the {@link BusinessDayIncrementAdd} with the new values
+     * @param update the {@link BusinessDayIncrementAdd} with the new values
      * @return a new {@link BusinessDayIncrement}
      */
     public static BusinessDayIncrement of(BusinessDayIncrementAdd update) {
@@ -258,12 +255,14 @@ public class BusinessDayIncrement {
 
     /**
      * Returns <code>true</code> if this {@link BusinessDayIncrement} has started
-     * before the given date. This method returns <code>false</code> if this {@link BusinessDayIncrement}
-     * was created on the same day the given Time instance has.
+     * before the given date. This method returns <code>false</code> if this
+     * {@link BusinessDayIncrement} was created on the same day the given Time
+     * instance has.
      * 
      * @param time2Check the {@link Time} to check
-     * @return <code>true</code> if this {@link BusinessDayIncrement} was created before the given date. Otherwise return <code>false</code>
-      */
+     * @return <code>true</code> if this {@link BusinessDayIncrement} was created
+     *         before the given date. Otherwise return <code>false</code>
+     */
     public boolean isBefore(Time time2Check) {
 
 	long days = time2Check.getDays();

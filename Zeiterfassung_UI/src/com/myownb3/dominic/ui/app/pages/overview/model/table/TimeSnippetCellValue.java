@@ -41,12 +41,9 @@ public class TimeSnippetCellValue {
     /**
      * Creates a new {@link TimeSnippetCellValue}
      * 
-     * @param beginOrEnd
-     *            begin or end value
-     * @param sequence
-     *            the sequence
-     * @param valueType
-     *            either {@link ValueTypes#BEGIN} or {@link ValueTypes#END}
+     * @param beginOrEnd begin or end value
+     * @param sequence   the sequence
+     * @param valueType  either {@link ValueTypes#BEGIN} or {@link ValueTypes#END}
      * @return a new {@link TimeSnippetCellValue}
      */
     public static TimeSnippetCellValue of(String beginOrEnd, int sequence, ValueTypes valueType) {

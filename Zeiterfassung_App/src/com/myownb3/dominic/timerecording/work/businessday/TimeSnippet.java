@@ -37,10 +37,8 @@ public class TimeSnippet {
      * Trys to parse the given end time stamp (as String) and summs this value up to
      * the given begin Time Stamp
      * 
-     * @param newEndAsString
-     *            the new End-time stamp as String
-     * @throws NumberFormatException
-     *             if there goes anything wrong while parsing
+     * @param newEndAsString the new End-time stamp as String
+     * @throws NumberFormatException if there goes anything wrong while parsing
      */
     public void addAdditionallyTime(String newEndAsString) throws NumberFormatException {
 	float additionallyTime = NumberFormat.parseFloat(newEndAsString) - getDuration();
@@ -54,8 +52,7 @@ public class TimeSnippet {
      * Trys to parse a new {@link Date} from the given timestamp value and sets this
      * value as new begin-time stamp
      * 
-     * @param newTimeStampValue
-     *            the new begin-time-stamp as String
+     * @param newTimeStampValue the new begin-time-stamp as String
      */
     public void updateAndSetBeginTimeStamp(String newTimeStampValue) {
 	if (!StringUtil.isEqual(newTimeStampValue, getBeginTimeStampRep())) {
@@ -68,8 +65,7 @@ public class TimeSnippet {
      * Trys to parse a new {@link Date} from the given timestamp value and sets this
      * value as new end-time stamp
      * 
-     * @param newTimeStampValue
-     *            the new begin-time-stamp as String
+     * @param newTimeStampValue the new begin-time-stamp as String
      */
     public void updateAndSetEndTimeStamp(String newTimeStampValue) {
 
@@ -145,14 +141,12 @@ public class TimeSnippet {
     }
 
     /**
-     * Creates a new {@link TimeSnippet} with the given {@link Time} as a begin
-     * time stamp. The duration of this new created {@link TimeSnippet} is the
-     * total duration of this current TimeSnipped divided by the given divisor
+     * Creates a new {@link TimeSnippet} with the given {@link Time} as a begin time
+     * stamp. The duration of this new created {@link TimeSnippet} is the total
+     * duration of this current TimeSnipped divided by the given divisor
      * 
-     * @param beginTimeStamp
-     *            the begin time stamp
-     * @param divisor
-     *            the divisor
+     * @param beginTimeStamp the begin time stamp
+     * @param divisor        the divisor
      * @return a new created {@link TimeSnippet}
      */
     public TimeSnippet createTimeStampForIncrement(Time beginTimeStamp, int divisor) {
@@ -170,8 +164,7 @@ public class TimeSnippet {
     /**
      * Creates a copy of the given timeSnippet
      * 
-     * @param otherTimeSnippet
-     *            the {@link TimeSnippet} to create a copy of
+     * @param otherTimeSnippet the {@link TimeSnippet} to create a copy of
      * @return a copy of the given timeSnippet
      */
     public static TimeSnippet of(TimeSnippet otherTimeSnippet) {

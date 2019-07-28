@@ -1,6 +1,6 @@
 package com.myownb3.dominic.timerecording.charge;
 
-public class InvalidChargeTypeRepresentationException extends Exception{
+public class InvalidChargeTypeRepresentationException extends Exception {
 
     public InvalidChargeTypeRepresentationException(String msg) {
 	super(msg);

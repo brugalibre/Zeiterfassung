@@ -55,8 +55,7 @@ public class StringUtil {
     }
 
     /**
-     * @param stringToDecode
-     *            , the string to decode in utf-8
+     * @param stringToDecode , the string to decode in utf-8
      * @return an in UTF-8 decoded version of the given string
      */
     public static String getDecodedString(String stringToDecode) {
@@ -81,10 +80,9 @@ public class StringUtil {
     /**
      * Separates an entire string in multiple fragments.
      * 
-     * @param stringToSeparat
-     *            , the string to separate
-     * @param separator
-     *            , the separator which separates the different fragments
+     * @param stringToSeparat , the string to separate
+     * @param separator       , the separator which separates the different
+     *                        fragments
      * @return an ArrayList with the separated elements
      */
     public static ArrayList<String> separateString(String stringToSeparat, String separator) {
@@ -134,8 +132,7 @@ public class StringUtil {
      * Returns the length of the given String, with the given {@link Font}
      * 
      * @param string
-     * @param the
-     *            {@link Component} whose {@link FontMetrics} is used
+     * @param the    {@link Component} whose {@link FontMetrics} is used
      * @return the length of the given String, with the given Font
      */
     public static int getStringLength(String string, Component comp) {

@@ -28,10 +28,9 @@ public class GlobalExceptionHandler implements Thread.UncaughtExceptionHandler {
     /**
      * Handles an uncaught Exception thrown within the JVM or the EDT
      * 
-     * @param Thread
-     *            , thread which is has thrown the Exception
-     * @param thrown
-     *            , thrown object (an {@link Exception} or a {@link Throwable})
+     * @param Thread          , thread which is has thrown the Exception
+     * @param thrown          , thrown object (an {@link Exception} or a
+     *                        {@link Throwable})
      * @param callbackHandler
      */
     public static void handleGlobalException(Thread thread, Throwable thrown) {
@@ -41,10 +40,11 @@ public class GlobalExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-    * Registers the given {@link CallbackHandler} as the handler which is used to do call backs
-    * if any error occurs
-    * @param callbackHandler the callback handler
-    */
+     * Registers the given {@link CallbackHandler} as the handler which is used to
+     * do call backs if any error occurs
+     * 
+     * @param callbackHandler the callback handler
+     */
     public static void registerHandler(CallbackHandler callbackHandler) {
 	GlobalExceptionHandler.callbackHandler = callbackHandler;
 	Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler());

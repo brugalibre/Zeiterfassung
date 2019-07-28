@@ -35,7 +35,7 @@ public class Time {
      * Creates a new Time started right now
      */
     public Time() {
-	this (System.currentTimeMillis());
+	this(System.currentTimeMillis());
     }
 
     /**
@@ -86,7 +86,7 @@ public class Time {
 	if (modulo >= amount / 2f) {
 	    duration = duration.plus((amount - (int) modulo) * getTimeRefactorValue(roundMode.getTimeType()));
 	} else {
-	    duration = duration.minus((int)modulo * getTimeRefactorValue(roundMode.getTimeType()));
+	    duration = duration.minus((int) modulo * getTimeRefactorValue(roundMode.getTimeType()));
 	}
     }
 

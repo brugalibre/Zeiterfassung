@@ -60,8 +60,7 @@ public abstract class BaseController<IN_VO extends PageModel, OUT_VO extends Pag
     /**
      * Sets the binding of the data model to it's corresponding UI-elements
      * 
-     * @param pageModel
-     *            - the updated data model
+     * @param pageModel - the updated data model
      */
     protected abstract void setBinding(OUT_VO pageModel);
 
@@ -110,8 +109,7 @@ public abstract class BaseController<IN_VO extends PageModel, OUT_VO extends Pag
     }
 
     /**
-     * @param PageModelResolver
-     *            the PageModelResolver to set
+     * @param PageModelResolver the PageModelResolver to set
      */
     protected void setPageModelResolver(PageModelResolver<IN_VO, OUT_VO> PageModelResolver) {
 	this.pageModelResolver = PageModelResolver;

@@ -8,8 +8,7 @@ public interface TimeSnippedChangedCallbackHandler {
     /**
      * Informs any listener that the {@link TimeSnippet} has changed
      * 
-     * @param changeValue
-     *            the changed Value
+     * @param changeValue the changed Value
      */
     public void handleTimeSnippedChanged(ChangedValue changeValue);
 

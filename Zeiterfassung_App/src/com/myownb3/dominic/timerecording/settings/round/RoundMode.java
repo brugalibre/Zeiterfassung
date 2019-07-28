@@ -33,10 +33,7 @@ public enum RoundMode {
      * @return the {@link RoundMode} for the given amount
      */
     public static RoundMode getRoundMode(String roundAmountAsString) {
-	return Arrays.asList(RoundMode.values())
-		.stream()
-		.filter(isSameAmount(roundAmountAsString))
-		.findFirst()
+	return Arrays.asList(RoundMode.values()).stream().filter(isSameAmount(roundAmountAsString)).findFirst()
 		.orElse(RoundMode.ONE_MIN);
     }
 
@@ -44,7 +41,7 @@ public enum RoundMode {
 	int amount = convertToString(roundAmountAsString);
 	return roundMode -> amount == roundMode.getAmount();
     }
-    
+
     private static int convertToString(String roundAmountAsString) {
 	return roundAmountAsString == null ? -1 : Integer.valueOf(roundAmountAsString);
     }

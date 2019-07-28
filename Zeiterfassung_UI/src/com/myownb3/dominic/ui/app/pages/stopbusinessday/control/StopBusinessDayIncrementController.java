@@ -74,8 +74,8 @@ public class StopBusinessDayIncrementController
     @FXML
     private Button abortButton;
 
-    private ComboBoxHelper ticketNumberComboBoxHelper ;
-    private ComboBoxHelper descriptionComboBoxHelper ;
+    private ComboBoxHelper ticketNumberComboBoxHelper;
+    private ComboBoxHelper descriptionComboBoxHelper;
     private MainWindowController mainWindowController;
 
     @Override
@@ -164,11 +164,11 @@ public class StopBusinessDayIncrementController
 	boolean isBaseInputValid = new InputFieldVerifier().verify(amountOfHoursTextField)
 		&& kindOfServiceComboBox.getSelectionModel().getSelectedItem() != null;
 	String ticketsAsString = ticketNumberComboBox.getSelectionModel().getSelectedItem();
-	
+
 	boolean multipleTicketsEntered = areMultipleTicketsEntered(ticketsAsString);
 	if (multipleTicketsEntered) {
 
-	    boolean isDescriptionValid =  new InputFieldVerifier().verifyNotNull(descriptionComboBox);
+	    boolean isDescriptionValid = new InputFieldVerifier().verifyNotNull(descriptionComboBox);
 	    return isBaseInputValid && isDescriptionValid;
 	}
 	return isBaseInputValid;

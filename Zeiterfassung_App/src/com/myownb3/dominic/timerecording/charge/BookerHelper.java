@@ -24,9 +24,10 @@ public class BookerHelper {
     }
 
     /**
-     * Collects from each {@link BusinessDayIncrement} the content to book
-     * and calls finally the {@link Booker#bookList(List)}. Additionally all booked {@link BusinessDayIncrement}
-     * are flagged as charged
+     * Collects from each {@link BusinessDayIncrement} the content to book and calls
+     * finally the {@link Booker#bookList(List)}. Additionally all booked
+     * {@link BusinessDayIncrement} are flagged as charged
+     * 
      * @see Booker#bookList(List)
      */
     public void book() {

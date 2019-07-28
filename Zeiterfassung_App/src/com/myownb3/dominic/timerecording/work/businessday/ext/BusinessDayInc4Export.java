@@ -15,8 +15,8 @@ import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * The {@link BusinessDayInc4Export} is used whenever a
- * {@link BusinessDayIncrement} is going to be exported. Either on a UI or on
- * a text file
+ * {@link BusinessDayIncrement} is going to be exported. Either on a UI or on a
+ * text file
  * 
  * @author Dominic
  *
@@ -67,8 +67,8 @@ public class BusinessDayInc4Export {
      * add some placeholders if this row has less TimeSnipets then the maximum
      * amount of TimeSnippet-Cells
      * 
-     * @param businessDayExportStruct
-     *            the {@link BusinessDay4Export} this increment belongs to
+     * @param businessDayExportStruct the {@link BusinessDay4Export} this increment
+     *                                belongs to
      * 
      */
     public void addPlaceHolderForMissingCell(BusinessDay4Export businessDayExportStruct) {

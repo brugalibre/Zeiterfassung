@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 public class TimeRecordingLauncher extends Application {
 
     public static void main(String[] args) {
-        launch();
+	launch();
     }
 
     @Override
@@ -50,8 +50,8 @@ public class TimeRecordingLauncher extends Application {
     }
 
     private void createTurboBucherPropertiesFileIfNotExists() {
-	File file = new File (TURBO_BUCHER_PROPERTIES);
-	if (!file.exists()){
+	File file = new File(TURBO_BUCHER_PROPERTIES);
+	if (!file.exists()) {
 	    try {
 		file.createNewFile();
 	    } catch (IOException e) {

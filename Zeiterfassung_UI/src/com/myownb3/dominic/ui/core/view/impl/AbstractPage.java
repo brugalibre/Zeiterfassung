@@ -13,10 +13,8 @@ import com.myownb3.dominic.ui.core.view.PageContent;
  * to a {@link Page} in order to display them.
  * 
  * @author Dominic Stalder
- * @param <OUT_VO>
- *            - the outgoing data-model
- * @param <IN_VO>
- *            - the incoming data-model
+ * @param <OUT_VO> - the outgoing data-model
+ * @param <IN_VO> - the incoming data-model
  *
  */
 public abstract class AbstractPage<IN_VO extends PageModel, OUT_VO extends PageModel> implements Page<IN_VO, OUT_VO> {
@@ -48,8 +46,7 @@ public abstract class AbstractPage<IN_VO extends PageModel, OUT_VO extends PageM
     }
 
     /**
-     * @param controller
-     *            the controller to set
+     * @param controller the controller to set
      */
     protected void setController(Controller<IN_VO, OUT_VO> controller) {
 	this.controller = controller;

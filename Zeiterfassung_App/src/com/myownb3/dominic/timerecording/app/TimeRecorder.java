@@ -116,11 +116,11 @@ public class TimeRecorder {
     }
 
     /**
-     * Return a String, which represents the current state and shows
-     * informations according to this
+     * Return a String, which represents the current state and shows informations
+     * according to this
      * 
-     * @return a String, which represents the current state and shows
-     *         informations according to this
+     * @return a String, which represents the current state and shows informations
+     *         according to this
      * @see WorkStates
      */
     public String getInfoStringForState() {
@@ -135,11 +135,9 @@ public class TimeRecorder {
     }
 
     /**
-     * Return <code>true</code> if there is any content, <code>false</code> if
-     * not
+     * Return <code>true</code> if there is any content, <code>false</code> if not
      * 
-     * @return <code>true</code> if there is any content, <code>false</code> if
-     *         not
+     * @return <code>true</code> if there is any content, <code>false</code> if not
      */
     public boolean hasContent() {
 	return businessDay.getTotalDuration() > 0f;
@@ -158,9 +156,8 @@ public class TimeRecorder {
     }
 
     /**
-     * Collects and export the necessary data which is used by the TurobBucher
-     * to charge After the tuber-bucher- app is invoked in order to do actual
-     * charge
+     * Collects and export the necessary data which is used by the TurobBucher to
+     * charge After the tuber-bucher- app is invoked in order to do actual charge
      * 
      * @return <code>true</code> if there was actually a booking process or
      *         <code>false</code> if there wasn't anything to do

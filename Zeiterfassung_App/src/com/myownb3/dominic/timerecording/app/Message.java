@@ -1,8 +1,9 @@
 package com.myownb3.dominic.timerecording.app;
 
 /**
- * A {@link Message} is used to transfer message between the {@link TimeRecorder} and the 
- * corresponding Tray interface
+ * A {@link Message} is used to transfer message between the
+ * {@link TimeRecorder} and the corresponding Tray interface
+ * 
  * @author Dominic
  *
  */
@@ -32,9 +33,10 @@ public class Message {
 
     /**
      * Creates a new message
+     * 
      * @param messageType the {@link MessageType}
-     * @param title the title
-     * @param msg the message itself
+     * @param title       the title
+     * @param msg         the message itself
      * @return
      */
     public static Message of(MessageType messageType, String title, String msg) {

@@ -100,6 +100,7 @@ public class TimeRecordingTray {
 
     /**
      * Shows the given {@link Throwable}
+     * 
      * @param thread the thread which caught the throable
      * @param thrown the thrown throable
      */
@@ -114,7 +115,9 @@ public class TimeRecordingTray {
     }
 
     /**
-     * @return the {@link CallbackHandler} which handles interaction between the {@link TimeRecordingTray} and the {@link TimeRecorder} or the {@link GlobalExceptionHandler}
+     * @return the {@link CallbackHandler} which handles interaction between the
+     *         {@link TimeRecordingTray} and the {@link TimeRecorder} or the
+     *         {@link GlobalExceptionHandler}
      */
     public CallbackHandler getCallbackHandler() {
 
@@ -142,12 +145,14 @@ public class TimeRecordingTray {
 
 	    @Override
 	    public void displayMessage(Message message) {
-		TimeRecordingTray.this.displayMessage(message.getMessageTitle(), message.getMessage(), message.getMessageType());
+		TimeRecordingTray.this.displayMessage(message.getMessageTitle(), message.getMessage(),
+			message.getMessageType());
 	    }
-	    
+
 	    @Override
 	    public void showMessageDialog(Message message) {
-		DialogManager.showMessageDialog(message.getMessageTitle(), message.getMessage(), message.getMessageType());
+		DialogManager.showMessageDialog(message.getMessageTitle(), message.getMessage(),
+			message.getMessageType());
 	    }
 	};
     }
@@ -157,23 +162,23 @@ public class TimeRecordingTray {
 	    showInputMask();
 	}
     }
-    
+
     private void book() {
 	boolean wasBooked = TimeRecorder.INSTANCE.book();
-	if (wasBooked){
+	if (wasBooked) {
 	    displayMessage(null, TextLabel.SUCCESSFULLY_CHARGED_TEXT, MessageType.INFORMATION);
 	}
     }
-    
+
     private void displayMessage(String messageTitle, String message, MessageType messageType) {
 
 	trayIcon.displayMessage(messageTitle, message, getTryIconErrorForMessageType(messageType));
     }
-    
+
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Create Content for UI
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     private JMenuItem createExitMenu() {
 	JMenuItem exitItem = new JMenuItem(TextLabel.EXIT);
 
@@ -307,7 +312,7 @@ public class TimeRecordingTray {
 
     private void safeRoundSettings(RoundMode roundMode) {
 	RoundMode currentRoundMode = TimeRounder.INSTANCE.getRoundMode();
-	if (currentRoundMode != roundMode){
+	if (currentRoundMode != roundMode) {
 	    TimeRounder.INSTANCE.setRoundMode(roundMode);
 	    displayMessage(null, TextLabel.SETTINGS_ROUND_SAVED, MessageType.INFORMATION);
 	}
@@ -327,7 +332,7 @@ public class TimeRecordingTray {
     }
 
     private java.awt.TrayIcon.MessageType getTryIconErrorForMessageType(MessageType messageType) {
-	
+
 	switch (messageType) {
 	case ERROR:
 	    return TrayIcon.MessageType.ERROR;
