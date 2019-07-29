@@ -38,6 +38,10 @@ public class TextLabel {
     public static final String CHARGE_LABEL = "Abbuchen";
     public static final String EXPORT_LABEL = "Exportieren";
 
+    // Import of recordings
+    public static final String SHOW_IMPORT_DIALOG_MENU_ITEM = "Aufzeichnungen (.csv) importieren";
+    public static final String SHOW_IMPORT_DIALOG_TITLE = ".csv Datei mit bestehenden Aufzeichnungen auswählen";
+    
     // Ticket Stuff
     public static final String TICKET = "Ticket";
     public static final String SUCCESSFULLY_CHARGED_TEXT = "Erfolgreich abgebucht";

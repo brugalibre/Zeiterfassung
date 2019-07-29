@@ -48,4 +48,10 @@ public class DateParser {
 	}
 	return currentSetDate;
     }
+
+    public static Date parse2Date(String readLine, String dateRepPattern) throws ParseException {
+	SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance();
+	df.applyPattern(dateRepPattern);
+	return df.parse(readLine);
+    }
 }

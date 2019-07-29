@@ -43,12 +43,20 @@ public class BusinessDay {
     private BusinessDayIncrement currentBussinessDayIncremental;
 
     public BusinessDay() {
-	initialize();
+	initialize(new Date());
+    }
+    
+    /**
+     * Creates a new {@link BusinessDay} for the given {@link Date}
+     * @param date the given Date
+     */
+    public BusinessDay(Date date) {
+	initialize(date);
     }
 
-    private void initialize() {
+    private void initialize(Date date) {
 	increments = new CopyOnWriteArrayList<BusinessDayIncrement>();
-	currentBussinessDayIncremental = new BusinessDayIncrement(new Date());
+	currentBussinessDayIncremental = new BusinessDayIncrement(date);
     }
 
     /**
