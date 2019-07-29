@@ -73,7 +73,6 @@ public class ContentSelector {
 	    builder.append(ChargeType.getRepresentation(inc.getChargeType()));
 	    builder.append(CONTENT_SEPPARATOR);
 	    builder.append(inc.isCharged() ? TextLabel.YES : TextLabel.NO);
-	    builder.append(CONTENT_SEPPARATOR);
 
 	    builder.append(System.getProperty("line.separator"));
 	    content.add(builder.toString());

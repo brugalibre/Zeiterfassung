@@ -39,8 +39,9 @@ public class TextLabel {
     public static final String EXPORT_LABEL = "Exportieren";
 
     // Import of recordings
-    public static final String SHOW_IMPORT_DIALOG_MENU_ITEM = "Aufzeichnungen (.csv) importieren";
+    public static final String SHOW_IMPORT_DIALOG_MENU_ITEM = "Vorhandene Aufzeichnungen importieren";
     public static final String SHOW_IMPORT_DIALOG_TITLE = ".csv Datei mit bestehenden Aufzeichnungen auswählen";
+    public static final String IMPORT_SUCESSFULL = "Import erfolgreich";
     
     // Ticket Stuff
     public static final String TICKET = "Ticket";

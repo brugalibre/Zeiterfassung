@@ -49,6 +49,13 @@ public class DateParser {
 	return currentSetDate;
     }
 
+    public static Time getTime(String input) throws ParseException {
+	SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
+	df.applyPattern("HH:mm:ss");
+	Date date = df.parse(input);
+	return new Time(date.getTime());
+    }
+
     public static Date parse2Date(String readLine, String dateRepPattern) throws ParseException {
 	SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance();
 	df.applyPattern(dateRepPattern);
