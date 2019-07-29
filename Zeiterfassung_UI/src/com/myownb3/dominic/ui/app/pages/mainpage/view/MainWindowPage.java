@@ -49,4 +49,11 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
 	return (MainWindowController) getController();
     }
 
+    /**
+     * Opens a dialog in order to choose a file to import
+     */
+    public void showImportDialog() {
+	getMainWindowPageController().showImportDialog(getStage().get());
+    }
+
 }

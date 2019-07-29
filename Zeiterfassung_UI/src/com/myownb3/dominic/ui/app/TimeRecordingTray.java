@@ -47,6 +47,7 @@ public class TimeRecordingTray {
     private TrayIcon trayIcon;
     private JMenuItem showHoursItem;
     private JMenuItem startTurboBucher;
+    private JMenuItem showImportDialogItem;
     private MainWindowPage mainWindowPage;
     private JPopupMenu popupMenu;
 
@@ -61,6 +62,7 @@ public class TimeRecordingTray {
 	JMenuItem exitItem = createExitMenu();
 	createShowHoursMenuItem();
 	createStartTurboBucherMenuItem();
+	createImportAufzeichnungMenueItem();
 	createPopupMenu(settingsRoundMenu, exitItem);
 
 	mainWindowPage = new MainWindowPage(this, primaryStage);
@@ -68,6 +70,16 @@ public class TimeRecordingTray {
 	trayIcon.addMouseMotionListener(getMouseMotionListener());
 	trayIcon.addMouseListener(getMouseListener());
 	HotKeyManager.INSTANCE.registerHotKey(() -> handleUserInteractionAndShowInputIfStopped());
+    }
+
+    private void createImportAufzeichnungMenueItem() {
+	showImportDialogItem = new JMenuItem(TextLabel.SHOW_IMPORT_DIALOG_MENU_ITEM);
+	showImportDialogItem.addActionListener(actionEvent -> showImportDialog());
+	showImportDialogItem.setEnabled(true);
+    }
+
+    private void showImportDialog() {
+	Platform.runLater(() -> mainWindowPage.showImportDialog());
     }
 
     private void showOverviewView() {
@@ -96,6 +108,7 @@ public class TimeRecordingTray {
     public void updateUIStates() {
 	showHoursItem.setEnabled(TimeRecorder.INSTANCE.hasContent());
 	startTurboBucher.setEnabled(TimeRecorder.INSTANCE.hasNotChargedElements());
+	showImportDialogItem.setEnabled(!TimeRecorder.INSTANCE.hasContent() && TimeRecorder.INSTANCE.getBussinessDay().getCurrentBussinessDayIncremental() == null);
     }
 
     /**
@@ -267,6 +280,7 @@ public class TimeRecordingTray {
 	popupMenu = new JPopupMenu();
 	popupMenu.add(settingsRoundMenu);
 	popupMenu.addSeparator();
+	popupMenu.add(showImportDialogItem);
 	popupMenu.add(startTurboBucher);
 	popupMenu.add(showHoursItem);
 	popupMenu.addSeparator();

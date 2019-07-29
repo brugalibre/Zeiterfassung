@@ -20,6 +20,7 @@ import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export
  */
 public class ContentSelector {
 
+    public static final String DATE_REP_PATTERN = "EEEEE, d MMM yyyy HH:mm:ss";
     public static final ContentSelector INSTANCE = new ContentSelector();
 
     private ContentSelector() {
@@ -41,7 +42,7 @@ public class ContentSelector {
 	List<String> content = new ArrayList<>();
 
 	// First line to mark the date, when the time was recorded
-	builder.append(bussinessDay.getDateRep("EEEEE, d MMM yyyy HH:mm:ss"));
+	builder.append(bussinessDay.getDateRep(DATE_REP_PATTERN));
 	builder.append(System.getProperty("line.separator"));
 	builder.append(System.getProperty("line.separator"));
 

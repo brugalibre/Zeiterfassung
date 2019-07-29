@@ -18,6 +18,10 @@ import com.myownb3.dominic.export.exception.FileExportException;
  */
 public class FileExporter {
 
+    /**
+     * The file extension of files to export
+     */
+    public static final String FILE_EXTENSION = "csv";
     public static final FileExporter INTANCE = new FileExporter();
 
     private FileExporter() {
@@ -32,9 +36,8 @@ public class FileExporter {
     public void export(List<String> content) {
 	String dateDetails = DateFormat.getDateInstance().format(new Date());
 	float randomNo = System.currentTimeMillis();
-	String fileExtension = "csv";
 	File file = new File(
-		System.getProperty("user.home") + "\\Desktop\\" + dateDetails + "_" + randomNo + "." + fileExtension);
+		System.getProperty("user.home") + "\\Desktop\\" + dateDetails + "_" + randomNo + "." + FILE_EXTENSION);
 
 	try (FileWriter writer = new FileWriter(file)) {
 	    file.createNewFile();

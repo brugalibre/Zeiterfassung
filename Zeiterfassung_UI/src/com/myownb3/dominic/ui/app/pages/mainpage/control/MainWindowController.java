@@ -13,6 +13,7 @@ import com.myownb3.dominic.ui.app.pages.overview.control.OverviewController;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.FinishAction;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
+import com.myownb3.dominic.ui.core.dialog.FileImportHelper;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 import com.myownb3.dominic.ui.core.view.Page;
 import com.myownb3.dominic.ui.core.view.impl.FXPageContent;
@@ -41,7 +42,8 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     private Region stopBusinessDayIncrementPanel;
 
     private TimeRecordingTray timeRecordingTray;
-
+    private FileImportHelper fileImportHelper;
+    
     @Override
     public void initialize(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {
 
@@ -54,6 +56,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
 	stage.setIconified(true);
 	stage.getIcons().add(PictureLibrary.getClockImageIcon());
+	fileImportHelper = new FileImportHelper();
     }
 
     public void showInputMask(Stage stage) {
@@ -81,6 +84,16 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	show();
     }
 
+    /**
+     * Opens a dialog in order to choose a file to import
+     * 
+     * @param stage
+     *            the current stage
+     */
+    public void showImportDialog(Stage stage) {
+	fileImportHelper.showImportDialog(stage);
+    }
+    
     private void initStage4NewComponent(Stage stage, Region region) {
 	mainPanel.setPrefWidth(region.getPrefWidth());
 	mainPanel.setPrefHeight(region.getPrefHeight());
