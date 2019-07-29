@@ -108,7 +108,11 @@ public class TimeRecordingTray {
     public void updateUIStates() {
 	showHoursItem.setEnabled(TimeRecorder.INSTANCE.hasContent());
 	startTurboBucher.setEnabled(TimeRecorder.INSTANCE.hasNotChargedElements());
-	showImportDialogItem.setEnabled(!TimeRecorder.INSTANCE.hasContent() && TimeRecorder.INSTANCE.getBussinessDay().getCurrentBussinessDayIncremental() == null);
+	showImportDialogItem.setEnabled(hasNoContentAndIsNotRecording());
+    }
+
+    private boolean hasNoContentAndIsNotRecording() {
+	return !TimeRecorder.INSTANCE.hasContent() && !TimeRecorder.INSTANCE.isRecordindg();
     }
 
     /**
@@ -151,6 +155,11 @@ public class TimeRecordingTray {
 		startWorking();
 	    }
 
+	    @Override
+	    public void refreshUIStates() {
+		updateUIStates();
+	    }
+	    
 	    @Override
 	    public void onException(Throwable thrown, Thread thread) {
 		showException(thread, thrown);

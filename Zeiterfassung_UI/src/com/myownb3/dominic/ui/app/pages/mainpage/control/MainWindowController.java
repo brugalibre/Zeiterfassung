@@ -3,6 +3,8 @@
  */
 package com.myownb3.dominic.ui.app.pages.mainpage.control;
 
+import java.io.File;
+
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
@@ -13,7 +15,7 @@ import com.myownb3.dominic.ui.app.pages.overview.control.OverviewController;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.FinishAction;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
-import com.myownb3.dominic.ui.core.dialog.FileImportHelper;
+import com.myownb3.dominic.ui.core.dialog.FileImportDialogHelper;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 import com.myownb3.dominic.ui.core.view.Page;
 import com.myownb3.dominic.ui.core.view.impl.FXPageContent;
@@ -42,8 +44,8 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     private Region stopBusinessDayIncrementPanel;
 
     private TimeRecordingTray timeRecordingTray;
-    private FileImportHelper fileImportHelper;
-    
+    private FileImportDialogHelper fileImportHelper;
+
     @Override
     public void initialize(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {
 
@@ -56,7 +58,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
 	stage.setIconified(true);
 	stage.getIcons().add(PictureLibrary.getClockImageIcon());
-	fileImportHelper = new FileImportHelper();
+	fileImportHelper = new FileImportDialogHelper();
     }
 
     public void showInputMask(Stage stage) {
@@ -85,15 +87,19 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     }
 
     /**
-     * Opens a dialog in order to choose a file to import
+     * Opens a dialog in order to choose a file to import If there was any file
+     * selected this file is passed to the {@link TimeRecorder} in order to import a
+     * new {@link BusinessDay}
      * 
-     * @param stage
-     *            the current stage
+     * @param stage the current stage
      */
     public void showImportDialog(Stage stage) {
-	fileImportHelper.showImportDialog(stage);
+	File selectedFile = fileImportHelper.showImportDialogAndReturnFile(stage);
+	if (selectedFile != null) {
+	    TimeRecorder.INSTANCE.importBusinessDayFromFile(selectedFile);
+	}
     }
-    
+
     private void initStage4NewComponent(Stage stage, Region region) {
 	mainPanel.setPrefWidth(region.getPrefWidth());
 	mainPanel.setPrefHeight(region.getPrefHeight());

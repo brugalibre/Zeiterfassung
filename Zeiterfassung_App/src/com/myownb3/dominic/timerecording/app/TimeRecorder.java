@@ -3,10 +3,13 @@
  */
 package com.myownb3.dominic.timerecording.app;
 
+import java.io.File;
 import java.util.List;
 
 import com.myownb3.dominic.export.ContentSelector;
 import com.myownb3.dominic.export.FileExporter;
+import com.myownb3.dominic.fileimport.BusinessDayImporter;
+import com.myownb3.dominic.fileimport.FileImporter;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
 import com.myownb3.dominic.timerecording.charge.BookerHelper;
@@ -105,6 +108,7 @@ public class TimeRecorder {
      */
     public void clear() {
 	businessDay.clearFinishedIncrements();
+	callbackHandler.refreshUIStates();
     }
 
     /**
@@ -176,5 +180,30 @@ public class TimeRecorder {
      */
     public TIME_TYPE getTimeType() {
 	return timeType;
+    }
+
+    /**
+     * Reads {@link File}, fills it's content into a list and imports with this list
+     * a new {@link BusinessDay}
+     * 
+     * @param file the file to import
+     */
+    public void importBusinessDayFromFile(File file) {
+	List<String> fileContent = FileImporter.INTANCE.importFile(file);
+	this.businessDay = BusinessDayImporter.INTANCE.importBusinessDay(fileContent);
+	afterImport();
+    }
+
+    private void afterImport() {
+	callbackHandler.refreshUIStates();
+	callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.IMPORT_SUCESSFULL));
+    }
+
+    /**
+     * @return <code>true</code> if the {@link TimeRecorder} is currently recording
+     *         and <code>false</code> if not
+     */
+    public boolean isRecordindg() {
+	return currentState == WorkStates.WORKING;
     }
 }

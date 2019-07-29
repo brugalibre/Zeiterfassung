@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementAdd;
+import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementImport;
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.charge.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
@@ -45,9 +46,10 @@ public class BusinessDay {
     public BusinessDay() {
 	initialize(new Date());
     }
-    
+
     /**
      * Creates a new {@link BusinessDay} for the given {@link Date}
+     * 
      * @param date the given Date
      */
     public BusinessDay(Date date) {
@@ -161,6 +163,20 @@ public class BusinessDay {
      */
     public void addBusinessIncrement(BusinessDayIncrementAdd update) {
 	BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(update);
+	increments.add(newBusinessDayInc);
+	checkForRedundancys();
+    }
+
+    /**
+     * Creates and adds a new {@link BusinessDayIncrement} for the given
+     * {@link BusinessDayIncrementImport}
+     * 
+     * @param businessDayIncrementImport the {@link BusinessDayIncrementImport}
+     *                                   which defines the new
+     *                                   {@link BusinessDayIncrement}
+     */
+    public void addBusinessIncrements(BusinessDayIncrementImport businessDayIncrementImport) {
+	BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(businessDayIncrementImport);
 	increments.add(newBusinessDayInc);
 	checkForRedundancys();
     }

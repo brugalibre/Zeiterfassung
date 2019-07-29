@@ -3,6 +3,7 @@
  */
 package com.myownb3.dominic.timerecording.work.businessday;
 
+import java.text.ParseException;
 import java.util.Date;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
@@ -159,6 +160,24 @@ public class TimeSnippet {
 	currentTimeSnippet.setBeginTimeStamp(beginTimeStamp);
 	currentTimeSnippet.setEndTimeStamp(currentEndTimeStamp);
 	return currentTimeSnippet;
+    }
+
+    /**
+     * Create new {@link TimeSnippet} for the given {@link Date} and begin,- an end
+     * time stamp as String values
+     * 
+     * @param date       the {@link Date}
+     * @param beginValue the begin time stamp as String
+     * @param endValue   the end time stamp as String
+     * @return a new {@link TimeSnippet}
+     * @throws ParseException if the {@code #beginValue} or {@code #endValue}
+     *                        could'nt be parsed
+     */
+    public static TimeSnippet createTimeSnippet(Date date, String beginValue, String endValue) throws ParseException {
+	TimeSnippet timeSnippet = new TimeSnippet(date);
+	timeSnippet.setBeginTimeStamp(DateParser.getTime(beginValue));
+	timeSnippet.setEndTimeStamp(DateParser.getTime(endValue));
+	return timeSnippet;
     }
 
     /**

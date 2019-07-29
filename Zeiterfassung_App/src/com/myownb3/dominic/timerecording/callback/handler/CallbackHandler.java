@@ -12,20 +12,25 @@ import com.myownb3.dominic.timerecording.app.Message;
 public interface CallbackHandler {
 
     /**
-     * 
+     * Stops a running recording
      */
     public void onStop();
 
     /**
-     * 
+     * Starts a new recording
      */
     public void onStart();
 
     /**
-     * 
+     * Resumes a previously stopped recording
      */
     public void onResume();
 
+    /**
+     * Refreshes the buttons and other UI elements
+     */
+    public void refreshUIStates();
+    
     public void onException(Throwable throwable, Thread t);
 
     /**

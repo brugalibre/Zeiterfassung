@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementAdd;
+import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementImport;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
 import com.myownb3.dominic.timerecording.charge.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.work.date.Time;
@@ -250,6 +251,32 @@ public class BusinessDayIncrement {
 	businessDayIncremental.chargeType = update.getKindOfService();
 	businessDayIncremental.startCurrentTimeSnippet(update.getTimeSnippet().getBeginTimeStamp());
 	businessDayIncremental.stopCurrentTimeSnippet(update.getTimeSnippet().getEndTimeStamp());
+	return businessDayIncremental;
+    }
+
+    /**
+     * Creates a new {@link BusinessDayIncrement} for the given
+     * {@link BusinessDayIncrementImport} with all its {@link TimeSnippet}s
+     * 
+     * @param businessDayIncrementImport
+     * @return a new {@link BusinessDayIncrement}
+     */
+    public static BusinessDayIncrement of(BusinessDayIncrementImport businessDayIncrementImport) {
+
+	List<TimeSnippet> timeSnippets2Add = businessDayIncrementImport.getTimeSnippets();
+	Date date = new Date();
+	if (timeSnippets2Add.isEmpty()) {
+	    date = timeSnippets2Add.get(0).getDate();
+	}
+	BusinessDayIncrement businessDayIncremental = new BusinessDayIncrement(date);
+	businessDayIncremental.description = businessDayIncrementImport.getDescription();
+	businessDayIncremental.ticketNumber = businessDayIncrementImport.getTicketNo();
+	businessDayIncremental.chargeType = businessDayIncrementImport.getKindOfService();
+
+	for (TimeSnippet timeSnippet : timeSnippets2Add) {
+	    businessDayIncremental.startCurrentTimeSnippet(timeSnippet.getBeginTimeStamp());
+	    businessDayIncremental.stopCurrentTimeSnippet(timeSnippet.getEndTimeStamp());
+	}
 	return businessDayIncremental;
     }
 
