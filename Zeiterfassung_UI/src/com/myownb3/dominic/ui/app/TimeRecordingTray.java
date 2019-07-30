@@ -11,6 +11,7 @@ import java.awt.TrayIcon;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
 import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
+import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.ui.app.pages.mainpage.view.MainWindowPage;
 import com.myownb3.dominic.ui.app.settings.hotkey.HotKeyManager;
 import com.myownb3.dominic.ui.util.ExceptionUtil;
@@ -127,8 +129,7 @@ public class TimeRecordingTray {
 
     public void clearBusinessDayContents() {
 	TimeRecorder.INSTANCE.clear();
-	showHoursItem.setEnabled(false);
-	startTurboBucher.setEnabled(false);
+	updateUIStates();
     }
 
     /**
@@ -156,11 +157,6 @@ public class TimeRecordingTray {
 	    }
 
 	    @Override
-	    public void refreshUIStates() {
-		updateUIStates();
-	    }
-	    
-	    @Override
 	    public void onException(Throwable thrown, Thread thread) {
 		showException(thread, thrown);
 	    }
@@ -179,13 +175,42 @@ public class TimeRecordingTray {
 	}
     }
 
-    private void book() {
+    /**
+     * Books the content of the current {@link BusinessDay}
+     */
+    public void book() {
 	boolean wasBooked = TimeRecorder.INSTANCE.book();
 	if (wasBooked) {
 	    displayMessage(null, TextLabel.SUCCESSFULLY_CHARGED_TEXT, MessageType.INFORMATION);
 	}
     }
 
+    /**
+     * Exports the content of the current {@link BusinessDay}
+     */
+    public void export(){
+	 TimeRecorder.INSTANCE.export();
+    }
+
+    /**
+     * Resumes a previously stopped recording
+     */
+    public void resume() {
+	TimeRecorder.INSTANCE.resume();
+    }
+    
+    public void importBusinessDayFromFile(File selectedFile) {
+
+	boolean success = TimeRecorder.INSTANCE.importBusinessDayFromFile(selectedFile);
+	if (success) {
+	    displayMessage(null, TextLabel.IMPORT_SUCESSFULL, MessageType.INFORMATION);
+	    updateUIStates();
+	} else {
+	    displayMessage(TextLabel.IMPORT_NOT_SUCESSFULL_MSG, TextLabel.IMPORT_NOT_SUCESSFULL_TITLE,
+		    MessageType.ERROR);
+	}
+    }
+    
     private void displayMessage(String messageTitle, String message, MessageType messageType) {
 
 	trayIcon.displayMessage(messageTitle, message, getTryIconErrorForMessageType(messageType));

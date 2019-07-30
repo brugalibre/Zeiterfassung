@@ -89,6 +89,9 @@ public class TimeRecorder {
 	callbackHandler.onStart();
     }
 
+    /**
+     * Resumes a previously stopped recording
+     */
     public void resume() {
 
 	currentState = WorkStates.WORKING;
@@ -109,7 +112,6 @@ public class TimeRecorder {
      */
     public void clear() {
 	businessDay.clearFinishedIncrements();
-	callbackHandler.refreshUIStates();
     }
 
     /**
@@ -191,25 +193,23 @@ public class TimeRecorder {
      * 
      * @param file
      *            the file to import
+     * @return <code>true</code> if the new {@link BusinessDay} was successfully
+     *         imported or <code>false</code> if not
      */
-    public void importBusinessDayFromFile(File file) {
+    public boolean importBusinessDayFromFile(File file) {
 	try {
 	    importBusinessDayInternal(file);
+	    return true;
 	} catch (BusinessDayImportException e) {
 	    e.printStackTrace();
-	    callbackHandler.displayMessage(Message.of(MessageType.ERROR, TextLabel.IMPORT_NOT_SUCESSFULL_MSG, TextLabel.IMPORT_NOT_SUCESSFULL_TITLE));
+	    // Nothing more to do
 	}
+	return false;
     }
 
     private void importBusinessDayInternal(File file) {
 	List<String> fileContent = FileImporter.INTANCE.importFile(file);
 	this.businessDay = BusinessDayImporter.INTANCE.importBusinessDay(fileContent);
-	afterImport();
-    }
-
-    private void afterImport() {
-	callbackHandler.refreshUIStates();
-	callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, TextLabel.IMPORT_SUCESSFULL, null));
     }
 
     /**

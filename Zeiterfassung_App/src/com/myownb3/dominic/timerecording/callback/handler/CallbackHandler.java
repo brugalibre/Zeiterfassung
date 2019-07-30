@@ -25,11 +25,6 @@ public interface CallbackHandler {
      * Resumes a previously stopped recording
      */
     public void onResume();
-
-    /**
-     * Refreshes the buttons and other UI elements
-     */
-    public void refreshUIStates();
     
     public void onException(Throwable throwable, Thread t);
 

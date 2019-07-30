@@ -50,7 +50,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     public void initialize(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {
 
 	super.initialize(mainWindowPage);
-	overviewPanelController.init(this);
+	overviewPanelController.init(this, timeRecordingTray);
 	stopBusinessDayIncrementPanelController.setMainWindowController(this);
 
 	FXPageContent pageContent = (FXPageContent) mainWindowPage.getContent();
@@ -97,7 +97,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     public void showImportDialog(Stage stage) {
 	File selectedFile = fileImportHelper.showImportDialogAndReturnFile(stage);
 	if (selectedFile != null) {
-	    TimeRecorder.INSTANCE.importBusinessDayFromFile(selectedFile);
+	    timeRecordingTray.importBusinessDayFromFile(selectedFile);
 	}
     }
 
@@ -123,7 +123,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	    dispose();
 	    break;
 	case RESUME:
-	    TimeRecorder.INSTANCE.resume();
+	    timeRecordingTray.resume();
 	    dispose();
 	    break;
 	case FINISH:
