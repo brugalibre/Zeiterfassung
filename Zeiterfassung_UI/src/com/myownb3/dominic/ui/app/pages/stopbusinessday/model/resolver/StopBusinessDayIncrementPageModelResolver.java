@@ -4,8 +4,8 @@
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.model.resolver;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
-import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
+import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDayInc4Export;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.model.StopBusinessDayIncrementPageModel;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 

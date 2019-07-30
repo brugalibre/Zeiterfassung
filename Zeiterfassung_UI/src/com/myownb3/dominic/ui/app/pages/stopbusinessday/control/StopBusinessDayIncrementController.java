@@ -9,8 +9,8 @@ import java.awt.Toolkit;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.myownb3.dominic.timerecording.charge.ChargeType;
-import com.myownb3.dominic.timerecording.charge.exception.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.timerecording.core.charge.ChargeType;
+import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.combobox.ComboBoxHelper;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.model.StopBusinessDayIncrementPageModel;

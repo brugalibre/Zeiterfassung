@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Objects;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.charge.ChargeType;
-import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
-import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
-import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
-import com.myownb3.dominic.timerecording.work.businessday.ext.TimeSnippet4Export;
+import com.myownb3.dominic.timerecording.core.charge.ChargeType;
+import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
+import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
+import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDayInc4Export;
+import com.myownb3.dominic.timerecording.core.work.businessday.extern.TimeSnippet4Export;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 import javafx.beans.property.SimpleStringProperty;

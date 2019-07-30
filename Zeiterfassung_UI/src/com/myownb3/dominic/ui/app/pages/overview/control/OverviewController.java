@@ -8,11 +8,11 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
-import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayChangedCallbackHandlerImpl;
-import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
-import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
-import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
+import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
+import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
+import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.app.pages.overview.model.OverviewPageModel;

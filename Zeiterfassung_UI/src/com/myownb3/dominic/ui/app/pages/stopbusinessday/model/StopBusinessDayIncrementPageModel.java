@@ -8,15 +8,15 @@ import static com.myownb3.dominic.ui.app.pages.stopbusinessday.util.StopBusiness
 import java.util.Date;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.callback.handler.TimeSnippedChangedCallbackHandler;
-import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayChangedCallbackHandlerImpl;
-import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementAdd;
-import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
-import com.myownb3.dominic.timerecording.charge.ChargeType;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
-import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
-import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDayInc4Export;
-import com.myownb3.dominic.timerecording.work.date.Time;
+import com.myownb3.dominic.timerecording.core.callbackhandler.TimeSnippedChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementAdd;
+import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
+import com.myownb3.dominic.timerecording.core.charge.ChargeType;
+import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
+import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDayInc4Export;
+import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
 import javafx.beans.property.Property;

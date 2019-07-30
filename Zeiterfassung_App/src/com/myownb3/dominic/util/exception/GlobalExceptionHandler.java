@@ -5,7 +5,7 @@ package com.myownb3.dominic.util.exception;
 
 import java.util.Objects;
 
-import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.CallbackHandler;
 
 /**
  * @author Dominic

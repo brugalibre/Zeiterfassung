@@ -7,8 +7,10 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementAdd;
-import com.myownb3.dominic.timerecording.work.date.Time;
+import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementAdd;
+import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
+import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
+import com.myownb3.dominic.timerecording.core.work.date.Time;
 
 public class BusinessDayTest {
 

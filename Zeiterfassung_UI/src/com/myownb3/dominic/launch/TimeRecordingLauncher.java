@@ -11,7 +11,7 @@ import java.io.IOException;
 import com.myownb3.dominic.launch.exception.ApplicationLaunchException;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.CallbackHandler;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
