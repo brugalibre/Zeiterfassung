@@ -91,7 +91,7 @@ public class BusinessDayInc4Export {
     }
 
     public final String getDescription() {
-	return this.description;
+	return this.description != null ? description : "";
     }
 
     public final String getTicketNumber() {

@@ -53,7 +53,7 @@ public class ContentSelector {
 	    builder.append(TextLabel.TICKET + ": ");
 	    builder.append(inc.getTicketNumber());
 	    builder.append(CONTENT_SEPPARATOR);
-	    if (inc.hasDescription()) {
+	    if (bussinessDay.hasIncrementWithDescription()) {
 		builder.append(inc.getDescription());
 		builder.append(CONTENT_SEPPARATOR);
 	    }
