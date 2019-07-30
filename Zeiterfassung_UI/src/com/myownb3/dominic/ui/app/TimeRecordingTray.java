@@ -6,6 +6,7 @@ package com.myownb3.dominic.ui.app;
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.SystemTray;
+import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -32,7 +33,6 @@ import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.ui.app.pages.mainpage.view.MainWindowPage;
 import com.myownb3.dominic.ui.app.settings.hotkey.HotKeyManager;
-import com.myownb3.dominic.ui.core.dialog.DialogManager;
 import com.myownb3.dominic.ui.util.ExceptionUtil;
 import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
@@ -170,12 +170,6 @@ public class TimeRecordingTray {
 		TimeRecordingTray.this.displayMessage(message.getMessageTitle(), message.getMessage(),
 			message.getMessageType());
 	    }
-
-	    @Override
-	    public void showMessageDialog(Message message) {
-		DialogManager.showMessageDialog(message.getMessageTitle(), message.getMessage(),
-			message.getMessageType());
-	    }
 	};
     }
 
@@ -195,6 +189,9 @@ public class TimeRecordingTray {
     private void displayMessage(String messageTitle, String message, MessageType messageType) {
 
 	trayIcon.displayMessage(messageTitle, message, getTryIconErrorForMessageType(messageType));
+	if (messageType == MessageType.ERROR){
+	    Toolkit.getDefaultToolkit().beep();
+	}
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

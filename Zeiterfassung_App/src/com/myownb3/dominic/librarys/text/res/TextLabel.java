@@ -43,6 +43,8 @@ public class TextLabel {
     public static final String SHOW_IMPORT_DIALOG_MENU_ITEM = "Vorhandene Aufzeichnungen importieren";
     public static final String SHOW_IMPORT_DIALOG_TITLE = ".csv Datei mit bestehenden Aufzeichnungen auswählen";
     public static final String IMPORT_SUCESSFULL = "Import erfolgreich";
+    public static final String IMPORT_NOT_SUCESSFULL_TITLE = "Import fehlgeschlagen!";
+    public static final String IMPORT_NOT_SUCESSFULL_MSG = "Prüfe das log sowie die zu importierende Datei";
     
     // Ticket Stuff
     public static final String TICKET = "Ticket";
@@ -61,5 +63,7 @@ public class TextLabel {
     public static final String CAPTURING_INACTIVE = "Zeiterfassung inaktiv";
     public static final String CAPTURING_INCTIVE_SINCE = "Zeiterfassung inaktiv seit:";
     public static final String CAPTURING_ACTIVE_SINCE = "Zeiterfassung aktiv seit:";
-    public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS = "Start einer neuen Aufzeichnung nicht möglich, da noch Elemente von vergangenen Tagen vorhanden sind.\nBitte zuerst diese Abbuchen und anschliessend löschen.";
+
+    public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS = "Es sind noch Elemente von vergangenen Tagen vorhanden! Diese zuerst abbuchen bzw. löschen";
+    public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE = "Start einer neuen Aufzeichnung nicht möglich!";
 }
