@@ -39,11 +39,4 @@ public interface CallbackHandler {
      * @param message the message to show
      */
     public void displayMessage(Message message);
-
-    /**
-     * Shows a message dialog to the user
-     * 
-     * @param message the given message to show
-     */
-    public void showMessageDialog(Message message);
 }
