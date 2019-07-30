@@ -8,12 +8,12 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
+import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.app.pages.overview.model.OverviewPageModel;
 import com.myownb3.dominic.ui.app.pages.overview.model.resolver.OverviewPageModelResolver;
@@ -72,6 +72,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     private BusinessDayChangedCallbackHandler handler;
     private BusinessDayTableModelHelper businessDayTableModel;
+    private TimeRecordingTray timeRecordingTray;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -114,8 +115,9 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	businessDayTableModel.init(businessDay4Export, tableView);
     }
 
-    public void init(MainWindowController mainWindowController) {
+    public void init(MainWindowController mainWindowController, TimeRecordingTray timeRecordingTray) {
 	this.mainWindowController = mainWindowController;
+	this.timeRecordingTray = timeRecordingTray;
     }
 
     private void handleMouseEvent(MouseEvent event) {
@@ -175,10 +177,10 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	    mainWindowController.clearBusinessDayContents();
 	    mainWindowController.dispose();
 	} else if (actionEvent.getSource() == bookButton) {
-	    TimeRecorder.INSTANCE.book();
+	    timeRecordingTray.book();
 	    show();
 	} else if (actionEvent.getSource() == exportButton) {
-	    TimeRecorder.INSTANCE.export();
+	    timeRecordingTray.export();
 	}
     }
 
