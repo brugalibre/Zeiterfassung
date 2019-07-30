@@ -3,7 +3,7 @@
  */
 package com.myownb3.dominic.ui.app.pages.overview.model.table;
 
-import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
+import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;

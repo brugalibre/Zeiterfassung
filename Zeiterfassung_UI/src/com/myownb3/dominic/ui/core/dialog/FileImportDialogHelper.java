@@ -2,8 +2,8 @@ package com.myownb3.dominic.ui.core.dialog;
 
 import java.io.File;
 
-import com.myownb3.dominic.fileimport.FileImporter;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.core.importexport.in.file.FileImporter;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;

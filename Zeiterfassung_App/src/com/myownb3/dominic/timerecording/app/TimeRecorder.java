@@ -6,19 +6,21 @@ package com.myownb3.dominic.timerecording.app;
 import java.io.File;
 import java.util.List;
 
-import com.myownb3.dominic.export.ContentSelector;
-import com.myownb3.dominic.export.FileExporter;
-import com.myownb3.dominic.fileimport.BusinessDayImporter;
-import com.myownb3.dominic.fileimport.FileImporter;
-import com.myownb3.dominic.fileimport.exception.BusinessDayImportException;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
-import com.myownb3.dominic.timerecording.charge.BookerHelper;
-import com.myownb3.dominic.timerecording.work.WorkStates;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
-import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement;
-import com.myownb3.dominic.timerecording.work.businessday.ext.BusinessDay4Export;
-import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
+import com.myownb3.dominic.timerecording.core.callbackhandler.CallbackHandler;
+import com.myownb3.dominic.timerecording.core.charge.BookerHelper;
+import com.myownb3.dominic.timerecording.core.importexport.in.businessday.BusinessDayImporter;
+import com.myownb3.dominic.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
+import com.myownb3.dominic.timerecording.core.importexport.in.file.FileImporter;
+import com.myownb3.dominic.timerecording.core.importexport.out.businessday.ContentSelector;
+import com.myownb3.dominic.timerecording.core.importexport.out.file.FileExporter;
+import com.myownb3.dominic.timerecording.core.message.Message;
+import com.myownb3.dominic.timerecording.core.message.MessageType;
+import com.myownb3.dominic.timerecording.core.work.WorkStates;
+import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
+import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
+import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
 
 /**
  * Responsible for recording the time. The {@link TimeRecorder} consist of one

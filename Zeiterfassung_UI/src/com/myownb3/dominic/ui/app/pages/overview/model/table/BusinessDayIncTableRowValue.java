@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
+import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

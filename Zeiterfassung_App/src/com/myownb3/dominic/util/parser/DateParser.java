@@ -8,7 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.myownb3.dominic.timerecording.work.date.Time;
+import com.myownb3.dominic.timerecording.core.work.date.Time;
 
 /**
  * @author Dominic
