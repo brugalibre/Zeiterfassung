@@ -265,7 +265,7 @@ public class BusinessDayIncrement {
 
 	List<TimeSnippet> timeSnippets2Add = businessDayIncrementImport.getTimeSnippets();
 	Date date = new Date();
-	if (timeSnippets2Add.isEmpty()) {
+	if (!timeSnippets2Add.isEmpty()) {
 	    date = timeSnippets2Add.get(0).getDate();
 	}
 	BusinessDayIncrement businessDayIncremental = new BusinessDayIncrement(date);
