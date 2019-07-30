@@ -39,7 +39,7 @@ public class Message {
      * @param msg         the message itself
      * @return
      */
-    public static Message of(MessageType messageType, String title, String msg) {
-	return new Message(title, msg, messageType);
+    public static Message of(MessageType messageType, String msg, String title) {
+	return new Message(msg, title, messageType);
     }
 }
