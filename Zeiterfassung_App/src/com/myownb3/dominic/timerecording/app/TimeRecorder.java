@@ -117,6 +117,7 @@ public class TimeRecorder {
     public void export() {
 	List<String> content = ContentSelector.INSTANCE.collectContent(BusinessDay4Export.of(businessDay));
 	FileExporter.INTANCE.export(content);
+	callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.SUCESSFULLY_EXPORTED));
     }
 
     /**
