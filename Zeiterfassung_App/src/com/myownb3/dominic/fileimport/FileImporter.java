@@ -15,6 +15,7 @@ import java.util.List;
 import com.myownb3.dominic.fileimport.exception.FileImportException;
 
 /**
+ * The {@link FileImporter} imports a {@link File} and put its content line by line into a {@link List} of {@link String}
  * @author Dominic
  *
  */

@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import com.myownb3.dominic.timerecording.charge.exception.InvalidChargeTypeRepresentationException;
+
 /**
  * @author Dominic
  *

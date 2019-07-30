@@ -14,7 +14,7 @@ import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementImport;
 import com.myownb3.dominic.timerecording.callback.handler.impl.ChangedValue;
-import com.myownb3.dominic.timerecording.charge.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.timerecording.charge.exception.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDayIncrement.TimeStampComparator;
 import com.myownb3.dominic.timerecording.work.date.Time;
@@ -43,6 +43,9 @@ public class BusinessDay {
     // the current increment which has been started but not yet finished so far
     private BusinessDayIncrement currentBussinessDayIncremental;
 
+    /**
+     * Creates a new {@link BusinessDay} 
+     */
     public BusinessDay() {
 	initialize(new Date());
     }
