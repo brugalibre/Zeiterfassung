@@ -87,11 +87,12 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     }
 
     /**
-     * Opens a dialog in order to choose a file to import If there was any file
-     * selected this file is passed to the {@link TimeRecorder} in order to import a
-     * new {@link BusinessDay}
+     * Opens a dialog in order to choose a file to import. If there was any file
+     * selected this file is passed to the {@link TimeRecorder} in order to
+     * import a new {@link BusinessDay}
      * 
-     * @param stage the current stage
+     * @param stage
+     *            the current stage
      */
     public void showImportDialog(Stage stage) {
 	File selectedFile = fileImportHelper.showImportDialogAndReturnFile(stage);

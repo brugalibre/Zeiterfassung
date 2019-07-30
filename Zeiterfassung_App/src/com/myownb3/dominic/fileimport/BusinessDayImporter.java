@@ -9,28 +9,30 @@ import static com.myownb3.dominic.util.utils.StringUtil.isNotEmptyOrNull;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.myownb3.dominic.export.ContentSelector;
+import com.myownb3.dominic.export.FileExporter;
 import com.myownb3.dominic.fileimport.exception.BusinessDayImportException;
-import com.myownb3.dominic.fileimport.exception.FileImportException;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementImport;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
-import com.myownb3.dominic.timerecording.charge.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.timerecording.charge.exception.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.work.businessday.ValueTypes;
 import com.myownb3.dominic.util.parser.DateParser;
 import com.myownb3.dominic.util.utils.StringUtil;
-import com.sun.xml.internal.txw2.IllegalSignatureException;
 
 /**
+ * The {@link BusinessDayImporter} is used to import a {@link BusinessDay} from a previously exported one.
+ * So the file to import must follow the exact same structure as the file which the {@link FileExporter} exports
+ * 
  * @author Dominic
+ * @see ContentSelector
  *
  */
 public class BusinessDayImporter {
@@ -63,14 +65,13 @@ public class BusinessDayImporter {
 	try {
 	    checkInput(importedLines);
 	    return importBusinessDayInternal(new ArrayList<>(importedLines));
-	} catch (IOException | ParseException | InvalidChargeTypeRepresentationException e) {
-	    e.printStackTrace();
+	} catch (ParseException | InvalidChargeTypeRepresentationException e) {
 	    throw new BusinessDayImportException(e);
 	}
     }
 
     private BusinessDay importBusinessDayInternal(List<String> importedLines)
-	    throws IOException, ParseException, InvalidChargeTypeRepresentationException {
+	    throws ParseException, InvalidChargeTypeRepresentationException {
 	Date date = parseDate(importedLines.remove(0));
 	List<BusinessDayIncrementImport> businessDayIncImports = createBusinessDayIncImports(importedLines, date);
 	return createAndReturnBusinessDay(date, businessDayIncImports);
@@ -193,24 +194,25 @@ public class BusinessDayImporter {
 	businessDayIncrementImport.setKindOfService(leistungsartForRep);
     }
 
-    private int shiftIndex(ValueTypes currentValueTypes, int currentElementIndex, String importLine) {
-	return shiftIndex(currentValueTypes, currentElementIndex, false, importLine);
+    private int shiftIndex(ValueTypes currentValueType, int currentElementIndex, String importLine) {
+	return shiftIndex(currentValueType, currentElementIndex, false, importLine);
     }
 
     /*
      * Shifts the index which is used to determine the value of the next element
      * to import depending on the current imported element
      */
-    private int shiftIndex(ValueTypes currentValueTypes, int currentElementIndex, boolean hasDescription,
+    private int shiftIndex(ValueTypes currentValueType, int currentElementIndex, boolean hasDescription,
 	    String importLine) {
-	switch (currentValueTypes) {
+	switch (currentValueType) {
 	case TICKET_NR:
 	    return currentElementIndex = hasDescription ? currentElementIndex : currentElementIndex + 1;
 	case DESCRIPTION:
 	    return currentElementIndex = currentElementIndex + 2;
 	case BEGIN:
 	    // Plus two since we incremented the index two times while adding a
-	    // new time stamp. Continue incrementing as long as there are 'placeholder' elements
+	    // new time stamp. Continue incrementing as long as there are
+	    // 'placeholder' elements
 	    currentElementIndex = currentElementIndex + 2;
 	    while (!isNexElementNotEmpty(importLine, currentElementIndex)) {
 		currentElementIndex++;
@@ -247,7 +249,7 @@ public class BusinessDayImporter {
 	    boolean hasMoreElements = hasNextBeginEndElement(importLine, currentElementIndex);
 	    return hasMoreElements ? BEGIN : ValueTypes.CHARGE_TYPE;
 	default:
-	    throw new IllegalSignatureException("Unsupported ValueTypes '" + currentValueType + "'");
+	    throw new BusinessDayImportException("Unsupported ValueTypes '" + currentValueType + "'");
 	}
     }
 
@@ -264,18 +266,18 @@ public class BusinessDayImporter {
 	return StringUtil.isNotEmptyOrNull(importLine.split(CONTENT_SEPARATOR)[currentElementIndex++]);
     }
 
-    private Date parseDate(String readLine) throws IOException, ParseException {
+    private Date parseDate(String readLine) throws ParseException {
 	if (isNotEmptyOrNull(readLine)) {
 	    return DateParser.parse2Date(readLine, ContentSelector.DATE_REP_PATTERN);
 	}
-	throw new FileImportException(
+	throw new BusinessDayImportException(
 		"The first line within the import file must not be empty or null! It should rather look like 'Dienstag, 25 Jul 2019 06:45:00'");
     }
 
     private void checkInput(List<String> importedLines) {
 	requireNonNull(importedLines, "The variable 'importedLines' must not be null!");
 	if (importedLines.isEmpty()) {
-	    throw new IllegalStateException("The List 'importedLines' must not be empty!");
+	    throw new BusinessDayImportException("The List 'importedLines' must not be empty!");
 	}
     }
 }

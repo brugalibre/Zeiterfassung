@@ -10,6 +10,7 @@ import com.myownb3.dominic.export.ContentSelector;
 import com.myownb3.dominic.export.FileExporter;
 import com.myownb3.dominic.fileimport.BusinessDayImporter;
 import com.myownb3.dominic.fileimport.FileImporter;
+import com.myownb3.dominic.fileimport.exception.BusinessDayImportException;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.callback.handler.CallbackHandler;
 import com.myownb3.dominic.timerecording.charge.BookerHelper;
@@ -184,12 +185,23 @@ public class TimeRecorder {
     }
 
     /**
-     * Reads {@link File}, fills it's content into a list and imports with this list
-     * a new {@link BusinessDay}
+     * First the {@link FileImporter} imports the given {@link File} and fills
+     * it's content into a list. Later the {@link BusinessDayImporter} uses this
+     * lists in order to import a a new {@link BusinessDay}
      * 
-     * @param file the file to import
+     * @param file
+     *            the file to import
      */
     public void importBusinessDayFromFile(File file) {
+	try {
+	    importBusinessDayInternal(file);
+	} catch (BusinessDayImportException e) {
+	    e.printStackTrace();
+	    callbackHandler.displayMessage(Message.of(MessageType.ERROR, TextLabel.IMPORT_NOT_SUCESSFULL_MSG, TextLabel.IMPORT_NOT_SUCESSFULL_TITLE));
+	}
+    }
+
+    private void importBusinessDayInternal(File file) {
 	List<String> fileContent = FileImporter.INTANCE.importFile(file);
 	this.businessDay = BusinessDayImporter.INTANCE.importBusinessDay(fileContent);
 	afterImport();
@@ -197,7 +209,7 @@ public class TimeRecorder {
 
     private void afterImport() {
 	callbackHandler.refreshUIStates();
-	callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.IMPORT_SUCESSFULL));
+	callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, TextLabel.IMPORT_SUCESSFULL, null));
     }
 
     /**

@@ -14,7 +14,7 @@ import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.callback.handler.impl.BusinessDayIncrementImport;
 import com.myownb3.dominic.timerecording.charge.ChargeType;
-import com.myownb3.dominic.timerecording.charge.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.timerecording.charge.exception.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.util.parser.NumberFormat;
