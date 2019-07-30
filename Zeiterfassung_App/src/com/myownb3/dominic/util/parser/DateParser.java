@@ -31,28 +31,36 @@ public class DateParser {
 
     public static Time getTime(String input, Time currentSetDate) {
 	try {
-	    SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-	    df.applyPattern("dd-MM-yyyy HH:mm:ss");
-
-	    // Parse the current Date Value
-	    String currentDateAsString = df.format(new Date(currentSetDate.getTime()));
-	    // Parse the current set Date in order to receive information about year, month
-	    // and day
-	    String yearMonthDayInfo = currentDateAsString.substring(0, currentDateAsString.length() - 8);
-	    // Append the information about hour, minutes and seconds to the given
-	    // information
-	    Date date = df.parse(yearMonthDayInfo + input);
-	    return new Time(date.getTime());
+	    return getTime(input, new Date(currentSetDate.getTime()));
 	} catch (ParseException e) {
 	    System.err.println(e.getMessage());
 	}
 	return currentSetDate;
     }
 
-    public static Time getTime(String input) throws ParseException {
+    /**
+     * Tries to parse the given input String into a {@link Time} instance
+     * 
+     * @param input
+     *            the given input value
+     * @param currentDate
+     *            the current Date which is used to append the given input
+     * @return a new {@link Time} instance
+     * @throws ParseException
+     */
+    public static Time getTime(String input, Date currentDate) throws ParseException {
 	SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-	df.applyPattern("HH:mm:ss");
-	Date date = df.parse(input);
+	df.applyPattern("dd-MM-yyyy HH:mm:ss");
+
+	// Parse the current Date Value
+	String currentDateAsString = df.format(currentDate);
+	// Parse the current set Date in order to receive information about
+	// year, month
+	// and day
+	String yearMonthDayInfo = currentDateAsString.substring(0, currentDateAsString.length() - 8);
+	// Append the information about hour, minutes and seconds to the given
+	// information
+	Date date = df.parse(yearMonthDayInfo + input);
 	return new Time(date.getTime());
     }
 

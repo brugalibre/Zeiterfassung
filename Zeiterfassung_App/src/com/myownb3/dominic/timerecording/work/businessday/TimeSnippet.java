@@ -175,8 +175,8 @@ public class TimeSnippet {
      */
     public static TimeSnippet createTimeSnippet(Date date, String beginValue, String endValue) throws ParseException {
 	TimeSnippet timeSnippet = new TimeSnippet(date);
-	timeSnippet.setBeginTimeStamp(DateParser.getTime(beginValue));
-	timeSnippet.setEndTimeStamp(DateParser.getTime(endValue));
+	timeSnippet.setBeginTimeStamp(DateParser.getTime(beginValue, date));
+	timeSnippet.setEndTimeStamp(DateParser.getTime(endValue, date));
 	return timeSnippet;
     }
 
