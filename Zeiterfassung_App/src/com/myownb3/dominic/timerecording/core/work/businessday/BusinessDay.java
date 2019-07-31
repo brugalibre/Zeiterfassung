@@ -275,7 +275,7 @@ public class BusinessDay {
     private Optional<BusinessDayIncrement> getBusinessIncrement(int orderNr) {
 	BusinessDayIncrement businessDayIncremental = null;
 	for (int i = 0; i < increments.size(); i++) {
-	    if (orderNr == i + 1) {
+	    if (orderNr == i) {
 		businessDayIncremental = increments.get(i);
 	    }
 	}
