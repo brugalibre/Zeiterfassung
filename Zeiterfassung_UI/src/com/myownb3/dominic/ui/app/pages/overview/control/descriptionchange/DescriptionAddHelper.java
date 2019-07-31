@@ -8,6 +8,7 @@ import static com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes
 import java.util.Optional;
 
 import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.overview.control.OverviewController;
@@ -39,10 +40,10 @@ public class DescriptionAddHelper {
     private BusinessDayChangedCallbackHandler handler;
     private TimeRecordingTray timeRecordingTray;
 
-    public DescriptionAddHelper(OverviewController overviewController, BusinessDayChangedCallbackHandler handler, TimeRecordingTray timeRecordingTray) {
+    public DescriptionAddHelper(OverviewController overviewController, TimeRecordingTray timeRecordingTray) {
 	this.overviewController = overviewController;
-	this.handler = handler;
 	this.timeRecordingTray = timeRecordingTray;
+	handler = new BusinessDayChangedCallbackHandlerImpl();
     }
 
     /**
@@ -62,9 +63,9 @@ public class DescriptionAddHelper {
     }
 
     private void showInputField(BusinessDayIncTableRowValue businessDayIncTableRowValue, double x, double y) {
-	Stage stage = new Stage();
+	
 	TextField field = new TextField();
-
+	Stage stage = new Stage();
 	EventHandler<? super KeyEvent> keyEventHandler = keyEvent -> handleKeyPressed(keyEvent, field, stage, businessDayIncTableRowValue.getNumberAsInt());
 	initContent(stage, field, keyEventHandler, x, y);
 	stage.show();

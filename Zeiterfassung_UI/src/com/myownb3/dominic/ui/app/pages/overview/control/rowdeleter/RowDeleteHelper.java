@@ -6,6 +6,7 @@ package com.myownb3.dominic.ui.app.pages.overview.control.rowdeleter;
 import java.util.Optional;
 
 import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.overview.control.OverviewController;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
@@ -27,9 +28,9 @@ public class RowDeleteHelper {
     private OverviewController overviewController;
     private TimeRecordingTray timeRecordingTray;
 
-    public RowDeleteHelper(OverviewController overviewController, BusinessDayChangedCallbackHandler handler, TimeRecordingTray timeRecordingTray) {
+    public RowDeleteHelper(OverviewController overviewController, TimeRecordingTray timeRecordingTray) {
 	this.overviewController = overviewController;
-	this.handler = handler;
+	this.handler = new BusinessDayChangedCallbackHandlerImpl();
 	this.timeRecordingTray = timeRecordingTray;
     }
 
