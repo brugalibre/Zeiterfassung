@@ -19,7 +19,6 @@ import com.myownb3.dominic.ui.app.pages.overview.model.resolver.OverviewPageMode
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayTableModelHelper;
 import com.myownb3.dominic.ui.app.pages.overview.view.OverviewPage;
-import com.myownb3.dominic.ui.app.styles.Styles;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 import com.myownb3.dominic.ui.core.view.Page;
@@ -82,9 +81,6 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	super.initialize(page);
 	businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelper(() -> show()));
 	setBinding(dataModel);
-
-	totalAmountOfTimeLabel.getStyleClass().add(Styles.BOLD_LABEL_12);
-	totalAmountOfTimeValue.getStyleClass().add(Styles.BOLD_LABEL_12);
 
 	initContextMenu();
 	initTable();
