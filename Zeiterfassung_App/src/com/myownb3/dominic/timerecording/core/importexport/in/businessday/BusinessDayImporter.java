@@ -6,13 +6,13 @@ package com.myownb3.dominic.timerecording.core.importexport.in.businessday;
 import static com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes.BEGIN;
 import static com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes.DESCRIPTION;
 import static com.myownb3.dominic.util.utils.StringUtil.isNotEmptyOrNull;
-import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementImport;
@@ -28,8 +28,9 @@ import com.myownb3.dominic.util.parser.DateParser;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
- * The {@link BusinessDayImporter} is used to import a {@link BusinessDay} from a previously exported one.
- * So the file to import must follow the exact same structure as the file which the {@link FileExporter} exports
+ * The {@link BusinessDayImporter} is used to import a {@link BusinessDay} from
+ * a previously exported one. So the file to import must follow the exact same
+ * structure as the file which the {@link FileExporter} exports
  * 
  * @author Dominic
  * @see ContentSelector
@@ -46,7 +47,7 @@ public class BusinessDayImporter {
      * The singleton instance of the {@link BusinessDayImporter}
      */
     public static final BusinessDayImporter INTANCE = new BusinessDayImporter();
-    private static final String TICKET_NR_PREFIX = TextLabel.TICKET + ": ";
+    private static final String CONTENT_LINE_BEGIN = TextLabel.TICKET + ":";
     private static final String CONTENT_SEPARATOR = ";";
 
     private BusinessDayImporter() {
@@ -70,8 +71,7 @@ public class BusinessDayImporter {
 	}
     }
 
-    private BusinessDay importBusinessDayInternal(List<String> importedLines)
-	    throws ParseException, InvalidChargeTypeRepresentationException {
+    private BusinessDay importBusinessDayInternal(List<String> importedLines) throws ParseException, InvalidChargeTypeRepresentationException {
 	Date date = parseDate(importedLines.remove(0));
 	List<BusinessDayIncrementImport> businessDayIncImports = createBusinessDayIncImports(importedLines, date);
 	return createAndReturnBusinessDay(date, businessDayIncImports);
@@ -85,39 +85,33 @@ public class BusinessDayImporter {
 	return businessDay;
     }
 
-    private List<BusinessDayIncrementImport> createBusinessDayIncImports(List<String> importedLines, Date date)
-	    throws ParseException, InvalidChargeTypeRepresentationException {
+    private List<BusinessDayIncrementImport> createBusinessDayIncImports(List<String> importedLines, Date date) throws ParseException, InvalidChargeTypeRepresentationException {
 
 	List<BusinessDayIncrementImport> businessDayInc2Import = new ArrayList<>();
-	String importLine = importedLines.remove(0);
-	boolean hasDescription = hasDescription(importedLines);
-
-	while (has2ContinueParsing(importedLines, importLine)) {
-	    if (has2ParseLine(importLine)) {
-		BusinessDayIncrementImport businessDayIncrementImport = parseLine2BusinessDayIncImport(hasDescription,
-			importLine, date);
-		businessDayInc2Import.add(businessDayIncrementImport);
-	    }
-	    importLine = importedLines.remove(0);
+	List<String> filteredLines = filterLines(importedLines);
+	while (has2ContinueParsing(filteredLines)) {
+	    String importLine = filteredLines.remove(0);
+	    BusinessDayIncrementImport businessDayIncrementImport = parseLine2BusinessDayIncImport(importLine, date);
+	    businessDayInc2Import.add(businessDayIncrementImport);
 	}
 	return businessDayInc2Import;
     }
 
-    private boolean has2ContinueParsing(List<String> importedLines, String importLine) {
-	return nonNull(importLine) && !importedLines.isEmpty();
+    private List<String> filterLines(List<String> importedLines) {
+	return importedLines.stream()//
+		.filter(importedLine -> has2ParseLine(importedLine))//
+		.collect(Collectors.toList());
+    }
+
+    private boolean has2ContinueParsing(List<String> importedLines) {
+	return !importedLines.isEmpty();
     }
 
     private boolean has2ParseLine(String importLine) {
-	return StringUtil.isNotEmptyOrNull(importLine) && importLine.startsWith(TextLabel.TICKET + ":");
+	return StringUtil.isNotEmptyOrNull(importLine) && importLine.startsWith(CONTENT_LINE_BEGIN);
     }
 
-    private String getElementFromLineAtIndex(String lineAtIndex, int index) {
-	String valueAtIndex = lineAtIndex.split(CONTENT_SEPARATOR)[index];
-	return valueAtIndex.trim();
-    }
-
-    private BusinessDayIncrementImport parseLine2BusinessDayIncImport(boolean hasDescription, String importLine,
-	    Date date) throws ParseException, InvalidChargeTypeRepresentationException {
+    private BusinessDayIncrementImport parseLine2BusinessDayIncImport(String importLine, Date date) throws ParseException, InvalidChargeTypeRepresentationException {
 	BusinessDayIncrementImport businessDayIncrementImport = new BusinessDayIncrementImport();
 
 	ValueTypes currentValueType = ValueTypes.TICKET_NR;
@@ -126,9 +120,9 @@ public class BusinessDayImporter {
 	while (!businessDayIncImported) {
 	    switch (currentValueType) {
 	    case TICKET_NR:
-		parseAndSetTicketNr(importLine, businessDayIncrementImport, currentElementIndex++);
-		currentElementIndex = shiftIndex(currentValueType, currentElementIndex, hasDescription, importLine);
-		currentValueType = evalNextValue2Import(currentValueType, currentElementIndex, hasDescription);
+		parseAndSetTicketNr(importLine, businessDayIncrementImport, currentElementIndex);
+		currentElementIndex = shiftIndex(currentValueType, currentElementIndex, importLine);
+		currentValueType = evalNextValue2Import(currentValueType, importLine, currentElementIndex);
 		break;
 
 	    case DESCRIPTION:
@@ -158,24 +152,18 @@ public class BusinessDayImporter {
 	return businessDayIncrementImport;
     }
 
-    private void parseAndSetTicketNr(String importLine, BusinessDayIncrementImport businessDayIncrementImport,
-	    int currentElementIndex) {
-	String ticketNr = getTicketNr(importLine, currentElementIndex);
+    private void parseAndSetTicketNr(String importLine, BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex) {
+	String ticketNrElement = getElementFromLineAtIndex(importLine, currentElementIndex);
+	String ticketNr = ticketNrElement.replace(CONTENT_LINE_BEGIN, "");
 	businessDayIncrementImport.setTicketNo(ticketNr);
     }
 
-    private String getTicketNr(String importLine, int currentElementIndex) {
-	return getElementFromLineAtIndex(importLine, currentElementIndex).replace(TICKET_NR_PREFIX, "");
-    }
-
-    private void parseAndSetDescription(String importLine, BusinessDayIncrementImport businessDayIncrementImport,
-	    int currentElementIndex) {
+    private void parseAndSetDescription(String importLine, BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex) {
 	String description = getElementFromLineAtIndex(importLine, currentElementIndex);
 	businessDayIncrementImport.setDescription(description);
     }
 
-    private void parseAndAddTimeSnippet(String importLine, Date date,
-	    BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex) throws ParseException {
+    private void parseAndAddTimeSnippet(String importLine, Date date, BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex) throws ParseException {
 	// get begin,- and end value as String
 	String beginValue = getElementFromLineAtIndex(importLine, currentElementIndex++);
 	String endValue = getElementFromLineAtIndex(importLine, currentElementIndex++);
@@ -187,26 +175,25 @@ public class BusinessDayImporter {
 	businessDayIncrementImport.getTimeSnippets().add(timeSnippet);
     }
 
-    private void parseAndSetChargeType(String importLine, BusinessDayIncrementImport businessDayIncrementImport,
-	    int currentElementIndex) throws InvalidChargeTypeRepresentationException {
+    private void parseAndSetChargeType(String importLine, BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex) throws InvalidChargeTypeRepresentationException {
 	String chargeType = getElementFromLineAtIndex(importLine, currentElementIndex);
 	int leistungsartForRep = ChargeType.getLeistungsartForRep(chargeType);
 	businessDayIncrementImport.setKindOfService(leistungsartForRep);
     }
 
-    private int shiftIndex(ValueTypes currentValueType, int currentElementIndex, String importLine) {
-	return shiftIndex(currentValueType, currentElementIndex, false, importLine);
+    private String getElementFromLineAtIndex(String lineAtIndex, int index) {
+	String valueAtIndex = lineAtIndex.split(CONTENT_SEPARATOR)[index];
+	return valueAtIndex.trim();
     }
 
     /*
-     * Shifts the index which is used to determine the value of the next element
-     * to import depending on the current imported element
+     * Shifts the index which is used to determine the value of the next element to
+     * import depending on the current imported element
      */
-    private int shiftIndex(ValueTypes currentValueType, int currentElementIndex, boolean hasDescription,
-	    String importLine) {
+    private int shiftIndex(ValueTypes currentValueType, int currentElementIndex, String importLine) {
 	switch (currentValueType) {
 	case TICKET_NR:
-	    return currentElementIndex = hasDescription ? currentElementIndex : currentElementIndex + 1;
+	    return currentElementIndex = currentElementIndex + 1;
 	case DESCRIPTION:
 	    return currentElementIndex = currentElementIndex + 2;
 	case BEGIN:
@@ -224,25 +211,15 @@ public class BusinessDayImporter {
 	}
     }
 
-    private ValueTypes evalNextValue2Import(ValueTypes currentValueType, String importLine, int currentElementIndex) {
-	return evalNextValue2Import(currentValueType, importLine, currentElementIndex, false);
-    }
-
-    private ValueTypes evalNextValue2Import(ValueTypes currentValueType, int currentElementIndex,
-	    boolean hasDescription) {
-	return evalNextValue2Import(currentValueType, null, currentElementIndex, hasDescription);
-    }
-
     /**
      * Evaluates the value type of the next element to import according the
      * current imported element and other informations like if the current line
      * has a description or if there are any more 'begin/end' elements
      */
-    private ValueTypes evalNextValue2Import(ValueTypes currentValueType, String importLine, int currentElementIndex,
-	    boolean hasDescription) {
+    private ValueTypes evalNextValue2Import(ValueTypes currentValueType, String importLine, int currentElementIndex) {
 	switch (currentValueType) {
 	case TICKET_NR:
-	    return hasDescription ? DESCRIPTION : BEGIN;
+	    return DESCRIPTION;
 	case DESCRIPTION:
 	    return BEGIN;
 	case BEGIN:
@@ -251,10 +228,6 @@ public class BusinessDayImporter {
 	default:
 	    throw new BusinessDayImportException("Unsupported ValueTypes '" + currentValueType + "'");
 	}
-    }
-
-    private boolean hasDescription(List<String> importedLines) {
-	return importedLines.stream().anyMatch(importedLine -> importedLine.contains(TextLabel.DESCRIPTION_LABEL));
     }
 
     private boolean hasNextBeginEndElement(String importLine, int currentElementIndex) {
