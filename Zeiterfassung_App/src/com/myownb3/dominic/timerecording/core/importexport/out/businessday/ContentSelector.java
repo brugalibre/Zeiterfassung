@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.coolguys.turbo.Booker;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
@@ -34,7 +33,8 @@ public class ContentSelector {
      * Selects line by line the content to export for the given
      * {@link BusinessDay4Export}
      * 
-     * @param bussinessDay the {@link BusinessDay4Export} which has to be exported
+     * @param bussinessDay
+     *            the {@link BusinessDay4Export} which has to be exported
      * @return a list of {@link String} to export
      */
     public List<String> collectContent(BusinessDay4Export bussinessDay) {
@@ -53,10 +53,8 @@ public class ContentSelector {
 	    builder.append(TextLabel.TICKET + ": ");
 	    builder.append(inc.getTicketNumber());
 	    builder.append(CONTENT_SEPPARATOR);
-	    if (bussinessDay.hasIncrementWithDescription()) {
-		builder.append(inc.getDescription());
-		builder.append(CONTENT_SEPPARATOR);
-	    }
+	    builder.append(inc.getDescription());
+	    builder.append(CONTENT_SEPPARATOR);
 	    builder.append(inc.getTotalDurationRep());
 	    builder.append(CONTENT_SEPPARATOR);
 
@@ -88,13 +86,10 @@ public class ContentSelector {
 
 	builder.append(TextLabel.TICKET);
 	builder.append(CONTENT_SEPPARATOR);
+	builder.append(TextLabel.DESCRIPTION_LABEL);
+	builder.append(CONTENT_SEPPARATOR);
 	builder.append(TextLabel.AMOUNT_OF_HOURS_LABEL);
 	builder.append(CONTENT_SEPPARATOR);
-
-	if (bussinessDay.hasIncrementWithDescription()) {
-	    builder.append(TextLabel.DESCRIPTION_LABEL);
-	    builder.append(CONTENT_SEPPARATOR);
-	}
 
 	appendBeginEndHeader(builder, bussinessDay);
 
