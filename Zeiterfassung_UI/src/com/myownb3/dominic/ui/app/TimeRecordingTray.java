@@ -120,8 +120,10 @@ public class TimeRecordingTray {
     /**
      * Shows the given {@link Throwable}
      * 
-     * @param thread the thread which caught the throable
-     * @param thrown the thrown throable
+     * @param thread
+     *            the thread which caught the throable
+     * @param thrown
+     *            the thrown throable
      */
     private void showException(Thread thread, Throwable thrown) {
 	ExceptionUtil.showException(thread, thrown);
@@ -163,8 +165,7 @@ public class TimeRecordingTray {
 
 	    @Override
 	    public void displayMessage(Message message) {
-		TimeRecordingTray.this.displayMessage(message.getMessageTitle(), message.getMessage(),
-			message.getMessageType());
+		TimeRecordingTray.this.displayMessage(message.getMessageTitle(), message.getMessage(), message.getMessageType());
 	    }
 	};
     }
@@ -188,8 +189,8 @@ public class TimeRecordingTray {
     /**
      * Exports the content of the current {@link BusinessDay}
      */
-    public void export(){
-	 TimeRecorder.INSTANCE.export();
+    public void export() {
+	TimeRecorder.INSTANCE.export();
     }
 
     /**
@@ -198,7 +199,7 @@ public class TimeRecordingTray {
     public void resume() {
 	TimeRecorder.INSTANCE.resume();
     }
-    
+
     public void importBusinessDayFromFile(File selectedFile) {
 
 	boolean success = TimeRecorder.INSTANCE.importBusinessDayFromFile(selectedFile);
@@ -206,15 +207,14 @@ public class TimeRecordingTray {
 	    displayMessage(null, TextLabel.IMPORT_SUCESSFULL, MessageType.INFORMATION);
 	    updateUIStates();
 	} else {
-	    displayMessage(TextLabel.IMPORT_NOT_SUCESSFULL_MSG, TextLabel.IMPORT_NOT_SUCESSFULL_TITLE,
-		    MessageType.ERROR);
+	    displayMessage(TextLabel.IMPORT_NOT_SUCESSFULL_TITLE, TextLabel.IMPORT_NOT_SUCESSFULL_MSG, MessageType.ERROR);
 	}
     }
-    
+
     private void displayMessage(String messageTitle, String message, MessageType messageType) {
 
 	trayIcon.displayMessage(messageTitle, message, getTryIconErrorForMessageType(messageType));
-	if (messageType == MessageType.ERROR){
+	if (messageType == MessageType.ERROR) {
 	    Toolkit.getDefaultToolkit().beep();
 	}
     }
@@ -247,8 +247,7 @@ public class TimeRecordingTray {
 
     private void addTrayIconToSystemTray() throws ApplicationLaunchException {
 
-	trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(),
-		TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
+	trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(), TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
 	if (SystemTray.isSupported()) {
 	    try {
 		SystemTray tray = SystemTray.getSystemTray();
