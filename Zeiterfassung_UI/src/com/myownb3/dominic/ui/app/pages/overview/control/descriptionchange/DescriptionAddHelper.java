@@ -40,9 +40,8 @@ public class DescriptionAddHelper {
     private BusinessDayChangedCallbackHandler handler;
     private TimeRecordingTray timeRecordingTray;
 
-    public DescriptionAddHelper(OverviewController overviewController, TimeRecordingTray timeRecordingTray) {
+    public DescriptionAddHelper(OverviewController overviewController) {
 	this.overviewController = overviewController;
-	this.timeRecordingTray = timeRecordingTray;
 	handler = new BusinessDayChangedCallbackHandlerImpl();
     }
 
@@ -101,6 +100,14 @@ public class DescriptionAddHelper {
 
     private void refreshUI() {
 	overviewController.show();
-	timeRecordingTray.updateUIStates();
+	getTimeRecordingTray().updateUIStates();
+    }
+
+    public TimeRecordingTray getTimeRecordingTray() {
+	return timeRecordingTray;
+    }
+
+    public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
+	this.timeRecordingTray = timeRecordingTray;
     }
 }

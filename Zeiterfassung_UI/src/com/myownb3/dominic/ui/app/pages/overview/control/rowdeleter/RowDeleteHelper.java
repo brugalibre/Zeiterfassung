@@ -28,10 +28,9 @@ public class RowDeleteHelper {
     private OverviewController overviewController;
     private TimeRecordingTray timeRecordingTray;
 
-    public RowDeleteHelper(OverviewController overviewController, TimeRecordingTray timeRecordingTray) {
+    public RowDeleteHelper(OverviewController overviewController) {
 	this.overviewController = overviewController;
 	this.handler = new BusinessDayChangedCallbackHandlerImpl();
-	this.timeRecordingTray = timeRecordingTray;
     }
 
     /**
@@ -59,5 +58,9 @@ public class RowDeleteHelper {
     private void consumeEventAndRefresh(ActionEvent event) {
 	event.consume();
 	overviewController.show();
+    }
+
+    public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
+	this.timeRecordingTray = timeRecordingTray;
     }
 }
