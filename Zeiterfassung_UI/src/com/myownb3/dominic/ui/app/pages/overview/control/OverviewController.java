@@ -8,8 +8,6 @@ import java.util.ResourceBundle;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
@@ -66,7 +64,6 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     private ContextMenu contextMenu;
 
-    private BusinessDayChangedCallbackHandler handler;
     private BusinessDayTableModelHelper businessDayTableModel;
     private TimeRecordingTray timeRecordingTray;
 
@@ -81,15 +78,12 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
 	super.initialize(page);
 	businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelper(this));
-	handler = new BusinessDayChangedCallbackHandlerImpl();
 	setBinding(dataModel);
 
 	totalAmountOfTimeLabel.getStyleClass().add(Styles.BOLD_LABEL_12);
 	totalAmountOfTimeValue.getStyleClass().add(Styles.BOLD_LABEL_12);
 
-	RowDeleteHelper rowDeleteHelper = new RowDeleteHelper(this, handler, timeRecordingTray);
-	DescriptionAddHelper helper = new DescriptionAddHelper(this, handler, timeRecordingTray);
-	initContextMenu(rowDeleteHelper, helper);
+	initContextMenu();
 	initTable();
     }
 
@@ -160,12 +154,15 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	totalAmountOfTimeValue.textProperty().bind(getDataModel().getTotalAmountOfTimeValue());
     }
 
-    private void initContextMenu(RowDeleteHelper rowDeleteHelper, DescriptionAddHelper helper) {
+    private void initContextMenu() {
 
+	RowDeleteHelper rowDeleteHelper = new RowDeleteHelper(this, timeRecordingTray);
+	DescriptionAddHelper descAddhelper = new DescriptionAddHelper(this, timeRecordingTray);
+	
 	MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
 	deleteMenue.setOnAction(event -> rowDeleteHelper.deleteRow(event, tableView));
 	changeDescriptionMenue = new MenuItem(TextLabel.CHANGE_DESCRIPTION);
-	changeDescriptionMenue.setOnAction(event -> helper.showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView));
+	changeDescriptionMenue.setOnAction(event -> descAddhelper.showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView));
 	contextMenu = new ContextMenu();
 	contextMenu.getItems().add(deleteMenue);
     }
