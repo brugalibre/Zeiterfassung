@@ -24,11 +24,9 @@ import javafx.scene.control.TableView;
 public class RowDeleteHelper {
 
     private UIRefresher uiRefresher;
-    private BusinessDayChangedCallbackHandler handler;
 
     public RowDeleteHelper(UIRefresher uiRefresher) {
 	this.uiRefresher = uiRefresher;
-	this.handler = new BusinessDayChangedCallbackHandlerImpl();
     }
 
     /**
@@ -41,6 +39,7 @@ public class RowDeleteHelper {
      */
     public void deleteRow(ActionEvent event, TableView<BusinessDayIncTableRowValue> tableView) {
 
+	BusinessDayChangedCallbackHandler handler = new BusinessDayChangedCallbackHandlerImpl();
 	Optional<BusinessDayIncTableRowValue> optionalBusinessDayIncTableRowValue = Optional.ofNullable(tableView.getSelectionModel().getSelectedItem());
 	optionalBusinessDayIncTableRowValue.ifPresent(businessDayIncTableRowValue -> {
 	    handler.handleBusinessDayIncrementDeleted(businessDayIncTableRowValue.getNumberAsInt());

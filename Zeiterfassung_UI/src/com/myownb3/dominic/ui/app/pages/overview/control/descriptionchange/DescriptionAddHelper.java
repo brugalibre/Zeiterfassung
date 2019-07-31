@@ -36,11 +36,9 @@ import javafx.stage.StageStyle;
 public class DescriptionAddHelper {
 
     private UIRefresher uiRefresher;
-    private BusinessDayChangedCallbackHandler handler;
 
     public DescriptionAddHelper(UIRefresher uiRefresher) {
 	this.uiRefresher = uiRefresher;
-	handler = new BusinessDayChangedCallbackHandlerImpl();
     }
 
     /**
@@ -85,6 +83,7 @@ public class DescriptionAddHelper {
 	if (keyEvent.getCode() == KeyCode.ESCAPE) {
 	    stage.close();
 	} else if (keyEvent.getCode() == KeyCode.ENTER) {
+	    BusinessDayChangedCallbackHandlerImpl handler = new BusinessDayChangedCallbackHandlerImpl();
 	    handler.handleBusinessDayChanged(ChangedValue.of(indexOfChangedEntry, textField.getText(), DESCRIPTION));
 	    closeStageAndRefreshUI(stage);
 	}
