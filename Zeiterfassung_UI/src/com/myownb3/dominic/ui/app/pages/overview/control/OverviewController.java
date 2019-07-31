@@ -104,6 +104,11 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     }
 
     private void afterDelete(ActionEvent event) {
+	consumeEventAndRefresh(event);
+	timeRecordingTray.updateUIStates();
+    }
+
+    private void consumeEventAndRefresh(ActionEvent event) {
 	event.consume();
 	show();
     }
@@ -115,9 +120,8 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	businessDayTableModel.init(businessDay4Export, tableView);
     }
 
-    public void init(MainWindowController mainWindowController, TimeRecordingTray timeRecordingTray) {
+    public void init(MainWindowController mainWindowController) {
 	this.mainWindowController = mainWindowController;
-	this.timeRecordingTray = timeRecordingTray;
     }
 
     private void handleMouseEvent(MouseEvent event) {
@@ -212,6 +216,10 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     private void initTable() {
 	tableView.setOnMousePressed(event -> handleMouseEvent(event));
 	tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    }
+
+    public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
+	this.timeRecordingTray = timeRecordingTray;
     }
 
 }

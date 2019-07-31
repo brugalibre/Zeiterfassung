@@ -50,7 +50,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     public void initialize(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {
 
 	super.initialize(mainWindowPage);
-	overviewPanelController.init(this, timeRecordingTray);
+	overviewPanelController.init(this);
 	stopBusinessDayIncrementPanelController.setMainWindowController(this);
 
 	FXPageContent pageContent = (FXPageContent) mainWindowPage.getContent();
@@ -162,6 +162,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 
     public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
 	this.timeRecordingTray = timeRecordingTray;
+	overviewPanelController.setTimeRecordingTray(timeRecordingTray);
     }
 
 }
