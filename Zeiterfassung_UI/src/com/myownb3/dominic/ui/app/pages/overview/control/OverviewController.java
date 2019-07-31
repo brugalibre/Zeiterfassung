@@ -10,18 +10,16 @@ import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
-import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
+import com.myownb3.dominic.ui.app.pages.overview.control.businessdaychange.BusinessDayChangeHelper;
 import com.myownb3.dominic.ui.app.pages.overview.control.descriptionchange.DescriptionAddHelper;
 import com.myownb3.dominic.ui.app.pages.overview.control.rowdeleter.RowDeleteHelper;
 import com.myownb3.dominic.ui.app.pages.overview.model.OverviewPageModel;
 import com.myownb3.dominic.ui.app.pages.overview.model.resolver.OverviewPageModelResolver;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayTableModelHelper;
-import com.myownb3.dominic.ui.app.pages.overview.model.table.TimeSnippetCellValue;
 import com.myownb3.dominic.ui.app.pages.overview.view.OverviewPage;
 import com.myownb3.dominic.ui.app.styles.Styles;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
@@ -29,15 +27,12 @@ import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 import com.myownb3.dominic.ui.core.view.Page;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -47,8 +42,7 @@ import javafx.scene.layout.BorderPane;
  * @author Dominic
  * 
  */
-public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel>
-	implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> {
+public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel> {
 
     private MainWindowController mainWindowController;
 
@@ -86,7 +80,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     @Override
     public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
 	super.initialize(page);
-	businessDayTableModel = new BusinessDayTableModelHelper(this);
+	businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelper(this));
 	handler = new BusinessDayChangedCallbackHandlerImpl();
 	setBinding(dataModel);
 
@@ -131,33 +125,6 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     private boolean hasRightClickOnTable(MouseEvent event) {
 	return event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseButton.SECONDARY
 		&& event.getSource() instanceof TableView<?>;
-    }
-
-    @Override
-    public void handle(CellEditEvent<BusinessDayIncTableRowValue, String> event) {
-
-	BusinessDayIncTableRowValue businessDayIncTableCellValue = event.getRowValue();
-	TablePosition<BusinessDayIncTableRowValue, String> tablePosition = event.getTablePosition();
-	String newValue = event.getNewValue();
-
-	ValueTypes valueType = businessDayIncTableCellValue.getChangeValueTypeForIndex(tablePosition.getColumn());
-	// XXX Ugly hack. Since we had to make present values editable
-	if (valueType == ValueTypes.NONE) {
-	    show();
-	    return;
-	}
-	int fromUptoSequence = getBeginEndSequence(businessDayIncTableCellValue, tablePosition);
-	int orderNumber = Integer.valueOf(businessDayIncTableCellValue.getNumber());
-	handler.handleBusinessDayChanged(ChangedValue.of(orderNumber, newValue, valueType, fromUptoSequence));
-
-	show();
-    }
-
-    private int getBeginEndSequence(BusinessDayIncTableRowValue businessDayIncTableCellValue,
-	    TablePosition<BusinessDayIncTableRowValue, String> tablePosition) {
-	TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue
-		.getTimeSnippe4RowIndex(tablePosition.getColumn());
-	return timeSnippet4Index != null ? timeSnippet4Index.getSequence() : -1;
     }
 
     @FXML
