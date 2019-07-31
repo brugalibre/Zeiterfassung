@@ -121,8 +121,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     }
 
     private void handleMouseEvent(MouseEvent event) {
-	if (hasRightClickOnTable(event)) {
-	    TableView<?> tableView = (TableView<?>) event.getSource();
+	if (hasRightClickOnTable(event) && !tableView.getSelectionModel().isEmpty()) {
 	    BusinessDayIncTableRowValue businessDayIncTableRowValue = (BusinessDayIncTableRowValue) tableView
 		    .getSelectionModel().getSelectedItem();
 	    setFocusToRow(tableView, businessDayIncTableRowValue.getNumberAsInt() - 1);
