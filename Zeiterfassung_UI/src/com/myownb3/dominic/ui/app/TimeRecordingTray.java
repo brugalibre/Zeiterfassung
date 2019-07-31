@@ -205,6 +205,7 @@ public class TimeRecordingTray {
 	boolean success = TimeRecorder.INSTANCE.importBusinessDayFromFile(selectedFile);
 	if (success) {
 	    displayMessage(null, TextLabel.IMPORT_SUCESSFULL, MessageType.INFORMATION);
+	    showOverviewView();
 	    updateUIStates();
 	} else {
 	    displayMessage(TextLabel.IMPORT_NOT_SUCESSFULL_TITLE, TextLabel.IMPORT_NOT_SUCESSFULL_MSG, MessageType.ERROR);
