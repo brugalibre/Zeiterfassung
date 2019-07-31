@@ -1,4 +1,4 @@
-/**
+ /**
  * 
  */
 package com.myownb3.dominic.ui.app.pages.overview.control.descriptionchange;
@@ -10,8 +10,7 @@ import java.util.Optional;
 import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
-import com.myownb3.dominic.ui.app.TimeRecordingTray;
-import com.myownb3.dominic.ui.app.pages.overview.control.OverviewController;
+import com.myownb3.dominic.ui.app.pages.overview.control.UIRefresher;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.myownb3.dominic.ui.app.pages.overview.view.OverviewPage;
 
@@ -36,12 +35,11 @@ import javafx.stage.StageStyle;
  */
 public class DescriptionAddHelper {
 
-    private OverviewController overviewController;
+    private UIRefresher uiRefresher;
     private BusinessDayChangedCallbackHandler handler;
-    private TimeRecordingTray timeRecordingTray;
 
-    public DescriptionAddHelper(OverviewController overviewController) {
-	this.overviewController = overviewController;
+    public DescriptionAddHelper(UIRefresher uiRefresher) {
+	this.uiRefresher = uiRefresher;
 	handler = new BusinessDayChangedCallbackHandlerImpl();
     }
 
@@ -95,19 +93,6 @@ public class DescriptionAddHelper {
 
     private void closeStageAndRefreshUI(Stage stage) {
 	stage.close();
-	refreshUI();
-    }
-
-    private void refreshUI() {
-	overviewController.show();
-	getTimeRecordingTray().updateUIStates();
-    }
-
-    public TimeRecordingTray getTimeRecordingTray() {
-	return timeRecordingTray;
-    }
-
-    public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
-	this.timeRecordingTray = timeRecordingTray;
+	uiRefresher.refreshUI();
     }
 }
