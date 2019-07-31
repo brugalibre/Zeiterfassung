@@ -51,7 +51,6 @@ public class TimeRecordingTray {
     private JMenuItem startTurboBucher;
     private JMenuItem showImportDialogItem;
     private MainWindowPage mainWindowPage;
-    private JPopupMenu popupMenu;
 
     public void registerSystemtray(Stage primaryStage) throws ApplicationLaunchException {
 
@@ -65,12 +64,12 @@ public class TimeRecordingTray {
 	createShowHoursMenuItem();
 	createStartTurboBucherMenuItem();
 	createImportAufzeichnungMenueItem();
-	createPopupMenu(settingsRoundMenu, exitItem);
+	JPopupMenu popupMenu = createPopupMenu(settingsRoundMenu, exitItem);
 
 	mainWindowPage = new MainWindowPage(this, primaryStage);
 
 	trayIcon.addMouseMotionListener(getMouseMotionListener());
-	trayIcon.addMouseListener(getMouseListener());
+	trayIcon.addMouseListener(getMouseListener(popupMenu));
 	HotKeyManager.INSTANCE.registerHotKey(() -> handleUserInteractionAndShowInputIfStopped());
     }
 
@@ -85,6 +84,7 @@ public class TimeRecordingTray {
     }
 
     private void showOverviewView() {
+	
 	Platform.runLater(() -> mainWindowPage.showOverviewView());
     }
 
@@ -275,7 +275,7 @@ public class TimeRecordingTray {
 	};
     }
 
-    private MouseListener getMouseListener() {
+    private MouseListener getMouseListener(JPopupMenu popupMenu) {
 	return new MouseListener() {
 	    @Override
 	    public void mouseReleased(MouseEvent e) {
@@ -307,8 +307,8 @@ public class TimeRecordingTray {
 	};
     }
 
-    private void createPopupMenu(JMenu settingsRoundMenu, JMenuItem exitItem) {
-	popupMenu = new JPopupMenu();
+    private JPopupMenu createPopupMenu(JMenu settingsRoundMenu, JMenuItem exitItem) {
+	JPopupMenu popupMenu = new JPopupMenu();
 	popupMenu.add(settingsRoundMenu);
 	popupMenu.addSeparator();
 	popupMenu.add(showImportDialogItem);
@@ -316,6 +316,7 @@ public class TimeRecordingTray {
 	popupMenu.add(showHoursItem);
 	popupMenu.addSeparator();
 	popupMenu.add(exitItem);
+	return popupMenu;
     }
 
     private JMenu createSettingsMenu() {
