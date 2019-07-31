@@ -68,6 +68,9 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     private TimeRecordingTray timeRecordingTray;
 
     private MenuItem changeDescriptionMenue;
+    
+    private RowDeleteHelper rowDeleteHelper;
+    private DescriptionAddHelper descAddHelper;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -156,13 +159,12 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     private void initContextMenu() {
 
-	RowDeleteHelper rowDeleteHelper = new RowDeleteHelper(this, timeRecordingTray);
-	DescriptionAddHelper descAddhelper = new DescriptionAddHelper(this, timeRecordingTray);
-	
+	rowDeleteHelper = new RowDeleteHelper(this);
+	descAddHelper = new DescriptionAddHelper(this);
 	MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
 	deleteMenue.setOnAction(event -> rowDeleteHelper.deleteRow(event, tableView));
 	changeDescriptionMenue = new MenuItem(TextLabel.CHANGE_DESCRIPTION);
-	changeDescriptionMenue.setOnAction(event -> descAddhelper.showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView));
+	changeDescriptionMenue.setOnAction(event -> descAddHelper.showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView));
 	contextMenu = new ContextMenu();
 	contextMenu.getItems().add(deleteMenue);
     }
@@ -182,6 +184,8 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
 	this.timeRecordingTray = timeRecordingTray;
+	rowDeleteHelper.setTimeRecordingTray(timeRecordingTray);
+	descAddHelper.setTimeRecordingTray(timeRecordingTray);
     }
 
 }
