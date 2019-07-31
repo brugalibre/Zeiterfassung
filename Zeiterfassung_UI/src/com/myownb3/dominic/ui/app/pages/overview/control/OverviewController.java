@@ -64,13 +64,14 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     private ContextMenu contextMenu;
 
+    private RowDeleteHelper rowDeleteHelper;
+    private DescriptionAddHelper descAddHelper;
     private BusinessDayTableModelHelper businessDayTableModel;
+
     private TimeRecordingTray timeRecordingTray;
 
     private MenuItem changeDescriptionMenue;
     
-    private RowDeleteHelper rowDeleteHelper;
-    private DescriptionAddHelper descAddHelper;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
