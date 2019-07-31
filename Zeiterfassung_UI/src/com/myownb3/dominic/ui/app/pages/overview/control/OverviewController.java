@@ -4,7 +4,6 @@
 package com.myownb3.dominic.ui.app.pages.overview.control;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
@@ -17,6 +16,7 @@ import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDa
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.app.pages.overview.control.descriptionchange.DescriptionAddHelper;
+import com.myownb3.dominic.ui.app.pages.overview.control.rowdeleter.RowDeleteHelper;
 import com.myownb3.dominic.ui.app.pages.overview.model.OverviewPageModel;
 import com.myownb3.dominic.ui.app.pages.overview.model.resolver.OverviewPageModelResolver;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
@@ -93,28 +93,10 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	totalAmountOfTimeLabel.getStyleClass().add(Styles.BOLD_LABEL_12);
 	totalAmountOfTimeValue.getStyleClass().add(Styles.BOLD_LABEL_12);
 
-	initContextMenu();
+	RowDeleteHelper rowDeleteHelper = new RowDeleteHelper(this, handler, timeRecordingTray);
+	DescriptionAddHelper helper = new DescriptionAddHelper(this, handler, timeRecordingTray);
+	initContextMenu(rowDeleteHelper, helper);
 	initTable();
-    }
-
-    private void deleteRow(ActionEvent event) {
-
-	Optional<BusinessDayIncTableRowValue> optionalBusinessDayIncTableRowValue = Optional
-		.ofNullable(tableView.getSelectionModel().getSelectedItem());
-	optionalBusinessDayIncTableRowValue.ifPresent(businessDayIncTableRowValue -> {
-	    handler.handleBusinessDayIncrementDeleted(businessDayIncTableRowValue.getNumberAsInt());
-	    afterDelete(event);
-	});
-    }
-
-    private void afterDelete(ActionEvent event) {
-	consumeEventAndRefresh(event);
-	timeRecordingTray.updateUIStates();
-    }
-
-    private void consumeEventAndRefresh(ActionEvent event) {
-	event.consume();
-	show();
     }
 
     @Override
@@ -211,10 +193,10 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	totalAmountOfTimeValue.textProperty().bind(getDataModel().getTotalAmountOfTimeValue());
     }
 
-    private void initContextMenu() {
+    private void initContextMenu(RowDeleteHelper rowDeleteHelper, DescriptionAddHelper helper) {
+
 	MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
-	deleteMenue.setOnAction(event -> deleteRow(event));
-	DescriptionAddHelper helper = new DescriptionAddHelper(this, handler, timeRecordingTray);
+	deleteMenue.setOnAction(event -> rowDeleteHelper.deleteRow(event, tableView));
 	changeDescriptionMenue = new MenuItem(TextLabel.CHANGE_DESCRIPTION);
 	changeDescriptionMenue.setOnAction(event -> helper.showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView));
 	contextMenu = new ContextMenu();
