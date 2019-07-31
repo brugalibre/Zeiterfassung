@@ -98,7 +98,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	Optional<BusinessDayIncTableRowValue> optionalBusinessDayIncTableRowValue = Optional
 		.ofNullable(tableView.getSelectionModel().getSelectedItem());
 	optionalBusinessDayIncTableRowValue.ifPresent(businessDayIncTableRowValue -> {
-	    handler.handleBusinessDayIncrementDeleted(businessDayIncTableRowValue.getNumberAsInt() - 1);
+	    handler.handleBusinessDayIncrementDeleted(businessDayIncTableRowValue.getNumberAsInt());
 	    afterDelete(event);
 	});
     }
@@ -118,7 +118,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	super.show();
 	BusinessDay4Export businessDay4Export = getDataModel().getBusinessDay4Export();
 	businessDayTableModel.init(businessDay4Export, tableView);
-    }
+	}
 
     public void init(MainWindowController mainWindowController) {
 	this.mainWindowController = mainWindowController;
@@ -128,7 +128,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	if (hasRightClickOnTable(event) && !tableView.getSelectionModel().isEmpty()) {
 	    BusinessDayIncTableRowValue businessDayIncTableRowValue = (BusinessDayIncTableRowValue) tableView
 		    .getSelectionModel().getSelectedItem();
-	    setFocusToRow(tableView, businessDayIncTableRowValue.getNumberAsInt() - 1);
+	    setFocusToRow(tableView, businessDayIncTableRowValue.getNumberAsInt());
 	    contextMenu.show(tableView, event.getScreenX(), event.getScreenY());
 	    event.consume();
 	} else {
