@@ -20,6 +20,7 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.util.parser.NumberFormat;
+import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * The {@link BusinessDay} defines an entire day full of work. Such a day may
@@ -109,6 +110,15 @@ public class BusinessDay {
     public boolean hasNotChargedElements() {
 	return increments.stream()//
 		.anyMatch(bDayInc -> !bDayInc.isCharged());
+    }
+
+    /**
+     * @return <code>true</code> if this {@link BusinessDay} has at least one
+     *         element with a description. Otherwise returns <code>false</code>
+     */
+    public boolean hasDescription() {
+	return increments.stream()//
+		.anyMatch(bDayInc -> StringUtil.isNotEmptyOrNull(bDayInc.getDescription()));
     }
 
     /**

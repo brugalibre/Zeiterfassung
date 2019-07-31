@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
@@ -15,6 +16,7 @@ import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
+import com.myownb3.dominic.ui.app.pages.overview.control.descriptionchange.DescriptionAddHelper;
 import com.myownb3.dominic.ui.app.pages.overview.model.OverviewPageModel;
 import com.myownb3.dominic.ui.app.pages.overview.model.resolver.OverviewPageModelResolver;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
@@ -74,6 +76,8 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     private BusinessDayTableModelHelper businessDayTableModel;
     private TimeRecordingTray timeRecordingTray;
 
+    private MenuItem changeDescriptionMenue;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 	initialize(new OverviewPage(this, url));
@@ -118,7 +122,8 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	super.show();
 	BusinessDay4Export businessDay4Export = getDataModel().getBusinessDay4Export();
 	businessDayTableModel.init(businessDay4Export, tableView);
-	}
+	addOrRemoveDescriptionChangeMenue();
+    }
 
     public void init(MainWindowController mainWindowController) {
 	this.mainWindowController = mainWindowController;
@@ -209,8 +214,19 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     private void initContextMenu() {
 	MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
 	deleteMenue.setOnAction(event -> deleteRow(event));
+	DescriptionAddHelper helper = new DescriptionAddHelper(this, handler, timeRecordingTray);
+	changeDescriptionMenue = new MenuItem(TextLabel.CHANGE_DESCRIPTION);
+	changeDescriptionMenue.setOnAction(event -> helper.showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView));
 	contextMenu = new ContextMenu();
 	contextMenu.getItems().add(deleteMenue);
+    }
+
+    private void addOrRemoveDescriptionChangeMenue() {
+	if (TimeRecorder.INSTANCE.getBussinessDay().hasDescription()) {
+	    contextMenu.getItems().remove(changeDescriptionMenue);
+	} else if (!contextMenu.getItems().contains(changeDescriptionMenue)) {
+	    contextMenu.getItems().add(changeDescriptionMenue);
+	}
     }
 
     private void initTable() {
