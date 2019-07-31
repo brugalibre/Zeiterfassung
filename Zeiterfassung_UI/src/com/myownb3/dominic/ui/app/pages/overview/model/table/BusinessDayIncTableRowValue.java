@@ -8,12 +8,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.TableView;
 
 /**
+ * The {@link BusinessDayIncTableRowValue} represents a single row in a
+ * {@link TableView}. There may be more than one {@link TimeSnippet}
+ * 
  * @author Dominic
  *
  */
@@ -67,8 +72,11 @@ public class BusinessDayIncTableRowValue {
     }
 
     /**
-     * @param tablePosition
-     * @return
+     * Returns the type of value for the element at the given index
+     * 
+     * @param index
+     *            the index
+     * @return the type of value for the element at the given index
      */
     public ValueTypes getChangeValueTypeForIndex(int index) {
 	return valueTypesForIndex.get(index);
@@ -78,6 +86,7 @@ public class BusinessDayIncTableRowValue {
      * Returns the {@link TimeSnippetCellValue} for the given index
      * 
      * @param index
+     *            the index
      * @return the {@link TimeSnippetCellValue} for the given index
      */
     public TimeSnippetCellValue getTimeSnippet(int index) {
@@ -88,6 +97,7 @@ public class BusinessDayIncTableRowValue {
      * Returns the {@link TimeSnippetCellValue} for the given index
      * 
      * @param index
+     *            the index
      * @return the {@link TimeSnippetCellValue} for the given index
      */
     public TimeSnippetCellValue getTimeSnippe4RowIndex(int index) {
