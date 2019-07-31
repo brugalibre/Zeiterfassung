@@ -67,7 +67,6 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     private RowDeleteHelper rowDeleteHelper;
     private DescriptionAddHelper descAddHelper;
     private BusinessDayTableModelHelper businessDayTableModel;
-
     private TimeRecordingTray timeRecordingTray;
 
     private MenuItem changeDescriptionMenue;
@@ -81,7 +80,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     @Override
     public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
 	super.initialize(page);
-	businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelper(this));
+	businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelper(() -> show()));
 	setBinding(dataModel);
 
 	totalAmountOfTimeLabel.getStyleClass().add(Styles.BOLD_LABEL_12);
@@ -160,8 +159,8 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     private void initContextMenu() {
 
-	rowDeleteHelper = new RowDeleteHelper(this);
-	descAddHelper = new DescriptionAddHelper(this);
+	rowDeleteHelper = new RowDeleteHelper(() -> refreshUI());
+	descAddHelper = new DescriptionAddHelper(() -> refreshUI());
 	MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
 	deleteMenue.setOnAction(event -> rowDeleteHelper.deleteRow(event, tableView));
 	changeDescriptionMenue = new MenuItem(TextLabel.CHANGE_DESCRIPTION);
@@ -185,8 +184,10 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
 	this.timeRecordingTray = timeRecordingTray;
-	rowDeleteHelper.setTimeRecordingTray(timeRecordingTray);
-	descAddHelper.setTimeRecordingTray(timeRecordingTray);
     }
 
+    private void refreshUI() {
+	show();
+	timeRecordingTray.updateUIStates();
+    }
 }

@@ -7,8 +7,7 @@ import java.util.Optional;
 
 import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
-import com.myownb3.dominic.ui.app.TimeRecordingTray;
-import com.myownb3.dominic.ui.app.pages.overview.control.OverviewController;
+import com.myownb3.dominic.ui.app.pages.overview.control.UIRefresher;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.myownb3.dominic.ui.app.pages.overview.view.OverviewPage;
 
@@ -24,12 +23,11 @@ import javafx.scene.control.TableView;
  */
 public class RowDeleteHelper {
 
+    private UIRefresher uiRefresher;
     private BusinessDayChangedCallbackHandler handler;
-    private OverviewController overviewController;
-    private TimeRecordingTray timeRecordingTray;
 
-    public RowDeleteHelper(OverviewController overviewController) {
-	this.overviewController = overviewController;
+    public RowDeleteHelper(UIRefresher uiRefresher) {
+	this.uiRefresher = uiRefresher;
 	this.handler = new BusinessDayChangedCallbackHandlerImpl();
     }
 
@@ -51,16 +49,7 @@ public class RowDeleteHelper {
     }
 
     private void afterDelete(ActionEvent event) {
-	consumeEventAndRefresh(event);
-	timeRecordingTray.updateUIStates();
-    }
-
-    private void consumeEventAndRefresh(ActionEvent event) {
 	event.consume();
-	overviewController.show();
-    }
-
-    public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
-	this.timeRecordingTray = timeRecordingTray;
+	uiRefresher.refreshUI();
     }
 }
