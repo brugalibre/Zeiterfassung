@@ -29,7 +29,10 @@ public class TextLabel {
     public static final String EXCEPTION_DIALOG_MESSAGE = "Ein unerwarteter Fehler ist aufgetreten:";
     public static final String EXCEPTION_DIALOG_TITLE = "Hoppla!";
 
+    // Change row
     public static final String DELETE_ROW = "Reihe Löschen";
+    public static final String CHANGE_DESCRIPTION = "Beschreibung hinzufügen";
+
     public static final String NUMMER_LABEL = "Nr.";
     public static final String CLEAR_LABEL = "Alles löschen";
     public static final String NEIN = "Nein";
@@ -45,7 +48,7 @@ public class TextLabel {
     public static final String IMPORT_SUCESSFULL = "Import erfolgreich";
     public static final String IMPORT_NOT_SUCESSFULL_TITLE = "Import fehlgeschlagen!";
     public static final String IMPORT_NOT_SUCESSFULL_MSG = "Prüfe das log sowie die zu importierende Datei";
-    
+
     // Ticket Stuff
     public static final String TICKET = "Ticket";
     public static final String SUCCESSFULLY_CHARGED_TEXT = "Erfolgreich abgebucht";
