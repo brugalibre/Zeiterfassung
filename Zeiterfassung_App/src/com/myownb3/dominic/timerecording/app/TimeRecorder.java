@@ -57,6 +57,23 @@ public class TimeRecorder {
 	businessDay = new BusinessDay();
     }
 
+    /**
+     * Either starts a new or stops the current recording.
+     * 
+     * @formatter:off
+     *	<ul>
+     *  	<li>Start: Starts a new recording. This leads the {@link TimeRecorder} to switch into the status
+     *                	{@link WorkStates#WORKING}.
+     * 		</li>
+     *          <li>Stop: Stops the current recording. This This leads the {@link TimeRecorder} to switch into
+     *          	the status {@link WorkStates#NOT_WORKING}. Also the UI is shown in 
+     *          	order to enter the Ticket-No
+     *          </li>
+     *	</ul>
+     * @formatter:on
+     * @return <code>true</code> if the {@link TimeRecorder} is working or
+     *         <code>false</code> if not
+     */
     public boolean handleUserInteraction() {
 	switch (currentState) {
 	case NOT_WORKING:
@@ -80,7 +97,11 @@ public class TimeRecorder {
 	}
     }
 
-    public void stop() {
+    /*
+     * Stops the current recording. This leads the {@link TimeRecorder} to switch into the status {@link WorkStates#NOT_WORKING}.
+     * Also the UI is shown in order to enter the Ticket-No
+     */
+    private void stop() {
 	businessDay.stopCurrentIncremental();
 	currentState = WorkStates.NOT_WORKING;
 	callbackHandler.onStop();
@@ -105,144 +126,15 @@ public class TimeRecorder {
 	callbackHandler.onResume();
     }
 
-    public void setCallbackHandler(CallbackHandler callbackHandler) {
-	this.callbackHandler = callbackHandler;
-    }
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    // Change the Business-Day (add, change, remove and so on)
+    /////////////////////////////////////////////////////////////////////////////////////////////
     
-    /**
-     * @return a {@link BusinessDay4Export} for the current {@link BusinessDay}
-     */
-    public BusinessDay4Export getBussinessDayReadOnly() {
-	return BusinessDay4Export.of(businessDay);
-    }
-
     /**
      * removes all recorded {@link BusinessDayIncrement}
      */
     public void clear() {
 	businessDay.clearFinishedIncrements();
-    }
-
-    /**
-    * 
-    */
-    public void export() {
-	List<String> content = BusinessDayExporter.INSTANCE.exportBusinessDay(BusinessDay4Export.of(businessDay));
-	FileExporter.INTANCE.export(content);
-	callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.SUCESSFULLY_EXPORTED));
-    }
-
-    /**
-     * Return a String, which represents the current state and shows informations
-     * according to this
-     * 
-     * @return a String, which represents the current state and shows informations
-     *         according to this
-     * @see WorkStates
-     */
-    public String getInfoStringForState() {
-	switch (currentState) {
-	case NOT_WORKING:
-	    return businessDay.getCapturingInactiveSinceMsg();
-	case WORKING:
-	    return businessDay.getCapturingActiveSinceMsg();
-	default:
-	    throw new RuntimeException("Unknowing working state '" + currentState + "'!");
-	}
-    }
-
-    /**
-     * Return <code>true</code> if there is any content, <code>false</code> if not
-     * 
-     * @return <code>true</code> if there is any content, <code>false</code> if not
-     */
-    public boolean hasContent() {
-	return businessDay.getTotalDuration() > 0f;
-    }
-
-    /**
-     * Returns <code>true</code> if this {@link BusinessDay} has at least one
-     * element which is not yed charged. Otherwise returns <code>false</code>
-     * 
-     * @return <code>true</code> if this {@link BusinessDay} has at least one
-     *         element which is not yed charged. Otherwise returns
-     *         <code>false</code>
-     */
-    public boolean hasNotChargedElements() {
-	return businessDay.hasNotChargedElements();
-    }
-
-    /**
-     * Collects and export the necessary data which is used by the TurobBucher to
-     * charge After the tuber-bucher- app is invoked in order to do actual charge
-     * 
-     * @return <code>true</code> if there was actually a booking process or
-     *         <code>false</code> if there wasn't anything to do
-     */
-    public boolean book() {
-	if (businessDay.hasNotChargedElements()) {
-	    BookerHelper helper = new BookerHelper(businessDay);
-	    helper.book();
-	    return true;
-	}
-	return false;
-    }
-
-    /**
-     * @return the current {@link TIME_TYPE} of this {@link TimeRecorder}
-     */
-    public TIME_TYPE getTimeType() {
-	return timeType;
-    }
-
-    /**
-     * First the {@link FileImporter} imports the given {@link File} and fills
-     * it's content into a list. Later the {@link BusinessDayImporter} uses this
-     * lists in order to import a a new {@link BusinessDay}
-     * 
-     * @param file
-     *            the file to import
-     * @return <code>true</code> if the new {@link BusinessDay} was successfully
-     *         imported or <code>false</code> if not
-     */
-    public boolean importBusinessDayFromFile(File file) {
-	try {
-	    importBusinessDayInternal(file);
-	    return true;
-	} catch (BusinessDayImportException e) {
-	    e.printStackTrace();
-	    // Nothing more to do
-	}
-	return false;
-    }
-
-    private void importBusinessDayInternal(File file) {
-	List<String> fileContent = FileImporter.INTANCE.importFile(file);
-	this.businessDay = BusinessDayImporter.INTANCE.importBusinessDay(fileContent);
-    }
-
-    /**
-     * @return <code>true</code> if the {@link TimeRecorder} is currently recording
-     *         and <code>false</code> if not
-     */
-    public boolean isRecordindg() {
-	return currentState == WorkStates.WORKING;
-    }
-
-    /**
-     * @return a {@link BusinessDayInc4Export} for the current {@link BusinessDayIncrement} of the {@link BusinessDay}
-     */
-    public BusinessDayInc4Export getCurrentBussinessDayIncrement() {
-	return BusinessDayInc4Export.of(businessDay.getCurrentBussinessDayIncremental());
-    }
-
-    /**
-     * @return <code>true</code> if the current {@link BusinessDay} has at least
-     *         on {@link BusinessDayIncrement} with a description otherwise
-     *         <code>false</code>
-     */
-    public boolean hasBusinessDayDescription() {
-	return businessDay.hasDescription();
     }
 
     /**
@@ -276,5 +168,146 @@ public class TimeRecorder {
      */
     public void changeBusinesDayIncrement(ChangedValue changeValue) {
 	businessDay.changeBusinesDayIncrement(changeValue);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    // Import, Export & Booking
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * Collects and export the necessary data which is used by the TurobBucher to
+     * charge After the tuber-bucher- app is invoked in order to do actual charge
+     * 
+     * @return <code>true</code> if there was actually a booking process or
+     *         <code>false</code> if there wasn't anything to do
+     */
+    public boolean book() {
+	if (businessDay.hasNotChargedElements()) {
+	    BookerHelper helper = new BookerHelper(businessDay);
+	    helper.book();
+	    return true;
+	}
+	return false;
+    }
+
+    /**
+    *  Exports the current {@link BusinessDay} to the file system
+    */
+    public void export() {
+	List<String> content = BusinessDayExporter.INSTANCE.exportBusinessDay(BusinessDay4Export.of(businessDay));
+	FileExporter.INTANCE.export(content);
+	callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.SUCESSFULLY_EXPORTED));
+    }
+    
+    /**
+     * First the {@link FileImporter} imports the given {@link File} and fills
+     * it's content into a list. Later the {@link BusinessDayImporter} uses this
+     * lists in order to import a a new {@link BusinessDay}
+     * 
+     * @param file
+     *            the file to import
+     * @return <code>true</code> if the new {@link BusinessDay} was successfully
+     *         imported or <code>false</code> if not
+     */
+    public boolean importBusinessDayFromFile(File file) {
+	try {
+	    importBusinessDayInternal(file);
+	    return true;
+	} catch (BusinessDayImportException e) {
+	    e.printStackTrace();
+	    // Nothing more to do
+	}
+	return false;
+    }
+
+    private void importBusinessDayInternal(File file) {
+	List<String> fileContent = FileImporter.INTANCE.importFile(file);
+	this.businessDay = BusinessDayImporter.INTANCE.importBusinessDay(fileContent);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    // Getter & Setter
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @return the current {@link TIME_TYPE} of this {@link TimeRecorder}
+     */
+    public TIME_TYPE getTimeType() {
+	return timeType;
+    }
+    
+    /**
+     * Return a String, which represents the current state and shows informations
+     * according to this
+     * 
+     * @return a String, which represents the current state and shows informations
+     *         according to this
+     * @see WorkStates
+     */
+    public String getInfoStringForState() {
+	switch (currentState) {
+	case NOT_WORKING:
+	    return businessDay.getCapturingInactiveSinceMsg();
+	case WORKING:
+	    return businessDay.getCapturingActiveSinceMsg();
+	default:
+	    throw new RuntimeException("Unknowing working state '" + currentState + "'!");
+	}
+    }
+    
+    /**
+     * Return <code>true</code> if there is any content, <code>false</code> if not
+     * 
+     * @return <code>true</code> if there is any content, <code>false</code> if not
+     */
+    public boolean hasContent() {
+	return businessDay.getTotalDuration() > 0f;
+    }
+
+    /**
+     * Returns <code>true</code> if this {@link BusinessDay} has at least one
+     * element which is not yed charged. Otherwise returns <code>false</code>
+     * 
+     * @return <code>true</code> if this {@link BusinessDay} has at least one
+     *         element which is not yed charged. Otherwise returns
+     *         <code>false</code>
+     */
+    public boolean hasNotChargedElements() {
+	return businessDay.hasNotChargedElements();
+    }
+    
+    /**
+     * @return <code>true</code> if the {@link TimeRecorder} is currently recording
+     *         and <code>false</code> if not
+     */
+    public boolean isRecordindg() {
+	return currentState == WorkStates.WORKING;
+    }
+
+    /**
+     * @return a {@link BusinessDayInc4Export} for the current {@link BusinessDayIncrement} of the {@link BusinessDay}
+     */
+    public BusinessDayInc4Export getCurrentBussinessDayIncrement() {
+	return BusinessDayInc4Export.of(businessDay.getCurrentBussinessDayIncremental());
+    }
+
+    /**
+     * @return <code>true</code> if the current {@link BusinessDay} has at least
+     *         on {@link BusinessDayIncrement} with a description otherwise
+     *         <code>false</code>
+     */
+    public boolean hasBusinessDayDescription() {
+	return businessDay.hasDescription();
+    }
+    
+    /**
+     * @return a {@link BusinessDay4Export} for the current {@link BusinessDay}
+     */
+    public BusinessDay4Export getBussinessDayReadOnly() {
+	return BusinessDay4Export.of(businessDay);
+    }
+
+    public void setCallbackHandler(CallbackHandler callbackHandler) {
+	this.callbackHandler = callbackHandler;
     }
 }
