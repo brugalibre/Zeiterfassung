@@ -22,8 +22,8 @@ import com.myownb3.dominic.timerecording.core.work.WorkStates;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDayInc4Export;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 
 /**
  * Responsible for recording the time. The {@link TimeRecorder} consist of one
@@ -191,7 +191,7 @@ public class TimeRecorder {
     *  Exports the current {@link BusinessDay} to the file system
     */
     public void export() {
-	List<String> content = BusinessDayExporter.INSTANCE.exportBusinessDay(BusinessDay4Export.of(businessDay));
+	List<String> content = BusinessDayExporter.INSTANCE.exportBusinessDay(BusinessDayVO.of(businessDay));
 	FileExporter.INTANCE.export(content);
 	callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.SUCESSFULLY_EXPORTED));
     }
@@ -275,10 +275,10 @@ public class TimeRecorder {
     }
 
     /**
-     * @return a {@link BusinessDayInc4Export} for the current {@link BusinessDayIncrement} of the {@link BusinessDay}
+     * @return a {@link BusinessDayIncrementVO} for the current {@link BusinessDayIncrement} of the {@link BusinessDay}
      */
-    public BusinessDayInc4Export getCurrentBussinessDayIncrement() {
-	return BusinessDayInc4Export.of(businessDay.getCurrentBussinessDayIncremental());
+    public BusinessDayIncrementVO getCurrentBussinessDayIncrement() {
+	return BusinessDayIncrementVO.of(businessDay.getCurrentBussinessDayIncremental());
     }
 
     /**
@@ -291,10 +291,10 @@ public class TimeRecorder {
     }
     
     /**
-     * @return a {@link BusinessDay4Export} for the current {@link BusinessDay}
+     * @return a {@link BusinessDayVO} for the current {@link BusinessDay}
      */
-    public BusinessDay4Export getBussinessDayReadOnly() {
-	return BusinessDay4Export.of(businessDay);
+    public BusinessDayVO getBussinessDayVO() {
+	return BusinessDayVO.of(businessDay);
     }
 
     public void setCallbackHandler(CallbackHandler callbackHandler) {

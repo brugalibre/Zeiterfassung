@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.myownb3.dominic.timerecording.core.work.businessday.extern;
+package com.myownb3.dominic.timerecording.core.work.businessday.vo;
 
 import java.util.Comparator;
 
@@ -9,15 +9,15 @@ import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
 
 /**
- * The {@link TimeSnippet4Export} is used whenever a {@link TimeSnippet} is
- * going to be exported. Either on a UI or on a text file
+ * The {@link TimeSnippetVO} is used whenever a we need
+ * {@link TimeSnippet} for displaying or exporting. The {@link TimeSnippetVO} is read only
  * 
  * @author Dominic
  *
  */
-public class TimeSnippet4Export {
+public class TimeSnippetVO {
 
-    public TimeSnippet4Export(TimeSnippet timeSnippet) {
+    public TimeSnippetVO(TimeSnippet timeSnippet) {
 	this.beginTimeStamp = timeSnippet.getBeginTimeStamp();
 	this.endTimeStamp = timeSnippet.getEndTimeStamp();
     }
@@ -37,9 +37,9 @@ public class TimeSnippet4Export {
 	return String.valueOf(endTimeStamp);
     }
 
-    public static class TimeStampComparator implements Comparator<TimeSnippet4Export> {
+    public static class TimeStampComparator implements Comparator<TimeSnippetVO> {
 	@Override
-	public int compare(TimeSnippet4Export timeSnippet, TimeSnippet4Export timeSnippet2) {
+	public int compare(TimeSnippetVO timeSnippet, TimeSnippetVO timeSnippet2) {
 	    Time beginTimeStamp1 = timeSnippet.beginTimeStamp;
 	    Time beginTimeStamp2 = timeSnippet2.beginTimeStamp;
 	    return beginTimeStamp1.compareTo(beginTimeStamp2);

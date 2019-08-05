@@ -15,6 +15,7 @@ import com.myownb3.dominic.timerecording.settings.round.exception.RounderInitExc
 import com.myownb3.dominic.timerecording.settings.round.exception.RounderStoreValueException;
 
 /**
+ * The {@link TimeRounder} is responsible for loading and storing of the current {@link RoundMode}
  * @author Dominic
  *
  */
@@ -28,8 +29,6 @@ public class TimeRounder {
     }
 
     public void init() {
-//	InputStream resourceStream = loader.getResourceAsStream(TURBO_BUCHER_PROPERTIES) Works but the properties file is empty..
-//	InputStream resourceStream = new FileInputStream(TURBO_BUCHER_PROPERTIES) Works perfectly fine within eclipse but not outside
 	RoundMode roundMode = evalRoundMode();
 	setRoundMode(roundMode);
     }

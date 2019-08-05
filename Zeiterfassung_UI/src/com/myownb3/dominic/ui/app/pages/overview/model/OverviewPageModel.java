@@ -4,7 +4,7 @@
 package com.myownb3.dominic.ui.app.pages.overview.model;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
 import javafx.beans.property.Property;
@@ -18,7 +18,7 @@ import javafx.beans.property.StringProperty;
  */
 public class OverviewPageModel implements PageModel {
 
-    private BusinessDay4Export businessDay4Export;
+    private BusinessDayVO businessDayVO;
     private Property<Boolean> isChargeButtonDisabled;
     private Property<Boolean> isClearButtonDisabled;
     private Property<Boolean> isExportButtonDisabled;
@@ -33,18 +33,18 @@ public class OverviewPageModel implements PageModel {
     /**
      * Creates a new {@link OverviewPageModel}
      */
-    public OverviewPageModel(BusinessDay4Export businessDay4Export) {
-	this.businessDay4Export = businessDay4Export;
-	isChargeButtonDisabled = new SimpleBooleanProperty(businessDay4Export.hasNotChargedElements());
-	isClearButtonDisabled = new SimpleBooleanProperty(businessDay4Export.hasNotChargedElements());
-	isExportButtonDisabled = new SimpleBooleanProperty(businessDay4Export.hasNotChargedElements());
+    public OverviewPageModel(BusinessDayVO businessDayVO) {
+	this.businessDayVO = businessDayVO;
+	isChargeButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
+	isClearButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
+	isExportButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
 
 	bookButtonLabel = new SimpleStringProperty(TextLabel.CHARGE_LABEL);
 	exportButtonLabel = new SimpleStringProperty(TextLabel.EXPORT_LABEL);
 	clearButtonLabel = new SimpleStringProperty(TextLabel.CLEAR_LABEL);
 
 	totalAmountOfTimeLabel = new SimpleStringProperty(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL);
-	totalAmountOfTimeValue = new SimpleStringProperty(businessDay4Export.getTotalDurationRep());
+	totalAmountOfTimeValue = new SimpleStringProperty(businessDayVO.getTotalDurationRep());
     }
 
     /**
@@ -52,11 +52,11 @@ public class OverviewPageModel implements PageModel {
      * @param of
      * @return
      */
-    public static OverviewPageModel of(OverviewPageModel inPageModel, BusinessDay4Export businessDay4Export) {
-	inPageModel.businessDay4Export = businessDay4Export;
-	inPageModel.getIsChargeButtonDisabled().setValue(!businessDay4Export.hasNotChargedElements());
-	inPageModel.getIsClearButtonDisabled().setValue(businessDay4Export.getBusinessDayIncrements().isEmpty());
-	inPageModel.getIsExportButtonDisabled().setValue(businessDay4Export.getBusinessDayIncrements().isEmpty());
+    public static OverviewPageModel of(OverviewPageModel inPageModel, BusinessDayVO businessDayVO) {
+	inPageModel.businessDayVO = businessDayVO;
+	inPageModel.getIsChargeButtonDisabled().setValue(!businessDayVO.hasNotChargedElements());
+	inPageModel.getIsClearButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
+	inPageModel.getIsExportButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
 
 	inPageModel.getBookButtonLabel().set(TextLabel.CHARGE_LABEL);
 	inPageModel.getExportButtonLabel().set(TextLabel.EXPORT_LABEL);
@@ -64,16 +64,16 @@ public class OverviewPageModel implements PageModel {
 
 	inPageModel.getTotalAmountOfTimeLabel().set(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL);
 
-	String totalDurationRep = businessDay4Export.getTotalDurationRep();
+	String totalDurationRep = businessDayVO.getTotalDurationRep();
 	inPageModel.getTotalAmountOfTimeValue().set(totalDurationRep);
 	return inPageModel;
     }
 
     /**
-     * @returns the {@link BusinessDay4Export}
+     * @returns the {@link BusinessDayVO}
      */
-    public final BusinessDay4Export getBusinessDay4Export() {
-	return this.businessDay4Export;
+    public final BusinessDayVO getBusinessDayVO() {
+	return this.businessDayVO;
     }
 
     /**
