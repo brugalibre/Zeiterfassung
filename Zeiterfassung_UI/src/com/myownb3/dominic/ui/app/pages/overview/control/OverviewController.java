@@ -95,7 +95,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	super.show();
 	BusinessDay4Export businessDay4Export = getDataModel().getBusinessDay4Export();
 	businessDayTableModel.init(businessDay4Export, tableView);
-	changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.getBussinessDay().hasDescription());
+	changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.hasBusinessDayDescription());
     }
 
 

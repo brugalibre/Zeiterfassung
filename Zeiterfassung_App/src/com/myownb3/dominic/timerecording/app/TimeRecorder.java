@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.callbackhandler.CallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementAdd;
+import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.charge.BookerHelper;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.BusinessDayImporter;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
@@ -19,7 +21,9 @@ import com.myownb3.dominic.timerecording.core.message.MessageType;
 import com.myownb3.dominic.timerecording.core.work.WorkStates;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
+import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDayInc4Export;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
 
 /**
@@ -104,9 +108,12 @@ public class TimeRecorder {
     public void setCallbackHandler(CallbackHandler callbackHandler) {
 	this.callbackHandler = callbackHandler;
     }
-
-    public BusinessDay getBussinessDay() {
-	return businessDay;
+    
+    /**
+     * @return a {@link BusinessDay4Export} for the current {@link BusinessDay}
+     */
+    public BusinessDay4Export getBussinessDayReadOnly() {
+	return BusinessDay4Export.of(businessDay);
     }
 
     /**
@@ -220,5 +227,54 @@ public class TimeRecorder {
      */
     public boolean isRecordindg() {
 	return currentState == WorkStates.WORKING;
+    }
+
+    /**
+     * @return a {@link BusinessDayInc4Export} for the current {@link BusinessDayIncrement} of the {@link BusinessDay}
+     */
+    public BusinessDayInc4Export getCurrentBussinessDayIncrement() {
+	return BusinessDayInc4Export.of(businessDay.getCurrentBussinessDayIncremental());
+    }
+
+    /**
+     * @return <code>true</code> if the current {@link BusinessDay} has at least
+     *         on {@link BusinessDayIncrement} with a description otherwise
+     *         <code>false</code>
+     */
+    public boolean hasBusinessDayDescription() {
+	return businessDay.hasDescription();
+    }
+
+    /**
+     * Creates and adds a new {@link BusinessDayIncrement} for the given
+     * {@link BusinessDayIncrementAdd}
+     * 
+     * @param update the {@link BusinessDayIncrementAdd} which defines the new
+     *               {@link BusinessDayIncrement}
+     */
+    public void addBusinessIncrement(BusinessDayIncrementAdd businessDayIncrementAdd) {
+	businessDay.addBusinessIncrement(businessDayIncrementAdd);
+    }
+
+    /**
+     * Removes the {@link BusinessDayIncrement} at the given index. If there is no
+     * {@link BusinessDayIncrement} for this index nothing is done
+     * 
+     * @param index the given index
+     */
+    public void removeIncrementAtIndex(int index) {
+	businessDay.removeIncrementAtIndex(index);
+    }
+
+    /**
+     * According to the given {@link ChangedValue} the corresponding
+     * {@link BusinessDayIncrement} evaluated. If there is one then the value is
+     * changed
+     * 
+     * @param changeValue the param which defines what value is changed
+     * @see ValueTypes
+     */
+    public void changeBusinesDayIncrement(ChangedValue changeValue) {
+	businessDay.changeBusinesDayIncrement(changeValue);
     }
 }

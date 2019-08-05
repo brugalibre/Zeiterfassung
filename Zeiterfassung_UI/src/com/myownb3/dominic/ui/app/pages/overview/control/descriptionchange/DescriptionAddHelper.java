@@ -7,7 +7,7 @@ import static com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes
 
 import java.util.Optional;
 
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.myownb3.dominic.timerecording.app.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
 import com.myownb3.dominic.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
