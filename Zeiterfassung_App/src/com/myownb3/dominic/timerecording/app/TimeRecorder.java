@@ -120,7 +120,7 @@ public class TimeRecorder {
     * 
     */
     public void export() {
-	List<String> content = BusinessDayExporter.INSTANCE.collectContent(BusinessDay4Export.of(businessDay));
+	List<String> content = BusinessDayExporter.INSTANCE.exportBusinessDay(BusinessDay4Export.of(businessDay));
 	FileExporter.INTANCE.export(content);
 	callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.SUCESSFULLY_EXPORTED));
     }
