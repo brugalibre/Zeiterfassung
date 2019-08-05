@@ -10,13 +10,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementImport;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement.TimeStampComparator;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
+import com.myownb3.dominic.timerecording.core.work.date.TimeType;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.util.parser.NumberFormat;
@@ -129,7 +129,7 @@ public class BusinessDay {
     }
 
     public float getTotalDuration() {
-	return getTotalDuration(TimeRecorder.INSTANCE.getTimeType());
+	return getTotalDuration(TimeType.DEFAULT);
     }
 
     public BusinessDayIncrement getCurrentBussinessDayIncremental() {

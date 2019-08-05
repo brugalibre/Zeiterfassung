@@ -24,7 +24,6 @@ import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrem
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDayInc4Export;
-import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
 
 /**
  * Responsible for recording the time. The {@link TimeRecorder} consist of one
@@ -49,10 +48,8 @@ public class TimeRecorder {
     private BusinessDay businessDay;
     private CallbackHandler callbackHandler;
     private WorkStates currentState;
-    private TIME_TYPE timeType;
 
     private TimeRecorder() {
-	timeType = TIME_TYPE.HOUR;
 	currentState = WorkStates.NOT_WORKING;
 	businessDay = new BusinessDay();
     }
@@ -229,13 +226,6 @@ public class TimeRecorder {
     // Getter & Setter
     /////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * @return the current {@link TIME_TYPE} of this {@link TimeRecorder}
-     */
-    public TIME_TYPE getTimeType() {
-	return timeType;
-    }
-    
     /**
      * Return a String, which represents the current state and shows informations
      * according to this
