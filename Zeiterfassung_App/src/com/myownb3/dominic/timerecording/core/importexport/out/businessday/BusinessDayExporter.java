@@ -41,7 +41,7 @@ public class BusinessDayExporter {
      *            the {@link BusinessDay4Export} which has to be exported
      * @return a list of {@link String} to export
      */
-    public List<String> collectContent(BusinessDay4Export bussinessDay) {
+    public List<String> exportBusinessDay(BusinessDay4Export bussinessDay) {
 	StringBuilder builder = new StringBuilder();
 	List<String> content = new ArrayList<>();
 
