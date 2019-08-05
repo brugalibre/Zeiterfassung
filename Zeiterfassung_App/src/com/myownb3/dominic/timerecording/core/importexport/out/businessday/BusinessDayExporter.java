@@ -9,20 +9,24 @@ import java.util.stream.Collectors;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
+import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
 import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDayInc4Export;
 import com.myownb3.dominic.timerecording.core.work.businessday.extern.TimeSnippet4Export;
 
 /**
+ * The {@link BusinessDayExporter} exports a {@link BusinessDay} into a
+ * {@link List} of {@link String}.
+ * 
  * @author Dominic
  *
  */
-public class ContentSelector {
+public class BusinessDayExporter {
 
     public static final String DATE_REP_PATTERN = "EEEEE, d MMM yyyy HH:mm:ss";
-    public static final ContentSelector INSTANCE = new ContentSelector();
+    public static final BusinessDayExporter INSTANCE = new BusinessDayExporter();
 
-    private ContentSelector() {
+    private BusinessDayExporter() {
 	// private constructor
     }
 

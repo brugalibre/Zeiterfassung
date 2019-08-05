@@ -19,7 +19,7 @@ import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIn
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
-import com.myownb3.dominic.timerecording.core.importexport.out.businessday.ContentSelector;
+import com.myownb3.dominic.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.myownb3.dominic.timerecording.core.importexport.out.file.FileExporter;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
@@ -33,7 +33,7 @@ import com.myownb3.dominic.util.utils.StringUtil;
  * structure as the file which the {@link FileExporter} exports
  * 
  * @author Dominic
- * @see ContentSelector
+ * @see BusinessDayExporter
  *
  */
 public class BusinessDayImporter {
@@ -241,7 +241,7 @@ public class BusinessDayImporter {
 
     private Date parseDate(String readLine) throws ParseException {
 	if (isNotEmptyOrNull(readLine)) {
-	    return DateParser.parse2Date(readLine, ContentSelector.DATE_REP_PATTERN);
+	    return DateParser.parse2Date(readLine, BusinessDayExporter.DATE_REP_PATTERN);
 	}
 	throw new BusinessDayImportException(
 		"The first line within the import file must not be empty or null! It should rather look like 'Dienstag, 25 Jul 2019 06:45:00'");
