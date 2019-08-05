@@ -9,9 +9,9 @@ import java.util.Objects;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDayInc4Export;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.TimeSnippet4Export;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.TimeSnippetVO;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -43,7 +43,7 @@ public class BusinessDayTableModelHelper {
 	this.changeListener = changeListener;
     }
 
-    public void init(BusinessDay4Export bussinessDay, TableView<BusinessDayIncTableRowValue> tableView) {
+    public void init(BusinessDayVO bussinessDay, TableView<BusinessDayIncTableRowValue> tableView) {
 	Objects.requireNonNull(bussinessDay);
 	this.colmnValues = getBusinessDayCells(bussinessDay);
 	this.columnNames = getTableHeaders(bussinessDay);
@@ -54,7 +54,7 @@ public class BusinessDayTableModelHelper {
 	tableView.setItems(observableList);
     }
 
-    private List<TableColumn<BusinessDayIncTableRowValue, String>> getTableHeaders(BusinessDay4Export bussinessDay) {
+    private List<TableColumn<BusinessDayIncTableRowValue, String>> getTableHeaders(BusinessDayVO bussinessDay) {
 	List<TableColumn<BusinessDayIncTableRowValue, String>> titleHeaders = new ArrayList<>();
 	TableColumn<BusinessDayIncTableRowValue, String> numberTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
 		TextLabel.NUMMER_LABEL);
@@ -162,10 +162,10 @@ public class BusinessDayTableModelHelper {
 	setNonEditableCellValueFactory(tableColumn, paramName);
     }
 
-    private List<BusinessDayIncTableRowValue> getBusinessDayCells(BusinessDay4Export businessDay) {
+    private List<BusinessDayIncTableRowValue> getBusinessDayCells(BusinessDayVO businessDay) {
 	List<BusinessDayIncTableRowValue> businessDayCells = new ArrayList<>();
 	int counter = 0;
-	for (BusinessDayInc4Export bussinessDayIncremental : businessDay.getBusinessDayIncrements()) {
+	for (BusinessDayIncrementVO bussinessDayIncremental : businessDay.getBusinessDayIncrements()) {
 	    BusinessDayIncTableRowValue businessDayIncrementalCell = getBusinessDayIncrementalCell(
 		    bussinessDayIncremental, businessDay.hasIncrementWithDescription(), counter);
 	    businessDayCells.add(businessDayIncrementalCell);
@@ -178,7 +178,7 @@ public class BusinessDayTableModelHelper {
      * Creates a list which contains all Cells that are required to paint a
      * BusinessDayIncremental
      */
-    private BusinessDayIncTableRowValue getBusinessDayIncrementalCell(BusinessDayInc4Export bussinessDayIncremental,
+    private BusinessDayIncTableRowValue getBusinessDayIncrementalCell(BusinessDayIncrementVO bussinessDayIncremental,
 	    boolean isDescriptionTitleNecessary, int no) {
 	// create Cells for the introduction of a BD-inc.
 
@@ -207,11 +207,11 @@ public class BusinessDayTableModelHelper {
      * Creates a list which contains all Cells with the content about each
      * TimeSnippet
      */
-    private List<TimeSnippetCellValue> getTimeSnippets(BusinessDayInc4Export bussinessDayIncremental) {
+    private List<TimeSnippetCellValue> getTimeSnippets(BusinessDayIncrementVO bussinessDayIncremental) {
 	// = for all time snippet
 	List<TimeSnippetCellValue> snippetCells = new ArrayList<>();
 	int sequence = 0;
-	for (TimeSnippet4Export snippet : bussinessDayIncremental.getTimeSnippets()) {
+	for (TimeSnippetVO snippet : bussinessDayIncremental.getTimeSnippets()) {
 	    String begin = String.valueOf(snippet.getBeginTimeStampRep());
 	    snippetCells.add(TimeSnippetCellValue.of(begin, sequence, ValueTypes.BEGIN));
 	    String end = String.valueOf(snippet.getEndTimeStamp());

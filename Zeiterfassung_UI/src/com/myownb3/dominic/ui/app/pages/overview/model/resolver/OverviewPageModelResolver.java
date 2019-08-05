@@ -4,7 +4,7 @@
 package com.myownb3.dominic.ui.app.pages.overview.model.resolver;
 
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.myownb3.dominic.ui.app.pages.overview.model.OverviewPageModel;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 
@@ -16,10 +16,10 @@ public class OverviewPageModelResolver implements PageModelResolver<OverviewPage
 
     @Override
     public OverviewPageModel resolvePageVO(OverviewPageModel inPageModel) {
-	BusinessDay4Export businessDay4Export = TimeRecorder.INSTANCE.getBussinessDayReadOnly();
+	BusinessDayVO businessDayVO = TimeRecorder.INSTANCE.getBussinessDayVO();
 	if (inPageModel == null) {
-	    return new OverviewPageModel(businessDay4Export);
+	    return new OverviewPageModel(businessDayVO);
 	}
-	return OverviewPageModel.of(inPageModel, businessDay4Export);
+	return OverviewPageModel.of(inPageModel, businessDayVO);
     }
 }

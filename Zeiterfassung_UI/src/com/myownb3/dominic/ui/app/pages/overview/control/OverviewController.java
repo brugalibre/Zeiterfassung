@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.app.pages.overview.control.businessdaychange.BusinessDayChangeHelper;
@@ -93,8 +93,8 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     @Override
     public void show() {
 	super.show();
-	BusinessDay4Export businessDay4Export = getDataModel().getBusinessDay4Export();
-	businessDayTableModel.init(businessDay4Export, tableView);
+	BusinessDayVO businessDayVO = getDataModel().getBusinessDayVO();
+	businessDayTableModel.init(businessDayVO, tableView);
 	changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.hasBusinessDayDescription());
     }
 

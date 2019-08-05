@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDayInc4Export;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.TimeSnippet4Export;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.TimeSnippetVO;
 
 /**
  * The {@link BusinessDayExporter} exports a {@link BusinessDay} into a
@@ -35,13 +35,13 @@ public class BusinessDayExporter {
 
     /**
      * Selects line by line the content to export for the given
-     * {@link BusinessDay4Export}
+     * {@link BusinessDayVO}
      * 
      * @param bussinessDay
-     *            the {@link BusinessDay4Export} which has to be exported
+     *            the {@link BusinessDayVO} which has to be exported
      * @return a list of {@link String} to export
      */
-    public List<String> exportBusinessDay(BusinessDay4Export bussinessDay) {
+    public List<String> exportBusinessDay(BusinessDayVO bussinessDay) {
 	StringBuilder builder = new StringBuilder();
 	List<String> content = new ArrayList<>();
 
@@ -53,7 +53,7 @@ public class BusinessDayExporter {
 	appendTitleHeaderCells(builder, bussinessDay);
 
 	// = For each 'Ticket' or Increment of an entire Day
-	for (BusinessDayInc4Export inc : bussinessDay.getBusinessDayIncrements()) {
+	for (BusinessDayIncrementVO inc : bussinessDay.getBusinessDayIncrements()) {
 	    builder.append(TextLabel.TICKET + ": ");
 	    builder.append(inc.getTicketNumber());
 	    builder.append(CONTENT_SEPPARATOR);
@@ -62,10 +62,10 @@ public class BusinessDayExporter {
 	    builder.append(inc.getTotalDurationRep());
 	    builder.append(CONTENT_SEPPARATOR);
 
-	    List<TimeSnippet4Export> timeSnippets = inc.getTimeSnippets();
+	    List<TimeSnippetVO> timeSnippets = inc.getTimeSnippets();
 
 	    // = For each single work units of a Ticket
-	    for (TimeSnippet4Export snippet : timeSnippets) {
+	    for (TimeSnippetVO snippet : timeSnippets) {
 		builder.append(snippet.getBeginTimeStampRep());
 		builder.append(CONTENT_SEPPARATOR);
 		builder.append(snippet.getEndTimeStampRep());
@@ -86,7 +86,7 @@ public class BusinessDayExporter {
 	return content;
     }
 
-    private void appendTitleHeaderCells(StringBuilder builder, BusinessDay4Export bussinessDay) {
+    private void appendTitleHeaderCells(StringBuilder builder, BusinessDayVO bussinessDay) {
 
 	builder.append(TextLabel.TICKET);
 	builder.append(CONTENT_SEPPARATOR);
@@ -103,7 +103,7 @@ public class BusinessDayExporter {
 	builder.append(System.getProperty("line.separator"));
     }
 
-    private void appendBeginEndHeader(StringBuilder builder, BusinessDay4Export bussinessDay) {
+    private void appendBeginEndHeader(StringBuilder builder, BusinessDayVO bussinessDay) {
 
 	int counter = bussinessDay.getAmountOfVonBisElements();
 	for (int i = 0; i < counter; i++) {
@@ -120,7 +120,7 @@ public class BusinessDayExporter {
      * amount of TimeSnippet-Cells
      * 
      */
-    private void addPlaceHolderForMissingBeginEndElements(StringBuilder builder, BusinessDayInc4Export inc) {
+    private void addPlaceHolderForMissingBeginEndElements(StringBuilder builder, BusinessDayIncrementVO inc) {
 	for (int i = 0; i < inc.getTimeSnippetPlaceHolders().size(); i++) {
 	    builder.append("");
 	    builder.append(CONTENT_SEPPARATOR);
@@ -134,13 +134,13 @@ public class BusinessDayExporter {
      * @param bussinessDay
      * @return the content which is required by the {@link Booker} in order to book
      */
-    public List<String> collectContent4TurboBucher(BusinessDay4Export bussinessDay) {
+    public List<String> collectContent4TurboBucher(BusinessDayVO bussinessDay) {
 
 	StringBuilder builder = new StringBuilder();
 	List<String> content = new ArrayList<>();
 
-	List<BusinessDayInc4Export> notChargedIncrements = getNotChargedIncrements(bussinessDay);
-	for (BusinessDayInc4Export inc : notChargedIncrements) {
+	List<BusinessDayIncrementVO> notChargedIncrements = getNotChargedIncrements(bussinessDay);
+	for (BusinessDayIncrementVO inc : notChargedIncrements) {
 	    builder.append(inc.getTicketNumber());
 	    builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 	    builder.append(inc.getChargeType());
@@ -160,7 +160,7 @@ public class BusinessDayExporter {
 	return content;
     }
 
-    private List<BusinessDayInc4Export> getNotChargedIncrements(BusinessDay4Export bussinessDay) {
+    private List<BusinessDayIncrementVO> getNotChargedIncrements(BusinessDayVO bussinessDay) {
 	return bussinessDay.getBusinessDayIncrements()//
 		.stream()//
 		.filter(bDayInc -> !bDayInc.isCharged())//

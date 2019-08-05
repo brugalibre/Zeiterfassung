@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.myownb3.dominic.timerecording.core.work.businessday.extern;
+package com.myownb3.dominic.timerecording.core.work.businessday.vo;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 
 /**
- * The {@link BusinessDay4Export} is used whenever a {@link BusinessDay} is
- * going to be exported. Either on a UI or on a text file
+ * The {@link BusinessDayVO} is used whenever a we need
+ * {@link BusinessDay} for displaying or exporting. The {@link BusinessDayVO} is read only
  * 
  * @author Dominic
  *
  */
-public class BusinessDay4Export {
+public class BusinessDayVO {
 
-    private List<BusinessDayInc4Export> businessDayIncrements;
+    private List<BusinessDayIncrementVO> businessDayIncrements;
     private float totalDuration;
     private Date date;
 
@@ -45,20 +45,20 @@ public class BusinessDay4Export {
 	return df.format(date);
     }
 
-    private BusinessDay4Export(BusinessDay businessDay) {
+    private BusinessDayVO(BusinessDay businessDay) {
 
 	totalDuration = businessDay.getTotalDuration();
 	date = businessDay.getDate();
 
 	businessDayIncrements = businessDay.getIncrements()//
 		.stream()//
-		.map(BusinessDayInc4Export::of)//
+		.map(BusinessDayIncrementVO::of)//
 		.collect(Collectors.toList());
 	businessDayIncrements.stream()//
 		.forEach(businessDayInc -> businessDayInc.addPlaceHolderForMissingCell(this));
     }
 
-    public final List<BusinessDayInc4Export> getBusinessDayIncrements() {
+    public final List<BusinessDayIncrementVO> getBusinessDayIncrements() {
 	return this.businessDayIncrements;
     }
 
@@ -72,12 +72,12 @@ public class BusinessDay4Export {
     public boolean hasIncrementWithDescription() {
 	return businessDayIncrements//
 		.stream()//
-		.anyMatch(BusinessDayInc4Export::hasDescription);
+		.anyMatch(BusinessDayIncrementVO::hasDescription);
     }
 
     /**
-     * @return <code>true</code> if this {@link BusinessDay4Export} has at least one
-     *         {@link BusinessDayInc4Export} which is not charged yet otherwise
+     * @return <code>true</code> if this {@link BusinessDayVO} has at least one
+     *         {@link BusinessDayIncrementVO} which is not charged yet otherwise
      *         <code>false</code>
      */
     public boolean hasNotChargedElements() {
@@ -86,7 +86,7 @@ public class BusinessDay4Export {
 	}
 	return !businessDayIncrements//
 		.stream()//
-		.anyMatch(BusinessDayInc4Export::isCharged);
+		.anyMatch(BusinessDayIncrementVO::isCharged);
     }
 
     /**
@@ -96,7 +96,7 @@ public class BusinessDay4Export {
      */
     public int getAmountOfVonBisElements() {
 	int counter = 0;
-	for (BusinessDayInc4Export businessDayIncremental : businessDayIncrements) {
+	for (BusinessDayIncrementVO businessDayIncremental : businessDayIncrements) {
 	    counter = Math.max(counter, businessDayIncremental.getTimeSnippets().size());
 	}
 	return counter;
@@ -107,12 +107,12 @@ public class BusinessDay4Export {
     }
 
     /**
-     * Creates a new {@link BusinessDay4Export} for the given {@link BusinessDay}
+     * Creates a new {@link BusinessDayVO} for the given {@link BusinessDay}
      * 
      * @param businessDay the given {@link BusinessDay}
-     * @return a new {@link BusinessDay4Export}
+     * @return a new {@link BusinessDayVO}
      */
-    public static BusinessDay4Export of(BusinessDay businessDay) {
-	return new BusinessDay4Export(businessDay);
+    public static BusinessDayVO of(BusinessDay businessDay) {
+	return new BusinessDayVO(businessDay);
     }
 }

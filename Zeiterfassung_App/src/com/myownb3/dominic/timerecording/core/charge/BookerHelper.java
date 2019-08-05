@@ -9,7 +9,7 @@ import com.coolguys.turbo.Booker;
 import com.myownb3.dominic.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
+import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 
 /**
  * Is responsible for booking the given {@link BusinessDay}.
@@ -58,7 +58,7 @@ public class BookerHelper {
      * later used by the Turbo-Bucher
      */
     private List<String> createBookContent() {
-	BusinessDay4Export businessDay4Export = BusinessDay4Export.of(businessDay);
-	return BusinessDayExporter.INSTANCE.collectContent4TurboBucher(businessDay4Export);
+	BusinessDayVO businessDayVO = BusinessDayVO.of(businessDay);
+	return BusinessDayExporter.INSTANCE.collectContent4TurboBucher(businessDayVO);
     }
 }

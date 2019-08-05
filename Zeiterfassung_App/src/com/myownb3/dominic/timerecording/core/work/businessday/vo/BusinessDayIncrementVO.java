@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.myownb3.dominic.timerecording.core.work.businessday.extern;
+package com.myownb3.dominic.timerecording.core.work.businessday.vo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,17 +14,16 @@ import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
- * The {@link BusinessDayInc4Export} is used whenever a
- * {@link BusinessDayIncrement} is going to be exported. Either on a UI or on a
- * text file
+ * The {@link BusinessDayIncrementVO} is used whenever a we need
+ * {@link BusinessDayIncrement} for displaying or exporting. The {@link BusinessDayIncrementVO} is read only
  * 
  * @author Dominic
  *
  */
-public class BusinessDayInc4Export {
+public class BusinessDayIncrementVO {
 
-    private List<TimeSnippet4Export> timeSnippets;
-    private List<TimeSnippetPlaceHolder> timeSnippetPlaceHolders;
+    private List<TimeSnippetVO> timeSnippets;
+    private List<TimeSnippetVOPlaceHolder> timeSnippetPlaceHolders;
 
     private TimeSnippet currentTimeSnippet;
 
@@ -34,7 +33,7 @@ public class BusinessDayInc4Export {
     private int chargeType;
     private boolean isCharged;
 
-    private BusinessDayInc4Export(BusinessDayIncrement businessDayIncremental) {
+    private BusinessDayIncrementVO(BusinessDayIncrement businessDayIncremental) {
 
 	this.currentTimeSnippet = TimeSnippet.of(businessDayIncremental.getCurrentTimeSnippet());
 	this.description = businessDayIncremental.getDescription();
@@ -45,9 +44,9 @@ public class BusinessDayInc4Export {
 
 	timeSnippets = businessDayIncremental.getTimeSnippets()//
 		.stream()//
-		.map(TimeSnippet4Export::new)//
+		.map(TimeSnippetVO::new)//
 		.collect(Collectors.toList());
-	Collections.sort(timeSnippets, new TimeSnippet4Export.TimeStampComparator());
+	Collections.sort(timeSnippets, new TimeSnippetVO.TimeStampComparator());
 	timeSnippetPlaceHolders = Collections.emptyList();
     }
 
@@ -67,17 +66,17 @@ public class BusinessDayInc4Export {
      * add some placeholders if this row has less TimeSnipets then the maximum
      * amount of TimeSnippet-Cells
      * 
-     * @param businessDayExportStruct the {@link BusinessDay4Export} this increment
+     * @param businessDayExportStruct the {@link BusinessDayVO} this increment
      *                                belongs to
      * 
      */
-    public void addPlaceHolderForMissingCell(BusinessDay4Export businessDayExportStruct) {
+    public void addPlaceHolderForMissingCell(BusinessDayVO businessDayExportStruct) {
 
 	int amountOfEmptyTimeSnippets = businessDayExportStruct.getAmountOfVonBisElements() - timeSnippets.size();
-	List<TimeSnippetPlaceHolder> timeSnippetPlaceHolders = new ArrayList<>();
+	List<TimeSnippetVOPlaceHolder> timeSnippetPlaceHolders = new ArrayList<>();
 	for (int i = 0; i < amountOfEmptyTimeSnippets; i++) {
-	    timeSnippetPlaceHolders.add(new TimeSnippetPlaceHolder());
-	    timeSnippetPlaceHolders.add(new TimeSnippetPlaceHolder());
+	    timeSnippetPlaceHolders.add(new TimeSnippetVOPlaceHolder());
+	    timeSnippetPlaceHolders.add(new TimeSnippetVOPlaceHolder());
 	}
 	this.timeSnippetPlaceHolders = timeSnippetPlaceHolders;
     }
@@ -86,7 +85,7 @@ public class BusinessDayInc4Export {
 	return NumberFormat.format(this.totalDuration);
     }
 
-    public final List<TimeSnippetPlaceHolder> getTimeSnippetPlaceHolders() {
+    public final List<TimeSnippetVOPlaceHolder> getTimeSnippetPlaceHolders() {
 	return this.timeSnippetPlaceHolders;
     }
 
@@ -102,7 +101,7 @@ public class BusinessDayInc4Export {
 	return this.chargeType;
     }
 
-    public final List<TimeSnippet4Export> getTimeSnippets() {
+    public final List<TimeSnippetVO> getTimeSnippets() {
 	return this.timeSnippets;
     }
 
@@ -115,15 +114,15 @@ public class BusinessDayInc4Export {
     }
 
     /**
-     * Returns a new {@link BusinessDayInc4Export} for the given
+     * Returns a new {@link BusinessDayIncrementVO} for the given
      * {@link BusinessDayIncrement}
      * 
      * @param currentBussinessDayIncremental
-     * @return a new {@link BusinessDayInc4Export} for the given
+     * @return a new {@link BusinessDayIncrementVO} for the given
      *         {@link BusinessDayIncrement}
      */
-    public static BusinessDayInc4Export of(BusinessDayIncrement currentBussinessDayIncremental) {
-	BusinessDayInc4Export businessDayInc4Export = new BusinessDayInc4Export(currentBussinessDayIncremental);
-	return businessDayInc4Export;
+    public static BusinessDayIncrementVO of(BusinessDayIncrement currentBussinessDayIncremental) {
+	BusinessDayIncrementVO businessDayIncrementVO = new BusinessDayIncrementVO(currentBussinessDayIncremental);
+	return businessDayIncrementVO;
     }
 }
