@@ -204,7 +204,6 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	Time currentBeginTimeStamp = timeSnippet.getBeginTimeStamp();
 
 	for (String ticket : tickets) {
-
 	    TimeSnippet currentTimeSnippet = timeSnippet.createTimeStampForIncrement(currentBeginTimeStamp,
 		    tickets.length);
 	    addIncrement2BusinessDayInternal(kindOfService, ticket, currentTimeSnippet);
