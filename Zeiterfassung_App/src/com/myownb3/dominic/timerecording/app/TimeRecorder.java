@@ -12,7 +12,7 @@ import com.myownb3.dominic.timerecording.core.charge.BookerHelper;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.BusinessDayImporter;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
 import com.myownb3.dominic.timerecording.core.importexport.in.file.FileImporter;
-import com.myownb3.dominic.timerecording.core.importexport.out.businessday.ContentSelector;
+import com.myownb3.dominic.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.myownb3.dominic.timerecording.core.importexport.out.file.FileExporter;
 import com.myownb3.dominic.timerecording.core.message.Message;
 import com.myownb3.dominic.timerecording.core.message.MessageType;
@@ -120,7 +120,7 @@ public class TimeRecorder {
     * 
     */
     public void export() {
-	List<String> content = ContentSelector.INSTANCE.collectContent(BusinessDay4Export.of(businessDay));
+	List<String> content = BusinessDayExporter.INSTANCE.collectContent(BusinessDay4Export.of(businessDay));
 	FileExporter.INTANCE.export(content);
 	callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.SUCESSFULLY_EXPORTED));
     }

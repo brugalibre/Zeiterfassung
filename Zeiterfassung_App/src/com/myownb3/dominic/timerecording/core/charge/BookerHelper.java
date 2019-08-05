@@ -6,7 +6,7 @@ package com.myownb3.dominic.timerecording.core.charge;
 import java.util.List;
 
 import com.coolguys.turbo.Booker;
-import com.myownb3.dominic.timerecording.core.importexport.out.businessday.ContentSelector;
+import com.myownb3.dominic.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.extern.BusinessDay4Export;
@@ -59,6 +59,6 @@ public class BookerHelper {
      */
     private List<String> createBookContent() {
 	BusinessDay4Export businessDay4Export = BusinessDay4Export.of(businessDay);
-	return ContentSelector.INSTANCE.collectContent4TurboBucher(businessDay4Export);
+	return BusinessDayExporter.INSTANCE.collectContent4TurboBucher(businessDay4Export);
     }
 }
