@@ -7,12 +7,12 @@ import static com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes
 
 import java.util.Optional;
 
-import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
-import com.myownb3.dominic.ui.app.pages.overview.control.UIRefresher;
+import com.myownb3.dominic.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.myownb3.dominic.ui.app.pages.overview.view.OverviewPage;
+import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.FinishAction;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -35,10 +35,22 @@ import javafx.stage.StageStyle;
  */
 public class DescriptionAddHelper {
 
-    private UIRefresher uiRefresher;
+    private BDChangeCallbackHandler callbackHandler;
+    private Stage stage;
 
-    public DescriptionAddHelper(UIRefresher uiRefresher) {
-	this.uiRefresher = uiRefresher;
+    public DescriptionAddHelper(BDChangeCallbackHandler uiRefresher) {
+	this.callbackHandler = uiRefresher;
+	stage = new Stage(StageStyle.UNDECORATED);
+    }
+
+    /**
+     * This {@link DescriptionAddHelper} will close  it's {@link Stage}s
+     * which was may be opened earlier in order to add a description
+     */
+    public void onDispose() {
+	if (stage.isShowing()){
+	    stage.close();
+	}
     }
 
     /**
@@ -49,7 +61,7 @@ public class DescriptionAddHelper {
      * @param x
      * @param y
      * @param tableView
-     *            the tableview
+     *            the table view
      */
     public void showInputField(ActionEvent event, double x, double y, TableView<BusinessDayIncTableRowValue> tableView) {
 	Optional<BusinessDayIncTableRowValue> optionalBusinessDayIncTableRowValue = Optional.ofNullable(tableView.getSelectionModel().getSelectedItem());
@@ -60,7 +72,6 @@ public class DescriptionAddHelper {
     private void showInputField(BusinessDayIncTableRowValue businessDayIncTableRowValue, double x, double y) {
 	
 	TextField field = new TextField();
-	Stage stage = new Stage();
 	EventHandler<? super KeyEvent> keyEventHandler = keyEvent -> handleKeyPressed(keyEvent, field, stage, businessDayIncTableRowValue.getNumberAsInt());
 	initContent(stage, field, keyEventHandler, x, y);
 	stage.show();
@@ -73,7 +84,6 @@ public class DescriptionAddHelper {
 	scene.setOnKeyPressed(keyEventHandler);
 
 	stage.setScene(scene);
-	stage.initStyle(StageStyle.UNDECORATED);
 	stage.setAlwaysOnTop(true);
 	stage.setX(x);
 	stage.setY(y);
@@ -82,16 +92,17 @@ public class DescriptionAddHelper {
     private void handleKeyPressed(KeyEvent keyEvent, TextField textField, Stage stage, int indexOfChangedEntry) {
 	if (keyEvent.getCode() == KeyCode.ESCAPE) {
 	    stage.close();
+	    closeStageAndRefreshUI(stage,  FinishAction.ABORT);
 	} else if (keyEvent.getCode() == KeyCode.ENTER) {
 	    BusinessDayChangedCallbackHandlerImpl handler = new BusinessDayChangedCallbackHandlerImpl();
 	    handler.handleBusinessDayChanged(ChangedValue.of(indexOfChangedEntry, textField.getText(), DESCRIPTION));
-	    closeStageAndRefreshUI(stage);
+	    closeStageAndRefreshUI(stage,  FinishAction.FINISH);
 	}
 	keyEvent.consume();
     }
 
-    private void closeStageAndRefreshUI(Stage stage) {
+    private void closeStageAndRefreshUI(Stage stage, FinishAction finishAction) {
 	stage.close();
-	uiRefresher.refreshUI();
+	callbackHandler.onFinish(finishAction);
     }
 }

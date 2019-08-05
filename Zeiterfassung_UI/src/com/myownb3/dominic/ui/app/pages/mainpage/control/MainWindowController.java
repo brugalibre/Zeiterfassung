@@ -82,7 +82,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	initStage4NewComponent(stage, overviewPanel);
 
 	overviewPanelController.show();
-	stage.setOnCloseRequest(null);
+	stage.setOnCloseRequest(overviewPanelController);
 	show();
     }
 

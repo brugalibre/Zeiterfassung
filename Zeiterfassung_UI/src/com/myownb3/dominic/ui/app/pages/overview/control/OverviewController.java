@@ -19,11 +19,13 @@ import com.myownb3.dominic.ui.app.pages.overview.model.resolver.OverviewPageMode
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayTableModelHelper;
 import com.myownb3.dominic.ui.app.pages.overview.view.OverviewPage;
+import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.FinishAction;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 import com.myownb3.dominic.ui.core.view.Page;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -34,12 +36,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.WindowEvent;
 
 /**
  * @author Dominic
  * 
  */
-public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel> {
+public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel>
+	implements EventHandler<WindowEvent> {
 
     private MainWindowController mainWindowController;
 
@@ -79,7 +83,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     @Override
     public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
 	super.initialize(page);
-	businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelper(() -> show()));
+	businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelper(finishAction -> refreshUI()));
 	setBinding(dataModel);
 
 	initContextMenu();
@@ -91,8 +95,9 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	super.show();
 	BusinessDay4Export businessDay4Export = getDataModel().getBusinessDay4Export();
 	businessDayTableModel.init(businessDay4Export, tableView);
-	addOrRemoveDescriptionChangeMenue();
+	changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.getBussinessDay().hasDescription());
     }
+
 
     public void init(MainWindowController mainWindowController) {
 	this.mainWindowController = mainWindowController;
@@ -133,7 +138,18 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	    timeRecordingTray.export();
 	}
     }
-
+    
+    @Override
+    public void handle(WindowEvent event) {
+	if (event.getEventType() == WindowEvent.WINDOW_CLOSE_REQUEST) {
+	    dispose();
+	}
+    }
+    
+    private void dispose() {
+	descAddHelper.onDispose();
+    }
+    
     @Override
     protected PageModelResolver<OverviewPageModel, OverviewPageModel> createPageModelResolver() {
 	return new OverviewPageModelResolver();
@@ -155,22 +171,15 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     private void initContextMenu() {
 
-	rowDeleteHelper = new RowDeleteHelper(() -> refreshUI());
-	descAddHelper = new DescriptionAddHelper(() -> refreshUI());
+	rowDeleteHelper = new RowDeleteHelper(action -> refreshUI());
+	descAddHelper = new DescriptionAddHelper(action -> onDescriptionChangeFinish(action));
 	MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
 	deleteMenue.setOnAction(event -> rowDeleteHelper.deleteRow(event, tableView));
 	changeDescriptionMenue = new MenuItem(TextLabel.CHANGE_DESCRIPTION);
-	changeDescriptionMenue.setOnAction(event -> descAddHelper.showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView));
+	changeDescriptionMenue.setOnAction(onDescriptionChange());
 	contextMenu = new ContextMenu();
 	contextMenu.getItems().add(deleteMenue);
-    }
-
-    private void addOrRemoveDescriptionChangeMenue() {
-	if (TimeRecorder.INSTANCE.getBussinessDay().hasDescription()) {
-	    contextMenu.getItems().remove(changeDescriptionMenue);
-	} else if (!contextMenu.getItems().contains(changeDescriptionMenue)) {
-	    contextMenu.getItems().add(changeDescriptionMenue);
-	}
+	contextMenu.getItems().add(changeDescriptionMenue);
     }
 
     private void initTable() {
@@ -180,6 +189,26 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
 	this.timeRecordingTray = timeRecordingTray;
+    }
+
+    private EventHandler<ActionEvent> onDescriptionChange() {
+	return event -> {
+	    changeDescriptionMenue.setDisable(true);
+	    descAddHelper.showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView);
+	};
+    }
+
+    private void onDescriptionChangeFinish(FinishAction finishAction) {
+	switch (finishAction) {
+	case FINISH:
+	    refreshUI();
+	    break;
+	case ABORT:
+	    changeDescriptionMenue.setDisable(false);
+	    break;
+	default:
+	    throw new IllegalStateException("Unsupported finish action '" + finishAction + "'!");
+	}
     }
 
     private void refreshUI() {
