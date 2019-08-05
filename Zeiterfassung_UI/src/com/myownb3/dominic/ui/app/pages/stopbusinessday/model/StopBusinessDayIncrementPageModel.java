@@ -86,10 +86,6 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	endTextFieldProperty = new SimpleStringProperty(timeSnippet != null ? timeSnippet.getEndTimeStampRep() : "");
     }
 
-    public BusinessDayIncrement map() {
-	return new BusinessDayIncrement(null);
-    }
-
     /**
      * Trys to parse a new {@link Date} from the given timestamp value and sets this
      * value as new begin-time stamp
@@ -130,8 +126,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     public static StopBusinessDayIncrementPageModel of(StopBusinessDayIncrementPageModel inPageModel,
 	    BusinessDayIncrementVO businessDayIncrementVO) {
 
-	TimeSnippet timeSnippet = businessDayIncrementVO.getCurrentTimeSnippet();
-	inPageModel.timeSnippet = timeSnippet;
+	inPageModel.timeSnippet = businessDayIncrementVO.getCurrentTimeSnippet();
 	inPageModel.getTicketNoLabelProperty().set(TextLabel.TICKET_NUMBER_LABEL);
 	inPageModel.getDescriptionLabelProperty().set(TextLabel.DESCRIPTION_LABEL);
 	inPageModel.getBeginLabelProperty().set(TextLabel.VON_LABEL);
@@ -154,9 +149,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 	inPageModel.getKindOfServiceTextFieldProperty()
 		.setValue(FXCollections.observableArrayList(ChargeType.getLeistungsartenRepresentation()));
 
-	timeSnippet.setCallbackHandler(inPageModel);
-	inPageModel.getBeginTextFieldProperty().set(timeSnippet.getBeginTimeStampRep());
-	inPageModel.getEndTextFieldProperty().set(timeSnippet.getEndTimeStampRep());
+	inPageModel.timeSnippet.setCallbackHandler(inPageModel);
+	inPageModel.getBeginTextFieldProperty().set(inPageModel.timeSnippet.getBeginTimeStampRep());
+	inPageModel.getEndTextFieldProperty().set(inPageModel.timeSnippet.getEndTimeStampRep());
 	return inPageModel;
     }
 
