@@ -155,12 +155,12 @@ public class BusinessDayImporter {
     private void parseAndSetTicketNr(String importLine, BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex) {
 	String ticketNrElement = getElementFromLineAtIndex(importLine, currentElementIndex);
 	String ticketNr = ticketNrElement.replace(CONTENT_LINE_BEGIN, "");
-	businessDayIncrementImport.setTicketNo(ticketNr);
+	businessDayIncrementImport.setTicketNo(ticketNr.trim());
     }
 
     private void parseAndSetDescription(String importLine, BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex) {
 	String description = getElementFromLineAtIndex(importLine, currentElementIndex);
-	businessDayIncrementImport.setDescription(description);
+	businessDayIncrementImport.setDescription(description.trim());
     }
 
     private void parseAndAddTimeSnippet(String importLine, Date date, BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex) throws ParseException {
