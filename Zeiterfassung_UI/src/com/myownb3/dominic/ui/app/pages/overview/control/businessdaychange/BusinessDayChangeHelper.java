@@ -9,9 +9,10 @@ import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
-import com.myownb3.dominic.ui.app.pages.overview.control.UIRefresher;
+import com.myownb3.dominic.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.TimeSnippetCellValue;
+import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.FinishAction;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -29,10 +30,10 @@ import javafx.scene.control.TablePosition;
  */
 public class BusinessDayChangeHelper implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> {
 
-    private UIRefresher uiRefresher;
+    private BDChangeCallbackHandler uiRefresher;
     private BusinessDayChangedCallbackHandler handler;
 
-    public BusinessDayChangeHelper(UIRefresher uiRefresher) {
+    public BusinessDayChangeHelper(BDChangeCallbackHandler uiRefresher) {
 	this.uiRefresher = uiRefresher;
 	this.handler = new BusinessDayChangedCallbackHandlerImpl();
     }
@@ -47,13 +48,13 @@ public class BusinessDayChangeHelper implements EventHandler<CellEditEvent<Busin
 	ValueTypes valueType = businessDayIncTableCellValue.getChangeValueTypeForIndex(tablePosition.getColumn());
 	// XXX Ugly hack. Since we had to make present values editable
 	if (valueType == ValueTypes.NONE) {
-	    uiRefresher.refreshUI();
+	    uiRefresher.onFinish(FinishAction.ABORT);
 	    return;
 	}
 	int fromUptoSequence = getBeginEndSequence(businessDayIncTableCellValue, tablePosition);
 	int orderNumber = Integer.valueOf(businessDayIncTableCellValue.getNumber());
 	handler.handleBusinessDayChanged(ChangedValue.of(orderNumber, newValue, valueType, fromUptoSequence));
-	uiRefresher.refreshUI();
+	uiRefresher.onFinish(FinishAction.FINISH);
     }
 
     private int getBeginEndSequence(BusinessDayIncTableRowValue businessDayIncTableCellValue, TablePosition<BusinessDayIncTableRowValue, String> tablePosition) {

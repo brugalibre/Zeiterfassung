@@ -7,9 +7,10 @@ import java.util.Optional;
 
 import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
-import com.myownb3.dominic.ui.app.pages.overview.control.UIRefresher;
+import com.myownb3.dominic.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.myownb3.dominic.ui.app.pages.overview.view.OverviewPage;
+import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.FinishAction;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.TableView;
@@ -23,9 +24,9 @@ import javafx.scene.control.TableView;
  */
 public class RowDeleteHelper {
 
-    private UIRefresher uiRefresher;
+    private BDChangeCallbackHandler uiRefresher;
 
-    public RowDeleteHelper(UIRefresher uiRefresher) {
+    public RowDeleteHelper(BDChangeCallbackHandler uiRefresher) {
 	this.uiRefresher = uiRefresher;
     }
 
@@ -49,6 +50,6 @@ public class RowDeleteHelper {
 
     private void afterDelete(ActionEvent event) {
 	event.consume();
-	uiRefresher.refreshUI();
+	uiRefresher.onFinish(FinishAction.FINISH);
     }
 }
