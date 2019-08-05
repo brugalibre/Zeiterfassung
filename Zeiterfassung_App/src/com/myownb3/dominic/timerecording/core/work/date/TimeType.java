@@ -10,6 +10,11 @@ package com.myownb3.dominic.timerecording.core.work.date;
  * @author Dominic
  */
 public class TimeType {
+
+    /**
+     * The default {@link TimeType} is {@link TIME_TYPE#HOUR}
+     */
+    public static final TIME_TYPE DEFAULT = TimeType.TIME_TYPE.HOUR;
     public enum TIME_TYPE {
 	HOUR, MIN, SEC, MILI_SEC,
     }

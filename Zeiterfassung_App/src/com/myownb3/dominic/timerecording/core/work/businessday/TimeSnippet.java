@@ -6,10 +6,10 @@ package com.myownb3.dominic.timerecording.core.work.businessday;
 import java.text.ParseException;
 import java.util.Date;
 
-import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.callbackhandler.TimeSnippedChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
+import com.myownb3.dominic.timerecording.core.work.date.TimeType;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.util.parser.DateParser;
 import com.myownb3.dominic.util.parser.NumberFormat;
@@ -44,7 +44,7 @@ public class TimeSnippet {
     public void addAdditionallyTime(String newEndAsString) throws NumberFormatException {
 	float additionallyTime = NumberFormat.parseFloat(newEndAsString) - getDuration();
 
-	long additionallyDuration = (long) (Time.getTimeRefactorValue(TimeRecorder.INSTANCE.getTimeType())
+	long additionallyDuration = (long) (Time.getTimeRefactorValue(TimeType.DEFAULT)
 		* additionallyTime);
 	setEndTimeStamp(new Time(getEndTimeStamp().getTime() + additionallyDuration));
     }
@@ -80,7 +80,7 @@ public class TimeSnippet {
      * @return the amount of minutes between the start, and end-point
      */
     public float getDuration() {
-	return getDuration(TimeRecorder.INSTANCE.getTimeType());
+	return getDuration(TimeType.DEFAULT);
     }
 
     public String getDurationRep() {
