@@ -10,6 +10,13 @@ import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
 
 /**
+ * The {@link RoundMode} defines how the recorded time is rounded as soon as a recording is stopped
+ * The recorded time can be rounded as 
+ * 	- with a precision of 1 minute
+ * 	- with a precision of 5 minutes
+ * 	- with a precision of 10 minutes
+ * 	- with a precision of 15 minutes
+ * 
  * @author Dominic
  *
  */
@@ -33,7 +40,10 @@ public enum RoundMode {
      * @return the {@link RoundMode} for the given amount
      */
     public static RoundMode getRoundMode(String roundAmountAsString) {
-	return Arrays.asList(RoundMode.values()).stream().filter(isSameAmount(roundAmountAsString)).findFirst()
+	return Arrays.asList(RoundMode.values())
+		.stream()
+		.filter(isSameAmount(roundAmountAsString))
+		.findFirst()
 		.orElse(RoundMode.ONE_MIN);
     }
 
