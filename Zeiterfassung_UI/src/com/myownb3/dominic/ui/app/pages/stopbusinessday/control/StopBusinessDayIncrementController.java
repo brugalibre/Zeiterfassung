@@ -3,8 +3,6 @@
  */
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.control;
 
-import static com.myownb3.dominic.ui.app.pages.stopbusinessday.util.StopBusinessDayUtil.areMultipleTicketsEntered;
-
 import java.awt.Toolkit;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -161,17 +159,8 @@ public class StopBusinessDayIncrementController
     }
 
     private boolean isInputValid() {
-	boolean isBaseInputValid = new InputFieldVerifier().verify(amountOfHoursTextField)
+	return new InputFieldVerifier().verify(amountOfHoursTextField)
 		&& kindOfServiceComboBox.getSelectionModel().getSelectedItem() != null;
-	String ticketsAsString = ticketNumberComboBox.getSelectionModel().getSelectedItem();
-
-	boolean multipleTicketsEntered = areMultipleTicketsEntered(ticketsAsString);
-	if (multipleTicketsEntered) {
-
-	    boolean isDescriptionValid = new InputFieldVerifier().verifyNotNull(descriptionComboBox);
-	    return isBaseInputValid && isDescriptionValid;
-	}
-	return isBaseInputValid;
     }
 
     @Override
