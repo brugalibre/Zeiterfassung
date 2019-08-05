@@ -8,8 +8,8 @@ import static com.myownb3.dominic.ui.app.pages.stopbusinessday.util.StopBusiness
 import java.util.Date;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.app.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.core.callbackhandler.TimeSnippedChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;

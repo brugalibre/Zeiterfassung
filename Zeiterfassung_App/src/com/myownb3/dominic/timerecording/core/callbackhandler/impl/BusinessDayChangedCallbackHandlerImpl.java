@@ -1,8 +1,7 @@
-package com.myownb3.dominic.timerecording.app;
+package com.myownb3.dominic.timerecording.core.callbackhandler.impl;
 
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementAdd;
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
 
 public class BusinessDayChangedCallbackHandlerImpl implements BusinessDayChangedCallbackHandler {
 
