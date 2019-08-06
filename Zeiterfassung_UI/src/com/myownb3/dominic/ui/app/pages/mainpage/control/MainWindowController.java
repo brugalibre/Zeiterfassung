@@ -106,6 +106,8 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	mainPanel.setPrefHeight(region.getPrefHeight());
 	stage.setWidth(region.getPrefWidth());
 	stage.setHeight(region.getPrefHeight());
+	stage.setMinWidth(region.getPrefWidth());
+	stage.setMinHeight(region.getPrefHeight());
 	stage.setResizable(false);
     }
 
