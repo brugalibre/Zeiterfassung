@@ -183,6 +183,7 @@ public class TimeRecordingTray {
 	boolean wasBooked = TimeRecorder.INSTANCE.book();
 	if (wasBooked) {
 	    displayMessage(null, TextLabel.SUCCESSFULLY_CHARGED_TEXT, MessageType.INFORMATION);
+	    updateUIStates();
 	}
     }
 
