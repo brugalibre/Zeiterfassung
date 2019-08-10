@@ -78,6 +78,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 
 	mainPanel.getChildren().clear();
 	mainPanel.getChildren().add(overviewPanel);
+	
 
 	initStage4NewComponent(stage, overviewPanel);
 
