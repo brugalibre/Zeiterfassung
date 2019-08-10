@@ -212,7 +212,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
     }
 
     private void refreshUI() {
-	show();
+	refresh();
 	timeRecordingTray.updateUIStates();
     }
 }
