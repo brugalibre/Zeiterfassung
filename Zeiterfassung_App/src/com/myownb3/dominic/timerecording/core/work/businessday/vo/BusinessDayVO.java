@@ -24,6 +24,7 @@ public class BusinessDayVO {
     private float totalDuration;
     private Date date;
     private boolean hasNotChargedElements;
+    private boolean hasIncrementWithDescription;
 
     /**
      * Returns the default representation of a date using the pattern 'dd.MM.yyyy'
@@ -58,6 +59,7 @@ public class BusinessDayVO {
 	businessDayIncrements.stream()//
 		.forEach(businessDayInc -> businessDayInc.addPlaceHolderForMissingCell(this));
 	hasNotChargedElements = businessDay.hasNotChargedElements();
+	hasIncrementWithDescription = businessDay.hasDescription();
     }
 
     public final List<BusinessDayIncrementVO> getBusinessDayIncrements() {
@@ -72,9 +74,7 @@ public class BusinessDayVO {
      *         element with a description <code>false</code> if not
      */
     public boolean hasIncrementWithDescription() {
-	return businessDayIncrements//
-		.stream()//
-		.anyMatch(BusinessDayIncrementVO::hasDescription);
+	return hasIncrementWithDescription;
     }
 
     /**
