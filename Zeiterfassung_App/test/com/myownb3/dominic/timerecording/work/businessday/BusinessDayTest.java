@@ -15,6 +15,53 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
 public class BusinessDayTest {
 
     @Test
+    public void testHasNotChargedElements() {
+
+	// Given
+	boolean expectedHasNotChargedElements = true;
+	BusinessDay businessDay = new BusinessDay();
+
+	TimeSnippet timeSnippet = createTimeSnippet(0);
+	BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, "SYRIUS-1324");		
+
+	TimeSnippet timeSnippetYesterday = createTimeSnippet(0);
+	BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, "SYRIUS-1324");
+
+	businessDay.addBusinessIncrement(updateWithTimeSnippet);
+	businessDay.flagBusinessDayAsCharged();
+	businessDay.addBusinessIncrement(updateWithTimeSnippetTomorrow);
+	
+	// When
+	boolean actualHasNotChargedElements= businessDay.hasNotChargedElements();
+
+	// Then
+	assertThat(actualHasNotChargedElements, is(expectedHasNotChargedElements));
+    }
+    @Test
+    public void testHasNoNotChargedElements() {
+	
+	// Given
+	boolean expectedHasNotChargedElements = false;
+	BusinessDay businessDay = new BusinessDay();
+	
+	TimeSnippet timeSnippet = createTimeSnippet(0);
+	BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, "SYRIUS-1324");		
+	
+	TimeSnippet timeSnippetYesterday = createTimeSnippet(0);
+	BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, "SYRIUS-1324");
+	
+	businessDay.addBusinessIncrement(updateWithTimeSnippet);
+	businessDay.addBusinessIncrement(updateWithTimeSnippetTomorrow);
+	businessDay.flagBusinessDayAsCharged();
+	
+	// When
+	boolean actualHasNotChargedElements= businessDay.hasNotChargedElements();
+	
+	// Then
+	assertThat(actualHasNotChargedElements, is(expectedHasNotChargedElements));
+    }
+    
+    @Test
     public void testHasElementsFromPrecedentDays_PrecedentElements() {
 
 	// Given

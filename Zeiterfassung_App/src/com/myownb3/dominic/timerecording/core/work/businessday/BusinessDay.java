@@ -108,8 +108,12 @@ public class BusinessDay {
      *         <code>false</code>
      */
     public boolean hasNotChargedElements() {
-	return increments.stream()//
-		.anyMatch(bDayInc -> !bDayInc.isCharged());
+	if (increments.isEmpty()) {
+	    return false;
+	}
+	return increments//
+		.stream()//
+		.anyMatch(increment -> !increment.isCharged());
     }
 
     /**
