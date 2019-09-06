@@ -16,6 +16,8 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
  */
 public class DateParser {
 
+    private static final String DOUBLE_POINT = ":";
+
     /**
      * Returns the String representation for the given {@link Time} instance
      * 
@@ -33,7 +35,7 @@ public class DateParser {
 	try {
 	    return getTime(input, new Date(currentSetDate.getTime()));
 	} catch (ParseException e) {
-	    System.err.println(e.getMessage());
+	    // ignore since we do not care
 	}
 	return currentSetDate;
     }
@@ -60,8 +62,23 @@ public class DateParser {
 	String yearMonthDayInfo = currentDateAsString.substring(0, currentDateAsString.length() - 8);
 	// Append the information about hour, minutes and seconds to the given
 	// information
-	Date date = df.parse(yearMonthDayInfo + input);
+	Date date = df.parse(yearMonthDayInfo + convertInput(input));
 	return new Time(date.getTime());
+    }
+
+    /*
+     * Converts the given input into the format hh:mm:ss regardless if the input is already in that form or not
+     */
+    private static String convertInput(String input) throws ParseException {
+	try {
+	    String neutralizedInput = input.replace(DOUBLE_POINT, "");
+	    String hour = neutralizedInput.substring(0,2);
+	    String min = neutralizedInput.substring(2,4);
+	    String sec = neutralizedInput.substring(4,6);
+	    return new StringBuilder(hour + DOUBLE_POINT + min + DOUBLE_POINT + sec).toString();
+	} catch (StringIndexOutOfBoundsException e) {
+	    throw new ParseException(input, 0);
+	}
     }
 
     public static Date parse2Date(String readLine, String dateRepPattern) throws ParseException {
