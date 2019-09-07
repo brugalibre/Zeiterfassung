@@ -56,7 +56,6 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 	FXPageContent pageContent = (FXPageContent) mainWindowPage.getContent();
 	Stage stage = pageContent.getStage().get();
 	stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
-	stage.setIconified(true);
 	stage.getIcons().add(PictureLibrary.getClockImageIcon());
 	fileImportHelper = new FileImportDialogHelper();
     }
