@@ -55,6 +55,7 @@ public class TextLabel {
     public static final String CHARGED = "Abgebucht";
     public static final String NO = "Nein";
     public static final String YES = "Ja";
+    public static final String BOOKING_RUNNING = "Abbuchen läuft, lehn zurück und geniess die Show!";
 
     public static final String SETTINGS_ROUND_SAVED = "Einstellungen wurden gespeichert";
     public static final String SETTINGS_ROUND = "Rundungseinstellungen";

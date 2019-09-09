@@ -31,6 +31,7 @@ import com.myownb3.dominic.timerecording.core.callbackhandler.CallbackHandler;
 import com.myownb3.dominic.timerecording.core.message.Message;
 import com.myownb3.dominic.timerecording.core.message.MessageType;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
+import com.myownb3.dominic.timerecording.core.workerfactory.ThreadFactory;
 import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
 import com.myownb3.dominic.ui.app.pages.mainpage.view.MainWindowPage;
@@ -108,9 +109,10 @@ public class TimeRecordingTray {
      * Updates the states of the button & elements
      */
     public void updateUIStates() {
-	showHoursItem.setEnabled(TimeRecorder.INSTANCE.hasContent());
-	startTurboBucher.setEnabled(TimeRecorder.INSTANCE.hasNotChargedElements());
-	showImportDialogItem.setEnabled(hasNoContentAndIsNotRecording());
+	boolean isNotBooking = !TimeRecorder.INSTANCE.isBooking();
+	showHoursItem.setEnabled(TimeRecorder.INSTANCE.hasContent() && isNotBooking);
+	startTurboBucher.setEnabled(TimeRecorder.INSTANCE.hasNotChargedElements() && isNotBooking);
+	showImportDialogItem.setEnabled(hasNoContentAndIsNotRecording() && isNotBooking);
     }
 
     private boolean hasNoContentAndIsNotRecording() {
@@ -180,6 +182,21 @@ public class TimeRecordingTray {
      * Books the content of the current {@link BusinessDay}
      */
     public void book() {
+	ThreadFactory.INSTANCE.execute(() -> getBookAndRefreshRunnable());
+	wait (500);
+	updateUIStates();
+    }
+
+    private void getBookAndRefreshRunnable() {
+	try {
+	    bookInternal();
+	} finally {
+	    // Make sure the UI is refreshed after the booking
+	    updateUIStates();
+	}
+    }
+
+    private void bookInternal() {
 	boolean wasBooked = TimeRecorder.INSTANCE.book();
 	if (wasBooked) {
 	    displayMessage(null, TextLabel.SUCCESSFULLY_CHARGED_TEXT, MessageType.INFORMATION);
@@ -389,6 +406,14 @@ public class TimeRecordingTray {
 	    return TrayIcon.MessageType.INFO;
 	default:
 	    return TrayIcon.MessageType.NONE;
+	}
+    }
+    
+    private void wait(int amount) {
+	try {
+	    Thread.sleep(amount);
+	} catch (InterruptedException e) {
+	    e.printStackTrace();// ignore
 	}
     }
 }

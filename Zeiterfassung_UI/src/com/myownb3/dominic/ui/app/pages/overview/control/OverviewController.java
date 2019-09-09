@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.myownb3.dominic.timerecording.core.workerfactory.ThreadFactory;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.app.pages.overview.control.businessdaychange.BusinessDayChangeHelper;
@@ -24,6 +25,7 @@ import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 import com.myownb3.dominic.ui.core.view.Page;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -77,7 +79,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-	initialize(new OverviewPage(this, url));
+	initialize(new OverviewPage(this));
     }
 
     @Override
@@ -132,10 +134,23 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 	    mainWindowController.clearBusinessDayContents();
 	    mainWindowController.dispose();
 	} else if (actionEvent.getSource() == bookButton) {
-	    timeRecordingTray.book();
-	    show();
+	    bookAsyncAndRefresh();
 	} else if (actionEvent.getSource() == exportButton) {
 	    timeRecordingTray.export();
+	}
+    }
+
+    private void bookAsyncAndRefresh() {
+	ThreadFactory.INSTANCE.execute(() -> getBookAndRefreshRunnable());
+	refreshUI();
+    }
+
+    private void getBookAndRefreshRunnable() {
+	try {
+	    TimeRecorder.INSTANCE.book();
+	} finally {
+	    // Make sure the UI is refreshed after the booking. If there was an exception and nothing was booked e.g.
+	    Platform.runLater(() -> refreshUI());
 	}
     }
     

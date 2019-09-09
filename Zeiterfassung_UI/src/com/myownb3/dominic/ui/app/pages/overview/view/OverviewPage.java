@@ -3,8 +3,6 @@
  */
 package com.myownb3.dominic.ui.app.pages.overview.view;
 
-import java.net.URL;
-
 import com.myownb3.dominic.ui.app.pages.overview.control.OverviewController;
 import com.myownb3.dominic.ui.app.pages.overview.model.OverviewPageModel;
 import com.myownb3.dominic.ui.core.view.impl.AbstractFXSubPage;
@@ -16,10 +14,9 @@ import com.myownb3.dominic.ui.core.view.impl.AbstractFXSubPage;
 public class OverviewPage extends AbstractFXSubPage<OverviewPageModel, OverviewPageModel> {
 
     /**
-     * @param overviewController
-     * @param arg0
+     * @param controller the {@link OverviewController} of this page
      */
-    public OverviewPage(OverviewController controller, URL url) {
+    public OverviewPage(OverviewController controller) {
 	super();
 	setController(controller);
     }
