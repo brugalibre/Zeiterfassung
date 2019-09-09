@@ -4,6 +4,7 @@
 package com.myownb3.dominic.ui.app.pages.overview.model;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
@@ -35,7 +36,7 @@ public class OverviewPageModel implements PageModel {
      */
     public OverviewPageModel(BusinessDayVO businessDayVO) {
 	this.businessDayVO = businessDayVO;
-	isChargeButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
+	isChargeButtonDisabled = new SimpleBooleanProperty(TimeRecorder.INSTANCE.isBooking() || !businessDayVO.hasNotChargedElements());
 	isClearButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
 	isExportButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
 
@@ -54,7 +55,7 @@ public class OverviewPageModel implements PageModel {
      */
     public static OverviewPageModel of(OverviewPageModel inPageModel, BusinessDayVO businessDayVO) {
 	inPageModel.businessDayVO = businessDayVO;
-	inPageModel.getIsChargeButtonDisabled().setValue(!businessDayVO.hasNotChargedElements());
+	inPageModel.getIsChargeButtonDisabled().setValue(TimeRecorder.INSTANCE.isBooking() || !businessDayVO.hasNotChargedElements());
 	inPageModel.getIsClearButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
 	inPageModel.getIsExportButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
 

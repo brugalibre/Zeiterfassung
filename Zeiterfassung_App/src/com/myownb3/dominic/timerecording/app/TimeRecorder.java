@@ -80,6 +80,8 @@ public class TimeRecorder {
 	case WORKING:
 	    stop();
 	    return true;
+	case BOOKING:
+	    return false;
 	default:
 	    throw new RuntimeException("Unknowing working state '" + currentState + "'!");
 	}
@@ -180,9 +182,15 @@ public class TimeRecorder {
      */
     public boolean book() {
 	if (businessDay.hasNotChargedElements()) {
-	    BookerHelper helper = new BookerHelper(businessDay);
-	    helper.book();
-	    return true;
+	    WorkStates tmpState = currentState;
+	    currentState = WorkStates.BOOKING;
+	    try {
+		BookerHelper helper = new BookerHelper(businessDay);
+		helper.book();
+		return true;
+	    } finally {
+		currentState = tmpState;
+	    }
 	}
 	return false;
     }
@@ -240,6 +248,8 @@ public class TimeRecorder {
 	    return businessDay.getCapturingInactiveSinceMsg();
 	case WORKING:
 	    return businessDay.getCapturingActiveSinceMsg();
+	case BOOKING:
+	    return TextLabel.BOOKING_RUNNING;
 	default:
 	    throw new RuntimeException("Unknowing working state '" + currentState + "'!");
 	}
@@ -275,6 +285,14 @@ public class TimeRecorder {
     }
 
     /**
+     * returns <code>true</code> if currently a booking is running and
+     * <code>false</code> if not
+     */
+    public boolean isBooking() {
+	return currentState == WorkStates.BOOKING;
+    }
+    
+    /**
      * @return a {@link BusinessDayIncrementVO} for the current {@link BusinessDayIncrement} of the {@link BusinessDay}
      */
     public BusinessDayIncrementVO getCurrentBussinessDayIncrement() {
@@ -294,7 +312,9 @@ public class TimeRecorder {
      * @return a {@link BusinessDayVO} for the current {@link BusinessDay}
      */
     public BusinessDayVO getBussinessDayVO() {
-	return BusinessDayVO.of(businessDay);
+	synchronized (businessDay) {
+	    return BusinessDayVO.of(businessDay);
+	}
     }
 
     public void setCallbackHandler(CallbackHandler callbackHandler) {

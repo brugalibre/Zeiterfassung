@@ -9,4 +9,5 @@ package com.myownb3.dominic.timerecording.core.work;
  */
 public enum WorkStates {
     WORKING, NOT_WORKING,
+    BOOKING,
 }

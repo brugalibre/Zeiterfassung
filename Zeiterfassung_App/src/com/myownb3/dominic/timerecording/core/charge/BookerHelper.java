@@ -58,7 +58,9 @@ public class BookerHelper {
      * later used by the Turbo-Bucher
      */
     private List<String> createBookContent() {
-	BusinessDayVO businessDayVO = BusinessDayVO.of(businessDay);
-	return BusinessDayExporter.INSTANCE.collectContent4TurboBucher(businessDayVO);
+	synchronized (businessDay) {
+	    BusinessDayVO businessDayVO = BusinessDayVO.of(businessDay);
+	    return BusinessDayExporter.INSTANCE.collectContent4TurboBucher(businessDayVO);
+	}
     }
 }
