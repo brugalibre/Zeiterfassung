@@ -3,8 +3,10 @@
  */
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.control;
 
+import java.text.NumberFormat;
+import java.text.ParsePosition;
+
 import com.myownb3.dominic.ui.app.styles.Styles;
-import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 import javafx.scene.Node;
@@ -27,15 +29,18 @@ public class InputFieldVerifier {
 
     private boolean verifyTextField(TextField textField) {
 
-	String text = textField.getText();
-	float val = -1;
+	String text = textField.getText().trim();
+	boolean isNumber = false;
 	try {
-	    val = NumberFormat.parseFloat(text.trim());
+	    NumberFormat formatter = NumberFormat.getInstance();
+	    ParsePosition pos = new ParsePosition(0);
+	    formatter.parse(text, pos);
+	    isNumber= text.length() == pos.getIndex();
 	} catch (NumberFormatException e) {
 	    System.err.println(e);
 	}
-	addOrRemoveErrorStyle(textField, val > 0);
-	return val > 0;
+	addOrRemoveErrorStyle(textField, isNumber);
+	return isNumber;
     }
 
     private boolean verifyComboBoxValueNotNull(ComboBox<String> comboBox) {
