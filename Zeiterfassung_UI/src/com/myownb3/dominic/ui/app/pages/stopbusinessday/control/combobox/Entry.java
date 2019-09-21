@@ -22,6 +22,6 @@ public class Entry {
 
     @Override
     public String toString() {
-	return getValue();
+	return "Value: " + getValue() + ", LastUsage: " + getLastUsage();
     }
 }
