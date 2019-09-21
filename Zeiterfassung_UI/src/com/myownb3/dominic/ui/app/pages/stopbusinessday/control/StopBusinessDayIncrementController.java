@@ -3,6 +3,8 @@
  */
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.control;
 
+import static java.util.Objects.nonNull;
+
 import java.awt.Toolkit;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -160,7 +162,7 @@ public class StopBusinessDayIncrementController
 
     private boolean isInputValid() {
 	return new InputFieldVerifier().verify(amountOfHoursTextField)
-		&& kindOfServiceComboBox.getSelectionModel().getSelectedItem() != null;
+		&& nonNull(kindOfServiceComboBox.getSelectionModel().getSelectedItem());
     }
 
     @Override
@@ -188,31 +190,23 @@ public class StopBusinessDayIncrementController
 
 	beginTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
 	    if (oldValue && !newValue) {
-		updateValue(beginTextField);
+		getDataModel().updateAndSetBeginTimeStamp(beginTextField.getText());
 	    }
 	});
 	endTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
 	    if (oldValue && !newValue) {
-		updateValue(endTextField);
+		 getDataModel().updateAndSetEndTimeStamp(endTextField.getText());
 	    }
 	});
 	amountOfHoursTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-	    if (oldValue && !newValue) {
-		updateValue(amountOfHoursTextField);
+	    if (hasAmountOfHoursChanged(oldValue, newValue)) {
+		getDataModel().addAdditionallyTime(amountOfHoursTextField.getText());
 	    }
 	});
     }
 
-    private void updateValue(TextField changedTextField) {
-	if (beginTextField == changedTextField) {
-	    getDataModel().updateAndSetBeginTimeStamp(changedTextField.getText());
-	} else if (endTextField == changedTextField) {
-	    getDataModel().updateAndSetEndTimeStamp(changedTextField.getText());
-	} else if (amountOfHoursTextField == changedTextField) {
-	    if (new InputFieldVerifier().verify(changedTextField)) {
-		getDataModel().addAdditionallyTime(changedTextField.getText());
-	    }
-	}
+    private boolean hasAmountOfHoursChanged(Boolean oldValue, Boolean newValue) {
+	return oldValue && !newValue && new InputFieldVerifier().verify(amountOfHoursTextField);
     }
 
     /**
