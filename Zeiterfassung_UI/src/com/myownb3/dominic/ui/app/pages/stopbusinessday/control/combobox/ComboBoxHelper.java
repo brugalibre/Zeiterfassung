@@ -1,13 +1,15 @@
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.control.combobox;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.myownb3.dominic.util.utils.StringUtil;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 
@@ -51,7 +53,16 @@ public class ComboBoxHelper {
 	    item = getExistingItemFromList(item);
 	}
 	item.setLastUsage();
+	
+	comboBox.setItems(FXCollections.observableList(getSortedEntries()));
 	cleanUp();
+    }
+
+    private List<String> getSortedEntries() {
+	return getElementsAsList().stream()
+		.sorted(Comparator.comparing(Entry::getLastUsage).reversed())
+		.map(Entry::getValue)
+		.collect(Collectors.toList());
     }
 
     /*
@@ -115,11 +126,14 @@ public class ComboBoxHelper {
     }
 
     private List<Entry> getElementsAsList() {
-	List<Entry> list = new ArrayList<>(getItemSize());
-	for (int i = 0; i < getItemSize(); i++) {
-	    list.add(getItemAt(i));
-	}
-	return list;
+	return comboBox.getItems()
+		.stream()
+		.map(this::getEntryValue)
+		.collect(Collectors.toList());
+    }
+
+    private Entry getEntryValue(String value) {
+	return value2EntryMap.get(value);
     }
 
     private void removeItem(List<Entry> currentSnapShotList) {
