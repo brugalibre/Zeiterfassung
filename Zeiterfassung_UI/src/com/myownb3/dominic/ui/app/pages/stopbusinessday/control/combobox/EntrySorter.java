@@ -28,28 +28,28 @@ public class EntrySorter implements Comparator<Entry> {
 
     @Override
     public Comparator<Entry> reversed() {
-	return null;
+	return this;
     }
 
     @Override
     public Comparator<Entry> thenComparing(Comparator<? super Entry> comparator) {
-	return null;
+	return this;
     }
 
     @Override
     public <U extends Comparable<? super U>> Comparator<Entry> thenComparing(
 	    Function<? super Entry, ? extends U> arg0) {
-	return null;
+	return this;
     }
 
     @Override
     public <U> Comparator<Entry> thenComparing(Function<? super Entry, ? extends U> arg0, Comparator<? super U> arg1) {
-	return null;
+	return this;
     }
 
     @Override
     public Comparator<Entry> thenComparingDouble(ToDoubleFunction<? super Entry> arg0) {
-	return null;
+	return this;
     }
 
     @Override
