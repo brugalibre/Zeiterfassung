@@ -9,7 +9,7 @@ package com.myownb3.dominic.librarys.text.res;
  */
 public class TextLabel {
     public static final String SHOW_WORKING_HOURS = "Zeige Arbeitsstunden";
-    public static final String APPLICATION_TITLE = "Champignons-League Zeiterfassung";
+    public static final String APPLICATION_TITLE = "Turbo-Bucher Zeiterfassung";
     public static final String EXIT = "Beenden";
 
     public static final String FINISH_BUTTON_TEXT = "Fertig";

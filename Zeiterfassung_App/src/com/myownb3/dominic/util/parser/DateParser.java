@@ -66,10 +66,15 @@ public class DateParser {
 	return new Time(date.getTime());
     }
 
-    /*
-     * Converts the given input into the format hh:mm:ss regardless if the input is already in that form or not
+    /**
+     * Converts the given input into the format hh:mm:ss regardless if the input is
+     * already in that form or not
+     * 
+     * @param input the input to parse, e.q. 121500 or 12:15:00
+     * @return a converted input, always with ':'
+     * @throws ParseException
      */
-    private static String convertInput(String input) throws ParseException {
+    public static String convertInput(String input) throws ParseException {
 	try {
 	    String neutralizedInput = input.replace(DOUBLE_POINT, "");
 	    String hour = neutralizedInput.substring(0,2);
