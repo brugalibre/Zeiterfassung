@@ -56,7 +56,8 @@ public class TimeSnippet {
      * @param newTimeStampValue the new begin-time-stamp as String
      */
     public void updateAndSetBeginTimeStamp(String newTimeStampValue) {
-	if (!StringUtil.isEqual(newTimeStampValue, getBeginTimeStampRep())) {
+	String convertedTimeStampValue = convertInput(newTimeStampValue);
+	if (!StringUtil.isEqual(convertedTimeStampValue, getBeginTimeStampRep())) {
 	    Time time = DateParser.getTime(newTimeStampValue, getBeginTimeStamp());
 	    setBeginTimeStamp(new Time(time));
 	}
@@ -69,11 +70,20 @@ public class TimeSnippet {
      * @param newTimeStampValue the new begin-time-stamp as String
      */
     public void updateAndSetEndTimeStamp(String newTimeStampValue) {
-
-	if (!StringUtil.isEqual(newTimeStampValue, getEndTimeStampRep())) {
+	String convertedTimeStampValue = convertInput(newTimeStampValue);
+	if (!StringUtil.isEqual(convertedTimeStampValue, getEndTimeStampRep())) {
 	    Time time = DateParser.getTime(newTimeStampValue, getEndTimeStamp());
 	    setEndTimeStamp(new Time(time));
 	}
+    }
+
+    private String convertInput(String newTimeStampValue) {
+	try {
+	    return DateParser.convertInput(newTimeStampValue);
+	} catch (ParseException e) {
+	    // ignore
+	}
+	return newTimeStampValue;
     }
 
     /**
