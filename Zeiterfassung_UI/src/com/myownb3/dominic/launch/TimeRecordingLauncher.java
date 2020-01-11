@@ -26,11 +26,13 @@ import javafx.stage.Stage;
 public class TimeRecordingLauncher extends Application {
 
     public static void main(String[] args) {
+	setSystemProperties();
 	launch();
     }
 
     @Override
     public void start(Stage primaryStage) throws ApplicationLaunchException {
+	setSystemProperties();
 	Runtime.getRuntime().addShutdownHook(createShutdownHook());
 
 	TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
@@ -47,6 +49,11 @@ public class TimeRecordingLauncher extends Application {
 	PictureLibrary.loadPictures();
 	Platform.setImplicitExit(false);
 	createTurboBucherPropertiesFileIfNotExists();
+   }
+
+    private static void setSystemProperties() {
+	System.setProperty("prism.order", "sw");
+	System.setProperty("prism.verbose", "true");
     }
 
     private void createTurboBucherPropertiesFileIfNotExists() {
