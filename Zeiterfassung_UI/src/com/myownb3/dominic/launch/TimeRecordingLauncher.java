@@ -67,11 +67,6 @@ public class TimeRecordingLauncher extends Application {
 	}
     }
 
-    private static void setSystemProperties() {
-	System.setProperty("prism.order", "sw");
-	System.setProperty("prism.verbose", "true");
-    }
-
     /*
      * create a shutdown hook whose export the current and maybe not yet exported
      * BusinessDay in case the application is shutdown by accident
