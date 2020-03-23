@@ -47,373 +47,369 @@ import javafx.stage.Stage;
  * 
  */
 public class TimeRecordingTray {
-    private TrayIcon trayIcon;
-    private JMenuItem showHoursItem;
-    private JMenuItem startTurboBucher;
-    private JMenuItem showImportDialogItem;
-    private MainWindowPage mainWindowPage;
+   private TrayIcon trayIcon;
+   private JMenuItem showHoursItem;
+   private JMenuItem startTurboBucher;
+   private JMenuItem showImportDialogItem;
+   private MainWindowPage mainWindowPage;
 
-    public void registerSystemtray(Stage primaryStage) throws ApplicationLaunchException {
+   public void registerSystemtray(Stage primaryStage) throws ApplicationLaunchException {
 
-	setLookAndFeel();
+      setLookAndFeel();
 
-	addTrayIconToSystemTray();
+      addTrayIconToSystemTray();
 
-	// Create a popup menu components
-	JMenu settingsRoundMenu = createSettingsMenu();
-	JMenuItem exitItem = createExitMenu();
-	createShowHoursMenuItem();
-	createStartTurboBucherMenuItem();
-	createImportAufzeichnungMenueItem();
-	JPopupMenu popupMenu = createPopupMenu(settingsRoundMenu, exitItem);
+      // Create a popup menu components
+      JMenu settingsRoundMenu = createSettingsMenu();
+      JMenuItem exitItem = createExitMenu();
+      createShowHoursMenuItem();
+      createStartTurboBucherMenuItem();
+      createImportAufzeichnungMenueItem();
+      JPopupMenu popupMenu = createPopupMenu(settingsRoundMenu, exitItem);
 
-	mainWindowPage = new MainWindowPage(this, primaryStage);
+      mainWindowPage = new MainWindowPage(this, primaryStage);
 
-	trayIcon.addMouseMotionListener(getMouseMotionListener());
-	trayIcon.addMouseListener(getMouseListener(popupMenu));
-	HotKeyManager.INSTANCE.registerHotKey(() -> handleUserInteractionAndShowInputIfStopped());
-    }
+      trayIcon.addMouseMotionListener(getMouseMotionListener());
+      trayIcon.addMouseListener(getMouseListener(popupMenu));
+      HotKeyManager.INSTANCE.registerHotKey(() -> handleUserInteractionAndShowInputIfStopped());
+   }
 
-    private void createImportAufzeichnungMenueItem() {
-	showImportDialogItem = new JMenuItem(TextLabel.SHOW_IMPORT_DIALOG_MENU_ITEM);
-	showImportDialogItem.addActionListener(actionEvent -> showImportDialog());
-	showImportDialogItem.setEnabled(true);
-    }
+   private void createImportAufzeichnungMenueItem() {
+      showImportDialogItem = new JMenuItem(TextLabel.SHOW_IMPORT_DIALOG_MENU_ITEM);
+      showImportDialogItem.addActionListener(actionEvent -> showImportDialog());
+      showImportDialogItem.setEnabled(true);
+   }
 
-    private void showImportDialog() {
-	Platform.runLater(() -> mainWindowPage.showImportDialog());
-    }
+   private void showImportDialog() {
+      Platform.runLater(() -> mainWindowPage.showImportDialog());
+   }
 
-    private void showOverviewView() {
-	
-	Platform.runLater(() -> mainWindowPage.showOverviewView());
-    }
+   private void showOverviewView() {
 
-    private void showInputMask() {
-	Platform.runLater(() -> mainWindowPage.showInputMask());
-    }
+      Platform.runLater(() -> mainWindowPage.showOverviewView());
+   }
 
-    private void startWorking() {
-	trayIcon.setImage(PictureLibrary.getWorkingImageIcon());
-	updateUIStates();
-    }
+   private void showInputMask() {
+      Platform.runLater(() -> mainWindowPage.showInputMask());
+   }
 
-    private void stopWorking() {
-	trayIcon.setImage(PictureLibrary.getNotWorkingImageIcon());
-	trayIcon.setToolTip(TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
-	showHoursItem.setEnabled(false);
-	startTurboBucher.setEnabled(false);
-    }
+   private void startWorking() {
+      trayIcon.setImage(PictureLibrary.getWorkingImageIcon());
+      updateUIStates();
+   }
 
-    /**
-     * Updates the states of the button & elements
-     */
-    public void updateUIStates() {
-	boolean isNotBooking = !TimeRecorder.INSTANCE.isBooking();
-	showHoursItem.setEnabled(TimeRecorder.INSTANCE.hasContent() && isNotBooking);
-	startTurboBucher.setEnabled(TimeRecorder.INSTANCE.hasNotChargedElements() && isNotBooking);
-	showImportDialogItem.setEnabled(hasNoContentAndIsNotRecording() && isNotBooking);
-    }
+   private void stopWorking() {
+      trayIcon.setImage(PictureLibrary.getNotWorkingImageIcon());
+      trayIcon.setToolTip(TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
+      showHoursItem.setEnabled(false);
+      startTurboBucher.setEnabled(false);
+   }
 
-    private boolean hasNoContentAndIsNotRecording() {
-	return !TimeRecorder.INSTANCE.hasContent() && !TimeRecorder.INSTANCE.isRecordindg();
-    }
+   /**
+    * Updates the states of the button & elements
+    */
+   public void updateUIStates() {
+      boolean isNotBooking = !TimeRecorder.INSTANCE.isBooking();
+      showHoursItem.setEnabled(TimeRecorder.INSTANCE.hasContent() && isNotBooking);
+      startTurboBucher.setEnabled(TimeRecorder.INSTANCE.hasNotChargedElements() && isNotBooking);
+      showImportDialogItem.setEnabled(hasNoContentAndIsNotRecording() && isNotBooking);
+   }
 
-    /**
-     * Shows the given {@link Throwable}
-     * 
-     * @param thread
-     *            the thread which caught the throable
-     * @param thrown
-     *            the thrown throable
-     */
-    private void showException(Thread thread, Throwable thrown) {
-	ExceptionUtil.showException(thread, thrown);
-    }
+   private boolean hasNoContentAndIsNotRecording() {
+      return !TimeRecorder.INSTANCE.hasContent() && !TimeRecorder.INSTANCE.isRecordindg();
+   }
 
-    public void clearBusinessDayContents() {
-	TimeRecorder.INSTANCE.clear();
-	updateUIStates();
-    }
+   /**
+    * Shows the given {@link Throwable}
+    * 
+    * @param thread
+    *        the thread which caught the throable
+    * @param thrown
+    *        the thrown throable
+    */
+   private void showException(Thread thread, Throwable thrown) {
+      ExceptionUtil.showException(thread, thrown);
+   }
 
-    /**
-     * @return the {@link CallbackHandler} which handles interaction between the
-     *         {@link TimeRecordingTray} and the {@link TimeRecorder} or the
-     *         {@link GlobalExceptionHandler}
-     */
-    public CallbackHandler getCallbackHandler() {
+   public void clearBusinessDayContents() {
+      TimeRecorder.INSTANCE.clear();
+      updateUIStates();
+   }
 
-	return new CallbackHandler() {
+   /**
+    * @return the {@link CallbackHandler} which handles interaction between the
+    *         {@link TimeRecordingTray} and the {@link TimeRecorder} or the
+    *         {@link GlobalExceptionHandler}
+    */
+   public CallbackHandler getCallbackHandler() {
 
-	    @Override
-	    public void onStop() {
-		stopWorking();
-	    }
+      return new CallbackHandler() {
 
-	    @Override
-	    public void onStart() {
-		startWorking();
-	    }
+         @Override
+         public void onStop() {
+            stopWorking();
+         }
 
-	    @Override
-	    public void onResume() {
-		startWorking();
-	    }
+         @Override
+         public void onStart() {
+            startWorking();
+         }
 
-	    @Override
-	    public void onException(Throwable thrown, Thread thread) {
-		showException(thread, thrown);
-	    }
+         @Override
+         public void onResume() {
+            startWorking();
+         }
 
-	    @Override
-	    public void displayMessage(Message message) {
-		TimeRecordingTray.this.displayMessage(message.getMessageTitle(), message.getMessage(), message.getMessageType());
-	    }
-	};
-    }
+         @Override
+         public void onException(Throwable thrown, Thread thread) {
+            showException(thread, thrown);
+         }
 
-    private void handleUserInteractionAndShowInputIfStopped() {
-	if (TimeRecorder.INSTANCE.handleUserInteraction()) {
-	    showInputMask();
-	}
-    }
+         @Override
+         public void displayMessage(Message message) {
+            TimeRecordingTray.this.displayMessage(message.getMessageTitle(), message.getMessage(), message.getMessageType());
+         }
+      };
+   }
 
-    /**
-     * Books the content of the current {@link BusinessDay}
-     */
-    public void book() {
-	ThreadFactory.INSTANCE.execute(() -> getBookAndRefreshRunnable());
-	wait (500);
-	updateUIStates();
-    }
+   private void handleUserInteractionAndShowInputIfStopped() {
+      if (TimeRecorder.INSTANCE.handleUserInteraction()) {
+         showInputMask();
+      }
+   }
 
-    private void getBookAndRefreshRunnable() {
-	try {
-	    bookInternal();
-	} finally {
-	    // Make sure the UI is refreshed after the booking
-	    updateUIStates();
-	}
-    }
+   /**
+    * Books the content of the current {@link BusinessDay}
+    */
+   public void book() {
+      ThreadFactory.INSTANCE.execute(() -> getBookAndRefreshRunnable());
+      wait(500);
+      updateUIStates();
+   }
 
-    private void bookInternal() {
-	boolean wasBooked = TimeRecorder.INSTANCE.book();
-	if (wasBooked) {
-	    displayMessage(null, TextLabel.SUCCESSFULLY_CHARGED_TEXT, MessageType.INFORMATION);
-	    updateUIStates();
-	}
-    }
+   private void getBookAndRefreshRunnable() {
+      try {
+         bookInternal();
+      } finally {
+         // Make sure the UI is refreshed after the booking
+         updateUIStates();
+      }
+   }
 
-    /**
-     * Exports the content of the current {@link BusinessDay}
-     */
-    public void export() {
-	TimeRecorder.INSTANCE.export();
-    }
+   private void bookInternal() {
+      boolean wasBooked = TimeRecorder.INSTANCE.book();
+      if (wasBooked) {
+         displayMessage(null, TextLabel.SUCCESSFULLY_CHARGED_TEXT, MessageType.INFORMATION);
+         updateUIStates();
+      }
+   }
 
-    /**
-     * Resumes a previously stopped recording
-     */
-    public void resume() {
-	TimeRecorder.INSTANCE.resume();
-    }
+   /**
+    * Exports the content of the current {@link BusinessDay}
+    */
+   public void export() {
+      TimeRecorder.INSTANCE.export();
+   }
 
-    public void importBusinessDayFromFile(File selectedFile) {
+   /**
+    * Resumes a previously stopped recording
+    */
+   public void resume() {
+      TimeRecorder.INSTANCE.resume();
+   }
 
-	boolean success = TimeRecorder.INSTANCE.importBusinessDayFromFile(selectedFile);
-	if (success) {
-	    displayMessage(null, TextLabel.IMPORT_SUCESSFULL, MessageType.INFORMATION);
-	    showOverviewView();
-	    updateUIStates();
-	} else {
-	    displayMessage(TextLabel.IMPORT_NOT_SUCESSFULL_TITLE, TextLabel.IMPORT_NOT_SUCESSFULL_MSG, MessageType.ERROR);
-	}
-    }
+   public void importBusinessDayFromFile(File selectedFile) {
 
-    private void displayMessage(String messageTitle, String message, MessageType messageType) {
+      boolean success = TimeRecorder.INSTANCE.importBusinessDayFromFile(selectedFile);
+      if (success) {
+         displayMessage(null, TextLabel.IMPORT_SUCESSFULL, MessageType.INFORMATION);
+         showOverviewView();
+         updateUIStates();
+      } else {
+         displayMessage(TextLabel.IMPORT_NOT_SUCESSFULL_TITLE, TextLabel.IMPORT_NOT_SUCESSFULL_MSG, MessageType.ERROR);
+      }
+   }
 
-	trayIcon.displayMessage(messageTitle, message, getTryIconErrorForMessageType(messageType));
-	if (messageType == MessageType.ERROR) {
-	    Toolkit.getDefaultToolkit().beep();
-	}
-    }
+   private void displayMessage(String messageTitle, String message, MessageType messageType) {
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Create Content for UI
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      trayIcon.displayMessage(messageTitle, message, getTryIconErrorForMessageType(messageType));
+      if (messageType == MessageType.ERROR) {
+         Toolkit.getDefaultToolkit().beep();
+      }
+   }
 
-    private JMenuItem createExitMenu() {
-	JMenuItem exitItem = new JMenuItem(TextLabel.EXIT);
+   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   // Create Content for UI
+   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	exitItem.addActionListener(actionEvent -> {
-	    Platform.exit();
-	    System.exit(0);
-	});
-	return exitItem;
-    }
+   private JMenuItem createExitMenu() {
+      JMenuItem exitItem = new JMenuItem(TextLabel.EXIT);
 
-    private void createStartTurboBucherMenuItem() {
-	startTurboBucher = new JMenuItem(TextLabel.CHARGE_LABEL);
-	startTurboBucher.addActionListener(actionEvent -> book());
-	startTurboBucher.setEnabled(false);
-    }
+      exitItem.addActionListener(actionEvent -> {
+         Platform.exit();
+         System.exit(0);
+      });
+      return exitItem;
+   }
 
-    private void createShowHoursMenuItem() {
-	showHoursItem = new JMenuItem(TextLabel.SHOW_WORKING_HOURS);
-	showHoursItem.addActionListener(actionEvent -> showOverviewView());
-	showHoursItem.setEnabled(false);
-    }
+   private void createStartTurboBucherMenuItem() {
+      startTurboBucher = new JMenuItem(TextLabel.CHARGE_LABEL);
+      startTurboBucher.addActionListener(actionEvent -> book());
+      startTurboBucher.setEnabled(false);
+   }
 
-    private void addTrayIconToSystemTray() throws ApplicationLaunchException {
+   private void createShowHoursMenuItem() {
+      showHoursItem = new JMenuItem(TextLabel.SHOW_WORKING_HOURS);
+      showHoursItem.addActionListener(actionEvent -> showOverviewView());
+      showHoursItem.setEnabled(false);
+   }
 
-	trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(), TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
-	if (SystemTray.isSupported()) {
-	    try {
-		SystemTray tray = SystemTray.getSystemTray();
-		tray.add(trayIcon);
-	    } catch (AWTException e) {
-		throw new ApplicationLaunchException(e);
-	    }
-	} else {
-	    throw new ApplicationLaunchException("SystemTray auf aktuellem System nicht verfügbar!");
-	}
-    }
+   private void addTrayIconToSystemTray() throws ApplicationLaunchException {
 
-    private MouseMotionListener getMouseMotionListener() {
-	return new MouseMotionListener() {
+      trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(), TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
+      if (SystemTray.isSupported()) {
+         try {
+            SystemTray tray = SystemTray.getSystemTray();
+            tray.add(trayIcon);
+         } catch (AWTException e) {
+            throw new ApplicationLaunchException(e);
+         }
+      } else {
+         throw new ApplicationLaunchException("SystemTray auf aktuellem System nicht verfügbar!");
+      }
+   }
 
-	    @Override
-	    public void mouseMoved(MouseEvent arg0) {
-		trayIcon.setToolTip(TimeRecorder.INSTANCE.getInfoStringForState());
-	    }
+   private MouseMotionListener getMouseMotionListener() {
+      return new MouseMotionListener() {
 
-	    @Override
-	    public void mouseDragged(MouseEvent arg0) {
-	    }
-	};
-    }
+         @Override
+         public void mouseMoved(MouseEvent arg0) {
+            trayIcon.setToolTip(TimeRecorder.INSTANCE.getInfoStringForState());
+         }
 
-    private MouseListener getMouseListener(JPopupMenu popupMenu) {
-	return new MouseListener() {
-	    @Override
-	    public void mouseReleased(MouseEvent e) {
-		if (e.isPopupTrigger()) {
-		    popupMenu.setLocation(e.getX(), e.getY());
-		    popupMenu.setInvoker(popupMenu);
-		    popupMenu.setVisible(true);
-		}
-	    }
+         @Override
+         public void mouseDragged(MouseEvent arg0) {}
+      };
+   }
 
-	    @Override
-	    public void mousePressed(MouseEvent e) {
-	    }
+   private MouseListener getMouseListener(JPopupMenu popupMenu) {
+      return new MouseListener() {
+         @Override
+         public void mouseReleased(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+               popupMenu.setLocation(e.getX(), e.getY());
+               popupMenu.setInvoker(popupMenu);
+               popupMenu.setVisible(true);
+            }
+         }
 
-	    @Override
-	    public void mouseExited(MouseEvent e) {
-	    }
+         @Override
+         public void mousePressed(MouseEvent e) {}
 
-	    @Override
-	    public void mouseEntered(MouseEvent e) {
-	    }
+         @Override
+         public void mouseExited(MouseEvent e) {}
 
-	    @Override
-	    public void mouseClicked(MouseEvent e) {
-		if (e.getButton() == MouseEvent.BUTTON1) {
-		    handleUserInteractionAndShowInputIfStopped();
-		}
-	    }
-	};
-    }
+         @Override
+         public void mouseEntered(MouseEvent e) {}
 
-    private JPopupMenu createPopupMenu(JMenu settingsRoundMenu, JMenuItem exitItem) {
-	JPopupMenu popupMenu = new JPopupMenu();
-	popupMenu.add(settingsRoundMenu);
-	popupMenu.addSeparator();
-	popupMenu.add(showImportDialogItem);
-	popupMenu.add(startTurboBucher);
-	popupMenu.add(showHoursItem);
-	popupMenu.addSeparator();
-	popupMenu.add(exitItem);
-	return popupMenu;
-    }
+         @Override
+         public void mouseClicked(MouseEvent e) {
+            if (e.getButton() == MouseEvent.BUTTON1) {
+               handleUserInteractionAndShowInputIfStopped();
+            }
+         }
+      };
+   }
 
-    private JMenu createSettingsMenu() {
+   private JPopupMenu createPopupMenu(JMenu settingsRoundMenu, JMenuItem exitItem) {
+      JPopupMenu popupMenu = new JPopupMenu();
+      popupMenu.add(settingsRoundMenu);
+      popupMenu.addSeparator();
+      popupMenu.add(showImportDialogItem);
+      popupMenu.add(startTurboBucher);
+      popupMenu.add(showHoursItem);
+      popupMenu.addSeparator();
+      popupMenu.add(exitItem);
+      return popupMenu;
+   }
 
-	JRadioButtonMenuItem settingsRoundItem1Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_1);
-	JRadioButtonMenuItem settingsRoundItem5Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_5);
-	JRadioButtonMenuItem settingsRoundItem10Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_10);
-	JRadioButtonMenuItem settingsRoundItem15Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_15);
+   private JMenu createSettingsMenu() {
 
-	ButtonGroup buttonGroup = new ButtonGroup();
-	buttonGroup.add(settingsRoundItem1Min);
-	buttonGroup.add(settingsRoundItem5Min);
-	buttonGroup.add(settingsRoundItem10Min);
-	buttonGroup.add(settingsRoundItem15Min);
+      JRadioButtonMenuItem settingsRoundItem1Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_1);
+      JRadioButtonMenuItem settingsRoundItem5Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_5);
+      JRadioButtonMenuItem settingsRoundItem10Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_10);
+      JRadioButtonMenuItem settingsRoundItem15Min = new JRadioButtonMenuItem(TextLabel.SETTINGS_ROUND_15);
 
-	Map<RoundMode, JRadioButtonMenuItem> roundMode2ButtonMap = new HashMap<>();
-	roundMode2ButtonMap.put(RoundMode.ONE_MIN, settingsRoundItem1Min);
-	roundMode2ButtonMap.put(RoundMode.FIVE_MIN, settingsRoundItem5Min);
-	roundMode2ButtonMap.put(RoundMode.TEN_MIN, settingsRoundItem10Min);
-	roundMode2ButtonMap.put(RoundMode.FIFTEEN_MIN, settingsRoundItem15Min);
+      ButtonGroup buttonGroup = new ButtonGroup();
+      buttonGroup.add(settingsRoundItem1Min);
+      buttonGroup.add(settingsRoundItem5Min);
+      buttonGroup.add(settingsRoundItem10Min);
+      buttonGroup.add(settingsRoundItem15Min);
 
-	// Register for reach an action handler
-	for (RoundMode roundMode : roundMode2ButtonMap.keySet()) {
-	    roundMode2ButtonMap.get(roundMode).addActionListener(event -> safeRoundSettings(roundMode));
-	}
+      Map<RoundMode, JRadioButtonMenuItem> roundMode2ButtonMap = new HashMap<>();
+      roundMode2ButtonMap.put(RoundMode.ONE_MIN, settingsRoundItem1Min);
+      roundMode2ButtonMap.put(RoundMode.FIVE_MIN, settingsRoundItem5Min);
+      roundMode2ButtonMap.put(RoundMode.TEN_MIN, settingsRoundItem10Min);
+      roundMode2ButtonMap.put(RoundMode.FIFTEEN_MIN, settingsRoundItem15Min);
 
-	// mark as selected
-	RoundMode currentRoundMode = TimeRounder.INSTANCE.getRoundMode();
-	JRadioButtonMenuItem jRadioButtonMenuItem = roundMode2ButtonMap.get(currentRoundMode);
-	jRadioButtonMenuItem.setSelected(true);
+      // Register for reach an action handler
+      for (RoundMode roundMode : roundMode2ButtonMap.keySet()) {
+         roundMode2ButtonMap.get(roundMode).addActionListener(event -> safeRoundSettings(roundMode));
+      }
 
-	JMenu settingsRoundMenu = new JMenu(TextLabel.SETTINGS_ROUND);
-	settingsRoundMenu.add(settingsRoundItem1Min);
-	settingsRoundMenu.add(settingsRoundItem5Min);
-	settingsRoundMenu.add(settingsRoundItem10Min);
-	settingsRoundMenu.add(settingsRoundItem15Min);
-	return settingsRoundMenu;
-    }
+      // mark as selected
+      RoundMode currentRoundMode = TimeRounder.INSTANCE.getRoundMode();
+      JRadioButtonMenuItem jRadioButtonMenuItem = roundMode2ButtonMap.get(currentRoundMode);
+      jRadioButtonMenuItem.setSelected(true);
 
-    private void safeRoundSettings(RoundMode roundMode) {
-	RoundMode currentRoundMode = TimeRounder.INSTANCE.getRoundMode();
-	if (currentRoundMode != roundMode) {
-	    TimeRounder.INSTANCE.setRoundMode(roundMode);
-	    displayMessage(null, TextLabel.SETTINGS_ROUND_SAVED, MessageType.INFORMATION);
-	}
-    }
+      JMenu settingsRoundMenu = new JMenu(TextLabel.SETTINGS_ROUND);
+      settingsRoundMenu.add(settingsRoundItem1Min);
+      settingsRoundMenu.add(settingsRoundItem5Min);
+      settingsRoundMenu.add(settingsRoundItem10Min);
+      settingsRoundMenu.add(settingsRoundItem15Min);
+      return settingsRoundMenu;
+   }
 
-    private void setLookAndFeel() {
-	try {
-	    UIManager.setLookAndFeel(new NimbusLookAndFeel());
-	    UIManager.put("control", Color.WHITE);
-	} catch (Exception ex) {
-	    try {
-		UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-	    } catch (Exception e) {
-		throw new ApplicationLaunchException(e);
-	    }
-	}
-    }
+   private void safeRoundSettings(RoundMode roundMode) {
+      RoundMode currentRoundMode = TimeRounder.INSTANCE.getRoundMode();
+      if (currentRoundMode != roundMode) {
+         TimeRounder.INSTANCE.setRoundMode(roundMode);
+         displayMessage(null, TextLabel.SETTINGS_ROUND_SAVED, MessageType.INFORMATION);
+      }
+   }
 
-    private java.awt.TrayIcon.MessageType getTryIconErrorForMessageType(MessageType messageType) {
+   private void setLookAndFeel() {
+      try {
+         UIManager.setLookAndFeel(new NimbusLookAndFeel());
+         UIManager.put("control", Color.WHITE);
+      } catch (Exception ex) {
+         try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+         } catch (Exception e) {
+            throw new ApplicationLaunchException(e);
+         }
+      }
+   }
 
-	switch (messageType) {
-	case ERROR:
-	    return TrayIcon.MessageType.ERROR;
-	case WARNING:
-	    return TrayIcon.MessageType.WARNING;
-	case INFORMATION:
-	    return TrayIcon.MessageType.INFO;
-	default:
-	    return TrayIcon.MessageType.NONE;
-	}
-    }
-    
-    private void wait(int amount) {
-	try {
-	    Thread.sleep(amount);
-	} catch (InterruptedException e) {
-	    e.printStackTrace();// ignore
-	}
-    }
+   private java.awt.TrayIcon.MessageType getTryIconErrorForMessageType(MessageType messageType) {
+
+      switch (messageType) {
+         case ERROR:
+            return TrayIcon.MessageType.ERROR;
+         case WARNING:
+            return TrayIcon.MessageType.WARNING;
+         case INFORMATION:
+            return TrayIcon.MessageType.INFO;
+         default:
+            return TrayIcon.MessageType.NONE;
+      }
+   }
+
+   private void wait(int amount) {
+      try {
+         Thread.sleep(amount);
+      } catch (InterruptedException e) {
+         e.printStackTrace();// ignore
+      }
+   }
 }

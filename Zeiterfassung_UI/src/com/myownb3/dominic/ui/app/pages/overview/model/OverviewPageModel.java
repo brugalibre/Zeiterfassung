@@ -19,96 +19,96 @@ import javafx.beans.property.StringProperty;
  */
 public class OverviewPageModel implements PageModel {
 
-    private BusinessDayVO businessDayVO;
-    private Property<Boolean> isChargeButtonDisabled;
-    private Property<Boolean> isClearButtonDisabled;
-    private Property<Boolean> isExportButtonDisabled;
+   private BusinessDayVO businessDayVO;
+   private Property<Boolean> isChargeButtonDisabled;
+   private Property<Boolean> isClearButtonDisabled;
+   private Property<Boolean> isExportButtonDisabled;
 
-    private StringProperty bookButtonLabel;
-    private StringProperty exportButtonLabel;
-    private StringProperty clearButtonLabel;
+   private StringProperty bookButtonLabel;
+   private StringProperty exportButtonLabel;
+   private StringProperty clearButtonLabel;
 
-    private StringProperty totalAmountOfTimeLabel;
-    private StringProperty totalAmountOfTimeValue;
+   private StringProperty totalAmountOfTimeLabel;
+   private StringProperty totalAmountOfTimeValue;
 
-    /**
-     * Creates a new {@link OverviewPageModel}
-     */
-    public OverviewPageModel(BusinessDayVO businessDayVO) {
-	this.businessDayVO = businessDayVO;
-	isChargeButtonDisabled = new SimpleBooleanProperty(TimeRecorder.INSTANCE.isBooking() || !businessDayVO.hasNotChargedElements());
-	isClearButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
-	isExportButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
+   /**
+    * Creates a new {@link OverviewPageModel}
+    */
+   public OverviewPageModel(BusinessDayVO businessDayVO) {
+      this.businessDayVO = businessDayVO;
+      isChargeButtonDisabled = new SimpleBooleanProperty(TimeRecorder.INSTANCE.isBooking() || !businessDayVO.hasNotChargedElements());
+      isClearButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
+      isExportButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
 
-	bookButtonLabel = new SimpleStringProperty(TextLabel.CHARGE_LABEL);
-	exportButtonLabel = new SimpleStringProperty(TextLabel.EXPORT_LABEL);
-	clearButtonLabel = new SimpleStringProperty(TextLabel.CLEAR_LABEL);
+      bookButtonLabel = new SimpleStringProperty(TextLabel.CHARGE_LABEL);
+      exportButtonLabel = new SimpleStringProperty(TextLabel.EXPORT_LABEL);
+      clearButtonLabel = new SimpleStringProperty(TextLabel.CLEAR_LABEL);
 
-	totalAmountOfTimeLabel = new SimpleStringProperty(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL);
-	totalAmountOfTimeValue = new SimpleStringProperty(businessDayVO.getTotalDurationRep());
-    }
+      totalAmountOfTimeLabel = new SimpleStringProperty(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL);
+      totalAmountOfTimeValue = new SimpleStringProperty(businessDayVO.getTotalDurationRep());
+   }
 
-    /**
-     * @param inPageModel
-     * @param of
-     * @return
-     */
-    public static OverviewPageModel of(OverviewPageModel inPageModel, BusinessDayVO businessDayVO) {
-	inPageModel.businessDayVO = businessDayVO;
-	inPageModel.getIsChargeButtonDisabled().setValue(TimeRecorder.INSTANCE.isBooking() || !businessDayVO.hasNotChargedElements());
-	inPageModel.getIsClearButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
-	inPageModel.getIsExportButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
+   /**
+    * @param inPageModel
+    * @param of
+    * @return
+    */
+   public static OverviewPageModel of(OverviewPageModel inPageModel, BusinessDayVO businessDayVO) {
+      inPageModel.businessDayVO = businessDayVO;
+      inPageModel.getIsChargeButtonDisabled().setValue(TimeRecorder.INSTANCE.isBooking() || !businessDayVO.hasNotChargedElements());
+      inPageModel.getIsClearButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
+      inPageModel.getIsExportButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
 
-	inPageModel.getBookButtonLabel().set(TextLabel.CHARGE_LABEL);
-	inPageModel.getExportButtonLabel().set(TextLabel.EXPORT_LABEL);
-	inPageModel.getClearButtonLabel().set(TextLabel.CLEAR_LABEL);
+      inPageModel.getBookButtonLabel().set(TextLabel.CHARGE_LABEL);
+      inPageModel.getExportButtonLabel().set(TextLabel.EXPORT_LABEL);
+      inPageModel.getClearButtonLabel().set(TextLabel.CLEAR_LABEL);
 
-	inPageModel.getTotalAmountOfTimeLabel().set(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL);
+      inPageModel.getTotalAmountOfTimeLabel().set(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL);
 
-	String totalDurationRep = businessDayVO.getTotalDurationRep();
-	inPageModel.getTotalAmountOfTimeValue().set(totalDurationRep);
-	return inPageModel;
-    }
+      String totalDurationRep = businessDayVO.getTotalDurationRep();
+      inPageModel.getTotalAmountOfTimeValue().set(totalDurationRep);
+      return inPageModel;
+   }
 
-    /**
-     * @returns the {@link BusinessDayVO}
-     */
-    public final BusinessDayVO getBusinessDayVO() {
-	return this.businessDayVO;
-    }
+   /**
+    * @returns the {@link BusinessDayVO}
+    */
+   public final BusinessDayVO getBusinessDayVO() {
+      return this.businessDayVO;
+   }
 
-    /**
-     * @return
-     */
-    public Property<Boolean> getIsChargeButtonDisabled() {
-	return isChargeButtonDisabled;
-    }
+   /**
+    * @return
+    */
+   public Property<Boolean> getIsChargeButtonDisabled() {
+      return isChargeButtonDisabled;
+   }
 
-    public Property<Boolean> getIsClearButtonDisabled() {
-	return isClearButtonDisabled;
-    }
+   public Property<Boolean> getIsClearButtonDisabled() {
+      return isClearButtonDisabled;
+   }
 
-    public final StringProperty getBookButtonLabel() {
-	return this.bookButtonLabel;
-    }
+   public final StringProperty getBookButtonLabel() {
+      return this.bookButtonLabel;
+   }
 
-    public final StringProperty getExportButtonLabel() {
-	return this.exportButtonLabel;
-    }
+   public final StringProperty getExportButtonLabel() {
+      return this.exportButtonLabel;
+   }
 
-    public final StringProperty getClearButtonLabel() {
-	return this.clearButtonLabel;
-    }
+   public final StringProperty getClearButtonLabel() {
+      return this.clearButtonLabel;
+   }
 
-    public final StringProperty getTotalAmountOfTimeLabel() {
-	return this.totalAmountOfTimeLabel;
-    }
+   public final StringProperty getTotalAmountOfTimeLabel() {
+      return this.totalAmountOfTimeLabel;
+   }
 
-    public final StringProperty getTotalAmountOfTimeValue() {
-	return this.totalAmountOfTimeValue;
-    }
+   public final StringProperty getTotalAmountOfTimeValue() {
+      return this.totalAmountOfTimeValue;
+   }
 
-    public final Property<Boolean> getIsExportButtonDisabled() {
-	return this.isExportButtonDisabled;
-    }
+   public final Property<Boolean> getIsExportButtonDisabled() {
+      return this.isExportButtonDisabled;
+   }
 }

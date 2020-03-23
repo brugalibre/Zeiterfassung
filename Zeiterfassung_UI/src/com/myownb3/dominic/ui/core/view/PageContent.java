@@ -11,5 +11,5 @@ package com.myownb3.dominic.ui.core.view;
  * @since rel2.00.00
  */
 public interface PageContent {
-    // Just a marker interface
+   // Just a marker interface
 }

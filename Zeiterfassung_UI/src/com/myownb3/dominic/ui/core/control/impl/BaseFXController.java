@@ -25,42 +25,42 @@ import javafx.stage.Stage;
  * @author Dominic Stalder
  */
 public abstract class BaseFXController<IN_VO extends PageModel, OUT_VO extends PageModel>
-	extends BaseController<IN_VO, OUT_VO> implements Initializable {
+      extends BaseController<IN_VO, OUT_VO> implements Initializable {
 
-    @Override
-    public void initialize(Page<IN_VO, OUT_VO> page) {
-	super.initialize(page);
-    }
+   @Override
+   public void initialize(Page<IN_VO, OUT_VO> page) {
+      super.initialize(page);
+   }
 
-    @Override
-    public void initialize(URL arg0, ResourceBundle arg1) {
-	// Nothing to do by default
-    }
+   @Override
+   public void initialize(URL arg0, ResourceBundle arg1) {
+      // Nothing to do by default
+   }
 
-    /**
-     * Shows the content of this controller. For the most common case we cast the
-     * 'incoming' datamodl to the 'outgoing' in order to initialize it. If this
-     * behavior is unwanted, override this method
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public void show() {
-	initDataModel((IN_VO) dataModel);
-	super.show();
-	Optional<Stage> optionalStage = getStage(page);
-	optionalStage.ifPresent(stage -> stage.show());
-    }
+   /**
+    * Shows the content of this controller. For the most common case we cast the
+    * 'incoming' datamodl to the 'outgoing' in order to initialize it. If this
+    * behavior is unwanted, override this method
+    */
+   @SuppressWarnings("unchecked")
+   @Override
+   public void show() {
+      initDataModel((IN_VO) dataModel);
+      super.show();
+      Optional<Stage> optionalStage = getStage(page);
+      optionalStage.ifPresent(stage -> stage.show());
+   }
 
-    private Optional<Stage> getStage(Page<?, ?> page) {
-	PageContent content = page.getContent();
-	if (content != null) {
-	    return ((FXPageContent) content).getStage();
-	}
-	return Optional.empty();
-    }
+   private Optional<Stage> getStage(Page<?, ?> page) {
+      PageContent content = page.getContent();
+      if (content != null) {
+         return ((FXPageContent) content).getStage();
+      }
+      return Optional.empty();
+   }
 
-    @SuppressWarnings("rawtypes")
-    public Node getPageContent() {
-	return ((AbstractFXPage) this.page).getRootParent();
-    }
+   @SuppressWarnings("rawtypes")
+   public Node getPageContent() {
+      return ((AbstractFXPage) this.page).getRootParent();
+   }
 }

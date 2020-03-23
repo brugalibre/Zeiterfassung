@@ -1,27 +1,27 @@
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.control.combobox;
 
 public class Entry {
-    private String value;
-    private long lastUsage; // defines when this entry was used the last time
+   private String value;
+   private long lastUsage; // defines when this entry was used the last time
 
-    public Entry(String value) {
-	this.value = value;
-    }
+   public Entry(String value) {
+      this.value = value;
+   }
 
-    public long getLastUsage() {
-	return lastUsage;
-    }
+   public long getLastUsage() {
+      return lastUsage;
+   }
 
-    public void setLastUsage() {
-	this.lastUsage = System.currentTimeMillis();
-    }
+   public void setLastUsage() {
+      this.lastUsage = System.currentTimeMillis();
+   }
 
-    public String getValue() {
-	return value;
-    }
+   public String getValue() {
+      return value;
+   }
 
-    @Override
-    public String toString() {
-	return "Value: " + getValue() + ", LastUsage: " + getLastUsage();
-    }
+   @Override
+   public String toString() {
+      return "Value: " + getValue() + ", LastUsage: " + getLastUsage();
+   }
 }

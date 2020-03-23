@@ -13,11 +13,11 @@ import com.myownb3.dominic.ui.core.model.PageModel;
  */
 public interface PageModelResolver<IN_MODEL extends PageModel, OUT_MODEL extends PageModel> {
 
-    /**
-     * Resolved the {@link PageModel}
-     * 
-     * @param inPageModel
-     * @return the new resolved {@link PageModel}
-     */
-    public OUT_MODEL resolvePageVO(IN_MODEL inPageModel);
+   /**
+    * Resolved the {@link PageModel}
+    * 
+    * @param inPageModel
+    * @return the new resolved {@link PageModel}
+    */
+   public OUT_MODEL resolvePageVO(IN_MODEL inPageModel);
 }

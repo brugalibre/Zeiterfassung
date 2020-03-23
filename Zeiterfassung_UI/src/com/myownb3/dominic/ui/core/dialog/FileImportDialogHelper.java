@@ -17,23 +17,24 @@ import javafx.stage.Stage;
  */
 public class FileImportDialogHelper {
 
-    private FileChooser fileChooser;
+   private FileChooser fileChooser;
 
-    public FileImportDialogHelper() {
-	fileChooser = new FileChooser();
-    }
+   public FileImportDialogHelper() {
+      fileChooser = new FileChooser();
+   }
 
-    /**
-     * Shows a dialog in order to import a file
-     * 
-     * @param stage the stage within the dialog is shown
-     * @return the selected file or <code>null</code> if none was selected
-     */
-    public File showImportDialogAndReturnFile(Stage stage) {
-	fileChooser.setTitle(TextLabel.SHOW_IMPORT_DIALOG_TITLE);
-	FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-		"Aufzeichnungen (*." + FileImporter.FILE_EXTENSION + ")", "*." + FileImporter.FILE_EXTENSION);
-	fileChooser.getExtensionFilters().add(extFilter);
-	return fileChooser.showOpenDialog(stage);
-    }
+   /**
+    * Shows a dialog in order to import a file
+    * 
+    * @param stage
+    *        the stage within the dialog is shown
+    * @return the selected file or <code>null</code> if none was selected
+    */
+   public File showImportDialogAndReturnFile(Stage stage) {
+      fileChooser.setTitle(TextLabel.SHOW_IMPORT_DIALOG_TITLE);
+      FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+            "Aufzeichnungen (*." + FileImporter.FILE_EXTENSION + ")", "*." + FileImporter.FILE_EXTENSION);
+      fileChooser.getExtensionFilters().add(extFilter);
+      return fileChooser.showOpenDialog(stage);
+   }
 }

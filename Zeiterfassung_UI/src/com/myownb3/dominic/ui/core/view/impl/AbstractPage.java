@@ -13,56 +13,59 @@ import com.myownb3.dominic.ui.core.view.PageContent;
  * to a {@link Page} in order to display them.
  * 
  * @author Dominic Stalder
- * @param <OUT_VO> - the outgoing data-model
- * @param <IN_VO> - the incoming data-model
+ * @param <OUT_VO>
+ *        - the outgoing data-model
+ * @param <IN_VO>
+ *        - the incoming data-model
  *
  */
 public abstract class AbstractPage<IN_VO extends PageModel, OUT_VO extends PageModel> implements Page<IN_VO, OUT_VO> {
-    private Controller<IN_VO, OUT_VO> controller;
-    protected PageContent pageContent;
-    protected boolean isDirty;
+   private Controller<IN_VO, OUT_VO> controller;
+   protected PageContent pageContent;
+   protected boolean isDirty;
 
-    protected AbstractPage() {
-	super();
-	initialize();
-    }
+   protected AbstractPage() {
+      super();
+      initialize();
+   }
 
-    protected abstract void initialize();
+   protected abstract void initialize();
 
-    /**
-     * Defines if the content of a {@link Page} (changed by a user) is valid or not
-     * 
-     * @return true if the page content is valid. False if not
-     */
-    @Override
-    public abstract void refresh();
+   /**
+    * Defines if the content of a {@link Page} (changed by a user) is valid or not
+    * 
+    * @return true if the page content is valid. False if not
+    */
+   @Override
+   public abstract void refresh();
 
-    /**
-     * @return the controller
-     */
-    @Override
-    public Controller<IN_VO, OUT_VO> getController() {
-	return controller;
-    }
+   /**
+    * @return the controller
+    */
+   @Override
+   public Controller<IN_VO, OUT_VO> getController() {
+      return controller;
+   }
 
-    /**
-     * @param controller the controller to set
-     */
-    protected void setController(Controller<IN_VO, OUT_VO> controller) {
-	this.controller = controller;
-    }
+   /**
+    * @param controller
+    *        the controller to set
+    */
+   protected void setController(Controller<IN_VO, OUT_VO> controller) {
+      this.controller = controller;
+   }
 
-    protected void setContent(PageContent pageContent) {
-	this.pageContent = pageContent;
-    }
+   protected void setContent(PageContent pageContent) {
+      this.pageContent = pageContent;
+   }
 
-    @Override
-    public PageContent getContent() {
-	return pageContent;
-    }
+   @Override
+   public PageContent getContent() {
+      return pageContent;
+   }
 
-    @Override
-    public void setDirty(boolean isDirty) {
-	this.isDirty = isDirty;
-    }
+   @Override
+   public void setDirty(boolean isDirty) {
+      this.isDirty = isDirty;
+   }
 }

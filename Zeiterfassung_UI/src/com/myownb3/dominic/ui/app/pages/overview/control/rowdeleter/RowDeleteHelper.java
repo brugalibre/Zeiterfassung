@@ -24,32 +24,33 @@ import javafx.scene.control.TableView;
  */
 public class RowDeleteHelper {
 
-    private BDChangeCallbackHandler uiRefresher;
+   private BDChangeCallbackHandler uiRefresher;
 
-    public RowDeleteHelper(BDChangeCallbackHandler uiRefresher) {
-	this.uiRefresher = uiRefresher;
-    }
+   public RowDeleteHelper(BDChangeCallbackHandler uiRefresher) {
+      this.uiRefresher = uiRefresher;
+   }
 
-    /**
-     * Deletes the row which is currently selected on the given {@link TableView}
-     * 
-     * @param event
-     *            the action event which triggered us
-     * @param tableView
-     *            the table-view
-     */
-    public void deleteRow(ActionEvent event, TableView<BusinessDayIncTableRowValue> tableView) {
+   /**
+    * Deletes the row which is currently selected on the given {@link TableView}
+    * 
+    * @param event
+    *        the action event which triggered us
+    * @param tableView
+    *        the table-view
+    */
+   public void deleteRow(ActionEvent event, TableView<BusinessDayIncTableRowValue> tableView) {
 
-	BusinessDayChangedCallbackHandler handler = new BusinessDayChangedCallbackHandlerImpl();
-	Optional<BusinessDayIncTableRowValue> optionalBusinessDayIncTableRowValue = Optional.ofNullable(tableView.getSelectionModel().getSelectedItem());
-	optionalBusinessDayIncTableRowValue.ifPresent(businessDayIncTableRowValue -> {
-	    handler.handleBusinessDayIncrementDeleted(businessDayIncTableRowValue.getNumberAsInt());
-	    afterDelete(event);
-	});
-    }
+      BusinessDayChangedCallbackHandler handler = new BusinessDayChangedCallbackHandlerImpl();
+      Optional<BusinessDayIncTableRowValue> optionalBusinessDayIncTableRowValue =
+            Optional.ofNullable(tableView.getSelectionModel().getSelectedItem());
+      optionalBusinessDayIncTableRowValue.ifPresent(businessDayIncTableRowValue -> {
+         handler.handleBusinessDayIncrementDeleted(businessDayIncTableRowValue.getNumberAsInt());
+         afterDelete(event);
+      });
+   }
 
-    private void afterDelete(ActionEvent event) {
-	event.consume();
-	uiRefresher.onFinish(FinishAction.FINISH);
-    }
+   private void afterDelete(ActionEvent event) {
+      event.consume();
+      uiRefresher.onFinish(FinishAction.FINISH);
+   }
 }

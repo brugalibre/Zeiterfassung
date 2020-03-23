@@ -5,18 +5,18 @@ import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChanged
 
 public class BusinessDayChangedCallbackHandlerImpl implements BusinessDayChangedCallbackHandler {
 
-    @Override
-    public void handleBusinessDayIncrementAdd(BusinessDayIncrementAdd businessDayIncrementAdd) {
-	TimeRecorder.INSTANCE.addBusinessIncrement(businessDayIncrementAdd);
-    }
+   @Override
+   public void handleBusinessDayIncrementAdd(BusinessDayIncrementAdd businessDayIncrementAdd) {
+      TimeRecorder.INSTANCE.addBusinessIncrement(businessDayIncrementAdd);
+   }
 
-    @Override
-    public void handleBusinessDayIncrementDeleted(int index) {
-	TimeRecorder.INSTANCE.removeIncrementAtIndex(index);
-    }
+   @Override
+   public void handleBusinessDayIncrementDeleted(int index) {
+      TimeRecorder.INSTANCE.removeIncrementAtIndex(index);
+   }
 
-    @Override
-    public void handleBusinessDayChanged(ChangedValue changeValue) {
-	TimeRecorder.INSTANCE.changeBusinesDayIncrement(changeValue);
-    }
+   @Override
+   public void handleBusinessDayChanged(ChangedValue changeValue) {
+      TimeRecorder.INSTANCE.changeBusinesDayIncrement(changeValue);
+   }
 }

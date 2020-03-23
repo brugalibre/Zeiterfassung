@@ -19,38 +19,41 @@ import javafx.beans.property.StringProperty;
  */
 public class TimeSnippetCellValue {
 
-    private IntegerProperty sequenceValueProperty;
-    private StringProperty beginOrEndValueProperty;
-    private ObjectProperty<ValueTypes> valueTypeProperty;
+   private IntegerProperty sequenceValueProperty;
+   private StringProperty beginOrEndValueProperty;
+   private ObjectProperty<ValueTypes> valueTypeProperty;
 
-    private TimeSnippetCellValue(int sequence, String beginOrEnd, ValueTypes valueType) {
+   private TimeSnippetCellValue(int sequence, String beginOrEnd, ValueTypes valueType) {
 
-	this.beginOrEndValueProperty = new SimpleStringProperty(beginOrEnd);
-	this.sequenceValueProperty = new SimpleIntegerProperty(sequence);
-	this.valueTypeProperty = new SimpleObjectProperty<ValueTypes>(valueType);
-    }
+      this.beginOrEndValueProperty = new SimpleStringProperty(beginOrEnd);
+      this.sequenceValueProperty = new SimpleIntegerProperty(sequence);
+      this.valueTypeProperty = new SimpleObjectProperty<ValueTypes>(valueType);
+   }
 
-    public int getSequence() {
-	return sequenceValueProperty.get();
-    }
+   public int getSequence() {
+      return sequenceValueProperty.get();
+   }
 
-    public String getBeginOrEnd() {
-	return beginOrEndValueProperty.get();
-    }
+   public String getBeginOrEnd() {
+      return beginOrEndValueProperty.get();
+   }
 
-    /**
-     * Creates a new {@link TimeSnippetCellValue}
-     * 
-     * @param beginOrEnd begin or end value
-     * @param sequence   the sequence
-     * @param valueType  either {@link ValueTypes#BEGIN} or {@link ValueTypes#END}
-     * @return a new {@link TimeSnippetCellValue}
-     */
-    public static TimeSnippetCellValue of(String beginOrEnd, int sequence, ValueTypes valueType) {
-	return new TimeSnippetCellValue(sequence, beginOrEnd, valueType);
-    }
+   /**
+    * Creates a new {@link TimeSnippetCellValue}
+    * 
+    * @param beginOrEnd
+    *        begin or end value
+    * @param sequence
+    *        the sequence
+    * @param valueType
+    *        either {@link ValueTypes#BEGIN} or {@link ValueTypes#END}
+    * @return a new {@link TimeSnippetCellValue}
+    */
+   public static TimeSnippetCellValue of(String beginOrEnd, int sequence, ValueTypes valueType) {
+      return new TimeSnippetCellValue(sequence, beginOrEnd, valueType);
+   }
 
-    public ValueTypes getValueType() {
-	return valueTypeProperty.get();
-    }
+   public ValueTypes getValueType() {
+      return valueTypeProperty.get();
+   }
 }

@@ -8,8 +8,8 @@ package com.myownb3.dominic.timerecording.settings.common;
  */
 public class Const {
 
-    /**
-     * The properties file for the turob-bucher
-     */
-    public static final String TURBO_BUCHER_PROPERTIES = "turbo-bucher.properties";
+   /**
+    * The properties file for the turob-bucher
+    */
+   public static final String TURBO_BUCHER_PROPERTIES = "turbo-bucher.properties";
 }

@@ -14,14 +14,14 @@ import com.myownb3.dominic.ui.core.view.impl.AbstractFXSubPage;
  *
  */
 public class StopBusinessDayIncrementPage
-	extends AbstractFXSubPage<StopBusinessDayIncrementPageModel, StopBusinessDayIncrementPageModel> {
+      extends AbstractFXSubPage<StopBusinessDayIncrementPageModel, StopBusinessDayIncrementPageModel> {
 
-    /**
-     * @param stopBusinessDayIncrementController
-     * @param url
-     */
-    public StopBusinessDayIncrementPage(StopBusinessDayIncrementController controller, URL url) {
-	super();
-	setController(controller);
-    }
+   /**
+    * @param stopBusinessDayIncrementController
+    * @param url
+    */
+   public StopBusinessDayIncrementPage(StopBusinessDayIncrementController controller, URL url) {
+      super();
+      setController(controller);
+   }
 }

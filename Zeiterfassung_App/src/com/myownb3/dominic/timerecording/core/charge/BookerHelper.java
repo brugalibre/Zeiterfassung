@@ -17,50 +17,50 @@ import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
  * @author Dominic
  */
 public class BookerHelper {
-    private BusinessDay businessDay;
+   private BusinessDay businessDay;
 
-    public BookerHelper(BusinessDay businessDay) {
-	this.businessDay = businessDay;
-    }
+   public BookerHelper(BusinessDay businessDay) {
+      this.businessDay = businessDay;
+   }
 
-    /**
-     * Collects from each {@link BusinessDayIncrement} the content to book and calls
-     * finally the {@link Booker#bookList(List)}. Additionally all booked
-     * {@link BusinessDayIncrement} are flagged as charged
-     * 
-     * @see Booker#bookList(List)
-     */
-    public void book() {
-	List<String> content2Charge = createBookContent();
-	bookInternal(content2Charge);
-	flagBusinessDayAsCharged();
-    }
+   /**
+    * Collects from each {@link BusinessDayIncrement} the content to book and calls
+    * finally the {@link Booker#bookList(List)}. Additionally all booked
+    * {@link BusinessDayIncrement} are flagged as charged
+    * 
+    * @see Booker#bookList(List)
+    */
+   public void book() {
+      List<String> content2Charge = createBookContent();
+      bookInternal(content2Charge);
+      flagBusinessDayAsCharged();
+   }
 
-    private void flagBusinessDayAsCharged() {
-	businessDay.flagBusinessDayAsCharged();
-    }
+   private void flagBusinessDayAsCharged() {
+      businessDay.flagBusinessDayAsCharged();
+   }
 
-    /*
-     * Does the actual charging
-     */
-    private void bookInternal(List<String> content) {
-	try {
-	    Booker booker = new Booker();
-	    booker.bookList(content);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    throw new ChargeException(e);
-	}
-    }
+   /*
+    * Does the actual charging
+    */
+   private void bookInternal(List<String> content) {
+      try {
+         Booker booker = new Booker();
+         booker.bookList(content);
+      } catch (Exception e) {
+         e.printStackTrace();
+         throw new ChargeException(e);
+      }
+   }
 
-    /*
-     * Collects the data which has to be charged and exports it into a file which is
-     * later used by the Turbo-Bucher
-     */
-    private List<String> createBookContent() {
-	synchronized (businessDay) {
-	    BusinessDayVO businessDayVO = BusinessDayVO.of(businessDay);
-	    return BusinessDayExporter.INSTANCE.collectContent4TurboBucher(businessDayVO);
-	}
-    }
+   /*
+    * Collects the data which has to be charged and exports it into a file which is
+    * later used by the Turbo-Bucher
+    */
+   private List<String> createBookContent() {
+      synchronized (businessDay) {
+         BusinessDayVO businessDayVO = BusinessDayVO.of(businessDay);
+         return BusinessDayExporter.INSTANCE.collectContent4TurboBucher(businessDayVO);
+      }
+   }
 }

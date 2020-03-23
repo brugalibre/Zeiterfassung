@@ -15,23 +15,25 @@ import com.myownb3.dominic.ui.util.SwingUtil;
  * @author Dominic
  */
 public class DialogManager extends JOptionPane {
-    /**
-    * 
-    */
-    private static final long serialVersionUID = 1L;
+   /**
+   * 
+   */
+   private static final long serialVersionUID = 1L;
 
-    /**
-     * Shows a OptionPane with the message 'messageToDisplay'. This method is
-     * called, when a fatal error occurs, such as unable to load the pictures or
-     * language files
-     * 
-     * @param component, an additionally component such as {@link TextArea}s and so
-     *        on
-     * @param title, the title of the dialog
-     */
-    public static void showException(String printStackTrace, String title) {
-	Toolkit.getDefaultToolkit().beep();
-	showConfirmDialog(null, SwingUtil.getDisplayArea(TextLabel.EXCEPTION_DIALOG_MESSAGE, printStackTrace), title,
-		CLOSED_OPTION, ERROR_MESSAGE);
-    }
+   /**
+    * Shows a OptionPane with the message 'messageToDisplay'. This method is
+    * called, when a fatal error occurs, such as unable to load the pictures or
+    * language files
+    * 
+    * @param component,
+    *        an additionally component such as {@link TextArea}s and so
+    *        on
+    * @param title,
+    *        the title of the dialog
+    */
+   public static void showException(String printStackTrace, String title) {
+      Toolkit.getDefaultToolkit().beep();
+      showConfirmDialog(null, SwingUtil.getDisplayArea(TextLabel.EXCEPTION_DIALOG_MESSAGE, printStackTrace), title,
+            CLOSED_OPTION, ERROR_MESSAGE);
+   }
 }

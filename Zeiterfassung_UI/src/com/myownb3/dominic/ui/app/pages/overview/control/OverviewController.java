@@ -45,189 +45,189 @@ import javafx.stage.WindowEvent;
  * 
  */
 public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel>
-	implements EventHandler<WindowEvent> {
+      implements EventHandler<WindowEvent> {
 
-    private MainWindowController mainWindowController;
+   private MainWindowController mainWindowController;
 
-    @FXML
-    private BorderPane borderPane;
+   @FXML
+   private BorderPane borderPane;
 
-    @FXML
-    private TableView<BusinessDayIncTableRowValue> tableView;
+   @FXML
+   private TableView<BusinessDayIncTableRowValue> tableView;
 
-    @FXML
-    private Label totalAmountOfTimeLabel;
-    @FXML
-    private Label totalAmountOfTimeValue;
+   @FXML
+   private Label totalAmountOfTimeLabel;
+   @FXML
+   private Label totalAmountOfTimeValue;
 
-    @FXML
-    private Button clearButton;
-    @FXML
-    private Button bookButton;
-    @FXML
-    private Button exportButton;
+   @FXML
+   private Button clearButton;
+   @FXML
+   private Button bookButton;
+   @FXML
+   private Button exportButton;
 
-    private ContextMenu contextMenu;
+   private ContextMenu contextMenu;
 
-    private RowDeleteHelper rowDeleteHelper;
-    private DescriptionAddHelper descAddHelper;
-    private BusinessDayTableModelHelper businessDayTableModel;
-    private TimeRecordingTray timeRecordingTray;
+   private RowDeleteHelper rowDeleteHelper;
+   private DescriptionAddHelper descAddHelper;
+   private BusinessDayTableModelHelper businessDayTableModel;
+   private TimeRecordingTray timeRecordingTray;
 
-    private MenuItem changeDescriptionMenue;
-    
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-	initialize(new OverviewPage(this));
-    }
-
-    @Override
-    public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
-	super.initialize(page);
-	businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelper(finishAction -> refreshUI()));
-	setBinding(dataModel);
-
-	initContextMenu();
-	initTable();
-    }
-
-    @Override
-    public void show() {
-	super.show();
-	BusinessDayVO businessDayVO = getDataModel().getBusinessDayVO();
-	businessDayTableModel.init(businessDayVO, tableView);
-	changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.hasBusinessDayDescription());
-    }
+   private MenuItem changeDescriptionMenue;
 
 
-    public void init(MainWindowController mainWindowController) {
-	this.mainWindowController = mainWindowController;
-    }
+   @Override
+   public void initialize(URL url, ResourceBundle resourceBundle) {
+      initialize(new OverviewPage(this));
+   }
 
-    private void handleMouseEvent(MouseEvent event) {
-	if (hasRightClickOnTable(event) && !tableView.getSelectionModel().isEmpty()) {
-	    BusinessDayIncTableRowValue businessDayIncTableRowValue = (BusinessDayIncTableRowValue) tableView
-		    .getSelectionModel().getSelectedItem();
-	    setFocusToRow(tableView, businessDayIncTableRowValue.getNumberAsInt());
-	    contextMenu.show(tableView, event.getScreenX(), event.getScreenY());
-	    event.consume();
-	} else {
-	    contextMenu.hide();
-	}
-    }
+   @Override
+   public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
+      super.initialize(page);
+      businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelper(finishAction -> refreshUI()));
+      setBinding(dataModel);
 
-    private void setFocusToRow(TableView<?> tableView, int selectedRow) {
-	tableView.getSelectionModel().clearSelection();
-	tableView.getSelectionModel().select(selectedRow);
-    }
+      initContextMenu();
+      initTable();
+   }
 
-    private boolean hasRightClickOnTable(MouseEvent event) {
-	return event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseButton.SECONDARY
-		&& event.getSource() instanceof TableView<?>;
-    }
+   @Override
+   public void show() {
+      super.show();
+      BusinessDayVO businessDayVO = getDataModel().getBusinessDayVO();
+      businessDayTableModel.init(businessDayVO, tableView);
+      changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.hasBusinessDayDescription());
+   }
 
-    @FXML
-    private void onAction(ActionEvent actionEvent) {
 
-	if (actionEvent.getSource() == clearButton) {
-	    mainWindowController.clearBusinessDayContents();
-	    mainWindowController.dispose();
-	} else if (actionEvent.getSource() == bookButton) {
-	    bookAsyncAndRefresh();
-	} else if (actionEvent.getSource() == exportButton) {
-	    timeRecordingTray.export();
-	}
-    }
+   public void init(MainWindowController mainWindowController) {
+      this.mainWindowController = mainWindowController;
+   }
 
-    private void bookAsyncAndRefresh() {
-	ThreadFactory.INSTANCE.execute(() -> getBookAndRefreshRunnable());
-	refreshUI();
-    }
+   private void handleMouseEvent(MouseEvent event) {
+      if (hasRightClickOnTable(event) && !tableView.getSelectionModel().isEmpty()) {
+         BusinessDayIncTableRowValue businessDayIncTableRowValue = (BusinessDayIncTableRowValue) tableView
+               .getSelectionModel().getSelectedItem();
+         setFocusToRow(tableView, businessDayIncTableRowValue.getNumberAsInt());
+         contextMenu.show(tableView, event.getScreenX(), event.getScreenY());
+         event.consume();
+      } else {
+         contextMenu.hide();
+      }
+   }
 
-    private void getBookAndRefreshRunnable() {
-	try {
-	    TimeRecorder.INSTANCE.book();
-	} finally {
-	    // Make sure the UI is refreshed after the booking. If there was an exception and nothing was booked e.g.
-	    Platform.runLater(() -> refreshUI());
-	}
-    }
-    
-    @Override
-    public void handle(WindowEvent event) {
-	if (event.getEventType() == WindowEvent.WINDOW_CLOSE_REQUEST) {
-	    dispose();
-	}
-    }
-    
-    private void dispose() {
-	descAddHelper.onDispose();
-    }
-    
-    @Override
-    protected PageModelResolver<OverviewPageModel, OverviewPageModel> createPageModelResolver() {
-	return new OverviewPageModelResolver();
-    }
+   private void setFocusToRow(TableView<?> tableView, int selectedRow) {
+      tableView.getSelectionModel().clearSelection();
+      tableView.getSelectionModel().select(selectedRow);
+   }
 
-    @Override
-    protected void setBinding(OverviewPageModel pageVO) {
-	bookButton.disableProperty().bind(getDataModel().getIsChargeButtonDisabled());
-	clearButton.disableProperty().bind(getDataModel().getIsClearButtonDisabled());
-	exportButton.disableProperty().bind(getDataModel().getIsExportButtonDisabled());
+   private boolean hasRightClickOnTable(MouseEvent event) {
+      return event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseButton.SECONDARY
+            && event.getSource() instanceof TableView<?>;
+   }
 
-	bookButton.textProperty().bind(getDataModel().getBookButtonLabel());
-	clearButton.textProperty().bind(getDataModel().getClearButtonLabel());
-	exportButton.textProperty().bind(getDataModel().getExportButtonLabel());
+   @FXML
+   private void onAction(ActionEvent actionEvent) {
 
-	totalAmountOfTimeLabel.textProperty().bind(getDataModel().getTotalAmountOfTimeLabel());
-	totalAmountOfTimeValue.textProperty().bind(getDataModel().getTotalAmountOfTimeValue());
-    }
+      if (actionEvent.getSource() == clearButton) {
+         mainWindowController.clearBusinessDayContents();
+         mainWindowController.dispose();
+      } else if (actionEvent.getSource() == bookButton) {
+         bookAsyncAndRefresh();
+      } else if (actionEvent.getSource() == exportButton) {
+         timeRecordingTray.export();
+      }
+   }
 
-    private void initContextMenu() {
+   private void bookAsyncAndRefresh() {
+      ThreadFactory.INSTANCE.execute(() -> getBookAndRefreshRunnable());
+      refreshUI();
+   }
 
-	rowDeleteHelper = new RowDeleteHelper(action -> refreshUI());
-	descAddHelper = new DescriptionAddHelper(action -> onDescriptionChangeFinish(action));
-	MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
-	deleteMenue.setOnAction(event -> rowDeleteHelper.deleteRow(event, tableView));
-	changeDescriptionMenue = new MenuItem(TextLabel.CHANGE_DESCRIPTION);
-	changeDescriptionMenue.setOnAction(onDescriptionChange());
-	contextMenu = new ContextMenu();
-	contextMenu.getItems().add(deleteMenue);
-	contextMenu.getItems().add(changeDescriptionMenue);
-    }
+   private void getBookAndRefreshRunnable() {
+      try {
+         TimeRecorder.INSTANCE.book();
+      } finally {
+         // Make sure the UI is refreshed after the booking. If there was an exception and nothing was booked e.g.
+         Platform.runLater(() -> refreshUI());
+      }
+   }
 
-    private void initTable() {
-	tableView.setOnMousePressed(event -> handleMouseEvent(event));
-	tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-    }
+   @Override
+   public void handle(WindowEvent event) {
+      if (event.getEventType() == WindowEvent.WINDOW_CLOSE_REQUEST) {
+         dispose();
+      }
+   }
 
-    public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
-	this.timeRecordingTray = timeRecordingTray;
-    }
+   private void dispose() {
+      descAddHelper.onDispose();
+   }
 
-    private EventHandler<ActionEvent> onDescriptionChange() {
-	return event -> {
-	    changeDescriptionMenue.setDisable(true);
-	    descAddHelper.showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView);
-	};
-    }
+   @Override
+   protected PageModelResolver<OverviewPageModel, OverviewPageModel> createPageModelResolver() {
+      return new OverviewPageModelResolver();
+   }
 
-    private void onDescriptionChangeFinish(FinishAction finishAction) {
-	switch (finishAction) {
-	case FINISH:
-	    refreshUI();
-	    break;
-	case ABORT:
-	    changeDescriptionMenue.setDisable(false);
-	    break;
-	default:
-	    throw new IllegalStateException("Unsupported finish action '" + finishAction + "'!");
-	}
-    }
+   @Override
+   protected void setBinding(OverviewPageModel pageVO) {
+      bookButton.disableProperty().bind(getDataModel().getIsChargeButtonDisabled());
+      clearButton.disableProperty().bind(getDataModel().getIsClearButtonDisabled());
+      exportButton.disableProperty().bind(getDataModel().getIsExportButtonDisabled());
 
-    private void refreshUI() {
-	refresh();
-	timeRecordingTray.updateUIStates();
-    }
+      bookButton.textProperty().bind(getDataModel().getBookButtonLabel());
+      clearButton.textProperty().bind(getDataModel().getClearButtonLabel());
+      exportButton.textProperty().bind(getDataModel().getExportButtonLabel());
+
+      totalAmountOfTimeLabel.textProperty().bind(getDataModel().getTotalAmountOfTimeLabel());
+      totalAmountOfTimeValue.textProperty().bind(getDataModel().getTotalAmountOfTimeValue());
+   }
+
+   private void initContextMenu() {
+
+      rowDeleteHelper = new RowDeleteHelper(action -> refreshUI());
+      descAddHelper = new DescriptionAddHelper(action -> onDescriptionChangeFinish(action));
+      MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
+      deleteMenue.setOnAction(event -> rowDeleteHelper.deleteRow(event, tableView));
+      changeDescriptionMenue = new MenuItem(TextLabel.CHANGE_DESCRIPTION);
+      changeDescriptionMenue.setOnAction(onDescriptionChange());
+      contextMenu = new ContextMenu();
+      contextMenu.getItems().add(deleteMenue);
+      contextMenu.getItems().add(changeDescriptionMenue);
+   }
+
+   private void initTable() {
+      tableView.setOnMousePressed(event -> handleMouseEvent(event));
+      tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+   }
+
+   public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
+      this.timeRecordingTray = timeRecordingTray;
+   }
+
+   private EventHandler<ActionEvent> onDescriptionChange() {
+      return event -> {
+         changeDescriptionMenue.setDisable(true);
+         descAddHelper.showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView);
+      };
+   }
+
+   private void onDescriptionChangeFinish(FinishAction finishAction) {
+      switch (finishAction) {
+         case FINISH:
+            refreshUI();
+            break;
+         case ABORT:
+            changeDescriptionMenue.setDisable(false);
+            break;
+         default:
+            throw new IllegalStateException("Unsupported finish action '" + finishAction + "'!");
+      }
+   }
+
+   private void refreshUI() {
+      refresh();
+      timeRecordingTray.updateUIStates();
+   }
 }

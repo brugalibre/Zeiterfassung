@@ -12,19 +12,20 @@ import java.util.concurrent.Executors;
  */
 public class ThreadFactory {
 
-    public static final ThreadFactory INSTANCE = new ThreadFactory();
-    private static ExecutorService executorService;
+   public static final ThreadFactory INSTANCE = new ThreadFactory();
+   private static ExecutorService executorService;
 
-    private ThreadFactory() {
-	executorService = Executors.newSingleThreadExecutor();
-    }
+   private ThreadFactory() {
+      executorService = Executors.newSingleThreadExecutor();
+   }
 
-    /**
-     * Executes the given {@link Runnable}
-     * 
-     * @param runnable the {@link Runnable} to execute
-     */
-    public void execute(Runnable runnable) {
-	executorService.execute(runnable);
-    }
+   /**
+    * Executes the given {@link Runnable}
+    * 
+    * @param runnable
+    *        the {@link Runnable} to execute
+    */
+   public void execute(Runnable runnable) {
+      executorService.execute(runnable);
+   }
 }
