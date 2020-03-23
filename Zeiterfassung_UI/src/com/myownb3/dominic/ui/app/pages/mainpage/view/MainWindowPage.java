@@ -21,39 +21,39 @@ import javafx.stage.Stage;
  */
 public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWindowPageModel> {
 
-    /**
-     * @param timeRecordingTray
-     * @param stage
-     */
-    public MainWindowPage(TimeRecordingTray timeRecordingTray, Stage stage) {
-	super(stage);
-	getMainWindowPageController().setTimeRecordingTray(timeRecordingTray);
-    }
+   /**
+    * @param timeRecordingTray
+    * @param stage
+    */
+   public MainWindowPage(TimeRecordingTray timeRecordingTray, Stage stage) {
+      super(stage);
+      getMainWindowPageController().setTimeRecordingTray(timeRecordingTray);
+   }
 
-    @Override
-    protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) throws IOException {
-	super.initializeScene(loader, optionalStage);
-	Stage stage = optionalStage.get();
-	stage.setScene(new Scene(loader.getRoot()));
-    }
+   @Override
+   protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) throws IOException {
+      super.initializeScene(loader, optionalStage);
+      Stage stage = optionalStage.get();
+      stage.setScene(new Scene(loader.getRoot()));
+   }
 
-    public void showOverviewView() {
-	getMainWindowPageController().showOverviewView(getStage().get());
-    }
+   public void showOverviewView() {
+      getMainWindowPageController().showOverviewView(getStage().get());
+   }
 
-    public void showInputMask() {
-	getMainWindowPageController().showInputMask(getStage().get());
-    }
+   public void showInputMask() {
+      getMainWindowPageController().showInputMask(getStage().get());
+   }
 
-    private MainWindowController getMainWindowPageController() {
-	return (MainWindowController) getController();
-    }
+   private MainWindowController getMainWindowPageController() {
+      return (MainWindowController) getController();
+   }
 
-    /**
-     * Opens a dialog in order to choose a file to import
-     */
-    public void showImportDialog() {
-	getMainWindowPageController().showImportDialog(getStage().get());
-    }
+   /**
+    * Opens a dialog in order to choose a file to import
+    */
+   public void showImportDialog() {
+      getMainWindowPageController().showImportDialog(getStage().get());
+   }
 
 }

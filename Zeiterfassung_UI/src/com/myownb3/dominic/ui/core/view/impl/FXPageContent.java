@@ -17,28 +17,28 @@ import javafx.stage.Stage;
  * @author Dominic Stalder
  */
 public class FXPageContent implements PageContent {
-    private Optional<Stage> stage;
-    private Parent rootParent; // the main node of this content
+   private Optional<Stage> stage;
+   private Parent rootParent; // the main node of this content
 
-    /**
-    * 
+   /**
+   * 
+   */
+   public FXPageContent(Optional<Stage> stage, Parent rootParent) {
+      this.stage = stage;
+      this.rootParent = rootParent;
+   }
+
+   /**
+    * @return the stage
     */
-    public FXPageContent(Optional<Stage> stage, Parent rootParent) {
-	this.stage = stage;
-	this.rootParent = rootParent;
-    }
+   public Optional<Stage> getStage() {
+      return stage;
+   }
 
-    /**
-     * @return the stage
-     */
-    public Optional<Stage> getStage() {
-	return stage;
-    }
-
-    /**
-     * @return the rootParent
-     */
-    public Parent getRootParent() {
-	return rootParent;
-    }
+   /**
+    * @return the rootParent
+    */
+   public Parent getRootParent() {
+      return rootParent;
+   }
 }

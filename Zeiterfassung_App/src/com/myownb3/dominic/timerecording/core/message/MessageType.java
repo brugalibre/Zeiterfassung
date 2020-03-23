@@ -9,5 +9,7 @@ package com.myownb3.dominic.timerecording.core.message;
  */
 public enum MessageType {
 
-    ERROR, WARNING, INFORMATION;
+   ERROR,
+   WARNING,
+   INFORMATION;
 }

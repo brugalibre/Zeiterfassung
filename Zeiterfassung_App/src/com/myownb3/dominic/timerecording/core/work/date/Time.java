@@ -20,130 +20,130 @@ import com.myownb3.dominic.util.parser.DateParser;
  */
 public class Time {
 
-    private Duration duration;
+   private Duration duration;
 
-    /**
-     * Create a new {@link Time} object according to the given {@link Time} object
-     * 
-     * @param time
-     */
-    public Time(Time time) {
-	this(time.getTime());
-    }
+   /**
+    * Create a new {@link Time} object according to the given {@link Time} object
+    * 
+    * @param time
+    */
+   public Time(Time time) {
+      this(time.getTime());
+   }
 
-    /**
-     * Creates a new Time started right now
-     */
-    public Time() {
-	this(System.currentTimeMillis());
-    }
+   /**
+    * Creates a new Time started right now
+    */
+   public Time() {
+      this(System.currentTimeMillis());
+   }
 
-    /**
-     * @param time
-     */
-    public Time(long time) {
-	this(time, RoundMode.ONE_MIN);
-    }
+   /**
+    * @param time
+    */
+   public Time(long time) {
+      this(time, RoundMode.ONE_MIN);
+   }
 
-    /**
-     * @param time
-     * @param roundMode
-     */
-    public Time(long time, RoundMode roundMode) {
-	duration = new Duration(time);
-	round(roundMode);
-    }
+   /**
+    * @param time
+    * @param roundMode
+    */
+   public Time(long time, RoundMode roundMode) {
+      duration = new Duration(time);
+      round(roundMode);
+   }
 
-    private void round(RoundMode roundMode) {
+   private void round(RoundMode roundMode) {
 
-	switch (roundMode) {
-	case ONE_MIN:
-	    roundSeconds();
-	    break;
-	case FIVE_MIN:
-	    // Fall through
-	case TEN_MIN:
-	    // Fall through
-	case FIFTEEN_MIN:
-	    roundSecondsAndMinutes(roundMode);
-	    break;
+      switch (roundMode) {
+         case ONE_MIN:
+            roundSeconds();
+            break;
+         case FIVE_MIN:
+            // Fall through
+         case TEN_MIN:
+            // Fall through
+         case FIFTEEN_MIN:
+            roundSecondsAndMinutes(roundMode);
+            break;
 
-	default:
-	    break;
-	}
-    }
+         default:
+            break;
+      }
+   }
 
-    private void roundSecondsAndMinutes(RoundMode roundMode) {
-	roundSeconds();
-	roundMinutes(roundMode);
-    }
+   private void roundSecondsAndMinutes(RoundMode roundMode) {
+      roundSeconds();
+      roundMinutes(roundMode);
+   }
 
-    private void roundMinutes(RoundMode roundMode) {
+   private void roundMinutes(RoundMode roundMode) {
 
-	int amount = roundMode.getAmount();
-	Period period = duration.toPeriod(PeriodType.dayTime());
-	float modulo = period.getMinutes() % amount;
-	if (modulo >= amount / 2f) {
-	    duration = duration.plus((amount - (int) modulo) * getTimeRefactorValue(roundMode.getTimeType()));
-	} else {
-	    duration = duration.minus((int) modulo * getTimeRefactorValue(roundMode.getTimeType()));
-	}
-    }
+      int amount = roundMode.getAmount();
+      Period period = duration.toPeriod(PeriodType.dayTime());
+      float modulo = period.getMinutes() % amount;
+      if (modulo >= amount / 2f) {
+         duration = duration.plus((amount - (int) modulo) * getTimeRefactorValue(roundMode.getTimeType()));
+      } else {
+         duration = duration.minus((int) modulo * getTimeRefactorValue(roundMode.getTimeType()));
+      }
+   }
 
-    private void roundSeconds() {
-	Period period = duration.toPeriod(PeriodType.dayTime());
-	if (period.getSeconds() >= 30) {
-	    duration = duration.plus((60 - period.getSeconds()) * getTimeRefactorValue(TIME_TYPE.SEC));
-	} else {
-	    duration = duration.minus(period.getSeconds() * getTimeRefactorValue(TIME_TYPE.SEC));
-	}
-    }
+   private void roundSeconds() {
+      Period period = duration.toPeriod(PeriodType.dayTime());
+      if (period.getSeconds() >= 30) {
+         duration = duration.plus((60 - period.getSeconds()) * getTimeRefactorValue(TIME_TYPE.SEC));
+      } else {
+         duration = duration.minus(period.getSeconds() * getTimeRefactorValue(TIME_TYPE.SEC));
+      }
+   }
 
-    /**
-     * Returns the factor to make proper calculations with the given time. E.g. for
-     * the TIME_TYPE 'HOUR' the value 3'600'000 is returned, since an hour has
-     * 3'600'000 milliseconds
-     * 
-     * @param type
-     * @return the appropriate calculating factor
-     */
-    public static int getTimeRefactorValue(TIME_TYPE type) {
-	switch (type) {
-	case HOUR:
-	    return 3600000;
-	case MIN:
-	    return 60000;
-	case SEC:
-	    return 1000;
-	case MILI_SEC:
-	    return 1;
-	default:
-	    throw new RuntimeException("Unknown TIME_TYPE value '" + type + "'!");
-	}
-    }
+   /**
+    * Returns the factor to make proper calculations with the given time. E.g. for
+    * the TIME_TYPE 'HOUR' the value 3'600'000 is returned, since an hour has
+    * 3'600'000 milliseconds
+    * 
+    * @param type
+    * @return the appropriate calculating factor
+    */
+   public static int getTimeRefactorValue(TIME_TYPE type) {
+      switch (type) {
+         case HOUR:
+            return 3600000;
+         case MIN:
+            return 60000;
+         case SEC:
+            return 1000;
+         case MILI_SEC:
+            return 1;
+         default:
+            throw new RuntimeException("Unknown TIME_TYPE value '" + type + "'!");
+      }
+   }
 
-    @Override
-    public String toString() {
-	return DateParser.parse2String(this);
-    }
+   @Override
+   public String toString() {
+      return DateParser.parse2String(this);
+   }
 
-    public int compareTo(Time otherTime) {
-	return duration.compareTo(otherTime.duration);
-    }
+   public int compareTo(Time otherTime) {
+      return duration.compareTo(otherTime.duration);
+   }
 
-    /**
-     * Returns the amount of milliseconds of this {@link Time}
-     * 
-     * @return the amount of milliseconds
-     */
-    public long getTime() {
-	return duration.getMillis();
-    }
+   /**
+    * Returns the amount of milliseconds of this {@link Time}
+    * 
+    * @return the amount of milliseconds
+    */
+   public long getTime() {
+      return duration.getMillis();
+   }
 
-    /**
-     * @return the amount of days of this Time instance
-     */
-    public long getDays() {
-	return duration.getStandardDays();
-    }
+   /**
+    * @return the amount of days of this Time instance
+    */
+   public long getDays() {
+      return duration.getStandardDays();
+   }
 }

@@ -25,57 +25,57 @@ import javafx.stage.Stage;
  */
 public class TimeRecordingLauncher extends Application {
 
-    public static void main(String[] args) {
-	setSystemProperties();
-	launch();
-    }
-
-    @Override
-    public void start(Stage primaryStage) throws ApplicationLaunchException {
-	setSystemProperties();
-	Runtime.getRuntime().addShutdownHook(createShutdownHook());
-
-	TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
-	CallbackHandler callbackHandler = timeRecordingTray.getCallbackHandler();
-
-	TimeRecorder.INSTANCE.setCallbackHandler(callbackHandler);
-	GlobalExceptionHandler.registerHandler(callbackHandler);
-
-	initApplication();
-	Platform.runLater(() -> timeRecordingTray.registerSystemtray(primaryStage));
-    }
-
-    private void initApplication() {
-	PictureLibrary.loadPictures();
-	Platform.setImplicitExit(false);
-	createTurboBucherPropertiesFileIfNotExists();
+   public static void main(String[] args) {
+      setSystemProperties();
+      launch();
    }
 
-    private static void setSystemProperties() {
-	System.setProperty("prism.order", "sw");
-	System.setProperty("prism.verbose", "true");
-    }
+   @Override
+   public void start(Stage primaryStage) throws ApplicationLaunchException {
+      setSystemProperties();
+      Runtime.getRuntime().addShutdownHook(createShutdownHook());
 
-    private void createTurboBucherPropertiesFileIfNotExists() {
-	File file = new File(TURBO_BUCHER_PROPERTIES);
-	if (!file.exists()) {
-	    try {
-		file.createNewFile();
-	    } catch (IOException e) {
-		throw new ApplicationLaunchException(e);
-	    }
-	}
-    }
+      TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
+      CallbackHandler callbackHandler = timeRecordingTray.getCallbackHandler();
 
-    /*
-     * create a shutdown hook whose export the current and maybe not yet exported
-     * BusinessDay in case the application is shutdown by accident
-     */
-    private static Thread createShutdownHook() {
-	return new Thread(() -> {
-	    if (TimeRecorder.INSTANCE.hasContent()) {
-		TimeRecorder.INSTANCE.export();
-	    }
-	});
-    }
+      TimeRecorder.INSTANCE.setCallbackHandler(callbackHandler);
+      GlobalExceptionHandler.registerHandler(callbackHandler);
+
+      initApplication();
+      Platform.runLater(() -> timeRecordingTray.registerSystemtray(primaryStage));
+   }
+
+   private void initApplication() {
+      PictureLibrary.loadPictures();
+      Platform.setImplicitExit(false);
+      createTurboBucherPropertiesFileIfNotExists();
+   }
+
+   private static void setSystemProperties() {
+      System.setProperty("prism.order", "sw");
+      System.setProperty("prism.verbose", "true");
+   }
+
+   private void createTurboBucherPropertiesFileIfNotExists() {
+      File file = new File(TURBO_BUCHER_PROPERTIES);
+      if (!file.exists()) {
+         try {
+            file.createNewFile();
+         } catch (IOException e) {
+            throw new ApplicationLaunchException(e);
+         }
+      }
+   }
+
+   /*
+    * create a shutdown hook whose export the current and maybe not yet exported
+    * BusinessDay in case the application is shutdown by accident
+    */
+   private static Thread createShutdownHook() {
+      return new Thread(() -> {
+         if (TimeRecorder.INSTANCE.hasContent()) {
+            TimeRecorder.INSTANCE.export();
+         }
+      });
+   }
 }

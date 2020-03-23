@@ -13,11 +13,12 @@ import com.myownb3.dominic.ui.core.view.impl.AbstractFXSubPage;
  */
 public class OverviewPage extends AbstractFXSubPage<OverviewPageModel, OverviewPageModel> {
 
-    /**
-     * @param controller the {@link OverviewController} of this page
-     */
-    public OverviewPage(OverviewController controller) {
-	super();
-	setController(controller);
-    }
+   /**
+    * @param controller
+    *        the {@link OverviewController} of this page
+    */
+   public OverviewPage(OverviewController controller) {
+      super();
+      setController(controller);
+   }
 }

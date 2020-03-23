@@ -15,23 +15,23 @@ import javafx.stage.Stage;
  */
 public class FXUIContent implements RootUIContent {
 
-    /*
-     * this is the main Stage object used by their user interface components. Its a
-     * redundant reference to the AbstractFXPage attribute 'stage'
-     */
-    private Stage stage;
-
-    /**
-    * 
+   /*
+    * this is the main Stage object used by their user interface components. Its a
+    * redundant reference to the AbstractFXPage attribute 'stage'
     */
-    public FXUIContent(Stage stage) {
-	this.stage = stage;
-    }
+   private Stage stage;
 
-    /**
-     * @return the stage
-     */
-    public Stage getStage() {
-	return stage;
-    }
+   /**
+   * 
+   */
+   public FXUIContent(Stage stage) {
+      this.stage = stage;
+   }
+
+   /**
+    * @return the stage
+    */
+   public Stage getStage() {
+      return stage;
+   }
 }

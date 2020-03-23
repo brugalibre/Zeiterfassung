@@ -9,5 +9,5 @@ package com.myownb3.dominic.ui.app.styles;
  */
 public class Styles {
 
-    public static final String INVALID_INPUT_LABEL = "invalidLabel";
+   public static final String INVALID_INPUT_LABEL = "invalidLabel";
 }

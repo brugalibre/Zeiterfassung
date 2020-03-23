@@ -13,15 +13,15 @@ import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
  *
  */
 public class StopBusinessDayIncrementPageModelResolver
-	implements PageModelResolver<StopBusinessDayIncrementPageModel, StopBusinessDayIncrementPageModel> {
+      implements PageModelResolver<StopBusinessDayIncrementPageModel, StopBusinessDayIncrementPageModel> {
 
-    @Override
-    public StopBusinessDayIncrementPageModel resolvePageVO(StopBusinessDayIncrementPageModel inPageModel) {
+   @Override
+   public StopBusinessDayIncrementPageModel resolvePageVO(StopBusinessDayIncrementPageModel inPageModel) {
 
-	BusinessDayIncrementVO currentBussinessDayIncremental = TimeRecorder.INSTANCE.getCurrentBussinessDayIncrement();
-	if (inPageModel == null) {
-	    return new StopBusinessDayIncrementPageModel(currentBussinessDayIncremental);
-	}
-	return StopBusinessDayIncrementPageModel.of(inPageModel, currentBussinessDayIncremental);
-    }
+      BusinessDayIncrementVO currentBussinessDayIncremental = TimeRecorder.INSTANCE.getCurrentBussinessDayIncrement();
+      if (inPageModel == null) {
+         return new StopBusinessDayIncrementPageModel(currentBussinessDayIncremental);
+      }
+      return StopBusinessDayIncrementPageModel.of(inPageModel, currentBussinessDayIncremental);
+   }
 }

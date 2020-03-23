@@ -31,139 +31,139 @@ import javafx.stage.Stage;
  */
 public class MainWindowController extends BaseFXController<MainWindowPageModel, MainWindowPageModel> {
 
-    @FXML
-    private StackPane mainPanel;
+   @FXML
+   private StackPane mainPanel;
 
-    @FXML
-    private OverviewController overviewPanelController;
-    @FXML
-    private Region overviewPanel;
-    @FXML
-    private StopBusinessDayIncrementController stopBusinessDayIncrementPanelController;
-    @FXML
-    private Region stopBusinessDayIncrementPanel;
+   @FXML
+   private OverviewController overviewPanelController;
+   @FXML
+   private Region overviewPanel;
+   @FXML
+   private StopBusinessDayIncrementController stopBusinessDayIncrementPanelController;
+   @FXML
+   private Region stopBusinessDayIncrementPanel;
 
-    private TimeRecordingTray timeRecordingTray;
-    private FileImportDialogHelper fileImportHelper;
+   private TimeRecordingTray timeRecordingTray;
+   private FileImportDialogHelper fileImportHelper;
 
-    @Override
-    public void initialize(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {
+   @Override
+   public void initialize(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {
 
-	super.initialize(mainWindowPage);
-	overviewPanelController.init(this);
-	stopBusinessDayIncrementPanelController.setMainWindowController(this);
+      super.initialize(mainWindowPage);
+      overviewPanelController.init(this);
+      stopBusinessDayIncrementPanelController.setMainWindowController(this);
 
-	FXPageContent pageContent = (FXPageContent) mainWindowPage.getContent();
-	Stage stage = pageContent.getStage().get();
-	stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
-	stage.getIcons().add(PictureLibrary.getClockImageIcon());
-	fileImportHelper = new FileImportDialogHelper();
-    }
+      FXPageContent pageContent = (FXPageContent) mainWindowPage.getContent();
+      Stage stage = pageContent.getStage().get();
+      stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
+      stage.getIcons().add(PictureLibrary.getClockImageIcon());
+      fileImportHelper = new FileImportDialogHelper();
+   }
 
-    public void showInputMask(Stage stage) {
+   public void showInputMask(Stage stage) {
 
-	mainPanel.getChildren().clear();
-	mainPanel.getChildren().add(stopBusinessDayIncrementPanel);
+      mainPanel.getChildren().clear();
+      mainPanel.getChildren().add(stopBusinessDayIncrementPanel);
 
-	initStage4NewComponent(stage, stopBusinessDayIncrementPanel);
-	stopBusinessDayIncrementPanelController.show();
+      initStage4NewComponent(stage, stopBusinessDayIncrementPanel);
+      stopBusinessDayIncrementPanelController.show();
 
-	stage.toFront();
-	stage.setOnCloseRequest(stopBusinessDayIncrementPanelController);
-	show();
-    }
+      stage.toFront();
+      stage.setOnCloseRequest(stopBusinessDayIncrementPanelController);
+      show();
+   }
 
-    public void showOverviewView(Stage stage) {
+   public void showOverviewView(Stage stage) {
 
-	mainPanel.getChildren().clear();
-	mainPanel.getChildren().add(overviewPanel);
+      mainPanel.getChildren().clear();
+      mainPanel.getChildren().add(overviewPanel);
 
-	initStage4NewComponent(stage, overviewPanel);
+      initStage4NewComponent(stage, overviewPanel);
 
-	overviewPanelController.show();
-	stage.setOnCloseRequest(overviewPanelController);
-	show();
-    }
+      overviewPanelController.show();
+      stage.setOnCloseRequest(overviewPanelController);
+      show();
+   }
 
-    /**
-     * Opens a dialog in order to choose a file to import. If there was any file
-     * selected this file is passed to the {@link TimeRecorder} in order to
-     * import a new {@link BusinessDay}
-     * 
-     * @param stage
-     *            the current stage
-     */
-    public void showImportDialog(Stage stage) {
-	File selectedFile = fileImportHelper.showImportDialogAndReturnFile(stage);
-	if (selectedFile != null) {
-	    timeRecordingTray.importBusinessDayFromFile(selectedFile);
-	}
-    }
+   /**
+    * Opens a dialog in order to choose a file to import. If there was any file
+    * selected this file is passed to the {@link TimeRecorder} in order to
+    * import a new {@link BusinessDay}
+    * 
+    * @param stage
+    *        the current stage
+    */
+   public void showImportDialog(Stage stage) {
+      File selectedFile = fileImportHelper.showImportDialogAndReturnFile(stage);
+      if (selectedFile != null) {
+         timeRecordingTray.importBusinessDayFromFile(selectedFile);
+      }
+   }
 
-    private void initStage4NewComponent(Stage stage, Region region) {
-	mainPanel.setPrefWidth(region.getPrefWidth());
-	mainPanel.setPrefHeight(region.getPrefHeight());
-	stage.setWidth(region.getPrefWidth());
-	stage.setHeight(region.getPrefHeight());
-	stage.setMinWidth(region.getPrefWidth());
-	stage.setMinHeight(region.getPrefHeight());
-	stage.setResizable(false);
-    }
+   private void initStage4NewComponent(Stage stage, Region region) {
+      mainPanel.setPrefWidth(region.getPrefWidth());
+      mainPanel.setPrefHeight(region.getPrefHeight());
+      stage.setWidth(region.getPrefWidth());
+      stage.setHeight(region.getPrefHeight());
+      stage.setMinWidth(region.getPrefWidth());
+      stage.setMinHeight(region.getPrefHeight());
+      stage.setResizable(false);
+   }
 
-    /**
-     * Lets the current shown window disappears. If the given boolean is true, the
-     * {@link BusinessDay} is checked for redundant entry
-     * 
-     * @param finishAction
-     */
-    public void finishOrAbortAndDispose(FinishAction finishAction) {
+   /**
+    * Lets the current shown window disappears. If the given boolean is true, the
+    * {@link BusinessDay} is checked for redundant entry
+    * 
+    * @param finishAction
+    */
+   public void finishOrAbortAndDispose(FinishAction finishAction) {
 
-	switch (finishAction) {
-	case ABORT:
-	    timeRecordingTray.updateUIStates();
-	    dispose();
-	    break;
-	case RESUME:
-	    timeRecordingTray.resume();
-	    dispose();
-	    break;
-	case FINISH:
-	    timeRecordingTray.updateUIStates();
-	    dispose();
-	    break;
-	default:
-	}
-    }
+      switch (finishAction) {
+         case ABORT:
+            timeRecordingTray.updateUIStates();
+            dispose();
+            break;
+         case RESUME:
+            timeRecordingTray.resume();
+            dispose();
+            break;
+         case FINISH:
+            timeRecordingTray.updateUIStates();
+            dispose();
+            break;
+         default:
+      }
+   }
 
-    public void dispose() {
-	page.hide();
-    }
+   public void dispose() {
+      page.hide();
+   }
 
-    /**
-     * Clears all entrys in the BusinessDay and updates the system-tray
-     */
-    public void clearBusinessDayContents() {
-	timeRecordingTray.clearBusinessDayContents();
-    }
+   /**
+    * Clears all entrys in the BusinessDay and updates the system-tray
+    */
+   public void clearBusinessDayContents() {
+      timeRecordingTray.clearBusinessDayContents();
+   }
 
-    @Override
-    protected void refresh() {
-	timeRecordingTray.updateUIStates();
-    }
+   @Override
+   protected void refresh() {
+      timeRecordingTray.updateUIStates();
+   }
 
-    @Override
-    protected PageModelResolver<MainWindowPageModel, MainWindowPageModel> createPageModelResolver() {
-	return oldPageModel -> oldPageModel == null ? new MainWindowPageModel() : oldPageModel;
-    }
+   @Override
+   protected PageModelResolver<MainWindowPageModel, MainWindowPageModel> createPageModelResolver() {
+      return oldPageModel -> oldPageModel == null ? new MainWindowPageModel() : oldPageModel;
+   }
 
-    @Override
-    protected void setBinding(MainWindowPageModel pageVO) {
-	// Nothing to do since this Page only contains to sub pages
-    }
+   @Override
+   protected void setBinding(MainWindowPageModel pageVO) {
+      // Nothing to do since this Page only contains to sub pages
+   }
 
-    public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
-	this.timeRecordingTray = timeRecordingTray;
-	overviewPanelController.setTimeRecordingTray(timeRecordingTray);
-    }
+   public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
+      this.timeRecordingTray = timeRecordingTray;
+      overviewPanelController.setTimeRecordingTray(timeRecordingTray);
+   }
 
 }

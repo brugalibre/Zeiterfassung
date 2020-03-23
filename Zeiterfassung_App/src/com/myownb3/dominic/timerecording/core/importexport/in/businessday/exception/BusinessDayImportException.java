@@ -2,17 +2,17 @@ package com.myownb3.dominic.timerecording.core.importexport.in.businessday.excep
 
 public class BusinessDayImportException extends RuntimeException {
 
-    public BusinessDayImportException(Exception e) {
-	super(e);
-    }
+   public BusinessDayImportException(Exception e) {
+      super(e);
+   }
 
-    public BusinessDayImportException(String message) {
-	super(message);
-    }
+   public BusinessDayImportException(String message) {
+      super(message);
+   }
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+   /**
+    * 
+    */
+   private static final long serialVersionUID = 1L;
 
 }

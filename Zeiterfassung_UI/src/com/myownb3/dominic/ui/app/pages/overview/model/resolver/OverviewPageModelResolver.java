@@ -14,12 +14,12 @@ import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
  */
 public class OverviewPageModelResolver implements PageModelResolver<OverviewPageModel, OverviewPageModel> {
 
-    @Override
-    public OverviewPageModel resolvePageVO(OverviewPageModel inPageModel) {
-	BusinessDayVO businessDayVO = TimeRecorder.INSTANCE.getBussinessDayVO();
-	if (inPageModel == null) {
-	    return new OverviewPageModel(businessDayVO);
-	}
-	return OverviewPageModel.of(inPageModel, businessDayVO);
-    }
+   @Override
+   public OverviewPageModel resolvePageVO(OverviewPageModel inPageModel) {
+      BusinessDayVO businessDayVO = TimeRecorder.INSTANCE.getBussinessDayVO();
+      if (inPageModel == null) {
+         return new OverviewPageModel(businessDayVO);
+      }
+      return OverviewPageModel.of(inPageModel, businessDayVO);
+   }
 }

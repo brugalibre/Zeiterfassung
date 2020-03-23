@@ -16,43 +16,45 @@ import com.myownb3.dominic.timerecording.core.importexport.in.file.exception.Fil
 
 /**
  * The {@link FileImporter} imports a {@link File} and put its content line by line into a {@link List} of {@link String}
+ * 
  * @author Dominic
  *
  */
 public class FileImporter {
 
-    /**
-     * The file extension of files to import
-     */
-    public static final String FILE_EXTENSION = "csv";
-    public static final FileImporter INTANCE = new FileImporter();
+   /**
+    * The file extension of files to import
+    */
+   public static final String FILE_EXTENSION = "csv";
+   public static final FileImporter INTANCE = new FileImporter();
 
-    private FileImporter() {
-	// private Constructor
-    }
+   private FileImporter() {
+      // private Constructor
+   }
 
-    /**
-     * Imports the given file and returns a list which contains each line of the
-     * file as a String
-     * 
-     * @param file the file to import
-     * @return a {@link List} which contains each line of the .csv file as a String
-     */
-    public List<String> importFile(File file) {
+   /**
+    * Imports the given file and returns a list which contains each line of the
+    * file as a String
+    * 
+    * @param file
+    *        the file to import
+    * @return a {@link List} which contains each line of the .csv file as a String
+    */
+   public List<String> importFile(File file) {
 
-	try (FileReader fileReader = new FileReader(file)) {
+      try (FileReader fileReader = new FileReader(file)) {
 
-	    BufferedReader bufferedReader = new BufferedReader(fileReader);
-	    String readLine = bufferedReader.readLine();
-	    List<String> importedLines = new ArrayList<String>();
-	    while (nonNull(readLine)) {
-		importedLines.add(readLine);
-		readLine = bufferedReader.readLine();
-	    }
-	    return importedLines;
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    throw new FileImportException(e);
-	}
-    }
+         BufferedReader bufferedReader = new BufferedReader(fileReader);
+         String readLine = bufferedReader.readLine();
+         List<String> importedLines = new ArrayList<String>();
+         while (nonNull(readLine)) {
+            importedLines.add(readLine);
+            readLine = bufferedReader.readLine();
+         }
+         return importedLines;
+      } catch (IOException e) {
+         e.printStackTrace();
+         throw new FileImportException(e);
+      }
+   }
 }

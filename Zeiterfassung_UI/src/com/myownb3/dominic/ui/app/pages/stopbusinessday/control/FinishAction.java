@@ -10,5 +10,7 @@ import com.myownb3.dominic.ui.app.pages.stopbusinessday.view.StopBusinessDayIncr
  */
 public enum FinishAction {
 
-    ABORT, FINISH, RESUME;
+   ABORT,
+   FINISH,
+   RESUME;
 }

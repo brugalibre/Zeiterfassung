@@ -11,8 +11,8 @@ import com.myownb3.dominic.ui.app.settings.hotkey.HotKeyManager;
  */
 public interface UiCallbackHandler {
 
-    /**
-     * Is called whenever the {@link HotKeyManager} has notified the hot key pressed
-     */
-    public void onHotKeyPressed();
+   /**
+    * Is called whenever the {@link HotKeyManager} has notified the hot key pressed
+    */
+   public void onHotKeyPressed();
 }

@@ -18,39 +18,40 @@ import com.myownb3.dominic.timerecording.core.importexport.out.file.exception.Fi
  */
 public class FileExporter {
 
-    /**
-     * The file extension of files to export
-     */
-    public static final String FILE_EXTENSION = "csv";
-    public static final FileExporter INTANCE = new FileExporter();
+   /**
+    * The file extension of files to export
+    */
+   public static final String FILE_EXTENSION = "csv";
+   public static final FileExporter INTANCE = new FileExporter();
 
-    private FileExporter() {
-	// private Constructor
-    }
+   private FileExporter() {
+      // private Constructor
+   }
 
-    /**
-     * Exports the given list of {@link String} to the Desktop
-     * 
-     * @param content the content to export
-     */
-    public void export(List<String> content) {
-	String dateDetails = DateFormat.getDateInstance().format(new Date());
-	float randomNo = System.currentTimeMillis();
-	File file = new File(
-		System.getProperty("user.home") + "\\Desktop\\" + dateDetails + "_" + randomNo + "." + FILE_EXTENSION);
+   /**
+    * Exports the given list of {@link String} to the Desktop
+    * 
+    * @param content
+    *        the content to export
+    */
+   public void export(List<String> content) {
+      String dateDetails = DateFormat.getDateInstance().format(new Date());
+      float randomNo = System.currentTimeMillis();
+      File file = new File(
+            System.getProperty("user.home") + "\\Desktop\\" + dateDetails + "_" + randomNo + "." + FILE_EXTENSION);
 
-	try (FileWriter writer = new FileWriter(file)) {
-	    file.createNewFile();
-	    writeLines(content, writer);
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    throw new FileExportException(e);
-	}
-    }
+      try (FileWriter writer = new FileWriter(file)) {
+         file.createNewFile();
+         writeLines(content, writer);
+      } catch (IOException e) {
+         e.printStackTrace();
+         throw new FileExportException(e);
+      }
+   }
 
-    private void writeLines(List<String> content, FileWriter writer) throws IOException {
-	for (String element : content) {
-	    writer.write(element);
-	}
-    }
+   private void writeLines(List<String> content, FileWriter writer) throws IOException {
+      for (String element : content) {
+         writer.write(element);
+      }
+   }
 }

@@ -30,35 +30,36 @@ import javafx.scene.control.TablePosition;
  */
 public class BusinessDayChangeHelper implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> {
 
-    private BDChangeCallbackHandler uiRefresher;
-    private BusinessDayChangedCallbackHandler handler;
+   private BDChangeCallbackHandler uiRefresher;
+   private BusinessDayChangedCallbackHandler handler;
 
-    public BusinessDayChangeHelper(BDChangeCallbackHandler uiRefresher) {
-	this.uiRefresher = uiRefresher;
-	this.handler = new BusinessDayChangedCallbackHandlerImpl();
-    }
+   public BusinessDayChangeHelper(BDChangeCallbackHandler uiRefresher) {
+      this.uiRefresher = uiRefresher;
+      this.handler = new BusinessDayChangedCallbackHandlerImpl();
+   }
 
-    @Override
-    public void handle(CellEditEvent<BusinessDayIncTableRowValue, String> event) {
+   @Override
+   public void handle(CellEditEvent<BusinessDayIncTableRowValue, String> event) {
 
-	BusinessDayIncTableRowValue businessDayIncTableCellValue = event.getRowValue();
-	TablePosition<BusinessDayIncTableRowValue, String> tablePosition = event.getTablePosition();
-	String newValue = event.getNewValue();
+      BusinessDayIncTableRowValue businessDayIncTableCellValue = event.getRowValue();
+      TablePosition<BusinessDayIncTableRowValue, String> tablePosition = event.getTablePosition();
+      String newValue = event.getNewValue();
 
-	ValueTypes valueType = businessDayIncTableCellValue.getChangeValueTypeForIndex(tablePosition.getColumn());
-	// XXX Ugly hack. Since we had to make present values editable
-	if (valueType == ValueTypes.NONE) {
-	    uiRefresher.onFinish(FinishAction.ABORT);
-	    return;
-	}
-	int fromUptoSequence = getBeginEndSequence(businessDayIncTableCellValue, tablePosition);
-	int orderNumber = Integer.valueOf(businessDayIncTableCellValue.getNumber());
-	handler.handleBusinessDayChanged(ChangedValue.of(orderNumber, newValue, valueType, fromUptoSequence));
-	uiRefresher.onFinish(FinishAction.FINISH);
-    }
+      ValueTypes valueType = businessDayIncTableCellValue.getChangeValueTypeForIndex(tablePosition.getColumn());
+      // XXX Ugly hack. Since we had to make present values editable
+      if (valueType == ValueTypes.NONE) {
+         uiRefresher.onFinish(FinishAction.ABORT);
+         return;
+      }
+      int fromUptoSequence = getBeginEndSequence(businessDayIncTableCellValue, tablePosition);
+      int orderNumber = Integer.valueOf(businessDayIncTableCellValue.getNumber());
+      handler.handleBusinessDayChanged(ChangedValue.of(orderNumber, newValue, valueType, fromUptoSequence));
+      uiRefresher.onFinish(FinishAction.FINISH);
+   }
 
-    private int getBeginEndSequence(BusinessDayIncTableRowValue businessDayIncTableCellValue, TablePosition<BusinessDayIncTableRowValue, String> tablePosition) {
-	TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue.getTimeSnippe4RowIndex(tablePosition.getColumn());
-	return timeSnippet4Index != null ? timeSnippet4Index.getSequence() : -1;
-    }
+   private int getBeginEndSequence(BusinessDayIncTableRowValue businessDayIncTableCellValue,
+         TablePosition<BusinessDayIncTableRowValue, String> tablePosition) {
+      TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue.getTimeSnippe4RowIndex(tablePosition.getColumn());
+      return timeSnippet4Index != null ? timeSnippet4Index.getSequence() : -1;
+   }
 }

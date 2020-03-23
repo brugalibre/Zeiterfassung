@@ -17,13 +17,13 @@ import java.lang.annotation.Target;
  * @since rel2.00.00
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
+@Target({ElementType.TYPE})
 public @interface FXContent {
 
-    /**
-     * Returns the name of the fxml-file of this Page
-     * 
-     * @return the name of the fxml-file of this Page
-     */
-    String fxmlFileName() default "";
+   /**
+    * Returns the name of the fxml-file of this Page
+    * 
+    * @return the name of the fxml-file of this Page
+    */
+   String fxmlFileName() default "";
 }

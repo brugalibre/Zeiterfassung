@@ -20,96 +20,98 @@ import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
  */
 public class BusinessDayVO {
 
-    private List<BusinessDayIncrementVO> businessDayIncrements;
-    private float totalDuration;
-    private Date date;
-    private boolean hasNotChargedElements;
-    private boolean hasIncrementWithDescription;
+   private List<BusinessDayIncrementVO> businessDayIncrements;
+   private float totalDuration;
+   private Date date;
+   private boolean hasNotChargedElements;
+   private boolean hasIncrementWithDescription;
 
-    /**
-     * Returns the default representation of a date using the pattern 'dd.MM.yyyy'
-     * 
-     * @return the default representation of a date using the pattern 'dd.MM.yyyy'
-     */
-    public String getDateRep() {
-	return getDateRep("dd.MM.yyyy");
-    }
+   /**
+    * Returns the default representation of a date using the pattern 'dd.MM.yyyy'
+    * 
+    * @return the default representation of a date using the pattern 'dd.MM.yyyy'
+    */
+   public String getDateRep() {
+      return getDateRep("dd.MM.yyyy");
+   }
 
-    /**
-     * Returns the default representation of a date using the given pattern
-     * 
-     * @param pattern the pattern to use
-     * @return the default representation of a date using the given pattern
-     */
-    public String getDateRep(String pattern) {
-	SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-	df.applyPattern(pattern);
-	return df.format(date);
-    }
+   /**
+    * Returns the default representation of a date using the given pattern
+    * 
+    * @param pattern
+    *        the pattern to use
+    * @return the default representation of a date using the given pattern
+    */
+   public String getDateRep(String pattern) {
+      SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
+      df.applyPattern(pattern);
+      return df.format(date);
+   }
 
-    private BusinessDayVO(BusinessDay businessDay) {
+   private BusinessDayVO(BusinessDay businessDay) {
 
-	totalDuration = businessDay.getTotalDuration();
-	date = businessDay.getDate();
+      totalDuration = businessDay.getTotalDuration();
+      date = businessDay.getDate();
 
-	businessDayIncrements = businessDay.getIncrements()//
-		.stream()//
-		.map(BusinessDayIncrementVO::of)//
-		.collect(Collectors.toList());
-	businessDayIncrements.stream()//
-		.forEach(businessDayInc -> businessDayInc.addPlaceHolderForMissingCell(this));
-	hasNotChargedElements = businessDay.hasNotChargedElements();
-	hasIncrementWithDescription = businessDay.hasDescription();
-    }
+      businessDayIncrements = businessDay.getIncrements()//
+            .stream()//
+            .map(BusinessDayIncrementVO::of)//
+            .collect(Collectors.toList());
+      businessDayIncrements.stream()//
+            .forEach(businessDayInc -> businessDayInc.addPlaceHolderForMissingCell(this));
+      hasNotChargedElements = businessDay.hasNotChargedElements();
+      hasIncrementWithDescription = businessDay.hasDescription();
+   }
 
-    public final List<BusinessDayIncrementVO> getBusinessDayIncrements() {
-	return this.businessDayIncrements;
-    }
+   public final List<BusinessDayIncrementVO> getBusinessDayIncrements() {
+      return this.businessDayIncrements;
+   }
 
-    /**
-     * Returns <code>true</code> if this {@link BusinessDay} has at least one
-     * element with a description <code>false</code> if not
-     * 
-     * @return <code>true</code> if this {@link BusinessDay} has at least one
-     *         element with a description <code>false</code> if not
-     */
-    public boolean hasIncrementWithDescription() {
-	return hasIncrementWithDescription;
-    }
+   /**
+    * Returns <code>true</code> if this {@link BusinessDay} has at least one
+    * element with a description <code>false</code> if not
+    * 
+    * @return <code>true</code> if this {@link BusinessDay} has at least one
+    *         element with a description <code>false</code> if not
+    */
+   public boolean hasIncrementWithDescription() {
+      return hasIncrementWithDescription;
+   }
 
-    /**
-     * @return <code>true</code> if this {@link BusinessDayVO} has at least one
-     *         {@link BusinessDayIncrementVO} which is not charged yet otherwise
-     *         <code>false</code>
-     */
-    public boolean hasNotChargedElements() {
-	return hasNotChargedElements;
-    }
+   /**
+    * @return <code>true</code> if this {@link BusinessDayVO} has at least one
+    *         {@link BusinessDayIncrementVO} which is not charged yet otherwise
+    *         <code>false</code>
+    */
+   public boolean hasNotChargedElements() {
+      return hasNotChargedElements;
+   }
 
-    /**
-     * Returns the amount of Begin/End Elements this {@link BusinessDay} has
-     * 
-     * @return the amount of Begin/End Elements this {@link BusinessDay} has
-     */
-    public int getAmountOfVonBisElements() {
-	int counter = 0;
-	for (BusinessDayIncrementVO businessDayIncremental : businessDayIncrements) {
-	    counter = Math.max(counter, businessDayIncremental.getTimeSnippets().size());
-	}
-	return counter;
-    }
+   /**
+    * Returns the amount of Begin/End Elements this {@link BusinessDay} has
+    * 
+    * @return the amount of Begin/End Elements this {@link BusinessDay} has
+    */
+   public int getAmountOfVonBisElements() {
+      int counter = 0;
+      for (BusinessDayIncrementVO businessDayIncremental : businessDayIncrements) {
+         counter = Math.max(counter, businessDayIncremental.getTimeSnippets().size());
+      }
+      return counter;
+   }
 
-    public String getTotalDurationRep() {
-	return String.valueOf(totalDuration);
-    }
+   public String getTotalDurationRep() {
+      return String.valueOf(totalDuration);
+   }
 
-    /**
-     * Creates a new {@link BusinessDayVO} for the given {@link BusinessDay}
-     * 
-     * @param businessDay the given {@link BusinessDay}
-     * @return a new {@link BusinessDayVO}
-     */
-    public static BusinessDayVO of(BusinessDay businessDay) {
-	return new BusinessDayVO(businessDay);
-    }
+   /**
+    * Creates a new {@link BusinessDayVO} for the given {@link BusinessDay}
+    * 
+    * @param businessDay
+    *        the given {@link BusinessDay}
+    * @return a new {@link BusinessDayVO}
+    */
+   public static BusinessDayVO of(BusinessDay businessDay) {
+      return new BusinessDayVO(businessDay);
+   }
 }
