@@ -15,6 +15,7 @@ import com.myownb3.dominic.timerecording.core.importexport.in.businessday.Busine
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
 import com.myownb3.dominic.timerecording.core.importexport.in.file.FileImporter;
 import com.myownb3.dominic.timerecording.core.importexport.out.businessday.BusinessDayExporter;
+import com.myownb3.dominic.timerecording.core.importexport.out.file.FileExportResult;
 import com.myownb3.dominic.timerecording.core.importexport.out.file.FileExporter;
 import com.myownb3.dominic.timerecording.core.message.Message;
 import com.myownb3.dominic.timerecording.core.message.MessageType;
@@ -43,7 +44,7 @@ public class TimeRecorder {
    /**
     * The version of the application
     */
-   public static final String VERSION = "1.5.5";
+   public static final String VERSION = "1.5.6";
 
    private BusinessDay businessDay;
    private CallbackHandler callbackHandler;
@@ -203,8 +204,12 @@ public class TimeRecorder {
     */
    public void export() {
       List<String> content = BusinessDayExporter.INSTANCE.exportBusinessDay(BusinessDayVO.of(businessDay));
-      FileExporter.INTANCE.export(content);
-      callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.SUCESSFULLY_EXPORTED));
+      FileExportResult fileExportResult = FileExporter.INTANCE.exportWithResult(content);
+      if (fileExportResult.isSuccess()) {
+         callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.SUCESSFULLY_EXPORTED));
+      } else {
+         callbackHandler.displayMessage(Message.of(MessageType.ERROR, fileExportResult.getErrorMsg(), TextLabel.EXPORT_FAILED_TITLE));
+      }
    }
 
    /**
