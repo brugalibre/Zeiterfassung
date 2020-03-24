@@ -10,6 +10,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.myownb3.dominic.timerecording.core.importexport.out.file.exception.FileExportException;
 
 /**
@@ -23,9 +25,29 @@ public class FileExporter {
     */
    public static final String FILE_EXTENSION = "csv";
    public static final FileExporter INTANCE = new FileExporter();
+   private static final Logger LOG = Logger.getLogger(FileExporter.class);
 
    private FileExporter() {
       // private Constructor
+   }
+
+   /**
+    * Exports the given list of {@link String} to the Desktop and returns a {@link FileExportResult} which may be used if there was an error
+    * occured
+    * 
+    * @param content
+    *        the content to export
+    */
+   public FileExportResult exportWithResult(List<String> content) {
+      FileExportResult exportResult = new FileExportResult();
+      try {
+         export(content);
+      } catch (FileExportException e) {
+         LOG.error(e.getMessage());
+         exportResult.setErrorMsg(e.getLocalizedMessage());
+         exportResult.setSuccess(false);
+      }
+      return exportResult;
    }
 
    /**
@@ -33,6 +55,8 @@ public class FileExporter {
     * 
     * @param content
     *        the content to export
+    * @throws FileExportException
+    *         if there was a {@link IOException}
     */
    public void export(List<String> content) {
       String dateDetails = DateFormat.getDateInstance().format(new Date());

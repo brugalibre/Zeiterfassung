@@ -41,6 +41,7 @@ public class TextLabel {
    public static final String CHARGE_LABEL = "Abbuchen";
    public static final String EXPORT_LABEL = "Exportieren";
    public static final String SUCESSFULLY_EXPORTED = "Erfolgreich exportiert";
+   public static final String EXPORT_FAILED_TITLE = "Export fehlgeschlagen:";
 
    // Import of recordings
    public static final String SHOW_IMPORT_DIALOG_MENU_ITEM = "Vorhandene Aufzeichnungen importieren";
