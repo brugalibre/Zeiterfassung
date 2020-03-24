@@ -1,6 +1,7 @@
 package com.myownb3.dominic.ui.app.settings.hotkey;
 
 import static com.myownb3.dominic.timerecording.settings.common.Const.TURBO_BUCHER_PROPERTIES;
+import static java.util.Objects.nonNull;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,11 +28,19 @@ public class HotKeyManager {
     * pressing
     */
    public void registerHotKey(UiCallbackHandler callbackHandler) {
-      String hotKeyAsString = evalHotKey();
-      if (hotKeyAsString != null) {
+      KeyStroke keyStroke = evalKeyStroke();
+      if (nonNull(keyStroke)) {
          Provider provider = Provider.getCurrentProvider(false);
-         provider.register(KeyStroke.getKeyStroke(hotKeyAsString), hotKey -> callbackHandler.onHotKeyPressed());
+         provider.register(keyStroke, hotKey -> callbackHandler.onHotKeyPressed());
       }
+   }
+
+   private KeyStroke evalKeyStroke() {
+      String hotKeyAsString = evalHotKey();
+      if (nonNull(hotKeyAsString)) {
+         return KeyStroke.getKeyStroke(hotKeyAsString);
+      }
+      return null;
    }
 
    private String evalHotKey() {
