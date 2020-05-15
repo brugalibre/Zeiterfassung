@@ -17,7 +17,7 @@ import com.tulskiy.keymaster.common.Provider;
 public class HotKeyManager {
 
    public static final HotKeyManager INSTANCE = new HotKeyManager();
-   public static final String START_STOP_HOT_KEY = "StartStopHotKey";
+   private static final String START_STOP_HOT_KEY = "StartStopHotKey";
 
    private HotKeyManager() {
       // Private constructor
@@ -37,10 +37,7 @@ public class HotKeyManager {
 
    private KeyStroke evalKeyStroke() {
       String hotKeyAsString = evalHotKey();
-      if (nonNull(hotKeyAsString)) {
-         return KeyStroke.getKeyStroke(hotKeyAsString);
-      }
-      return null;
+      return nonNull(hotKeyAsString) ? KeyStroke.getKeyStroke(hotKeyAsString) : null;
    }
 
    private String evalHotKey() {
@@ -48,7 +45,6 @@ public class HotKeyManager {
       try (InputStream resourceStream = new FileInputStream(TURBO_BUCHER_PROPERTIES)) {
          hotKey = evalHotKeyFromProperties(resourceStream);
       } catch (IOException e) {
-         e.printStackTrace();
          throw new HotKeyRegisterException(e);
       }
       return hotKey;
