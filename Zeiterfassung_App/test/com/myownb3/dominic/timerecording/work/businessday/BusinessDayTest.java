@@ -1,7 +1,7 @@
 package com.myownb3.dominic.timerecording.work.businessday;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.Date;
 
@@ -14,103 +14,104 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
 
 public class BusinessDayTest {
 
-    @Test
-    public void testHasNotChargedElements() {
+   @Test
+   public void testHasNotChargedElements() {
 
-	// Given
-	boolean expectedHasNotChargedElements = true;
-	BusinessDay businessDay = new BusinessDay();
+      // Given
+      boolean expectedHasNotChargedElements = true;
+      BusinessDay businessDay = new BusinessDay();
 
-	TimeSnippet timeSnippet = createTimeSnippet(0);
-	BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, "SYRIUS-1324");		
+      TimeSnippet timeSnippet = createTimeSnippet(0);
+      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, "SYRIUS-1324");
 
-	TimeSnippet timeSnippetYesterday = createTimeSnippet(0);
-	BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, "SYRIUS-1324");
+      TimeSnippet timeSnippetYesterday = createTimeSnippet(0);
+      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, "SYRIUS-1324");
 
-	businessDay.addBusinessIncrement(updateWithTimeSnippet);
-	businessDay.flagBusinessDayAsCharged();
-	businessDay.addBusinessIncrement(updateWithTimeSnippetTomorrow);
-	
-	// When
-	boolean actualHasNotChargedElements= businessDay.hasNotChargedElements();
+      businessDay.addBusinessIncrement(updateWithTimeSnippet);
+      businessDay.flagBusinessDayAsCharged();
+      businessDay.addBusinessIncrement(updateWithTimeSnippetTomorrow);
 
-	// Then
-	assertThat(actualHasNotChargedElements, is(expectedHasNotChargedElements));
-    }
-    @Test
-    public void testHasNoNotChargedElements() {
-	
-	// Given
-	boolean expectedHasNotChargedElements = false;
-	BusinessDay businessDay = new BusinessDay();
-	
-	TimeSnippet timeSnippet = createTimeSnippet(0);
-	BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, "SYRIUS-1324");		
-	
-	TimeSnippet timeSnippetYesterday = createTimeSnippet(0);
-	BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, "SYRIUS-1324");
-	
-	businessDay.addBusinessIncrement(updateWithTimeSnippet);
-	businessDay.addBusinessIncrement(updateWithTimeSnippetTomorrow);
-	businessDay.flagBusinessDayAsCharged();
-	
-	// When
-	boolean actualHasNotChargedElements= businessDay.hasNotChargedElements();
-	
-	// Then
-	assertThat(actualHasNotChargedElements, is(expectedHasNotChargedElements));
-    }
-    
-    @Test
-    public void testHasElementsFromPrecedentDays_PrecedentElements() {
+      // When
+      boolean actualHasNotChargedElements = businessDay.hasNotChargedElements();
 
-	// Given
-	boolean expectedHasElementsFromPrecedentDays = true;
-	BusinessDay businessDay = new BusinessDay();
+      // Then
+      assertThat(actualHasNotChargedElements, is(expectedHasNotChargedElements));
+   }
 
-	TimeSnippet timeSnippet = createTimeSnippet(0);
-	BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, "SYRIUS-1324");		
+   @Test
+   public void testHasNoNotChargedElements() {
 
-	TimeSnippet timeSnippetYesterday = createTimeSnippet(-24*60*3600*1000);// One day in Miliseconds
-	BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, "SYRIUS-1324");
+      // Given
+      boolean expectedHasNotChargedElements = false;
+      BusinessDay businessDay = new BusinessDay();
 
-	businessDay.addBusinessIncrement(updateWithTimeSnippet);
-	businessDay.addBusinessIncrement(updateWithTimeSnippetTomorrow);
+      TimeSnippet timeSnippet = createTimeSnippet(0);
+      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, "SYRIUS-1324");
 
-	// When
-	boolean actualHasElementsFromPrecedentDays = businessDay.hasElementsFromPrecedentDays();
+      TimeSnippet timeSnippetYesterday = createTimeSnippet(0);
+      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, "SYRIUS-1324");
 
-	// Then
-	assertThat(actualHasElementsFromPrecedentDays, is(expectedHasElementsFromPrecedentDays));
-    }
+      businessDay.addBusinessIncrement(updateWithTimeSnippet);
+      businessDay.addBusinessIncrement(updateWithTimeSnippetTomorrow);
+      businessDay.flagBusinessDayAsCharged();
 
-    @Test
-    public void testHasElementsFromPrecedentDays_NoPrecedentElements() {
+      // When
+      boolean actualHasNotChargedElements = businessDay.hasNotChargedElements();
 
-	// Given
-	boolean expectedHasElementsFromPrecedentDays = false;
-	BusinessDay businessDay = new BusinessDay();
+      // Then
+      assertThat(actualHasNotChargedElements, is(expectedHasNotChargedElements));
+   }
 
-	// When
-	boolean actualHasElementsFromPrecedentDays = businessDay.hasElementsFromPrecedentDays();
+   @Test
+   public void testHasElementsFromPrecedentDays_PrecedentElements() {
 
-	// Then
-	assertThat(actualHasElementsFromPrecedentDays, is(expectedHasElementsFromPrecedentDays));
-    }
+      // Given
+      boolean expectedHasElementsFromPrecedentDays = true;
+      BusinessDay businessDay = new BusinessDay();
 
-    private BusinessDayIncrementAdd createUpdate(TimeSnippet timeSnippet, int kindOfService, String ticketNo) {
-	BusinessDayIncrementAdd update = new BusinessDayIncrementAdd();
-	update.setTimeSnippet(timeSnippet);
-	update.setTicketNo(ticketNo);
-	update.setKindOfService(kindOfService);
-	return update;
-    }
+      TimeSnippet timeSnippet = createTimeSnippet(0);
+      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, "SYRIUS-1324");
 
-    private TimeSnippet createTimeSnippet(int additionalTime) {
-	Time beginTimeStamp = new Time(System.currentTimeMillis() + additionalTime);
-	TimeSnippet timeSnippet = new TimeSnippet(new Date (beginTimeStamp.getTime()));
-	timeSnippet.setBeginTimeStamp(beginTimeStamp);
-	timeSnippet.setEndTimeStamp(new Time(System.currentTimeMillis() + additionalTime + 10));
-	return timeSnippet;
-    }
+      TimeSnippet timeSnippetYesterday = createTimeSnippet(-24 * 60 * 3600 * 1000);// One day in Miliseconds
+      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, "SYRIUS-1324");
+
+      businessDay.addBusinessIncrement(updateWithTimeSnippet);
+      businessDay.addBusinessIncrement(updateWithTimeSnippetTomorrow);
+
+      // When
+      boolean actualHasElementsFromPrecedentDays = businessDay.hasElementsFromPrecedentDays();
+
+      // Then
+      assertThat(actualHasElementsFromPrecedentDays, is(expectedHasElementsFromPrecedentDays));
+   }
+
+   @Test
+   public void testHasElementsFromPrecedentDays_NoPrecedentElements() {
+
+      // Given
+      boolean expectedHasElementsFromPrecedentDays = false;
+      BusinessDay businessDay = new BusinessDay();
+
+      // When
+      boolean actualHasElementsFromPrecedentDays = businessDay.hasElementsFromPrecedentDays();
+
+      // Then
+      assertThat(actualHasElementsFromPrecedentDays, is(expectedHasElementsFromPrecedentDays));
+   }
+
+   private BusinessDayIncrementAdd createUpdate(TimeSnippet timeSnippet, int kindOfService, String ticketNo) {
+      BusinessDayIncrementAdd update = new BusinessDayIncrementAdd();
+      update.setTimeSnippet(timeSnippet);
+      update.setTicketNo(ticketNo);
+      update.setKindOfService(kindOfService);
+      return update;
+   }
+
+   private TimeSnippet createTimeSnippet(int additionalTime) {
+      Time beginTimeStamp = new Time(System.currentTimeMillis() + additionalTime);
+      TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
+      timeSnippet.setBeginTimeStamp(beginTimeStamp);
+      timeSnippet.setEndTimeStamp(new Time(System.currentTimeMillis() + additionalTime + 10));
+      return timeSnippet;
+   }
 }
