@@ -33,3 +33,13 @@ Genauigkeit der Aufzeichnung:
 - Die Genauigkeit der Aufzeichnung kann drei stufig definiert werden:
 - 1, 5, 10 & 15 Minuten genau. Entweder im turbo-bucher.properties (Property Rundungseinstellungen) oder mittels Kontext-Menü 'Rundungseinstellungen' auf den roten/grünen Kreis
 
+Abbuchen der Stunden
+- Die Stunden können direkt über den Kontextmenu-Eintrag 'Abbuchen' oder von der Übersichtsseite her abgebucht werden
+
+Anzeige der aufgezeichneten Stunden
+- Via Kontextmenue 'Zeige Arbeitsstunden' kann auf die Übersichtsseite navigiert werden
+- Hier kann durch einen Doppelklick auf einen  Eintrag dessen Bezeichnung, Start- und Endzeit oder die Leistungsart geändert werden
+- Nicht direkt geändert werden kann die 'Anzahl Stunden', diese setzt sich aus Start- und Endzeit zusammen
+- Klick auf 'Abbuchen' startet das Abbuchen
+- Klick auf 'Exportieren' startet den Export auf den Desktop
+- Klick auf 'Alles Löschen' löscht die Aufzeichnung ohne Vorwahrnung
