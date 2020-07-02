@@ -4,6 +4,10 @@ public class FileExportResult {
    private boolean success;
    private String errorMsg;
 
+   public FileExportResult() {
+      success = true;
+   }
+
    public final boolean isSuccess() {
       return this.success;
    }

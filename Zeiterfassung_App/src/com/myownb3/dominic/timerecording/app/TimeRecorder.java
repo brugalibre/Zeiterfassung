@@ -44,7 +44,7 @@ public class TimeRecorder {
    /**
     * The version of the application
     */
-   public static final String VERSION = "1.5.6";
+   public static final String VERSION = "1.5.7";
 
    private BusinessDay businessDay;
    private CallbackHandler callbackHandler;
