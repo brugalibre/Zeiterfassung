@@ -31,7 +31,7 @@ public class TimeRecordingLauncher extends Application {
    }
 
    @Override
-   public void start(Stage primaryStage) throws ApplicationLaunchException {
+   public void start(Stage primaryStage) {
       setSystemProperties();
       Runtime.getRuntime().addShutdownHook(createShutdownHook());
 
@@ -60,7 +60,9 @@ public class TimeRecordingLauncher extends Application {
       File file = new File(TURBO_BUCHER_PROPERTIES);
       if (!file.exists()) {
          try {
-            file.createNewFile();
+            if (!file.createNewFile()) {
+               throw new ApplicationLaunchException("Unable to create the '" + TURBO_BUCHER_PROPERTIES + "' file!");
+            }
          } catch (IOException e) {
             throw new ApplicationLaunchException(e);
          }

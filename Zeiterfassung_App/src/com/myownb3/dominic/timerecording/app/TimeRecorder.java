@@ -84,7 +84,7 @@ public class TimeRecorder {
          case BOOKING:
             return false;
          default:
-            throw new RuntimeException("Unknowing working state '" + currentState + "'!");
+            throw new IllegalStateException("Unknowing working state '" + currentState + "'!");
       }
    }
 
@@ -259,7 +259,7 @@ public class TimeRecorder {
          case BOOKING:
             return TextLabel.BOOKING_RUNNING;
          default:
-            throw new RuntimeException("Unknowing working state '" + currentState + "'!");
+            throw new IllegalStateException("Unknowing working state '" + currentState + "'!");
       }
    }
 

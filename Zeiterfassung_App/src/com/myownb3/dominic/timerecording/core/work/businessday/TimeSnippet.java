@@ -43,11 +43,10 @@ public class TimeSnippet {
     * @throws NumberFormatException
     *         if there goes anything wrong while parsing
     */
-   public void addAdditionallyTime(String newEndAsString) throws NumberFormatException {
+   public void addAdditionallyTime(String newEndAsString) {
       float additionallyTime = NumberFormat.parseFloat(newEndAsString) - getDuration();
 
-      long additionallyDuration = (long) (Time.getTimeRefactorValue(TimeType.DEFAULT)
-            * additionallyTime);
+      long additionallyDuration = (long) (Time.getTimeRefactorValue(TimeType.DEFAULT) * additionallyTime);
       setEndTimeStamp(new Time(getEndTimeStamp().getTime() + additionallyDuration));
    }
 
@@ -109,8 +108,8 @@ public class TimeSnippet {
     */
    public float getDuration(TIME_TYPE type) {
       Time endTimeSnippet = (endTimeStamp != null ? endTimeStamp : new Time(System.currentTimeMillis()));
-      float time = endTimeSnippet.getTime() - getBeginTimeStamp().getTime();
-      int factor = Time.getTimeRefactorValue(type);
+      long time = endTimeSnippet.getTime() - getBeginTimeStamp().getTime();
+      int factor = (int) Time.getTimeRefactorValue(type);
 
       return NumberFormat.parse(time, factor);
    }
