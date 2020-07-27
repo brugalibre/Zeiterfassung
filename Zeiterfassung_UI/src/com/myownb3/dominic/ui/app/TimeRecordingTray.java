@@ -12,8 +12,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
@@ -53,7 +54,7 @@ public class TimeRecordingTray {
    private JMenuItem showImportDialogItem;
    private MainWindowPage mainWindowPage;
 
-   public void registerSystemtray(Stage primaryStage) throws ApplicationLaunchException {
+   public void registerSystemtray(Stage primaryStage) {
 
       setLookAndFeel();
 
@@ -71,7 +72,7 @@ public class TimeRecordingTray {
 
       trayIcon.addMouseMotionListener(getMouseMotionListener());
       trayIcon.addMouseListener(getMouseListener(popupMenu));
-      HotKeyManager.INSTANCE.registerHotKey(() -> handleUserInteractionAndShowInputIfStopped());
+      HotKeyManager.INSTANCE.registerHotKey(this::handleUserInteractionAndShowInputIfStopped);
    }
 
    private void createImportAufzeichnungMenueItem() {
@@ -182,7 +183,7 @@ public class TimeRecordingTray {
     * Books the content of the current {@link BusinessDay}
     */
    public void book() {
-      ThreadFactory.INSTANCE.execute(() -> getBookAndRefreshRunnable());
+      ThreadFactory.INSTANCE.execute(this::getBookAndRefreshRunnable);
       wait(500);
       updateUIStates();
    }
@@ -264,7 +265,7 @@ public class TimeRecordingTray {
       showHoursItem.setEnabled(false);
    }
 
-   private void addTrayIconToSystemTray() throws ApplicationLaunchException {
+   private void addTrayIconToSystemTray() {
 
       trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(), TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
       if (SystemTray.isSupported()) {
@@ -288,7 +289,7 @@ public class TimeRecordingTray {
          }
 
          @Override
-         public void mouseDragged(MouseEvent arg0) {}
+         public void mouseDragged(MouseEvent arg0) {/*no-op*/}
       };
    }
 
@@ -304,13 +305,15 @@ public class TimeRecordingTray {
          }
 
          @Override
-         public void mousePressed(MouseEvent e) {}
+         public void mousePressed(MouseEvent e) {
+            /*no-op*/
+         }
 
          @Override
-         public void mouseExited(MouseEvent e) {}
+         public void mouseExited(MouseEvent e) {/*no-op*/}
 
          @Override
-         public void mouseEntered(MouseEvent e) {}
+         public void mouseEntered(MouseEvent e) {/*no-op*/}
 
          @Override
          public void mouseClicked(MouseEvent e) {
@@ -346,15 +349,15 @@ public class TimeRecordingTray {
       buttonGroup.add(settingsRoundItem10Min);
       buttonGroup.add(settingsRoundItem15Min);
 
-      Map<RoundMode, JRadioButtonMenuItem> roundMode2ButtonMap = new HashMap<>();
+      Map<RoundMode, JRadioButtonMenuItem> roundMode2ButtonMap = new EnumMap<>(RoundMode.class);
       roundMode2ButtonMap.put(RoundMode.ONE_MIN, settingsRoundItem1Min);
       roundMode2ButtonMap.put(RoundMode.FIVE_MIN, settingsRoundItem5Min);
       roundMode2ButtonMap.put(RoundMode.TEN_MIN, settingsRoundItem10Min);
       roundMode2ButtonMap.put(RoundMode.FIFTEEN_MIN, settingsRoundItem15Min);
 
       // Register for reach an action handler
-      for (RoundMode roundMode : roundMode2ButtonMap.keySet()) {
-         roundMode2ButtonMap.get(roundMode).addActionListener(event -> safeRoundSettings(roundMode));
+      for (Entry<RoundMode, JRadioButtonMenuItem> roundMode : roundMode2ButtonMap.entrySet()) {
+         roundMode2ButtonMap.get(roundMode.getKey()).addActionListener(event -> safeRoundSettings(roundMode.getKey()));
       }
 
       // mark as selected

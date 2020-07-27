@@ -6,6 +6,10 @@ public class FileExportException extends RuntimeException {
       super(e);
    }
 
+   public FileExportException(String msg) {
+      super(msg);
+   }
+
    /**
     * 
     */

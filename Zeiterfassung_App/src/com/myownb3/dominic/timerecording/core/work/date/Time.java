@@ -107,18 +107,18 @@ public class Time {
     * @param type
     * @return the appropriate calculating factor
     */
-   public static int getTimeRefactorValue(TIME_TYPE type) {
+   public static long getTimeRefactorValue(TIME_TYPE type) {
       switch (type) {
          case HOUR:
-            return 3600000;
+            return 3600000l;
          case MIN:
-            return 60000;
+            return 60000l;
          case SEC:
-            return 1000;
+            return 1000l;
          case MILI_SEC:
-            return 1;
+            return 1l;
          default:
-            throw new RuntimeException("Unknown TIME_TYPE value '" + type + "'!");
+            throw new IllegalStateException("Unknown TIME_TYPE value '" + type + "'!");
       }
    }
 
