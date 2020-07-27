@@ -65,7 +65,7 @@ public class ChargeType {
       LEISTUNGSARTEN_MAP.put(111, "111 - Meeting");
       LEISTUNGSARTEN_MAP.put(113, "113 - Umsetzung/Dokumentation");
       LEISTUNGSARTEN_MAP.put(122, "122 - Qualtitätssicherung");
-      LEISTUNGSARTEN_MAP.put(141, "141 - Allg. Verwaltungsarbeiten");
+      LEISTUNGSARTEN_MAP.put(140, "140 - Allg. Verwaltungsarbeiten");
       LEISTUNGSARTEN_MAP.put(164, "164 - bezahlte Abwesenheiten");
    }
 
