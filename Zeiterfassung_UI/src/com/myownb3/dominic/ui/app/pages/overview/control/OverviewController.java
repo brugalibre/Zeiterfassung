@@ -69,7 +69,6 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
    private ContextMenu contextMenu;
 
-   private RowDeleteHelper rowDeleteHelper;
    private DescriptionAddHelper descAddHelper;
    private BusinessDayTableModelHelper businessDayTableModel;
    private TimeRecordingTray timeRecordingTray;
@@ -107,8 +106,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
    private void handleMouseEvent(MouseEvent event) {
       if (hasRightClickOnTable(event) && !tableView.getSelectionModel().isEmpty()) {
-         BusinessDayIncTableRowValue businessDayIncTableRowValue = (BusinessDayIncTableRowValue) tableView
-               .getSelectionModel().getSelectedItem();
+         BusinessDayIncTableRowValue businessDayIncTableRowValue = tableView.getSelectionModel().getSelectedItem();
          setFocusToRow(tableView, businessDayIncTableRowValue.getNumberAsInt());
          contextMenu.show(tableView, event.getScreenX(), event.getScreenY());
          event.consume();
@@ -141,7 +139,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
    }
 
    private void bookAsyncAndRefresh() {
-      ThreadFactory.INSTANCE.execute(() -> getBookAndRefreshRunnable());
+      ThreadFactory.INSTANCE.execute(this::getBookAndRefreshRunnable);
       refreshUI();
    }
 
@@ -150,7 +148,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
          TimeRecorder.INSTANCE.book();
       } finally {
          // Make sure the UI is refreshed after the booking. If there was an exception and nothing was booked e.g.
-         Platform.runLater(() -> refreshUI());
+         Platform.runLater(this::refreshUI);
       }
    }
 
@@ -186,8 +184,8 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
    private void initContextMenu() {
 
-      rowDeleteHelper = new RowDeleteHelper(action -> refreshUI());
-      descAddHelper = new DescriptionAddHelper(action -> onDescriptionChangeFinish(action));
+      RowDeleteHelper rowDeleteHelper = new RowDeleteHelper(action -> refreshUI());
+      descAddHelper = new DescriptionAddHelper(this::onDescriptionChangeFinish);
       MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
       deleteMenue.setOnAction(event -> rowDeleteHelper.deleteRow(event, tableView));
       changeDescriptionMenue = new MenuItem(TextLabel.CHANGE_DESCRIPTION);
@@ -198,7 +196,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
    }
 
    private void initTable() {
-      tableView.setOnMousePressed(event -> handleMouseEvent(event));
+      tableView.setOnMousePressed(this::handleMouseEvent);
       tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
    }
 

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.coolguys.turbo.Booker;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
@@ -25,6 +26,7 @@ public class BusinessDayExporter {
 
    public static final String DATE_REP_PATTERN = "EEEEE, d MMM yyyy HH:mm:ss";
    public static final BusinessDayExporter INSTANCE = new BusinessDayExporter();
+   private static final String LINE_SEPARATOR = "line.separator";
 
    private BusinessDayExporter() {
       // private constructor
@@ -47,8 +49,8 @@ public class BusinessDayExporter {
 
       // First line to mark the date, when the time was recorded
       builder.append(bussinessDay.getDateRep(DATE_REP_PATTERN));
-      builder.append(System.getProperty("line.separator"));
-      builder.append(System.getProperty("line.separator"));
+      builder.append(System.getProperty(LINE_SEPARATOR));
+      builder.append(System.getProperty(LINE_SEPARATOR));
 
       appendTitleHeaderCells(builder, bussinessDay);
 
@@ -76,11 +78,11 @@ public class BusinessDayExporter {
          builder.append(CONTENT_SEPPARATOR);
          builder.append(inc.isCharged() ? TextLabel.YES : TextLabel.NO);
 
-         builder.append(System.getProperty("line.separator"));
+         builder.append(System.getProperty(LINE_SEPARATOR));
          content.add(builder.toString());
          builder.delete(0, builder.capacity());
       }
-      builder.append(System.getProperty("line.separator"));
+      builder.append(System.getProperty(LINE_SEPARATOR));
       builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + bussinessDay.getTotalDurationRep());
       content.add(builder.toString());
       return content;
@@ -100,7 +102,7 @@ public class BusinessDayExporter {
       builder.append(TextLabel.CHARGE_TYPE_LABEL);
       builder.append(CONTENT_SEPPARATOR);
       builder.append(TextLabel.CHARGED);
-      builder.append(System.getProperty("line.separator"));
+      builder.append(System.getProperty(LINE_SEPARATOR));
    }
 
    private void appendBeginEndHeader(StringBuilder builder, BusinessDayVO bussinessDay) {
@@ -153,7 +155,7 @@ public class BusinessDayExporter {
             builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
             builder.append(inc.getDescription());
          }
-         builder.append(System.getProperty("line.separator"));
+         builder.append(System.getProperty(LINE_SEPARATOR));
          content.add(builder.toString());
          builder.delete(0, builder.capacity());
       }

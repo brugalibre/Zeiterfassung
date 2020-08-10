@@ -15,6 +15,10 @@ import com.myownb3.dominic.ui.core.dialog.DialogManager;
  */
 public class ExceptionUtil {
 
+   private ExceptionUtil() {
+      // private 
+   }
+
    /**
     * @param thread
     * @param thrown

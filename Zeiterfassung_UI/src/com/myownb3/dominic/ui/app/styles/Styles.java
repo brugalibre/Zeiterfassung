@@ -8,6 +8,9 @@ package com.myownb3.dominic.ui.app.styles;
  *
  */
 public class Styles {
+   private Styles() {
+      // private 
+   }
 
    public static final String INVALID_INPUT_LABEL = "invalidLabel";
 }

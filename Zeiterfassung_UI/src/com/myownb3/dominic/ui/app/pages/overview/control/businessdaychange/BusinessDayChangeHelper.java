@@ -52,7 +52,7 @@ public class BusinessDayChangeHelper implements EventHandler<CellEditEvent<Busin
          return;
       }
       int fromUptoSequence = getBeginEndSequence(businessDayIncTableCellValue, tablePosition);
-      int orderNumber = Integer.valueOf(businessDayIncTableCellValue.getNumber());
+      int orderNumber = Integer.parseInt(businessDayIncTableCellValue.getNumber());
       handler.handleBusinessDayChanged(ChangedValue.of(orderNumber, newValue, valueType, fromUptoSequence));
       uiRefresher.onFinish(FinishAction.FINISH);
    }

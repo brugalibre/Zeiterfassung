@@ -8,6 +8,10 @@ package com.myownb3.dominic.timerecording.settings.common;
  */
 public class Const {
 
+   private Const() {
+      // private 
+   }
+
    /**
     * The properties file for the turob-bucher
     */

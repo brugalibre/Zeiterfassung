@@ -55,7 +55,7 @@ public class BusinessDayIncrementVO {
     * description or <code>false</code> if not
     * 
     * @return<code>true</code> if this {@link BusinessDayIncrement} has a valid
-    *                          description or <code>false</code> if not
+    * description or <code>false</code> if not
     */
    public boolean hasDescription() {
       return StringUtil.isNotEmptyOrNull(description);
@@ -72,14 +72,13 @@ public class BusinessDayIncrementVO {
     * 
     */
    public void addPlaceHolderForMissingCell(BusinessDayVO businessDayExportStruct) {
-
       int amountOfEmptyTimeSnippets = businessDayExportStruct.getAmountOfVonBisElements() - timeSnippets.size();
-      List<TimeSnippetVOPlaceHolder> timeSnippetPlaceHolders = new ArrayList<>();
+      List<TimeSnippetVOPlaceHolder> timeSnippetPlaceHoldersTmp = new ArrayList<>();
       for (int i = 0; i < amountOfEmptyTimeSnippets; i++) {
-         timeSnippetPlaceHolders.add(new TimeSnippetVOPlaceHolder());
-         timeSnippetPlaceHolders.add(new TimeSnippetVOPlaceHolder());
+         timeSnippetPlaceHoldersTmp.add(new TimeSnippetVOPlaceHolder());
+         timeSnippetPlaceHoldersTmp.add(new TimeSnippetVOPlaceHolder());
       }
-      this.timeSnippetPlaceHolders = timeSnippetPlaceHolders;
+      this.timeSnippetPlaceHolders = timeSnippetPlaceHoldersTmp;
    }
 
    public final String getTotalDurationRep() {
@@ -123,7 +122,6 @@ public class BusinessDayIncrementVO {
     *         {@link BusinessDayIncrement}
     */
    public static BusinessDayIncrementVO of(BusinessDayIncrement currentBussinessDayIncremental) {
-      BusinessDayIncrementVO businessDayIncrementVO = new BusinessDayIncrementVO(currentBussinessDayIncremental);
-      return businessDayIncrementVO;
+      return new BusinessDayIncrementVO(currentBussinessDayIncremental);
    }
 }

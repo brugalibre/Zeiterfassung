@@ -91,7 +91,7 @@ public class ComboBoxHelper {
             return value2EntryMap.get(entryValue);
          }
       }
-      return null;
+      throw new IllegalStateException("No Value at index '" + i + "'");
    }
 
    private void cleanUp() {

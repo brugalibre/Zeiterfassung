@@ -22,8 +22,8 @@ import javafx.stage.Stage;
  * @author Dominic Stalder
  * @since rel2.00.00
  */
-public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends PageModel>
-      extends AbstractPage<IN_VO, OUT_VO> {
+public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
+      extends AbstractPage<I, O> {
 
    /**
     * Creates a new AbstractFXPage without a Scene
@@ -51,15 +51,15 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
 
    @Override
    public void hide() {
-      getStage().ifPresent(stage -> stage.hide());
+      getStageOptional().ifPresent(Stage::hide);
    }
 
    @Override
    public void show() {
-      getStage().ifPresent(stage -> stage.show());
+      getStageOptional().ifPresent(Stage::show);
    }
 
-   protected Optional<Stage> getStage() {
+   protected Optional<Stage> getStageOptional() {
       FXPageContent content = (FXPageContent) getContent();
       return content.getStage();
    }
@@ -72,7 +72,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
          initializeController(loader);
          applyStyle(stage);
       } catch (IOException e) {
-         throw new RuntimeException("Unable to load the fxml file located at '" + getUIResource() + "'!", e);
+         throw new IllegalStateException("Unable to load the fxml file located at '" + getUIResource() + "'!", e);
       }
    }
 
@@ -103,7 +103,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
     *        the optional {@link Stage}
     * @throws IOException
     */
-   protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) throws IOException {
+   protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) {
       Pane content = loader.getRoot();
       setContent(new FXPageContent(optionalStage, content));
    }
@@ -115,7 +115,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
     *        - the FXMLLoader
     */
    protected void initializeController(FXMLLoader loader) {
-      Controller<IN_VO, OUT_VO> controller = loader.getController();
+      Controller<I, O> controller = loader.getController();
       controller.initialize(this);
       setController(controller);
    }
@@ -154,7 +154,7 @@ public abstract class AbstractFXPage<IN_VO extends PageModel, OUT_VO extends Pag
     * @return
     * @throws MalformedURLException
     */
-   protected URL getFXMLLocation() throws MalformedURLException {
+   protected URL getFXMLLocation() {
       String uiResource = getUIResource();
       return getClass().getResource(uiResource);
    }

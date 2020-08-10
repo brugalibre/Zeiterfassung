@@ -3,8 +3,6 @@
  */
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.view;
 
-import java.net.URL;
-
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.model.StopBusinessDayIncrementPageModel;
 import com.myownb3.dominic.ui.core.view.impl.AbstractFXSubPage;
@@ -18,9 +16,8 @@ public class StopBusinessDayIncrementPage
 
    /**
     * @param stopBusinessDayIncrementController
-    * @param url
     */
-   public StopBusinessDayIncrementPage(StopBusinessDayIncrementController controller, URL url) {
+   public StopBusinessDayIncrementPage(StopBusinessDayIncrementController controller) {
       super();
       setController(controller);
    }

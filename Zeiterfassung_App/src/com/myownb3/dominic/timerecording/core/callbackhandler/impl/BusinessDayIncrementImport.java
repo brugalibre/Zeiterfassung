@@ -27,7 +27,7 @@ public class BusinessDayIncrementImport {
    private List<TimeSnippet> timeSnippets;
 
    public BusinessDayIncrementImport() {
-      timeSnippets = new ArrayList<TimeSnippet>();
+      timeSnippets = new ArrayList<>();
    }
 
    public final String getTicketNo() {

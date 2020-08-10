@@ -3,6 +3,7 @@
  */
 package com.myownb3.dominic.ui.core.model.resolver;
 
+import com.myownb3.dominic.ui.core.control.Controller;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
 /**
@@ -11,13 +12,13 @@ import com.myownb3.dominic.ui.core.model.PageModel;
  * 
  * @author Dominic Stalder
  */
-public interface PageModelResolver<IN_MODEL extends PageModel, OUT_MODEL extends PageModel> {
+public interface PageModelResolver<I extends PageModel, O extends PageModel> {
 
    /**
     * Resolved the {@link PageModel}
     * 
-    * @param inPageModel
+    * @param dataModelIn
     * @return the new resolved {@link PageModel}
     */
-   public OUT_MODEL resolvePageVO(IN_MODEL inPageModel);
+   public O resolvePageVO(I dataModelIn);
 }

@@ -12,14 +12,18 @@ import com.myownb3.dominic.ui.core.view.Page;
  * The {@link BaseController} provides the most basic features any
  * {@link Controller} should provide such as refreshing the current visible page
  * 
+ * @param <O>
+ *        - the outgoing data-model
+ * @param <I>
+ *        - the incoming data-model
  * @author Dominic Stalder
  */
-public abstract class BaseController<IN_VO extends PageModel, OUT_VO extends PageModel>
-      implements Controller<IN_VO, OUT_VO> {
+public abstract class BaseController<I extends PageModel, O extends PageModel>
+      implements Controller<I, O> {
 
    // Data-model related attributes
-   protected OUT_VO dataModel;
-   protected PageModelResolver<IN_VO, OUT_VO> pageModelResolver;
+   protected O dataModel;
+   protected PageModelResolver<I, O> pageModelResolver;
 
    // The (main) page this controller controls
    protected Page<?, ?> page;
@@ -29,32 +33,31 @@ public abstract class BaseController<IN_VO extends PageModel, OUT_VO extends Pag
     * {@link PageModelResolver}<br>
     */
    @Override
-   public void initialize(Page<IN_VO, OUT_VO> page) {
+   public void initialize(Page<I, O> page) {
       this.page = page;
-      PageModelResolver<IN_VO, OUT_VO> newPageModelResolver = createPageModelResolver();
+      PageModelResolver<I, O> newPageModelResolver = createPageModelResolver();
       setPageModelResolver(newPageModelResolver);
       dataModel = newPageModelResolver.resolvePageVO(null);
       setBinding(dataModel);
    }
 
-   protected abstract PageModelResolver<IN_VO, OUT_VO> createPageModelResolver();
+   protected abstract PageModelResolver<I, O> createPageModelResolver();
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    // HANDLING PAGE-VO //
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   protected OUT_VO initDataModel(IN_VO inVO) {
-      OUT_VO out_VO = updateIncomingVO(inVO);
-      this.dataModel = out_VO;
-      return out_VO;
+   protected O initDataModel(I dataModelIn) {
+      this.dataModel = updateIncomingVO(dataModelIn);
+      return dataModel;
    }
 
    /**
-    * @param inVO
+    * @param dataModelIn
     * @return
     */
-   protected OUT_VO updateIncomingVO(IN_VO inVO) {
-      return pageModelResolver.resolvePageVO(inVO);
+   protected O updateIncomingVO(I dataModelIn) {
+      return pageModelResolver.resolvePageVO(dataModelIn);
    }
 
    /**
@@ -63,7 +66,7 @@ public abstract class BaseController<IN_VO extends PageModel, OUT_VO extends Pag
     * @param pageModel
     *        - the updated data model
     */
-   protected abstract void setBinding(OUT_VO pageModel);
+   protected abstract void setBinding(O pageModel);
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    // SHOW & REFRESH //
@@ -104,15 +107,15 @@ public abstract class BaseController<IN_VO extends PageModel, OUT_VO extends Pag
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    @Override
-   public OUT_VO getDataModel() {
+   public O getDataModel() {
       return dataModel;
    }
 
    /**
-    * @param PageModelResolver
+    * @param pageModelResolver
     *        the PageModelResolver to set
     */
-   protected void setPageModelResolver(PageModelResolver<IN_VO, OUT_VO> PageModelResolver) {
-      this.pageModelResolver = PageModelResolver;
+   protected void setPageModelResolver(PageModelResolver<I, O> pageModelResolver) {
+      this.pageModelResolver = pageModelResolver;
    }
 }

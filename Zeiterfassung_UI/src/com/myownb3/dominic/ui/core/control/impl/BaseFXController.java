@@ -24,13 +24,8 @@ import javafx.stage.Stage;
  * 
  * @author Dominic Stalder
  */
-public abstract class BaseFXController<IN_VO extends PageModel, OUT_VO extends PageModel>
-      extends BaseController<IN_VO, OUT_VO> implements Initializable {
-
-   @Override
-   public void initialize(Page<IN_VO, OUT_VO> page) {
-      super.initialize(page);
-   }
+public abstract class BaseFXController<I extends PageModel, O extends PageModel>
+      extends BaseController<I, O> implements Initializable {
 
    @Override
    public void initialize(URL arg0, ResourceBundle arg1) {
@@ -45,10 +40,10 @@ public abstract class BaseFXController<IN_VO extends PageModel, OUT_VO extends P
    @SuppressWarnings("unchecked")
    @Override
    public void show() {
-      initDataModel((IN_VO) dataModel);
+      initDataModel((I) dataModel);
       super.show();
       Optional<Stage> optionalStage = getStage(page);
-      optionalStage.ifPresent(stage -> stage.show());
+      optionalStage.ifPresent(Stage::show);
    }
 
    private Optional<Stage> getStage(Page<?, ?> page) {

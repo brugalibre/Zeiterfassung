@@ -13,14 +13,14 @@ import com.myownb3.dominic.ui.core.model.PageModel;
  * @author Dominic Stalder
  *
  */
-public interface Page<IN_VO extends PageModel, OUT_VO extends PageModel> {
+public interface Page<I extends PageModel, O extends PageModel> {
 
    /**
     * Returns the controller of this Page
     * 
     * @return the controller of this Page
     */
-   public Controller<IN_VO, OUT_VO> getController();
+   public Controller<I, O> getController();
 
    /**
     * Returns <code>true</code> if this Page is dirty and needs to be refreshed or

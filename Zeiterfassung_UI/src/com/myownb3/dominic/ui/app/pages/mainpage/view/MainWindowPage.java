@@ -3,7 +3,6 @@
  */
 package com.myownb3.dominic.ui.app.pages.mainpage.view;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
@@ -31,18 +30,17 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
    }
 
    @Override
-   protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) throws IOException {
+   protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) {
       super.initializeScene(loader, optionalStage);
-      Stage stage = optionalStage.get();
-      stage.setScene(new Scene(loader.getRoot()));
+      optionalStage.ifPresent(stage -> stage.setScene(new Scene(loader.getRoot())));
    }
 
    public void showOverviewView() {
-      getMainWindowPageController().showOverviewView(getStage().get());
+      getMainWindowPageController().showOverviewView(getStage());
    }
 
    public void showInputMask() {
-      getMainWindowPageController().showInputMask(getStage().get());
+      getMainWindowPageController().showInputMask(getStage());
    }
 
    private MainWindowController getMainWindowPageController() {
@@ -53,7 +51,11 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
     * Opens a dialog in order to choose a file to import
     */
    public void showImportDialog() {
-      getMainWindowPageController().showImportDialog(getStage().get());
+      getMainWindowPageController().showImportDialog(getStage());
    }
 
+   private Stage getStage() {
+      return getStageOptional()
+            .orElseThrow(IllegalStateException::new);
+   }
 }

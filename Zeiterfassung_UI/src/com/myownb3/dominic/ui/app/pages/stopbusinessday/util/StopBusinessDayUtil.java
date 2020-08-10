@@ -4,6 +4,10 @@ import com.myownb3.dominic.util.utils.StringUtil;
 
 public class StopBusinessDayUtil {
 
+   private StopBusinessDayUtil() {
+      // private 
+   }
+
    /**
     * Verifies if the given String contains multiple Tickets
     * 

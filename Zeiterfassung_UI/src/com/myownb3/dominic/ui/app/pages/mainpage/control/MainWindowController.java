@@ -53,8 +53,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       overviewPanelController.init(this);
       stopBusinessDayIncrementPanelController.setMainWindowController(this);
 
-      FXPageContent pageContent = (FXPageContent) mainWindowPage.getContent();
-      Stage stage = pageContent.getStage().get();
+      Stage stage = getStage(mainWindowPage);
       stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
       stage.getIcons().add(PictureLibrary.getClockImageIcon());
       fileImportHelper = new FileImportDialogHelper();
@@ -120,15 +119,12 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 
       switch (finishAction) {
          case ABORT:
+         case FINISH:// Fall through
             timeRecordingTray.updateUIStates();
             dispose();
             break;
          case RESUME:
             timeRecordingTray.resume();
-            dispose();
-            break;
-         case FINISH:
-            timeRecordingTray.updateUIStates();
             dispose();
             break;
          default:
@@ -166,4 +162,10 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       overviewPanelController.setTimeRecordingTray(timeRecordingTray);
    }
 
+   private static Stage getStage(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {
+      FXPageContent pageContent = (FXPageContent) mainWindowPage.getContent();
+      return pageContent
+            .getStage()
+            .orElseThrow(IllegalStateException::new);
+   }
 }

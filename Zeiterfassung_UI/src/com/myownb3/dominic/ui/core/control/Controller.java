@@ -11,17 +11,19 @@ import com.myownb3.dominic.ui.core.view.Page;
  * 
  * @author Dominic
  *
- * @param <IN_VO>
- * @param <OUT_VO>
+ * @param <I>
+ *        the incoming data model
+ * @param <O>
+ *        the outgoing data model
  */
-public interface Controller<IN_VO extends PageModel, OUT_VO extends PageModel> {
+public interface Controller<I extends PageModel, O extends PageModel> {
    /**
     * Initializes this Controller with it's main page to show
     * 
     * @param page
     *        - the main page
     */
-   public void initialize(Page<IN_VO, OUT_VO> page);
+   public void initialize(Page<I, O> page);
 
    /**
     * Forces this Controller to update and finally show it's content
@@ -39,5 +41,5 @@ public interface Controller<IN_VO extends PageModel, OUT_VO extends PageModel> {
     * 
     * @return the current set data model
     */
-   public OUT_VO getDataModel();
+   public O getDataModel();
 }

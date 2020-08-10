@@ -11,18 +11,18 @@ import com.myownb3.dominic.timerecording.app.TimeRecorder;
  */
 public class Message {
 
-   private String message;
+   private String msgAsString;
    private String messageTitle;
    private MessageType messageType;
 
-   private Message(String message, String messageTitle, MessageType messageType) {
-      this.message = message;
+   private Message(String msgAsString, String messageTitle, MessageType messageType) {
+      this.msgAsString = msgAsString;
       this.messageTitle = messageTitle;
       this.messageType = messageType;
    }
 
    public String getMessage() {
-      return message;
+      return msgAsString;
    }
 
    public String getMessageTitle() {

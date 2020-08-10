@@ -20,7 +20,7 @@ import javafx.scene.control.TextField;
 public class InputFieldVerifier {
 
    public boolean verify(TextField c) {
-      return verifyTextField((TextField) c);
+      return verifyTextField(c);
    }
 
    public boolean verifyNotNull(ComboBox<String> comboBox) {
@@ -37,7 +37,7 @@ public class InputFieldVerifier {
          formatter.parse(text, pos);
          isNumber = text.length() == pos.getIndex();
       } catch (NumberFormatException e) {
-         System.err.println(e);
+         e.printStackTrace();
       }
       addOrRemoveErrorStyle(textField, isNumber);
       return isNumber;
