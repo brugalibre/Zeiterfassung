@@ -65,11 +65,8 @@ public class FileExporter {
             System.getProperty("user.home") + "\\Desktop\\" + dateDetails + "_" + randomNo + "." + FILE_EXTENSION);
 
       try (FileWriter writer = new FileWriter(file)) {
-         if (file.createNewFile()) {
-            writeLines(content, writer);
-         } else {
-            throw new FileExportException("File konnte nicht erstellt werden!");
-         }
+         file.createNewFile();
+         writeLines(content, writer);
       } catch (IOException e) {
          throw new FileExportException(e);
       }
