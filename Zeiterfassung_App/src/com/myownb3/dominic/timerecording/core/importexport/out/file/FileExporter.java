@@ -10,6 +10,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.filechooser.FileSystemView;
+
 import org.apache.log4j.Logger;
 
 import com.myownb3.dominic.timerecording.core.importexport.out.file.exception.FileExportException;
@@ -61,8 +63,9 @@ public class FileExporter {
    public void export(List<String> content) {
       String dateDetails = DateFormat.getDateInstance().format(new Date());
       float randomNo = System.currentTimeMillis();
-      File file = new File(
-            System.getProperty("user.home") + "\\Desktop\\" + dateDetails + "_" + randomNo + "." + FILE_EXTENSION);
+
+      String getDefaultPath = evalDefaultPath(dateDetails, randomNo);
+      File file = new File(getDefaultPath);
 
       try (FileWriter writer = new FileWriter(file)) {
          file.createNewFile();
@@ -70,6 +73,13 @@ public class FileExporter {
       } catch (IOException e) {
          throw new FileExportException(e);
       }
+   }
+
+   private static String evalDefaultPath(String dateDetails, float randomNo) {
+      FileSystemView filesys = FileSystemView.getFileSystemView();
+      File homeDirectory = filesys.getHomeDirectory();
+      String path = homeDirectory.getPath();
+      return path + "\\" + dateDetails + "_" + randomNo + "." + FILE_EXTENSION;
    }
 
    private void writeLines(List<String> content, FileWriter writer) throws IOException {
