@@ -13,14 +13,14 @@ import com.myownb3.dominic.ui.core.view.PageContent;
  * to a {@link Page} in order to display them.
  * 
  * @author Dominic Stalder
- * @param <OUT_VO>
+ * @param <O>
  *        - the outgoing data-model
- * @param <IN_VO>
+ * @param <I>
  *        - the incoming data-model
  *
  */
-public abstract class AbstractPage<IN_VO extends PageModel, OUT_VO extends PageModel> implements Page<IN_VO, OUT_VO> {
-   private Controller<IN_VO, OUT_VO> controller;
+public abstract class AbstractPage<I extends PageModel, O extends PageModel> implements Page<I, O> {
+   private Controller<I, O> controller;
    protected PageContent pageContent;
    protected boolean isDirty;
 
@@ -32,18 +32,10 @@ public abstract class AbstractPage<IN_VO extends PageModel, OUT_VO extends PageM
    protected abstract void initialize();
 
    /**
-    * Defines if the content of a {@link Page} (changed by a user) is valid or not
-    * 
-    * @return true if the page content is valid. False if not
-    */
-   @Override
-   public abstract void refresh();
-
-   /**
     * @return the controller
     */
    @Override
-   public Controller<IN_VO, OUT_VO> getController() {
+   public Controller<I, O> getController() {
       return controller;
    }
 
@@ -51,7 +43,7 @@ public abstract class AbstractPage<IN_VO extends PageModel, OUT_VO extends PageM
     * @param controller
     *        the controller to set
     */
-   protected void setController(Controller<IN_VO, OUT_VO> controller) {
+   protected void setController(Controller<I, O> controller) {
       this.controller = controller;
    }
 

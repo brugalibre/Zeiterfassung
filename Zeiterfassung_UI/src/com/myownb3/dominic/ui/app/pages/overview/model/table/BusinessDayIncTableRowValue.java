@@ -68,7 +68,6 @@ public class BusinessDayIncTableRowValue {
          index++;
       }
       valueTypesForIndex.put(index, ValueTypes.CHARGE_TYPE);
-      index++;
    }
 
    /**
@@ -103,15 +102,10 @@ public class BusinessDayIncTableRowValue {
    public TimeSnippetCellValue getTimeSnippe4RowIndex(int index) {
       ValueTypes valueTypeForIndex = getChangeValueTypeForIndex(3);
       int offset = 3;
-      int timeSnippetIndex = index;
-      switch (valueTypeForIndex) {
-         case DESCRIPTION:
-            offset = 4;
-            break;
-         default:
-            break;
+      if (valueTypeForIndex == ValueTypes.DESCRIPTION) {
+         offset = 4;
       }
-      timeSnippetIndex = index - offset;
+      int timeSnippetIndex = index - offset;
       if (timeSnippetIndex < timeSnippets.size() && timeSnippetIndex >= 0) {
          return timeSnippets.get(timeSnippetIndex);
       }

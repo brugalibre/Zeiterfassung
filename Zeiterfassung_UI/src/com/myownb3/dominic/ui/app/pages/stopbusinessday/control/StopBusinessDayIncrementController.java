@@ -80,7 +80,7 @@ public class StopBusinessDayIncrementController
 
    @Override
    public void initialize(URL url, ResourceBundle resourceBundle) {
-      initialize(new StopBusinessDayIncrementPage(this, url));
+      initialize(new StopBusinessDayIncrementPage(this));
       kindOfServiceComboBox.getSelectionModel().selectFirst();
       ticketNumberComboBoxHelper = new ComboBoxHelper(5, ticketNumberComboBox);
       descriptionComboBoxHelper = new ComboBoxHelper(5, descriptionComboBox);
@@ -156,7 +156,7 @@ public class StopBusinessDayIncrementController
       } catch (InvalidChargeTypeRepresentationException e) {
          // This should never happen here, therefore we throw a RuntimeException
          e.printStackTrace();
-         throw new RuntimeException(e);
+         throw new IllegalStateException(e);
       }
    }
 
@@ -189,12 +189,12 @@ public class StopBusinessDayIncrementController
       cancelButton.tooltipProperty().bind(pageModel.getCancelButtonToolTipText());
 
       beginTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-         if (oldValue && !newValue) {
+         if (oldValue.booleanValue() && !newValue.booleanValue()) {
             getDataModel().updateAndSetBeginTimeStamp(beginTextField.getText());
          }
       });
       endTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-         if (oldValue && !newValue) {
+         if (oldValue.booleanValue() && !newValue.booleanValue()) {
             getDataModel().updateAndSetEndTimeStamp(endTextField.getText());
          }
       });

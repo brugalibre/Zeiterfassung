@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 public class ThreadFactory {
 
    public static final ThreadFactory INSTANCE = new ThreadFactory();
-   private static ExecutorService executorService;
+   private ExecutorService executorService;
 
    private ThreadFactory() {
       executorService = Executors.newSingleThreadExecutor();

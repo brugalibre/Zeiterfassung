@@ -22,6 +22,11 @@ import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeType
  *
  */
 public class ChargeType {
+
+   private ChargeType() {
+      // private 
+   }
+
    private static final Map<Integer, String> LEISTUNGSARTEN_MAP;
 
    static {
@@ -64,7 +69,7 @@ public class ChargeType {
       LEISTUNGSARTEN_MAP.put(100, "100 - Analyse");
       LEISTUNGSARTEN_MAP.put(111, "111 - Meeting");
       LEISTUNGSARTEN_MAP.put(113, "113 - Umsetzung/Dokumentation");
-      LEISTUNGSARTEN_MAP.put(122, "122 - Qualtitätssicherung");
+      LEISTUNGSARTEN_MAP.put(122, "122 - Qualtitï¿½tssicherung");
       LEISTUNGSARTEN_MAP.put(140, "140 - Allg. Verwaltungsarbeiten");
       LEISTUNGSARTEN_MAP.put(164, "164 - bezahlte Abwesenheiten");
    }

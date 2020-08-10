@@ -40,7 +40,7 @@ public class BusinessDayIncrement {
 
    public BusinessDayIncrement(Date date) {
       this.date = date;
-      timeSnippets = new ArrayList<TimeSnippet>();
+      timeSnippets = new ArrayList<>();
       ticketNumber = "SYRIUS-";
    }
 
@@ -107,7 +107,6 @@ public class BusinessDayIncrement {
    private boolean hasSameDescription(BusinessDayIncrement other) {
       return StringUtil.isEmptyOrNull(other.getDescription()) && StringUtil.isEmptyOrNull(this.getDescription())
             || (StringUtil.isNotEmptyOrNull(other.getDescription())
-                  && StringUtil.isNotEmptyOrNull(other.getDescription())
                   && other.getDescription().equals(this.getDescription()));
    }
 
@@ -207,13 +206,9 @@ public class BusinessDayIncrement {
     * @param newTimeStampValue
     *        the new value for the time stamp
     */
-   public void updateBeginTimeSnippetAndCalculate(BusinessDayIncrement businessDayIncremental, int fromUptoSequence,
-         String newTimeStampValue) {
-
+   public void updateBeginTimeSnippetAndCalculate(int fromUptoSequence, String newTimeStampValue) {
       Optional<TimeSnippet> timeSnippetOpt = getTimeSnippet4Index(fromUptoSequence);
-      timeSnippetOpt.ifPresent(timeSnippet -> {
-         timeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue);
-      });
+      timeSnippetOpt.ifPresent(timeSnippet -> timeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue));
    }
 
    /**
@@ -223,12 +218,9 @@ public class BusinessDayIncrement {
     * @param newTimeStampValue
     *        the new value for the time stamp
     */
-   public void updateEndTimeSnippetAndCalculate(BusinessDayIncrement businessDayIncremental, int fromUptoSequence,
-         String newTimeStampValue) {
+   public void updateEndTimeSnippetAndCalculate(int fromUptoSequence, String newTimeStampValue) {
       Optional<TimeSnippet> timeSnippetOpt = getTimeSnippet4Index(fromUptoSequence);
-      timeSnippetOpt.ifPresent(timeSnippet -> {
-         timeSnippet.updateAndSetEndTimeStamp(newTimeStampValue);
-      });
+      timeSnippetOpt.ifPresent(timeSnippet -> timeSnippet.updateAndSetEndTimeStamp(newTimeStampValue));
    }
 
    public static class TimeStampComparator implements Comparator<TimeSnippet> {

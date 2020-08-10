@@ -61,7 +61,7 @@ public class BusinessDayImporter {
     * @param importedLines
     *        the imported content
     */
-   public BusinessDay importBusinessDay(List<String> importedLines) throws BusinessDayImportException {
+   public BusinessDay importBusinessDay(List<String> importedLines) {
 
       try {
          checkInput(importedLines);
@@ -99,8 +99,8 @@ public class BusinessDayImporter {
    }
 
    private List<String> filterLines(List<String> importedLines) {
-      return importedLines.stream()//
-            .filter(importedLine -> has2ParseLine(importedLine))//
+      return importedLines.stream()
+            .filter(this::has2ParseLine)
             .collect(Collectors.toList());
    }
 
@@ -169,7 +169,7 @@ public class BusinessDayImporter {
          throws ParseException {
       // get begin,- and end value as String
       String beginValue = getElementFromLineAtIndex(importLine, currentElementIndex++);
-      String endValue = getElementFromLineAtIndex(importLine, currentElementIndex++);
+      String endValue = getElementFromLineAtIndex(importLine, currentElementIndex);
 
       // Parse both, begin and end and create a new TimeSnippet
       TimeSnippet timeSnippet = TimeSnippet.createTimeSnippet(date, beginValue, endValue);
@@ -197,9 +197,9 @@ public class BusinessDayImporter {
    private int shiftIndex(ValueTypes currentValueType, int currentElementIndex, String importLine) {
       switch (currentValueType) {
          case TICKET_NR:
-            return currentElementIndex = currentElementIndex + 1;
+            return currentElementIndex + 1;
          case DESCRIPTION:
-            return currentElementIndex = currentElementIndex + 2;
+            return currentElementIndex + 2;
          case BEGIN:
             // Plus two since we incremented the index two times while adding a
             // new time stamp. Continue incrementing as long as there are
@@ -240,15 +240,24 @@ public class BusinessDayImporter {
    }
 
    private boolean isNexElementNotEmpty(String importLine, int currentElementIndex) {
-      return StringUtil.isNotEmptyOrNull(importLine.split(CONTENT_SEPARATOR)[currentElementIndex++]);
+      return StringUtil.isNotEmptyOrNull(importLine.split(CONTENT_SEPARATOR)[currentElementIndex]);
    }
 
-   private Date parseDate(String readLine) throws ParseException {
+   private Date parseDate(String readLine) {
       if (isNotEmptyOrNull(readLine)) {
-         return DateParser.parse2Date(readLine, BusinessDayExporter.DATE_REP_PATTERN);
+         try {
+            return DateParser.parse2Date(readLine, BusinessDayExporter.DATE_REP_PATTERN);
+         } catch (ParseException e) {
+            throw buildBusinessDayImportException(e.getLocalizedMessage() + "\n" +
+                  "The first line should look like 'Dienstag, 25 Jul 2019 06:45:00'");
+         }
       }
-      throw new BusinessDayImportException(
+      throw buildBusinessDayImportException(
             "The first line within the import file must not be empty or null! It should rather look like 'Dienstag, 25 Jul 2019 06:45:00'");
+   }
+
+   private BusinessDayImportException buildBusinessDayImportException(String message) {
+      return new BusinessDayImportException(message);
    }
 
    private void checkInput(List<String> importedLines) {

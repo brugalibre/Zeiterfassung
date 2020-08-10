@@ -27,7 +27,7 @@ public class TimeSnippetCellValue {
 
       this.beginOrEndValueProperty = new SimpleStringProperty(beginOrEnd);
       this.sequenceValueProperty = new SimpleIntegerProperty(sequence);
-      this.valueTypeProperty = new SimpleObjectProperty<ValueTypes>(valueType);
+      this.valueTypeProperty = new SimpleObjectProperty<>(valueType);
    }
 
    public int getSequence() {

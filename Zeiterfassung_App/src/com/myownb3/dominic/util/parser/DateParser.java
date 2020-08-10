@@ -16,6 +16,10 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
  */
 public class DateParser {
 
+   private DateParser() {
+      // private 
+   }
+
    private static final String DOUBLE_POINT = ":";
 
    /**

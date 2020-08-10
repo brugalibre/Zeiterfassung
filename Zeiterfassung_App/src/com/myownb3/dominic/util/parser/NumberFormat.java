@@ -4,18 +4,23 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 
 public class NumberFormat {
+
+   private NumberFormat() {
+      // private 
+   }
+
    private static final java.text.NumberFormat decimalFormat;
 
    static {
       decimalFormat = new DecimalFormat("0.00");
    }
 
-   public static float parse(float time, int factor) throws NumberFormatException {
+   public static float parse(float time, int factor) {
 
       java.text.NumberFormat format = java.text.NumberFormat.getInstance();
       Number number = Float.valueOf(0);
       try {
-         number = format.parse(decimalFormat.format((time = time / factor)));
+         number = format.parse(decimalFormat.format(time / factor));
       } catch (ParseException e) {
          e.printStackTrace();
          throw new NumberFormatException(e.getLocalizedMessage());

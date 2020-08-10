@@ -62,7 +62,7 @@ public class BusinessDay {
    }
 
    private void initialize(Date date) {
-      increments = new CopyOnWriteArrayList<BusinessDayIncrement>();
+      increments = new CopyOnWriteArrayList<>();
       currentBussinessDayIncremental = new BusinessDayIncrement(date);
    }
 
@@ -213,9 +213,7 @@ public class BusinessDay {
     */
    public void changeBusinesDayIncrement(ChangedValue changeValue) {
       Optional<BusinessDayIncrement> businessDayIncOpt = getBusinessIncrement(changeValue.getSequence());
-      businessDayIncOpt.ifPresent(businessDayIncrement -> {
-         handleBusinessDayChangedInternal(businessDayIncrement, changeValue);
-      });
+      businessDayIncOpt.ifPresent(businessDayIncrement -> handleBusinessDayChangedInternal(businessDayIncrement, changeValue));
    }
 
    /**
@@ -318,12 +316,12 @@ public class BusinessDay {
             businessDayIncremental.setDescription(changedValue.getNewValue());
             break;
          case BEGIN:
-            businessDayIncremental.updateBeginTimeSnippetAndCalculate(businessDayIncremental,
-                  changedValue.getFromUptoSequence(), changedValue.getNewValue());
+            businessDayIncremental.updateBeginTimeSnippetAndCalculate(changedValue.getFromUptoSequence(),
+                  changedValue.getNewValue());
             break;
          case END:
-            businessDayIncremental.updateEndTimeSnippetAndCalculate(businessDayIncremental,
-                  changedValue.getFromUptoSequence(), changedValue.getNewValue());
+            businessDayIncremental.updateEndTimeSnippetAndCalculate(changedValue.getFromUptoSequence(),
+                  changedValue.getNewValue());
             break;
          case TICKET_NR:
             businessDayIncremental.setTicketNumber(changedValue.getNewValue());

@@ -56,23 +56,20 @@ public class BusinessDayTableModelHelper {
 
    private List<TableColumn<BusinessDayIncTableRowValue, String>> getTableHeaders(BusinessDayVO bussinessDay) {
       List<TableColumn<BusinessDayIncTableRowValue, String>> titleHeaders = new ArrayList<>();
-      TableColumn<BusinessDayIncTableRowValue, String> numberTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
+      TableColumn<BusinessDayIncTableRowValue, String> numberTableColumn = new TableColumn<>(
             TextLabel.NUMMER_LABEL);
       setNonEditableCellValueFactory(numberTableColumn, "number");
       titleHeaders.add(numberTableColumn);
-      TableColumn<BusinessDayIncTableRowValue, String> amountOfHoursTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
-            TextLabel.AMOUNT_OF_HOURS_LABEL);
+      TableColumn<BusinessDayIncTableRowValue, String> amountOfHoursTableColumn = new TableColumn<>(TextLabel.AMOUNT_OF_HOURS_LABEL);
       titleHeaders.add(amountOfHoursTableColumn);
       setNonEditableCellValueFactory(amountOfHoursTableColumn, "totalDuration");
-      TableColumn<BusinessDayIncTableRowValue, String> ticketTableColumnt = new TableColumn<BusinessDayIncTableRowValue, String>(
-            TextLabel.TICKET);
+      TableColumn<BusinessDayIncTableRowValue, String> ticketTableColumnt = new TableColumn<>(TextLabel.TICKET);
       titleHeaders.add(ticketTableColumnt);
       setEditableCellValueFactory(ticketTableColumnt, "ticketNumber", changeListener);
 
       boolean isDescriptionTitleNecessary = bussinessDay.hasIncrementWithDescription();
       if (isDescriptionTitleNecessary) {
-         TableColumn<BusinessDayIncTableRowValue, String> descriptionTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
-               TextLabel.DESCRIPTION_LABEL);
+         TableColumn<BusinessDayIncTableRowValue, String> descriptionTableColumn = new TableColumn<>(TextLabel.DESCRIPTION_LABEL);
          setEditableCellValueFactory(descriptionTableColumn, "description", changeListener);
          titleHeaders.add(descriptionTableColumn);
       }
@@ -81,11 +78,9 @@ public class BusinessDayTableModelHelper {
       List<TableColumn<BusinessDayIncTableRowValue, String>> beginEndHeaders = new ArrayList<>();
       for (int i = 0; i < counter; i++) {
 
-         TableColumn<BusinessDayIncTableRowValue, String> beginTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
-               TextLabel.VON_LABEL);
+         TableColumn<BusinessDayIncTableRowValue, String> beginTableColumn = new TableColumn<>(TextLabel.VON_LABEL);
 
-         TableColumn<BusinessDayIncTableRowValue, String> endTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
-               TextLabel.BIS_LABEL);
+         TableColumn<BusinessDayIncTableRowValue, String> endTableColumn = new TableColumn<>(TextLabel.BIS_LABEL);
 
          beginEndHeaders.add(beginTableColumn);
          beginEndHeaders.add(endTableColumn);
@@ -94,18 +89,16 @@ public class BusinessDayTableModelHelper {
       for (int i = 0; i < beginEndHeaders.size(); i++) {
          TableColumn<BusinessDayIncTableRowValue, String> tableColumn = beginEndHeaders.get(i);
 
-         tableColumn.setCellValueFactory(getTimeSnippetBeginEndCellValueFactory(i, tableColumn));
+         tableColumn.setCellValueFactory(getTimeSnippetBeginEndCellValueFactory(i));
          tableColumn.setCellFactory(getTimeSnippetBeginEndCellFactory(i, tableColumn));
       }
 
       titleHeaders.addAll(beginEndHeaders);
 
-      TableColumn<BusinessDayIncTableRowValue, String> chargeTypeTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
-            TextLabel.CHARGE_TYPE_LABEL);
+      TableColumn<BusinessDayIncTableRowValue, String> chargeTypeTableColumn = new TableColumn<>(TextLabel.CHARGE_TYPE_LABEL);
       titleHeaders.add(chargeTypeTableColumn);
       setEditableColumBoxCellFactory(chargeTypeTableColumn);
-      TableColumn<BusinessDayIncTableRowValue, String> isChargedTableColumn = new TableColumn<BusinessDayIncTableRowValue, String>(
-            TextLabel.CHARGED);
+      TableColumn<BusinessDayIncTableRowValue, String> isChargedTableColumn = new TableColumn<>(TextLabel.CHARGED);
       titleHeaders.add(isChargedTableColumn);
       setNonEditableCellValueFactory(isChargedTableColumn, "isCharged");
       return titleHeaders;
@@ -121,7 +114,7 @@ public class BusinessDayTableModelHelper {
    }
 
    private Callback<CellDataFeatures<BusinessDayIncTableRowValue, String>, ObservableValue<String>> getTimeSnippetBeginEndCellValueFactory(
-         final int i, TableColumn<BusinessDayIncTableRowValue, String> tableColumn) {
+         final int i) {
       return cellData -> {
          BusinessDayIncTableRowValue businessDayIncTableCellValue = cellData.getValue();
 
@@ -143,13 +136,11 @@ public class BusinessDayTableModelHelper {
             return new TextFieldTableCell<>(new DefaultStringConverter());
          }
          return new TextFieldTableCell<>(new DefaultStringConverter());
-         // return new TableCell<>();
       };
    }
 
-   private void setNonEditableCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn,
-         String paramName) {
-      tableColumn.setCellValueFactory(new PropertyValueFactory<BusinessDayIncTableRowValue, String>(paramName));
+   private void setNonEditableCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn, String paramName) {
+      tableColumn.setCellValueFactory(new PropertyValueFactory<>(paramName));
    }
 
    private void setEditableCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn,
@@ -198,7 +189,6 @@ public class BusinessDayTableModelHelper {
       businessDayIncTableCellValue
             .setChargeType(ChargeType.getRepresentation(bussinessDayIncremental.getChargeType()));
       businessDayIncTableCellValue.setIsCharged(bussinessDayIncremental.isCharged() ? TextLabel.YES : TextLabel.NO);
-
       businessDayIncTableCellValue.setValueTypes(isDescriptionTitleNecessary);
       return businessDayIncTableCellValue;
    }

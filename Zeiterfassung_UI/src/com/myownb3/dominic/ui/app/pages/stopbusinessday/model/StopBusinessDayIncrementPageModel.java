@@ -52,9 +52,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    private StringProperty finishButtonText;
    private StringProperty abortButtonText;
    private StringProperty cancelButtonText;
-   private ObservableValue<? extends Tooltip> abortButtonToolTipText;
-   private ObservableValue<? extends Tooltip> cancelButtonToolTipText;
-   public TimeSnippet timeSnippet;
+   private ObservableValue<Tooltip> abortButtonToolTipText;
+   private ObservableValue<Tooltip> cancelButtonToolTipText;
+   private TimeSnippet timeSnippet;
 
    /**
     * Creates a new {@link StopBusinessDayIncrementPageModel}
@@ -70,12 +70,12 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       finishButtonText = new SimpleStringProperty(TextLabel.FINISH_BUTTON_TEXT);
       abortButtonText = new SimpleStringProperty(TextLabel.ABORT_BUTTON_TEXT);
       cancelButtonText = new SimpleStringProperty(TextLabel.CANCEL_BUTTON_TEXT);
-      abortButtonToolTipText = new SimpleObjectProperty<Tooltip>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
-      cancelButtonToolTipText = new SimpleObjectProperty<Tooltip>(new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
+      abortButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
+      cancelButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
 
       amountOfHoursTextFieldProperty = new SimpleStringProperty(businessDayIncrementVO.getTotalDurationRep());
-      ticketNoProperty = new SimpleObjectProperty<String>(businessDayIncrementVO.getTicketNumber());
-      descriptionProperty = new SimpleObjectProperty<String>(businessDayIncrementVO.getDescription());
+      ticketNoProperty = new SimpleObjectProperty<>(businessDayIncrementVO.getTicketNumber());
+      descriptionProperty = new SimpleObjectProperty<>(businessDayIncrementVO.getDescription());
 
       kindOfServiceTextFieldProperty = new SimpleListProperty<>(
             FXCollections.observableArrayList(ChargeType.getLeistungsartenRepresentation()));
@@ -142,10 +142,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       inPageModel.getAbortButtonText().set(TextLabel.ABORT_BUTTON_TEXT);
       inPageModel.getCancelButtonText().set(TextLabel.CANCEL_BUTTON_TEXT);
 
-      inPageModel.abortButtonToolTipText = new SimpleObjectProperty<Tooltip>(
-            new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
-      inPageModel.cancelButtonToolTipText = new SimpleObjectProperty<Tooltip>(
-            new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
+      inPageModel.abortButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
+      inPageModel.cancelButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
 
       inPageModel.getAmountOfHoursTextFieldProperty().set(businessDayIncrementVO.getTotalDurationRep());
       inPageModel.getTicketNoProperty().setValue(businessDayIncrementVO.getTicketNumber());
@@ -283,11 +281,11 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       return this.cancelButtonText;
    }
 
-   public ObservableValue<? extends Tooltip> getAbortButtonToolTipText() {
+   public ObservableValue<Tooltip> getAbortButtonToolTipText() {
       return abortButtonToolTipText;
    }
 
-   public ObservableValue<? extends Tooltip> getCancelButtonToolTipText() {
+   public ObservableValue<Tooltip> getCancelButtonToolTipText() {
       return cancelButtonToolTipText;
    }
 }

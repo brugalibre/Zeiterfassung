@@ -30,19 +30,17 @@ public class TimeRounder {
    }
 
    public void init() {
-      RoundMode roundMode = evalRoundMode();
-      setRoundMode(roundMode);
+      RoundMode newRoundMode = evalRoundMode();
+      setRoundMode(newRoundMode);
    }
 
    private RoundMode evalRoundMode() {
-      RoundMode roundMode = null;
       try (InputStream resourceStream = new FileInputStream(TURBO_BUCHER_PROPERTIES)) {
-         roundMode = evalRoundModeFromProperties(resourceStream);
+         return evalRoundModeFromProperties(resourceStream);
       } catch (IOException e) {
          e.printStackTrace();
          throw new RounderInitException(e);
       }
-      return roundMode;
    }
 
    private RoundMode evalRoundModeFromProperties(InputStream resourceStream) throws IOException {

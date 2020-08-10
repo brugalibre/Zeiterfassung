@@ -17,6 +17,11 @@ import javax.swing.JTextArea;
  * 
  */
 public class SwingUtil {
+
+   private SwingUtil() {
+      // private 
+   }
+
    /**
     * @param areaText
     * @return an {@link JPanel} which contains an {@link JTextArea} and a

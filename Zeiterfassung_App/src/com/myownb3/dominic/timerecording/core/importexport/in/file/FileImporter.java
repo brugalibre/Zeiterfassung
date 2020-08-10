@@ -46,7 +46,7 @@ public class FileImporter {
 
          BufferedReader bufferedReader = new BufferedReader(fileReader);
          String readLine = bufferedReader.readLine();
-         List<String> importedLines = new ArrayList<String>();
+         List<String> importedLines = new ArrayList<>();
          while (nonNull(readLine)) {
             importedLines.add(readLine);
             readLine = bufferedReader.readLine();

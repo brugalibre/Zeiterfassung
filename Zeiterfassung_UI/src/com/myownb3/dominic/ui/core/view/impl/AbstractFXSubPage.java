@@ -13,9 +13,13 @@ import javafx.stage.Stage;
 
 /**
  * @author Dominic Stalder
+ * @param <O>
+ *        - the outgoing data-model
+ * @param <I>
+ *        - the incoming data-model
  */
-public abstract class AbstractFXSubPage<IN_VO extends PageModel, OUT_VO extends PageModel>
-      extends AbstractFXPage<IN_VO, OUT_VO> {
+public abstract class AbstractFXSubPage<I extends PageModel, O extends PageModel>
+      extends AbstractFXPage<I, O> {
 
    @Override
    protected void initializeFXMLoader(FXMLLoader loader) throws IOException {
@@ -28,7 +32,7 @@ public abstract class AbstractFXSubPage<IN_VO extends PageModel, OUT_VO extends 
    }
 
    @Override
-   protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) throws IOException {
+   protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) {
       // Nothing to do
    }
 }
