@@ -75,7 +75,7 @@ public class BusinessDayIncrement {
 
    public List<TimeSnippet> getTimeSnippets() {
       Collections.sort(timeSnippets, new TimeStampComparator());
-      return timeSnippets;
+      return Collections.unmodifiableList(timeSnippets);
    }
 
    public float getTotalDuration() {
@@ -293,5 +293,19 @@ public class BusinessDayIncrement {
       long days = time2Check.getDays();
       Time bdTime = new Time(date.getTime());
       return days > bdTime.getDays();
+   }
+
+   /**
+    * Calculates the duration of the last {@link TimeSnippet} of this {@link BusinessDayIncrement}
+    * 
+    * @return the duration of the last {@link TimeSnippet} of this {@link BusinessDayIncrement}
+    */
+   public float calcDurationOfLastIncrement() {
+      float durationOfLastIncrement = getTotalDuration();
+      for (int i = 0; i < getTimeSnippets().size() - 1; i++) {
+         TimeSnippet timeSnippet = getTimeSnippets().get(i);
+         durationOfLastIncrement = durationOfLastIncrement - timeSnippet.getDuration();
+      }
+      return durationOfLastIncrement;
    }
 }

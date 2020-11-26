@@ -46,8 +46,7 @@ public class BusinessDayChangeHelper implements EventHandler<CellEditEvent<Busin
       String newValue = event.getNewValue();
 
       ValueTypes valueType = businessDayIncTableCellValue.getChangeValueTypeForIndex(tablePosition.getColumn());
-      // XXX Ugly hack. Since we had to make present values editable
-      if (valueType == ValueTypes.NONE) {
+      if (isNotValidValueType(valueType)) {
          uiRefresher.onFinish(FinishAction.ABORT);
          return;
       }
@@ -55,6 +54,11 @@ public class BusinessDayChangeHelper implements EventHandler<CellEditEvent<Busin
       int orderNumber = Integer.parseInt(businessDayIncTableCellValue.getNumber());
       handler.handleBusinessDayChanged(ChangedValue.of(orderNumber, newValue, valueType, fromUptoSequence));
       uiRefresher.onFinish(FinishAction.FINISH);
+   }
+
+   private static boolean isNotValidValueType(ValueTypes valueType) {
+      // XXX Ugly hack. Since we had to make present values editable
+      return valueType == ValueTypes.NONE;
    }
 
    private int getBeginEndSequence(BusinessDayIncTableRowValue businessDayIncTableCellValue,

@@ -39,6 +39,27 @@ public class NumberFormat {
       }
    }
 
+   /**
+    * 
+    * Returns a parsed Float of the given String or the given default value<code>null</code> if the String in not a number
+    * 
+    * @param stringValue2Parse
+    *        the String to parse
+    * @param defaultReturnValue
+    *        the desired default value
+    * @return a parsed Float of the given String or the given default value<code>null</code> if the String in not a number
+    */
+   public static float parseFloatOrDefault(String stringValue2Parse, float defaultReturnValue) {
+      java.text.NumberFormat format = java.text.NumberFormat.getInstance();
+      try {
+         Number number = format.parse(stringValue2Parse);
+         return number.floatValue();
+      } catch (ParseException e) {
+         e.printStackTrace();
+      }
+      return defaultReturnValue;
+   }
+
    public static String format(float number) {
       java.text.NumberFormat format = java.text.NumberFormat.getInstance();
       return format.format(number);
