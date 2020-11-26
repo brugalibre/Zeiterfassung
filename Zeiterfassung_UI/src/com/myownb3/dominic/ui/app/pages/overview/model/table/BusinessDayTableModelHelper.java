@@ -35,9 +35,7 @@ public class BusinessDayTableModelHelper {
    private List<TableColumn<BusinessDayIncTableRowValue, String>> columnNames;
    private EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener;
 
-   public BusinessDayTableModelHelper(
-         EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener) {
-
+   public BusinessDayTableModelHelper(EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener) {
       columnNames = new ArrayList<>();
       colmnValues = new ArrayList<>();
       this.changeListener = changeListener;
@@ -63,9 +61,9 @@ public class BusinessDayTableModelHelper {
       TableColumn<BusinessDayIncTableRowValue, String> amountOfHoursTableColumn = new TableColumn<>(TextLabel.AMOUNT_OF_HOURS_LABEL);
       titleHeaders.add(amountOfHoursTableColumn);
       setNonEditableCellValueFactory(amountOfHoursTableColumn, "totalDuration");
-      TableColumn<BusinessDayIncTableRowValue, String> ticketTableColumnt = new TableColumn<>(TextLabel.TICKET);
-      titleHeaders.add(ticketTableColumnt);
-      setEditableCellValueFactory(ticketTableColumnt, "ticketNumber", changeListener);
+      TableColumn<BusinessDayIncTableRowValue, String> ticketTableColumn = new TableColumn<>(TextLabel.TICKET);
+      titleHeaders.add(ticketTableColumn);
+      setEditableCellValueFactory(ticketTableColumn, "ticketNumber", changeListener);
 
       boolean isDescriptionTitleNecessary = bussinessDay.hasIncrementWithDescription();
       if (isDescriptionTitleNecessary) {
@@ -77,11 +75,8 @@ public class BusinessDayTableModelHelper {
       int counter = bussinessDay.getAmountOfVonBisElements();
       List<TableColumn<BusinessDayIncTableRowValue, String>> beginEndHeaders = new ArrayList<>();
       for (int i = 0; i < counter; i++) {
-
          TableColumn<BusinessDayIncTableRowValue, String> beginTableColumn = new TableColumn<>(TextLabel.VON_LABEL);
-
          TableColumn<BusinessDayIncTableRowValue, String> endTableColumn = new TableColumn<>(TextLabel.BIS_LABEL);
-
          beginEndHeaders.add(beginTableColumn);
          beginEndHeaders.add(endTableColumn);
       }
@@ -117,7 +112,6 @@ public class BusinessDayTableModelHelper {
          final int i) {
       return cellData -> {
          BusinessDayIncTableRowValue businessDayIncTableCellValue = cellData.getValue();
-
          TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue.getTimeSnippet(i);
          return new SimpleStringProperty(timeSnippet4Index.getBeginOrEnd());
       };

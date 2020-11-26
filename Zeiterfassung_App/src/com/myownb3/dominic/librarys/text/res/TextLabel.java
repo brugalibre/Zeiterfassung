@@ -34,11 +34,11 @@ public class TextLabel {
    public static final String EXCEPTION_DIALOG_TITLE = "Hoppla!";
 
    // Change row
-   public static final String DELETE_ROW = "Reihe Löschen";
-   public static final String CHANGE_DESCRIPTION = "Beschreibung hinzufügen";
+   public static final String DELETE_ROW = "Reihe LÃ¶schen";
+   public static final String CHANGE_DESCRIPTION = "Beschreibung hinzufÃ¼gen";
 
    public static final String NUMMER_LABEL = "Nr.";
-   public static final String CLEAR_LABEL = "Alles löschen";
+   public static final String CLEAR_LABEL = "Alles lÃ¶schen";
    public static final String NEIN = "Nein";
    public static final String JA = "Ja";
    public static final String WARN_TITLE = "Achtung!";
@@ -49,10 +49,10 @@ public class TextLabel {
 
    // Import of recordings
    public static final String SHOW_IMPORT_DIALOG_MENU_ITEM = "Vorhandene Aufzeichnungen importieren";
-   public static final String SHOW_IMPORT_DIALOG_TITLE = ".csv Datei mit bestehenden Aufzeichnungen auswählen";
+   public static final String SHOW_IMPORT_DIALOG_TITLE = ".csv Datei mit bestehenden Aufzeichnungen ausÃ¤whlen";
    public static final String IMPORT_SUCESSFULL = "Import erfolgreich";
    public static final String IMPORT_NOT_SUCESSFULL_TITLE = "Import fehlgeschlagen!";
-   public static final String IMPORT_NOT_SUCESSFULL_MSG = "Prüfe das log sowie die zu importierende Datei";
+   public static final String IMPORT_NOT_SUCESSFULL_MSG = "PrÃ¼fe das log sowie die zu importierende Datei";
 
    // Ticket Stuff
    public static final String TICKET = "Ticket";
@@ -60,7 +60,7 @@ public class TextLabel {
    public static final String CHARGED = "Abgebucht";
    public static final String NO = "Nein";
    public static final String YES = "Ja";
-   public static final String BOOKING_RUNNING = "Abbuchen läuft, lehn zurück und geniess die Show!";
+   public static final String BOOKING_RUNNING = "Abbuchen lÃ¤uft, lehn zurÃ¼ck und geniess die Show!";
 
    public static final String SETTINGS_ROUND_SAVED = "Einstellungen wurden gespeichert";
    public static final String SETTINGS_ROUND = "Rundungseinstellungen";
@@ -74,6 +74,6 @@ public class TextLabel {
    public static final String CAPTURING_ACTIVE_SINCE = "Zeiterfassung aktiv seit:";
 
    public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS =
-         "Es sind noch Elemente von vergangenen Tagen vorhanden! Diese zuerst abbuchen bzw. löschen";
-   public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE = "Start einer neuen Aufzeichnung nicht möglich!";
+         "Es sind noch Elemente von vergangenen Tagen vorhanden! Diese zuerst abbuchen bzw. lÃ¶schen";
+   public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE = "Start einer neuen Aufzeichnung nicht mÃ¶glich!";
 }
