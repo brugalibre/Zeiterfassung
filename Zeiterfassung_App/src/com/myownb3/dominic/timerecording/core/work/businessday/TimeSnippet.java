@@ -38,13 +38,13 @@ public class TimeSnippet {
     * Trys to parse the given end time stamp (as String) and summs this value up to
     * the given begin Time Stamp
     * 
-    * @param newEndAsString
-    *        the new End-time stamp as String
+    * @param amountOfTime2Add
+    *        the amount of time to add as String
     * @throws NumberFormatException
     *         if there goes anything wrong while parsing
     */
-   public void addAdditionallyTime(String newEndAsString) {
-      float additionallyTime = NumberFormat.parseFloat(newEndAsString) - getDuration();
+   public void addAdditionallyTime(String amountOfTime2Add) {
+      float additionallyTime = NumberFormat.parseFloat(amountOfTime2Add) - getDuration();
 
       long additionallyDuration = (long) (Time.getTimeRefactorValue(TimeType.DEFAULT) * additionallyTime);
       setEndTimeStamp(new Time(getEndTimeStamp().getTime() + additionallyDuration));

@@ -15,14 +15,14 @@ Aufzeichnung exportieren:
 - Dazu einfach via Kontext-Menü 'Zeige Arbeitsstunden' auf die Übersichtsseite navigieren und von dor aus auf 'Exportieren' klicken
 - Export erfolgt auf den Desktop
 
-Leistungsarten
+Leistungsarten:
 - Per Default sind folgende Leistungsarten unterstützt:
--- 100 (Analyse)
--- 111 (Meeting)
--- 113 (Umsetzung/Dokumentation)
--- 122 (Qualtitätssicherung)
--- 141 (Allg. Verwaltungsarbeiten)
--- 164 (bezahlte Abwesenheiten)
+  - 100 (Analyse)
+  - 111 (Meeting)
+  - 113 (Umsetzung/Dokumentation)
+  - 122 (Qualtitätssicherung)
+  - 141 (Allg. Verwaltungsarbeiten)
+  - 164 (bezahlte Abwesenheiten)
 - in einem optionalen leistungsarten.properties können beliebige andere Leistungsarten definiert werden
 
 Aufzeichnung importieren:
@@ -38,8 +38,12 @@ Abbuchen der Stunden
 
 Anzeige der aufgezeichneten Stunden
 - Via Kontextmenue 'Zeige Arbeitsstunden' kann auf die Übersichtsseite navigiert werden
-- Hier kann durch einen Doppelklick auf einen  Eintrag dessen Bezeichnung, Start- und Endzeit oder die Leistungsart geändert werden
-- Nicht direkt geändert werden kann die 'Anzahl Stunden', diese setzt sich aus Start- und Endzeit zusammen
+- Hier kann durch einen Doppelklick auf einen Eintrag folgende Elemente geändert werden:
+  - Die Ticket-Nr
+  - Der Buchungstext
+  - Die Gesamtdauer des Eintrages ('Anzahl Stunden'). Wird diese geändert, passt sich die Endzeit des letzten Zeitabschnittes so an, dass die Summe aller Zeitabschnitte der gewünschten Dauer entspricht
+  - Start- und Endzeit der vorhandenen Zeitabschnitten
+  - Die Leistungsart aller Zeitabschnitten
 - Klick auf 'Abbuchen' startet das Abbuchen
 - Klick auf 'Exportieren' startet den Export auf den Desktop
 - Klick auf 'Alles Löschen' löscht die Aufzeichnung ohne Vorwahrnung

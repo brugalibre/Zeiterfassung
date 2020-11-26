@@ -60,7 +60,7 @@ public class BusinessDayTableModelHelper {
       titleHeaders.add(numberTableColumn);
       TableColumn<BusinessDayIncTableRowValue, String> amountOfHoursTableColumn = new TableColumn<>(TextLabel.AMOUNT_OF_HOURS_LABEL);
       titleHeaders.add(amountOfHoursTableColumn);
-      setNonEditableCellValueFactory(amountOfHoursTableColumn, "totalDuration");
+      setEditableCellValueFactory(amountOfHoursTableColumn, "totalDuration", changeListener);
       TableColumn<BusinessDayIncTableRowValue, String> ticketTableColumn = new TableColumn<>(TextLabel.TICKET);
       titleHeaders.add(ticketTableColumn);
       setEditableCellValueFactory(ticketTableColumn, "ticketNumber", changeListener);
@@ -141,10 +141,10 @@ public class BusinessDayTableModelHelper {
          String paramName, EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener) {
       tableColumn.setEditable(true);
       tableColumn.setOnEditCommit(changeListener);
-      Callback<TableColumn<BusinessDayIncTableRowValue, String>, TableCell<BusinessDayIncTableRowValue, String>> forTableColumn = TextFieldTableCell
+      Callback<TableColumn<BusinessDayIncTableRowValue, String>, TableCell<BusinessDayIncTableRowValue, String>> callback = TextFieldTableCell
             .forTableColumn();
-      tableColumn.setCellFactory(forTableColumn);
-      setNonEditableCellValueFactory(tableColumn, paramName);
+      tableColumn.setCellFactory(callback);
+      setNonEditableCellValueFactory(tableColumn, paramName);// For diplaying the value read only
    }
 
    private List<BusinessDayIncTableRowValue> getBusinessDayCells(BusinessDayVO businessDay) {

@@ -55,7 +55,7 @@ public class BusinessDayIncTableRowValue {
       int index = 0;
       valueTypesForIndex.put(index, ValueTypes.NONE);
       index++;
-      valueTypesForIndex.put(index, ValueTypes.NONE);
+      valueTypesForIndex.put(index, ValueTypes.AMOUNT_OF_TIME);
       index++;
       valueTypesForIndex.put(index, ValueTypes.TICKET_NR);
       index++;

@@ -334,6 +334,9 @@ public class BusinessDay {
                // ignore failures
             }
             break;
+         case AMOUNT_OF_TIME:
+            changeAmountOfTime4BDIncrement(businessDayIncremental, changedValue);
+            break;
          default:
             throw new UnsupportedOperationException(
                   "ChargeType '" + changedValue.getValueTypes() + "' not implemented!");
@@ -341,9 +344,28 @@ public class BusinessDay {
       checkForRedundancys();
    }
 
+   /*
+    * The duration of the timeSnippet within the given BusinessDayIncrement is expanded so that the new total Duration of 
+    * the BusinessDayIncrement matches with the desired duration
+    * 
+    * Therefore we first calculate the new duration of this last TimeSnipped. Then we calculate the difference between the new and current duration
+    * This difference is than added to the last TimeSnippet
+    */
+   private static void changeAmountOfTime4BDIncrement(BusinessDayIncrement businessDayIncremental, ChangedValue changedValue) {
+      float newTotalDurationOfBDInc = NumberFormat.parseFloatOrDefault(changedValue.getNewValue(), 0);
+      float currentDurationOfLastIncrement = businessDayIncremental.calcDurationOfLastIncrement();
+      float newDurationOfLastSnippet = newTotalDurationOfBDInc - businessDayIncremental.getTotalDuration() + currentDurationOfLastIncrement;
+
+      if (newDurationOfLastSnippet > 0) {
+         TimeSnippet lastTimeSnippet = businessDayIncremental.getTimeSnippets().get(businessDayIncremental.getTimeSnippets().size() - 1);
+         lastTimeSnippet.addAdditionallyTime(String.valueOf(newDurationOfLastSnippet));
+      }
+   }
+
    private void createNewIncremental() {
       currentBussinessDayIncremental = new BusinessDayIncrement(new Date());
    }
+
 
    private float getTotalDuration(TIME_TYPE type) {
       float sum = 0;
