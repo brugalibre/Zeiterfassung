@@ -30,17 +30,17 @@ public class InputFieldVerifier {
    private boolean verifyTextField(TextField textField) {
 
       String text = textField.getText().trim();
-      boolean isNumber = false;
+      boolean isValidNumber = false;
       try {
          NumberFormat formatter = NumberFormat.getInstance();
          ParsePosition pos = new ParsePosition(0);
-         formatter.parse(text, pos);
-         isNumber = text.length() == pos.getIndex();
+         Number number = formatter.parse(text, pos);
+         isValidNumber = number.doubleValue() > 0.0;
       } catch (NumberFormatException e) {
          e.printStackTrace();
       }
-      addOrRemoveErrorStyle(textField, isNumber);
-      return isNumber;
+      addOrRemoveErrorStyle(textField, isValidNumber);
+      return isValidNumber;
    }
 
    private boolean verifyComboBoxValueNotNull(ComboBox<String> comboBox) {
