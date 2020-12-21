@@ -276,7 +276,7 @@ public class TimeRecordingTray {
             throw new ApplicationLaunchException(e);
          }
       } else {
-         throw new ApplicationLaunchException("SystemTray auf aktuellem System nicht verfügbar!");
+         throw new ApplicationLaunchException("SystemTray auf aktuellem System nicht verfÃ¼gbar!");
       }
    }
 
@@ -298,15 +298,15 @@ public class TimeRecordingTray {
          @Override
          public void mouseReleased(MouseEvent e) {
             if (e.isPopupTrigger()) {
-               popupMenu.setLocation(e.getX(), e.getY());
-               popupMenu.setInvoker(popupMenu);
-               popupMenu.setVisible(true);
+               handlePopupTrigger(popupMenu, e);
             }
          }
 
          @Override
          public void mousePressed(MouseEvent e) {
-            /*no-op*/
+            if (e.isPopupTrigger()) {
+               handlePopupTrigger(popupMenu, e);
+            }
          }
 
          @Override
@@ -319,7 +319,15 @@ public class TimeRecordingTray {
          public void mouseClicked(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
                handleUserInteractionAndShowInputIfStopped();
+            } else if (e.isPopupTrigger()) {
+               handlePopupTrigger(popupMenu, e);
             }
+         }
+
+         private void handlePopupTrigger(JPopupMenu popupMenu, MouseEvent e) {
+            popupMenu.setLocation(e.getX(), e.getY());
+            popupMenu.setInvoker(popupMenu);
+            popupMenu.setVisible(true);
          }
       };
    }
