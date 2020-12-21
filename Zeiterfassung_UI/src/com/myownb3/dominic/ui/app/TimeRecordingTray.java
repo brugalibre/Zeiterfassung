@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
@@ -61,18 +62,40 @@ public class TimeRecordingTray {
       addTrayIconToSystemTray();
 
       // Create a popup menu components
+      JPopupMenueSupplier popupMenuSupplier = new JPopupMenueSupplier();
       JMenu settingsRoundMenu = createSettingsMenu();
       JMenuItem exitItem = createExitMenu();
+      JMenuItem closePopupItem = createClosePopupMenu(popupMenuSupplier);
       createShowHoursMenuItem();
       createStartTurboBucherMenuItem();
       createImportAufzeichnungMenueItem();
-      JPopupMenu popupMenu = createPopupMenu(settingsRoundMenu, exitItem);
+      JPopupMenu popupMenu = createPopupMenu(settingsRoundMenu, exitItem, closePopupItem);
+      popupMenuSupplier.setJMenuePopup(popupMenu);
 
       mainWindowPage = new MainWindowPage(this, primaryStage);
 
       trayIcon.addMouseMotionListener(getMouseMotionListener());
       trayIcon.addMouseListener(getMouseListener(popupMenu));
       HotKeyManager.INSTANCE.registerHotKey(this::handleUserInteractionAndShowInputIfStopped);
+   }
+
+   private static final class JPopupMenueSupplier implements Supplier<JPopupMenu> {
+      private JPopupMenu jPopupMenu;
+
+      @Override
+      public JPopupMenu get() {
+         return jPopupMenu;
+      }
+
+      private void setJMenuePopup(JPopupMenu popupMenu) {
+         this.jPopupMenu = popupMenu;
+      }
+   }
+
+   private JMenuItem createClosePopupMenu(Supplier<JPopupMenu> popupMenuSupplier) {
+      JMenuItem closePopupMenuItem = new JMenuItem(TextLabel.CLOSE_POPUP_MENU);
+      closePopupMenuItem.addActionListener(actionEvent -> popupMenuSupplier.get().setVisible(false));
+      return closePopupMenuItem;
    }
 
    private void createImportAufzeichnungMenueItem() {
@@ -244,7 +267,7 @@ public class TimeRecordingTray {
    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    private JMenuItem createExitMenu() {
-      JMenuItem exitItem = new JMenuItem(TextLabel.EXIT);
+      JMenuItem exitItem = new JMenuItem(TextLabel.EXIT_APP);
 
       exitItem.addActionListener(actionEvent -> {
          Platform.exit();
@@ -332,7 +355,7 @@ public class TimeRecordingTray {
       };
    }
 
-   private JPopupMenu createPopupMenu(JMenu settingsRoundMenu, JMenuItem exitItem) {
+   private JPopupMenu createPopupMenu(JMenu settingsRoundMenu, JMenuItem exitItem, JMenuItem closePopupItem) {
       JPopupMenu popupMenu = new JPopupMenu();
       popupMenu.add(settingsRoundMenu);
       popupMenu.addSeparator();
@@ -340,6 +363,7 @@ public class TimeRecordingTray {
       popupMenu.add(startTurboBucher);
       popupMenu.add(showHoursItem);
       popupMenu.addSeparator();
+      popupMenu.add(closePopupItem);
       popupMenu.add(exitItem);
       return popupMenu;
    }

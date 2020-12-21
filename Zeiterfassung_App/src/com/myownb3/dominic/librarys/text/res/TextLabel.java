@@ -14,7 +14,8 @@ public class TextLabel {
 
    public static final String SHOW_WORKING_HOURS = "Zeige Arbeitsstunden";
    public static final String APPLICATION_TITLE = "Turbo-Bucher Zeiterfassung";
-   public static final String EXIT = "Beenden";
+   public static final String EXIT_APP = "App beenden";
+   public static final String CLOSE_POPUP_MENU = "Menu schliessen";
 
    public static final String FINISH_BUTTON_TEXT = "Fertig";
    public static final String CANCEL_BUTTON_TEXT = "Abbrechen";
