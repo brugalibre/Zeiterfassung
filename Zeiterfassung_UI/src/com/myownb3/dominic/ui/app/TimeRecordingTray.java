@@ -289,11 +289,10 @@ public class TimeRecordingTray {
    }
 
    private void addTrayIconToSystemTray() {
-
-      trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(), TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
       if (SystemTray.isSupported()) {
          try {
             SystemTray tray = SystemTray.getSystemTray();
+            trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(), TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
             tray.add(trayIcon);
          } catch (AWTException e) {
             throw new ApplicationLaunchException(e);
