@@ -84,11 +84,18 @@ public class DateParser {
          String neutralizedInput = input.replace(DOUBLE_POINT, "");
          String hour = neutralizedInput.substring(0, 2);
          String min = neutralizedInput.substring(2, 4);
-         String sec = neutralizedInput.substring(4, 6);
+         String sec = "00";
+         if (containsSeconds(neutralizedInput)) {
+            sec = neutralizedInput.substring(4, 6);
+         }
          return new StringBuilder(hour + DOUBLE_POINT + min + DOUBLE_POINT + sec).toString();
       } catch (StringIndexOutOfBoundsException e) {
          throw new ParseException(input, 0);
       }
+   }
+
+   private static boolean containsSeconds(String neutralizedInput) {
+      return neutralizedInput.length() >= 6;
    }
 
    public static Date parse2Date(String readLine, String dateRepPattern) throws ParseException {
