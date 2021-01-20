@@ -7,8 +7,8 @@ Aufzeichnung stoppen:
 - Durch Klick auf den grünen Kreis unten in der Info-Leiste
 - Durch Drücken der Tastenkombination, welche im turbo-bucher.properties definiert werden kann (Property StartStopHotKey)
 - Anschliessend kann die Ticket-Nr sowie exakter start- und Endzeitpunkt eingegeben werden 
-- Eingabe der Zeit z.B. als 090000 oder 09:00:00
-- Durch die Eingabe mehrerer Ticket-Nrs, welche durch Semikollons separiert sind, wirddie gesammt Zeit auf die Anzahl einzelner Tickets aufgeteilt (z.B. für Story-Time Buchungen)
+- Eingabe der Zeit z.B. als 090000 oder 09:00:00. Bzw. 0900 oder 09:00 bei vollen Stunden
+- Story-Time Buchungen: Durch die Eingabe mehrerer Ticket-Nrs, welche durch Semikollons separiert sind, wird die gesammt Zeit auf die Anzahl einzelner Tickets aufgeteilt
 
 Aufzeichnung exportieren:
 - Sollte ein Abbuchen nicht möglich sein, kann die aktuelle Aufzeichnung exportiert werden
