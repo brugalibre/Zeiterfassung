@@ -1,3 +1,9 @@
+Initiales Set-Up
+	Eine Kopie vom turbo-bucher.properties in einem Ordner deines Vertrauens anlegen 
+  Dein AD-Benutzer & AD-PW eintragen - ansonsten kann sich Chrome nicht in Jira anmelden!!
+  Allenfalls Rundungseinstellungen und Hot-Key ergänzen
+	Starten vom .jar via .bat-File. Keine Ahnung warum das nicht mehr ohne geht (ist erst seit Umbau auf Java-FX so)
+
 Aufzeichnung starten:
 - Durch Klick auf den roten Kreis unten in der Info-Leiste
 - Durch Drücken der Tastenkombination, welche im turbo-bucher.properties definiert werden kann (Property StartStopHotKey)
@@ -36,7 +42,7 @@ Genauigkeit der Aufzeichnung:
 Abbuchen der Stunden
 - Die Stunden können direkt über den Kontextmenu-Eintrag 'Abbuchen' oder von der Übersichtsseite her abgebucht werden
 
-Anzeige der aufgezeichneten Stunden
+Anzeige und Ändern von aufgezeichneten Stunden
 - Via Kontextmenue 'Zeige Arbeitsstunden' kann auf die Übersichtsseite navigiert werden
 - Hier kann durch einen Doppelklick auf einen Eintrag folgende Elemente geändert werden:
   - Die Ticket-Nr
