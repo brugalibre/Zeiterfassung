@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
 import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
 
 /**
@@ -22,6 +24,8 @@ import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeType
  *
  */
 public class ChargeType {
+
+   private static final Logger LOG = Logger.getLogger(ChargeType.class);
 
    private ChargeType() {
       // private 
@@ -31,8 +35,7 @@ public class ChargeType {
 
    static {
       LEISTUNGSARTEN_MAP = new LinkedHashMap<>();
-      try {
-         InputStream inputStream = getInputStream();
+      try (InputStream inputStream = getInputStream()) {
          Properties chargeTypesPro = new Properties();
          chargeTypesPro.load(inputStream);
 
@@ -51,7 +54,7 @@ public class ChargeType {
                   leistungsart + " - " + chargeTypesPro.get(String.valueOf(leistungsart)));
          }
       } catch (IOException e) {
-         e.printStackTrace();
+         LOG.info("Kein 'leistungsarten.properties' vorhanden, verwende die Default-Leistungsarten");
          addDefaultLeistungsarten();
       }
    }

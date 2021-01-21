@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout
+                pattern="[%-5level] %d{dd.MM.yyyy HH:mm:ss.SSS} [%t] %c{1}: %msg%n" />
+        </Console>
+	   	<File name="fileLog" fileName="logs/zeiterfassung.log">
+			<PatternLayout pattern="[%-5level] %d{dd.MM.yyyy HH:mm:ss.SSS} [%t]
+				%c{1}: %msg%n"/>
+		</File>
+		<Async name="AsyncFileLog">
+			<AppenderRef ref="fileLog" />
+		</Async>
+    </Appenders>
+    <Loggers>
+        <Root level="info" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="AsyncFileLog" />
+        </Root>
+    </Loggers>
+</Configuration>
