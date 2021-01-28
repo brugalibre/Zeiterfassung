@@ -1,10 +1,10 @@
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.control.combobox;
 
 public class Entry {
-   private String value;
+   private ComboboxItem value;
    private long lastUsage; // defines when this entry was used the last time
 
-   public Entry(String value) {
+   public Entry(ComboboxItem value) {
       this.value = value;
    }
 
@@ -16,7 +16,7 @@ public class Entry {
       this.lastUsage = System.currentTimeMillis();
    }
 
-   public String getValue() {
+   public ComboboxItem getValue() {
       return value;
    }
 

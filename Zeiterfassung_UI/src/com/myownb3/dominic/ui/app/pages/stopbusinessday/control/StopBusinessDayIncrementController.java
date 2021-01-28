@@ -11,8 +11,8 @@ import java.util.ResourceBundle;
 
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.ui.app.pages.combobox.TicketComboboxItem;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
-import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.combobox.ComboBoxHelper;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.model.StopBusinessDayIncrementPageModel;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.model.resolver.StopBusinessDayIncrementPageModelResolver;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
@@ -26,8 +26,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 
 /**
  * @author Dominic
@@ -40,12 +43,15 @@ public class StopBusinessDayIncrementController
    @FXML
    private Label ticketNumberLabel;
    @FXML
-   private ComboBox<String> ticketNumberComboBox;
+   private ComboBox<TicketComboboxItem> ticketNumberComboBox;
+
+   @FXML
+   private TextField ticketNumberField;
 
    @FXML
    private Label descriptionLabel;
    @FXML
-   private ComboBox<String> descriptionComboBox;
+   private TextField descriptionTextField;
 
    @FXML
    private Label beginLabel;
@@ -74,22 +80,32 @@ public class StopBusinessDayIncrementController
    @FXML
    private Button abortButton;
 
-   private ComboBoxHelper ticketNumberComboBoxHelper;
-   private ComboBoxHelper descriptionComboBoxHelper;
    private MainWindowController mainWindowController;
 
    @Override
    public void initialize(URL url, ResourceBundle resourceBundle) {
       initialize(new StopBusinessDayIncrementPage(this));
       kindOfServiceComboBox.getSelectionModel().selectFirst();
-      ticketNumberComboBoxHelper = new ComboBoxHelper(5, ticketNumberComboBox);
-      descriptionComboBoxHelper = new ComboBoxHelper(5, descriptionComboBox);
+      ticketNumberComboBox.setCellFactory(createCellFactory());
    }
 
-   @Override
-   public void show() {
-      super.show();
-      ticketNumberComboBoxHelper.setFocusToFirstElement();
+   private static Callback<ListView<TicketComboboxItem>, ListCell<TicketComboboxItem>> createCellFactory() {
+      return listView -> new ListCell<TicketComboboxItem>() {
+         @Override
+         protected void updateItem(TicketComboboxItem item, boolean isEmpty) {
+            super.updateItem(item, isEmpty);
+            if (item == null || isEmpty) {
+               setGraphic(null);
+            } else {
+               setText(item.toString());
+               if (item.getTicket().isCurrentUserAssigned()) {
+                  getStyleClass().add(Styles.CURRENT_USER_HAS_TICKET_ASSIGNED);
+               } else {
+                  getStyleClass().remove(Styles.CURRENT_USER_HAS_TICKET_ASSIGNED);
+               }
+            }
+         }
+      };
    }
 
    @Override
@@ -107,6 +123,14 @@ public class StopBusinessDayIncrementController
          abort();
       } else if (actionEvent.getSource() == cancelButton) {
          cancel();
+      } else if (actionEvent.getSource() == ticketNumberComboBox) {
+         setSelectedTicket();
+      }
+   }
+
+   private void setSelectedTicket() {
+      if (nonNull(ticketNumberComboBox.getSelectionModel().getSelectedItem())) {
+         ticketNumberField.setText(ticketNumberComboBox.getSelectionModel().getSelectedItem().getKey());
       }
    }
 
@@ -135,18 +159,10 @@ public class StopBusinessDayIncrementController
    private void submit() {
       if (isInputValid()) {
          getDataModel().addIncrement2BusinessDay(getSelectedLeistungsart());
-         updateCombobo();
          dispose(FinishAction.FINISH);
       } else {
          Toolkit.getDefaultToolkit().beep();
       }
-   }
-
-   private void updateCombobo() {
-      String selectedItem = ticketNumberComboBox.getSelectionModel().getSelectedItem();
-      ticketNumberComboBoxHelper.addNewItem(selectedItem);
-      String selectedDescItem = descriptionComboBox.getSelectionModel().getSelectedItem();
-      descriptionComboBoxHelper.addNewItem(selectedDescItem);
    }
 
    private int getSelectedLeistungsart() {
@@ -154,8 +170,7 @@ public class StopBusinessDayIncrementController
       try {
          return ChargeType.getLeistungsartForRep(selectedItem);
       } catch (InvalidChargeTypeRepresentationException e) {
-         // This should never happen here, therefore we throw a RuntimeException
-         e.printStackTrace();
+         // This should never happen here, therefore we throw an Exception
          throw new IllegalStateException(e);
       }
    }
@@ -167,8 +182,9 @@ public class StopBusinessDayIncrementController
 
    @Override
    protected void setBinding(StopBusinessDayIncrementPageModel pageModel) {
-      descriptionComboBox.valueProperty().bindBidirectional(pageModel.getDescriptionProperty());
-      ticketNumberComboBox.valueProperty().bindBidirectional(pageModel.getTicketNoProperty());
+      descriptionTextField.textProperty().bindBidirectional(pageModel.getDescriptionProperty());
+      ticketNumberField.textProperty().bindBidirectional(pageModel.getTicketNoProperty());
+      ticketNumberComboBox.itemsProperty().bindBidirectional(pageModel.getTicketComboboxItemsProperty());
 
       beginTextField.textProperty().bindBidirectional(pageModel.getBeginTextFieldProperty());
       endTextField.textProperty().bindBidirectional(pageModel.getEndTextFieldProperty());

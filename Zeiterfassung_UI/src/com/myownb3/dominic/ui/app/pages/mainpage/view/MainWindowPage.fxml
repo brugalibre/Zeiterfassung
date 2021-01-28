@@ -3,9 +3,9 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController">
+<BorderPane xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController">
    <center>
-      <StackPane id="mainPanel" fx:id="mainPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <StackPane id="mainPanel" fx:id="mainPanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
          <children>
             <fx:include fx:id="overviewPanel" source="../../overview/view/OverviewPage.fxml" />
             <fx:include fx:id="stopBusinessDayIncrementPanel" source="../../stopbusinessday/view/StopBusinessDayIncrementPage.fxml" />

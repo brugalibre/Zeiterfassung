@@ -14,6 +14,7 @@ import com.myownb3.dominic.ui.app.pages.mainpage.model.MainWindowPageModel;
 import com.myownb3.dominic.ui.app.pages.overview.control.OverviewController;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.FinishAction;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController;
+import com.myownb3.dominic.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.dialog.FileImportDialogHelper;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
@@ -57,6 +58,15 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
       stage.getIcons().add(PictureLibrary.getClockImageIcon());
       fileImportHelper = new FileImportDialogHelper();
+   }
+
+   /**
+    * Refreshes the {@link StopBusinessDayIncrementPage} if the content is currently visible
+    */
+   public void refreshStopBusinessDayPage() {
+      if (stopBusinessDayIncrementPanel.isVisible()) {
+         stopBusinessDayIncrementPanelController.refresh(true);
+      }
    }
 
    public void showInputMask(Stage stage) {
@@ -107,6 +117,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       stage.setMinWidth(region.getPrefWidth());
       stage.setMinHeight(region.getPrefHeight());
       stage.setResizable(false);
+      stage.sizeToScene();
    }
 
    /**

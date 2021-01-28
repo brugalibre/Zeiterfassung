@@ -62,6 +62,10 @@ public class TextLabel {
    public static final String NO = "Nein";
    public static final String YES = "Ja";
    public static final String BOOKING_RUNNING = "Abbuchen lÃ¤uft, lehn zurÃ¼ck und geniess die Show!";
+   public static final String REFRESH_TICKET_BACKLOG = "Sprint-Tickets aktualisieren";
+   public static final String REFRESH_TICKET_BACKLOG_DONE = "Sprint-Tickets aktualisiert";
+   public static final String REFRESH_TICKET_BACKLOG_NOT_POSSIBLE = "Aktualisierung der Sprint-Tickets nicht möglich; Konfiguration unvollständig";
+   public static final String REFRESH_TICKET_BACKLOG_FAILED = "Fehler bei der Aktualisierung der Sprint-Ticket";
 
    public static final String SETTINGS_ROUND_SAVED = "Einstellungen wurden gespeichert";
    public static final String SETTINGS_ROUND = "Rundungseinstellungen";

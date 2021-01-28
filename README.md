@@ -1,8 +1,9 @@
 Initiales Set-Up
-	Eine Kopie vom turbo-bucher.properties in einem Ordner deines Vertrauens anlegen 
-  Dein AD-Benutzer & AD-PW eintragen - ansonsten kann sich Chrome nicht in Jira anmelden!!
+  Eine Kopie vom turbo-bucher.properties in einem Ordner deines Vertrauens anlegen 
+  Dein AD-Benutzer & AD-PW eintragen - ansonsten kann sich Chrome nicht in Jira anmelden und somit können auch die aktuellen Sprint-Tickets  nicht ermittelt werden!
   Allenfalls Rundungseinstellungen und Hot-Key ergänzen
-	Starten vom .jar via .bat-File. Keine Ahnung warum das nicht mehr ohne geht (ist erst seit Umbau auf Java-FX so)
+  Optional kann mit dem key 'boardName' ein Scrum-Board angegeben werden. Anhand diesem wird versucht die Tickets des aktuellen Sprints zu ermitteln um beim Stoppen einer Aufzeichnung davon auswählen zu können
+  tarten vom .jar via .bat-File. Keine Ahnung warum das nicht mehr ohne geht (ist erst seit Umbau auf Java-FX so)
 
 Aufzeichnung starten:
 - Durch Klick auf den roten Kreis unten in der Info-Leiste
@@ -13,8 +14,16 @@ Aufzeichnung stoppen:
 - Durch Klick auf den grünen Kreis unten in der Info-Leiste
 - Durch Drücken der Tastenkombination, welche im turbo-bucher.properties definiert werden kann (Property StartStopHotKey)
 - Anschliessend kann die Ticket-Nr sowie exakter start- und Endzeitpunkt eingegeben werden 
+- Wenn im turbo-bucher.properties der Name des Scrum-Boards angegeben werden, kann in der Drop-Down Liste aus den Tickets im aktuellen Sprint ausgewählt werden.
+Zusätzlich sind drei Standardtickets drin: INTA-147, INTA-151 & INTA-155
 - Eingabe der Zeit z.B. als 090000 oder 09:00:00. Bzw. 0900 oder 09:00 bei vollen Stunden
 - Story-Time Buchungen: Durch die Eingabe mehrerer Ticket-Nrs, welche durch Semikollons separiert sind, wird die gesammt Zeit auf die Anzahl einzelner Tickets aufgeteilt
+
+Tickets des aktuellen Sprints
+- Damit beim Stoppen der Aufzeichnung aus den Tickets im aktuellen Sprint ausgewählt werden kann, bedarf es einem Eintrag im Turbo-bucher.properties
+- z.B. boardName=Contract Health um für das Board 'Contract Health' die zum Start-Zeitpunkt der App aktuellen Tickets. Der Boardname ist so wie er in Jira angezeigt wird
+- Beim Stop einer Aufzeichnung kann aus der Dropdown-Liste rechts vom Eingabe Feld ein Ticket ausgewählt werden. Tickets die dir zugewiesen sind, werden fett dargestellt
+- Diese Liste mit Tickets kann aktualisiert werden, indem mittels der rechten Maustaste auf den roten/grünen Kreis das Kontext-Menu geöffnet und dort auf 'Sprint-Tickets aktualisieren geklickt wird.
 
 Aufzeichnung exportieren:
 - Sollte ein Abbuchen nicht möglich sein, kann die aktuelle Aufzeichnung exportiert werden
