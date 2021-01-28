@@ -30,6 +30,9 @@ public class InputFieldVerifier {
    private boolean verifyTextField(TextField textField) {
 
       String text = textField.getText().trim();
+      if (text.isEmpty()) {
+         return false;
+      }
       boolean isValidNumber = false;
       try {
          NumberFormat formatter = NumberFormat.getInstance();
