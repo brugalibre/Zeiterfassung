@@ -16,7 +16,7 @@ public class ThreadFactory {
    private ExecutorService executorService;
 
    private ThreadFactory() {
-      executorService = Executors.newSingleThreadExecutor();
+      executorService = Executors.newCachedThreadPool();
    }
 
    /**

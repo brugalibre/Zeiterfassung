@@ -1,0 +1,44 @@
+package com.myownb3.dominic.timerecording.ticketbacklog.data;
+
+
+/**
+ * Helps pasring the project numer and project description from the jira custom field 'customfield_10060'
+ * 
+ * @author Dominic
+ *
+ */
+public class ProjektnummerParser {
+
+   private static final String DELIMITER = " ";
+
+   /**
+    * Retrieves the project numer from the String '400000 Syrius Wartung Standard'
+    * Always assuming that the value of custom field 'customfield_10060' contains the value with this pattern
+    * 
+    * @param projektNrAndBez
+    *        the input
+    * @return the project number extracted from the input
+    */
+   public String getProjektNr(String projektNrAndBez) {
+      if (projektNrAndBez.indexOf(DELIMITER) < 0) {
+         return "";
+      }
+      return projektNrAndBez.substring(0, projektNrAndBez.indexOf(DELIMITER));
+   }
+
+   /**
+    * Retrieves the project description from the String '400000 Syrius Wartung Standard'
+    * Always assuming that the value of custom field 'customfield_10060' contains the value with this pattern
+    * 
+    * @param projektNrAndBez
+    *        the input
+    * @return the project description extracted from the input
+    */
+   public String getProjektDesc(String projektNrAndBez) {
+      if (projektNrAndBez.indexOf(DELIMITER) < 0) {
+         return "";
+      }
+      return projektNrAndBez.substring(projektNrAndBez.indexOf(DELIMITER) + 1);
+   }
+
+}
