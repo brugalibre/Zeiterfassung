@@ -7,11 +7,10 @@ import static com.myownb3.dominic.timerecording.settings.common.Const.TURBO_BUCH
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import com.myownb3.dominic.timerecording.settings.round.exception.RounderInitException;
+import com.myownb3.dominic.timerecording.settings.Settings;
 import com.myownb3.dominic.timerecording.settings.round.exception.RounderStoreValueException;
 
 /**
@@ -35,18 +34,7 @@ public class TimeRounder {
    }
 
    private RoundMode evalRoundMode() {
-      try (InputStream resourceStream = new FileInputStream(TURBO_BUCHER_PROPERTIES)) {
-         return evalRoundModeFromProperties(resourceStream);
-      } catch (IOException e) {
-         e.printStackTrace();
-         throw new RounderInitException(e);
-      }
-   }
-
-   private RoundMode evalRoundModeFromProperties(InputStream resourceStream) throws IOException {
-      Properties prop = new Properties();
-      prop.load(resourceStream);
-      String roundModeAsString = (String) prop.get(RoundMode.PROPERTY_KEY);
+      String roundModeAsString = Settings.INSTANCE.getSettingsValue(RoundMode.PROPERTY_KEY);
       return RoundMode.getRoundMode(roundModeAsString);
    }
 
