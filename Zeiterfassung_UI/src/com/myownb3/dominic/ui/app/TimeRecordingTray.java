@@ -36,6 +36,8 @@ import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.workerfactory.ThreadFactory;
 import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
+import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
+import com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler.UpdateStatus;
 import com.myownb3.dominic.ui.app.pages.mainpage.view.MainWindowPage;
 import com.myownb3.dominic.ui.app.settings.hotkey.HotKeyManager;
 import com.myownb3.dominic.ui.util.ExceptionUtil;
@@ -53,6 +55,7 @@ public class TimeRecordingTray {
    private JMenuItem showHoursItem;
    private JMenuItem startTurboBucher;
    private JMenuItem showImportDialogItem;
+   private JMenuItem refreshTicketBacklogMenuItem;
    private MainWindowPage mainWindowPage;
 
    public void registerSystemtray(Stage primaryStage) {
@@ -66,6 +69,7 @@ public class TimeRecordingTray {
       JMenu settingsRoundMenu = createSettingsMenu();
       JMenuItem exitItem = createExitMenu();
       JMenuItem closePopupItem = createClosePopupMenu(popupMenuSupplier);
+      createRefreshTicketBacklogMenuItem();
       createShowHoursMenuItem();
       createStartTurboBucherMenuItem();
       createImportAufzeichnungMenueItem();
@@ -77,6 +81,34 @@ public class TimeRecordingTray {
       trayIcon.addMouseMotionListener(getMouseMotionListener());
       trayIcon.addMouseListener(getMouseListener(popupMenu));
       HotKeyManager.INSTANCE.registerHotKey(this::handleUserInteractionAndShowInputIfStopped);
+      initTicketBacklog();
+   }
+
+   private void initTicketBacklog() {
+      refreshTicketBacklogMenuItem.setEnabled(false);
+      TicketBacklogSPI.getTicketBacklog().initTicketBacklog(this::handleTicketBacklogUpdated);
+   }
+
+   private void handleTicketBacklogUpdated(UpdateStatus status) {
+      Platform.runLater(() -> {
+         mainWindowPage.refreshStopBusinessDayPage();
+         refreshTicketBacklogMenuItem.setEnabled(true);
+         displayMessage(status);
+      });
+   }
+
+   private void displayMessage(UpdateStatus status) {
+      switch (status) {
+         case SUCCESS:
+            displayMessage(null, TextLabel.REFRESH_TICKET_BACKLOG_DONE, MessageType.INFORMATION);
+            break;
+         case NOT_CONFIGURED:
+            displayMessage(null, TextLabel.REFRESH_TICKET_BACKLOG_NOT_POSSIBLE, MessageType.WARNING);
+            break;
+         case FAIL:
+            displayMessage(null, TextLabel.REFRESH_TICKET_BACKLOG_FAILED, MessageType.ERROR);
+            break;
+      }
    }
 
    private static final class JPopupMenueSupplier implements Supplier<JPopupMenu> {
@@ -282,6 +314,11 @@ public class TimeRecordingTray {
       startTurboBucher.setEnabled(false);
    }
 
+   private void createRefreshTicketBacklogMenuItem() {
+      refreshTicketBacklogMenuItem = new JMenuItem(TextLabel.REFRESH_TICKET_BACKLOG);
+      refreshTicketBacklogMenuItem.addActionListener(actionEvent -> initTicketBacklog());
+   }
+
    private void createShowHoursMenuItem() {
       showHoursItem = new JMenuItem(TextLabel.SHOW_WORKING_HOURS);
       showHoursItem.addActionListener(actionEvent -> showOverviewView());
@@ -357,6 +394,8 @@ public class TimeRecordingTray {
    private JPopupMenu createPopupMenu(JMenu settingsRoundMenu, JMenuItem exitItem, JMenuItem closePopupItem) {
       JPopupMenu popupMenu = new JPopupMenu();
       popupMenu.add(settingsRoundMenu);
+      popupMenu.addSeparator();
+      popupMenu.add(refreshTicketBacklogMenuItem);
       popupMenu.addSeparator();
       popupMenu.add(showImportDialogItem);
       popupMenu.add(startTurboBucher);

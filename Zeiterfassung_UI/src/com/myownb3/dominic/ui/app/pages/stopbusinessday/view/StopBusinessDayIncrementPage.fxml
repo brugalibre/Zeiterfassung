@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="310.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController">
+<AnchorPane prefHeight="290.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.myownb3.dominic.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController">
    <children>
       <HBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -31,8 +31,13 @@
             </VBox>
             <VBox prefWidth="170.0" spacing="5.0">
                <children>
-                  <ComboBox fx:id="ticketNumberComboBox" editable="true" prefHeight="30.0" style="-fx-font-weight: normal;" />
-                  <ComboBox fx:id="descriptionComboBox" editable="true" prefHeight="30.0" style="-fx-font-weight: normal;" />
+                  <HBox prefHeight="30.0" prefWidth="170.0">
+                     <children>
+                        <TextField fx:id="ticketNumberField" prefHeight="30.0" prefWidth="143.0" style="-fx-font-weight: normal;" />
+                        <ComboBox fx:id="ticketNumberComboBox" maxWidth="5.0" onAction="#onAction" prefHeight="30.0" prefWidth="5.0" style="-fx-font-weight: normal;" />
+                     </children>
+                  </HBox>
+                  <TextField fx:id="descriptionTextField" prefHeight="30.0" />
                   <TextField id="beginTextField" fx:id="beginTextField" prefHeight="30.0" />
                   <TextField id="endTextField" fx:id="endTextField" prefHeight="30.0" />
                   <TextField id="amountOfHoursTextField" fx:id="amountOfHoursTextField" onAction="#onAction" prefHeight="30.0" />

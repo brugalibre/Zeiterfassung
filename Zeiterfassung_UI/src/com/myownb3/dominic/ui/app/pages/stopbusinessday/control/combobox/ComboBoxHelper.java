@@ -19,10 +19,10 @@ public class ComboBoxHelper {
    private int maxAmountOfEntries;
    // Map to store the actual value to its entry (which has information about
    // usage) since the ComboBoxes works with Strings!
-   private Map<String, Entry> value2EntryMap;
-   private ComboBox<String> comboBox;
+   private Map<ComboboxItem, Entry> value2EntryMap;
+   private ComboBox<ComboboxItem> comboBox;
 
-   public ComboBoxHelper(int amountOfEntries, ComboBox<String> comboBox) {
+   public ComboBoxHelper(int amountOfEntries, ComboBox<ComboboxItem> comboBox) {
       super();
 
       value2EntryMap = new HashMap<>();
@@ -35,14 +35,14 @@ public class ComboBoxHelper {
     * Adds the given String to this ComboBox. If there is any value which LRU value
     * is below the threshold, this value is removed
     * 
-    * @param itemAsString
+    * @param item
     *        - the new value to add
     */
-   public void addNewItem(String itemAsString) {
-      if (StringUtil.isEmptyOrNull(itemAsString)) {
+   public void addNewItem(ComboboxItem comboItem) {
+      if (StringUtil.isEmptyOrNull(comboItem.getValue())) {
          return;
       }
-      Entry item = new Entry(itemAsString);
+      Entry item = new Entry(comboItem);
       // Item does not exist at the moment --> add it, and set the amount of
       // calls to 1
       if (!listContain(item)) {
@@ -59,7 +59,7 @@ public class ComboBoxHelper {
       cleanUp();
    }
 
-   private List<String> getSortedEntries() {
+   private List<ComboboxItem> getSortedEntries() {
       return getElementsAsList().stream()
             .sorted(Comparator.comparing(Entry::getLastUsage).reversed())
             .map(Entry::getValue)
@@ -86,7 +86,7 @@ public class ComboBoxHelper {
    private Entry getItemAt(int i) {
 
       for (int j = 0; j < getItemSize(); j++) {
-         String entryValue = comboBox.getItems().get(j);
+         ComboboxItem entryValue = comboBox.getItems().get(j);
          if (i == j) {
             return value2EntryMap.get(entryValue);
          }
@@ -133,7 +133,7 @@ public class ComboBoxHelper {
             .collect(Collectors.toList());
    }
 
-   private Entry getEntryValue(String value) {
+   private Entry getEntryValue(ComboboxItem value) {
       return value2EntryMap.get(value);
    }
 
@@ -147,7 +147,7 @@ public class ComboBoxHelper {
    }
 
    private void addItem(Entry item) {
-      ObservableList<String> items = comboBox.getItems();
+      ObservableList<ComboboxItem> items = comboBox.getItems();
       if (items.isEmpty()) {
          items.add(item.getValue());
          value2EntryMap.put(item.getValue(), item);

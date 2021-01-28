@@ -77,6 +77,17 @@ public class Ticket {
       return isCurrentUserAssigned;
    }
 
+   /**
+    * Returns a string starting with the ticket-nr and following by ('description-of-this-ticket')
+    * 
+    * @param ticket
+    *        the ticket
+    * @return a representation
+    */
+   public String getTicketRep() {
+      return this.getNr() + " (" + this.getTitle() + ")";
+   }
+
    @Override
    public String toString() {
       return "Ticket-Nr = " + nr + " (" + title + "), projekt-nr = " + projektNr + " (" + projektDesc + ")";

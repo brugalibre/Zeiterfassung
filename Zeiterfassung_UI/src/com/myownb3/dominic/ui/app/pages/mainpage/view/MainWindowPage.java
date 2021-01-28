@@ -8,6 +8,7 @@ import java.util.Optional;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.app.pages.mainpage.model.MainWindowPageModel;
+import com.myownb3.dominic.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
 import com.myownb3.dominic.ui.core.view.impl.AbstractFXPage;
 
 import javafx.fxml.FXMLLoader;
@@ -41,6 +42,15 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
 
    public void showInputMask() {
       getMainWindowPageController().showInputMask(getStage());
+   }
+
+   /**
+    * Refreshes the {@link StopBusinessDayIncrementPage} if the content is currently visible
+    */
+   public void refreshStopBusinessDayPage() {
+      if (getStage().isShowing()) {
+         getMainWindowPageController().refreshStopBusinessDayPage();
+      }
    }
 
    private MainWindowController getMainWindowPageController() {

@@ -52,6 +52,10 @@
     -fx-faint-focus-color: #FF202020 ;
 }
 
+.currentUserHasTicketAssigned {
+    -fx-font-weight: bold;
+}
+
 .invalidLabel:focused {
     -fx-border-color: red;
     -fx-background-radius:2;

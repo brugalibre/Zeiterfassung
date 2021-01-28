@@ -6,6 +6,8 @@ package com.myownb3.dominic.ui.app.pages.stopbusinessday.model;
 import static com.myownb3.dominic.ui.app.pages.stopbusinessday.util.StopBusinessDayUtil.areMultipleTicketsEntered;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.callbackhandler.TimeSnippedChangedCallbackHandler;
@@ -17,6 +19,10 @@ import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrem
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
+import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.TicketComparator;
+import com.myownb3.dominic.ui.app.pages.combobox.TicketComboboxItem;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
 import javafx.beans.property.Property;
@@ -41,6 +47,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    private StringProperty endTextFieldProperty;
    private StringProperty amountOfHoursTextFieldProperty;
    private Property<ObservableList<String>> kindOfServiceTextFieldProperty;
+   private Property<ObservableList<TicketComboboxItem>> ticketComboboxItemsProperty;
 
    private StringProperty ticketNoLabelProperty;
    private StringProperty descriptionLabelProperty;
@@ -84,6 +91,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       beginTextFieldProperty = new SimpleStringProperty(
             timeSnippet != null ? timeSnippet.getBeginTimeStampRep() : "");
       endTextFieldProperty = new SimpleStringProperty(timeSnippet != null ? timeSnippet.getEndTimeStampRep() : "");
+      ticketComboboxItemsProperty = new SimpleListProperty<>(getTicketComboboxItems());
    }
 
    /**
@@ -144,18 +152,31 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
       inPageModel.abortButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
       inPageModel.cancelButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
-
-      inPageModel.getAmountOfHoursTextFieldProperty().set(businessDayIncrementVO.getTotalDurationRep());
       inPageModel.getTicketNoProperty().setValue(businessDayIncrementVO.getTicketNumber());
       inPageModel.getDescriptionProperty().setValue(businessDayIncrementVO.getDescription());
 
+      inPageModel.getAmountOfHoursTextFieldProperty().set(businessDayIncrementVO.getTotalDurationRep());
+
       inPageModel.getKindOfServiceTextFieldProperty()
             .setValue(FXCollections.observableArrayList(ChargeType.getLeistungsartenRepresentation()));
+      inPageModel.getTicketComboboxItemsProperty().setValue(getTicketComboboxItems());
 
       inPageModel.timeSnippet.setCallbackHandler(inPageModel);
       inPageModel.getBeginTextFieldProperty().set(inPageModel.timeSnippet.getBeginTimeStampRep());
       inPageModel.getEndTextFieldProperty().set(inPageModel.timeSnippet.getEndTimeStampRep());
       return inPageModel;
+   }
+
+   private static ObservableList<TicketComboboxItem> getTicketComboboxItems() {
+      List<TicketComboboxItem> ticketComboboxItems = getTicketsAndMap2ComboboxItems(TicketBacklogSPI.getTicketBacklog().getTickets());
+      return FXCollections.observableList(ticketComboboxItems);
+   }
+
+   private static List<TicketComboboxItem> getTicketsAndMap2ComboboxItems(List<Ticket> tickets) {
+      return tickets.stream()
+            .sorted(new TicketComparator())
+            .map(TicketComboboxItem::of)
+            .collect(Collectors.toList());
    }
 
    @Override
@@ -287,5 +308,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    public ObservableValue<Tooltip> getCancelButtonToolTipText() {
       return cancelButtonToolTipText;
+   }
+
+   public Property<ObservableList<TicketComboboxItem>> getTicketComboboxItemsProperty() {
+      return ticketComboboxItemsProperty;
    }
 }
