@@ -56,6 +56,11 @@
     -fx-font-weight: bold;
 }
 
+.wordMatch {
+	-fx-font-weight: bold; 
+	-fx-fill: #dcab09;
+}
+
 .invalidLabel:focused {
     -fx-border-color: red;
     -fx-background-radius:2;

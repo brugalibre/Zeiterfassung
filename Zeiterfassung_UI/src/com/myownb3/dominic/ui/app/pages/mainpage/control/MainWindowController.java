@@ -165,7 +165,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 
    @Override
    protected void setBinding(MainWindowPageModel pageVO) {
-      // Nothing to do since this Page only contains to sub pages
+      // Nothing to do since this Page only contains two sub pages
    }
 
    @SuppressWarnings("unchecked")

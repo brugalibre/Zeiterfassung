@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.myownb3.dominic.ui.app.inputfield.AutoCompleteTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -33,7 +34,7 @@
                <children>
                   <HBox prefHeight="30.0" prefWidth="170.0">
                      <children>
-                        <TextField fx:id="ticketNumberField" prefHeight="30.0" prefWidth="143.0" style="-fx-font-weight: normal;" />
+                        <AutoCompleteTextField fx:id="ticketNumberField" prefHeight="30.0" prefWidth="143.0" style="-fx-font-weight: normal;" />
                         <ComboBox fx:id="ticketNumberComboBox" maxWidth="5.0" onAction="#onAction" prefHeight="30.0" prefWidth="5.0" style="-fx-font-weight: normal;" />
                      </children>
                   </HBox>

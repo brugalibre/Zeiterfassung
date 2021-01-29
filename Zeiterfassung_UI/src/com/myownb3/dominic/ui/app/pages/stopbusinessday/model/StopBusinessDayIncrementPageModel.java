@@ -19,6 +19,7 @@ import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrem
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
+import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklog;
 import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.TicketComparator;
@@ -48,6 +49,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    private StringProperty amountOfHoursTextFieldProperty;
    private Property<ObservableList<String>> kindOfServiceTextFieldProperty;
    private Property<ObservableList<TicketComboboxItem>> ticketComboboxItemsProperty;
+   private Property<ObservableList<Ticket>> ticketsProperty;
 
    private StringProperty ticketNoLabelProperty;
    private StringProperty descriptionLabelProperty;
@@ -92,6 +94,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
             timeSnippet != null ? timeSnippet.getBeginTimeStampRep() : "");
       endTextFieldProperty = new SimpleStringProperty(timeSnippet != null ? timeSnippet.getEndTimeStampRep() : "");
       ticketComboboxItemsProperty = new SimpleListProperty<>(getTicketComboboxItems());
+      ticketsProperty = new SimpleListProperty<>(getTickets());
    }
 
    /**
@@ -160,6 +163,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       inPageModel.getKindOfServiceTextFieldProperty()
             .setValue(FXCollections.observableArrayList(ChargeType.getLeistungsartenRepresentation()));
       inPageModel.getTicketComboboxItemsProperty().setValue(getTicketComboboxItems());
+      inPageModel.getTicketsProperty().setValue(getTickets());
 
       inPageModel.timeSnippet.setCallbackHandler(inPageModel);
       inPageModel.getBeginTextFieldProperty().set(inPageModel.timeSnippet.getBeginTimeStampRep());
@@ -170,6 +174,10 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    private static ObservableList<TicketComboboxItem> getTicketComboboxItems() {
       List<TicketComboboxItem> ticketComboboxItems = getTicketsAndMap2ComboboxItems(TicketBacklogSPI.getTicketBacklog().getTickets());
       return FXCollections.observableList(ticketComboboxItems);
+   }
+
+   private static ObservableList<Ticket> getTickets() {
+      return FXCollections.observableList(TicketBacklogSPI.getTicketBacklog().getTickets());
    }
 
    private static List<TicketComboboxItem> getTicketsAndMap2ComboboxItems(List<Ticket> tickets) {
@@ -312,5 +320,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    public Property<ObservableList<TicketComboboxItem>> getTicketComboboxItemsProperty() {
       return ticketComboboxItemsProperty;
+   }
+
+   public Property<ObservableList<Ticket>> getTicketsProperty() {
+      return ticketsProperty;
    }
 }

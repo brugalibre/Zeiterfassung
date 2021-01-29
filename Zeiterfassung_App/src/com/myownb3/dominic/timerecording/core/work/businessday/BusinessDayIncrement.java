@@ -37,7 +37,7 @@ public class BusinessDayIncrement {
 
    public BusinessDayIncrement(Date date) {
       this.date = date;
-      ticketNumber = "SYRIUS-";
+      ticketNumber = "SYRIUS";
    }
 
    /**
