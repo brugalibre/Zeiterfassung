@@ -77,27 +77,23 @@ public class DateParser {
     * already in that form or not
     * 
     * @param input
-    *        the input to parse, e.q. 121500 or 12:15:00
+    *        the input to parse, e.q. 1215 or 12:15 resp. 700 or 7:00 or 0700
     * @return a converted input, always with ':'
     * @throws ParseException
     */
    public static String convertInput(String input) throws ParseException {
       try {
          String neutralizedInput = input.replace(DOUBLE_POINT, "");
+         if (neutralizedInput.length() == 3) {
+            neutralizedInput = "0" + neutralizedInput;
+         }
          String hour = neutralizedInput.substring(0, 2);
          String min = neutralizedInput.substring(2, 4);
          String sec = "00";
-         if (containsSeconds(neutralizedInput)) {
-            sec = neutralizedInput.substring(4, 6);
-         }
          return new StringBuilder(hour + DOUBLE_POINT + min + DOUBLE_POINT + sec).toString();
       } catch (StringIndexOutOfBoundsException e) {
          throw new ParseException(input, 0);
       }
-   }
-
-   private static boolean containsSeconds(String neutralizedInput) {
-      return neutralizedInput.length() >= 6;
    }
 
    public static Date parse2Date(String readLine, String dateRepPattern) throws ParseException {
