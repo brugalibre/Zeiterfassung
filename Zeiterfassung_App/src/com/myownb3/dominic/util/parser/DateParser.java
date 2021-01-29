@@ -16,6 +16,8 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
  */
 public class DateParser {
 
+   private static final String DATE_PATTERN = "HH:mm";
+
    private DateParser() {
       // private 
    }
@@ -30,7 +32,7 @@ public class DateParser {
     */
    public static String parse2String(Time time) {
       SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-      df.applyPattern("HH:mm:ss");
+      df.applyPattern(DATE_PATTERN);
       Date date = new Date(time.getTime());
       return df.format(date);
    }
