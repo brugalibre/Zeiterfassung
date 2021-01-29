@@ -2,32 +2,34 @@ package com.myownb3.dominic.util.parser;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.text.ParseException;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 class DateParserTest {
 
    @Test
-   void testConvertInputInvalidInput() {
+   void testConvertInputWithNoLeadingZero() throws ParseException {
       // Given
-      String input = "00:0";
+      String input1 = "700";
+      String expectedConvertedInput = "07:00:00";
+      String input2 = "7:00";
 
       // When
-      Executable exec = () -> DateParser.convertInput(input);
+      String actualConvertedInput1 = DateParser.convertInput(input1);
+      String actualConvertedInput2 = DateParser.convertInput(input2);
 
       // Then
-      assertThrows(ParseException.class, exec);
+      assertThat(actualConvertedInput1, is(expectedConvertedInput));
+      assertThat(actualConvertedInput2, is(expectedConvertedInput));
    }
 
    @Test
    void testConvertInputWithDoublePoints() throws ParseException {
       // Given
-      String input = "15:20:11";
-      String expectedConvertedInput = "15:20:11";
+      String input = "15:20:00";
+      String expectedConvertedInput = "15:20:00";
 
       // When
       String actualConvertedInput = DateParser.convertInput(input);
@@ -52,8 +54,8 @@ class DateParserTest {
    @Test
    void testConvertInputWithoutDoublePoints() throws ParseException {
       // Given
-      String input = "101010";
-      String expectedConvertedInput = "10:10:10";
+      String input = "101100";
+      String expectedConvertedInput = "10:11:00";
 
       // When
       String actualConvertedInput = DateParser.convertInput(input);
