@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.ui.app.inputfield.AutoCompleteTextField;
 import com.myownb3.dominic.ui.app.inputfield.InputFieldVerifier;
 import com.myownb3.dominic.ui.app.pages.combobox.TicketComboboxItem;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
@@ -47,7 +48,7 @@ public class StopBusinessDayIncrementController
    private ComboBox<TicketComboboxItem> ticketNumberComboBox;
 
    @FXML
-   private TextField ticketNumberField;
+   private AutoCompleteTextField ticketNumberField;
 
    @FXML
    private Label descriptionLabel;
@@ -110,6 +111,13 @@ public class StopBusinessDayIncrementController
    }
 
    @Override
+   public void show() {
+      super.show();
+      ticketNumberField.requestFocus();// sometimes this also 'selects all'. But not somehow not the first time
+      ticketNumberField.selectAll();
+   }
+
+   @Override
    public void handle(WindowEvent event) {
       if (event.getEventType() == WindowEvent.WINDOW_CLOSE_REQUEST) {
          cancel();
@@ -155,6 +163,7 @@ public class StopBusinessDayIncrementController
    private void dispose(FinishAction finishAction) {
       mainWindowController.finishOrAbortAndDispose(finishAction);
       amountOfHoursTextField.getStyleClass().remove(Styles.INVALID_INPUT_LABEL);
+      ticketNumberField.onDispose();
    }
 
    private void submit() {
@@ -186,6 +195,7 @@ public class StopBusinessDayIncrementController
       descriptionTextField.textProperty().bindBidirectional(pageModel.getDescriptionProperty());
       ticketNumberField.textProperty().bindBidirectional(pageModel.getTicketNoProperty());
       ticketNumberComboBox.itemsProperty().bindBidirectional(pageModel.getTicketComboboxItemsProperty());
+      ticketNumberField.keyWordsProperty().bindBidirectional(pageModel.getTicketsProperty());
 
       beginTextField.textProperty().bindBidirectional(pageModel.getBeginTextFieldProperty());
       endTextField.textProperty().bindBidirectional(pageModel.getEndTextFieldProperty());
