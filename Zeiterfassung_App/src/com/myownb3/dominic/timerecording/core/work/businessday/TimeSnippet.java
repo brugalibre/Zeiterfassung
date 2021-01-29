@@ -56,11 +56,16 @@ public class TimeSnippet {
     * 
     * @param newTimeStampValue
     *        the new begin-time-stamp as String
+    * @param negativeDurationNOK
+    *        <code>true</code> if a resulting negative duration is not okey and thus the begin time stampt is not changed
     */
-   public void updateAndSetBeginTimeStamp(String newTimeStampValue) {
+   public void updateAndSetBeginTimeStamp(String newTimeStampValue, boolean negativeDurationNOK) {
       String convertedTimeStampValue = convertInput(newTimeStampValue);
       if (!StringUtil.isEqual(convertedTimeStampValue, getBeginTimeStampRep())) {
          Time time = DateParser.getTime(newTimeStampValue, getBeginTimeStamp());
+         if (getEndTimeStamp().getTime() - time.getTime() < 0 && negativeDurationNOK) {
+            return;
+         }
          setBeginTimeStamp(new Time(time));
       }
    }
@@ -71,11 +76,16 @@ public class TimeSnippet {
     * 
     * @param newTimeStampValue
     *        the new begin-time-stamp as String
+    * @param negativeDurationNOK
+    *        <code>true</code> if a resulting negative duration is not okey and thus the end time stampt is not changed
     */
-   public void updateAndSetEndTimeStamp(String newTimeStampValue) {
+   public void updateAndSetEndTimeStamp(String newTimeStampValue, boolean negativeDurationNOK) {
       String convertedTimeStampValue = convertInput(newTimeStampValue);
       if (!StringUtil.isEqual(convertedTimeStampValue, getEndTimeStampRep())) {
          Time time = DateParser.getTime(newTimeStampValue, getEndTimeStamp());
+         if (time.getTime() - getBeginTimeStamp().getTime() < 0 && negativeDurationNOK) {
+            return;
+         }
          setEndTimeStamp(new Time(time));
       }
    }

@@ -132,24 +132,24 @@ public class BusinessDayIncrement {
 
    /**
     * Updates the {@link TimeSnippet} at the given index and recalulates the entire
-    * {@link BusinessDay}
+    * {@link BusinessDay}. If the update would lead to a negative duration, it's skipped
     * 
     * @param newTimeStampValue
     *        the new value for the time stamp
     */
    public void updateBeginTimeSnippetAndCalculate(String newTimeStampValue) {
-      currentTimeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue);
+      currentTimeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue, true);
    }
 
    /**
     * Updates the {@link TimeSnippet} at the given index and recalulates the entire
-    * {@link BusinessDay}
+    * {@link BusinessDay}. If the update would lead to a negative duration, it's skipped
     * 
     * @param newTimeStampValue
     *        the new value for the time stamp
     */
    public void updateEndTimeSnippetAndCalculate(String newTimeStampValue) {
-      currentTimeSnippet.updateAndSetEndTimeStamp(newTimeStampValue);
+      currentTimeSnippet.updateAndSetEndTimeStamp(newTimeStampValue, true);
    }
 
    public static class TimeStampComparator implements Comparator<TimeSnippet> {

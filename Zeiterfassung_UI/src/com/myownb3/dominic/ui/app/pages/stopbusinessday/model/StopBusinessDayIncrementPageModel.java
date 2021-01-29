@@ -102,7 +102,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     *        the new begin-time-stamp as String
     */
    public void updateAndSetBeginTimeStamp(String newTimeStampValue) {
-      timeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue);
+      timeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue, false);
    }
 
    /**
@@ -113,7 +113,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     *        the new begin-time-stamp as String
     */
    public void updateAndSetEndTimeStamp(String newTimeStampValue) {
-      timeSnippet.updateAndSetEndTimeStamp(newTimeStampValue);
+      timeSnippet.updateAndSetEndTimeStamp(newTimeStampValue, false);
    }
 
    /**
