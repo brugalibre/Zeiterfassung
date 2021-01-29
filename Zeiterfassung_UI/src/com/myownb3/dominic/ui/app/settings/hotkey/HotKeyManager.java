@@ -10,7 +10,7 @@ import java.util.Properties;
 
 import javax.swing.KeyStroke;
 
-import com.myownb3.dominic.ui.app.callback.UiCallbackHandler;
+import com.myownb3.dominic.ui.app.settings.hotkey.callback.UiCallbackHandler;
 import com.myownb3.dominic.ui.app.settings.hotkey.exception.HotKeyRegisterException;
 import com.tulskiy.keymaster.common.Provider;
 

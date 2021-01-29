@@ -1,4 +1,4 @@
-package com.myownb3.dominic.ui.app.pages.stopbusinessday.control.combobox;
+package com.myownb3.dominic.ui.app.pages.combobox;
 
 public class ComboboxItem {
    private String key;

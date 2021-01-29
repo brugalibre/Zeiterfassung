@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.ui.app.inputfield.InputFieldVerifier;
 import com.myownb3.dominic.ui.app.pages.combobox.TicketComboboxItem;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.model.StopBusinessDayIncrementPageModel;
