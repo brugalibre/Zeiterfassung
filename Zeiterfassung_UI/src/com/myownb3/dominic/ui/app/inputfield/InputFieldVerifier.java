@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.myownb3.dominic.ui.app.pages.stopbusinessday.control;
+package com.myownb3.dominic.ui.app.inputfield;
 
 import java.text.NumberFormat;
 import java.text.ParsePosition;

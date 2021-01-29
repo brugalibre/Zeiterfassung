@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.myownb3.dominic.ui.app.callback;
+package com.myownb3.dominic.ui.app.settings.hotkey.callback;
 
 import com.myownb3.dominic.ui.app.settings.hotkey.HotKeyManager;
 
