@@ -3,11 +3,6 @@
  */
 package com.myownb3.dominic.timerecording.core.work.businessday.vo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.util.parser.NumberFormat;
@@ -22,9 +17,6 @@ import com.myownb3.dominic.util.utils.StringUtil;
  */
 public class BusinessDayIncrementVO {
 
-   private List<TimeSnippetVO> timeSnippets;
-   private List<TimeSnippetVOPlaceHolder> timeSnippetPlaceHolders;
-
    private TimeSnippet currentTimeSnippet;
 
    private float totalDuration;
@@ -35,19 +27,12 @@ public class BusinessDayIncrementVO {
 
    private BusinessDayIncrementVO(BusinessDayIncrement businessDayIncremental) {
 
-      this.currentTimeSnippet = TimeSnippet.of(businessDayIncremental.getCurrentTimeSnippet());
+      this.currentTimeSnippet = businessDayIncremental.getCurrentTimeSnippet();
       this.description = businessDayIncremental.getDescription();
       this.ticketNumber = businessDayIncremental.getTicketNumber();
       this.chargeType = businessDayIncremental.getChargeType();
       this.totalDuration = businessDayIncremental.getTotalDuration();
       this.isCharged = businessDayIncremental.isCharged();
-
-      timeSnippets = businessDayIncremental.getTimeSnippets()//
-            .stream()//
-            .map(TimeSnippetVO::new)//
-            .collect(Collectors.toList());
-      Collections.sort(timeSnippets, new TimeSnippetVO.TimeStampComparator());
-      timeSnippetPlaceHolders = Collections.emptyList();
    }
 
    /**
@@ -61,32 +46,8 @@ public class BusinessDayIncrementVO {
       return StringUtil.isNotEmptyOrNull(description);
    }
 
-   /**
-    * All rows must fit with it content to the title header. Thats why we have to
-    * add some placeholders if this row has less TimeSnipets then the maximum
-    * amount of TimeSnippet-Cells
-    * 
-    * @param businessDayExportStruct
-    *        the {@link BusinessDayVO} this increment
-    *        belongs to
-    * 
-    */
-   public void addPlaceHolderForMissingCell(BusinessDayVO businessDayExportStruct) {
-      int amountOfEmptyTimeSnippets = businessDayExportStruct.getAmountOfVonBisElements() - timeSnippets.size();
-      List<TimeSnippetVOPlaceHolder> timeSnippetPlaceHoldersTmp = new ArrayList<>();
-      for (int i = 0; i < amountOfEmptyTimeSnippets; i++) {
-         timeSnippetPlaceHoldersTmp.add(new TimeSnippetVOPlaceHolder());
-         timeSnippetPlaceHoldersTmp.add(new TimeSnippetVOPlaceHolder());
-      }
-      this.timeSnippetPlaceHolders = timeSnippetPlaceHoldersTmp;
-   }
-
    public final String getTotalDurationRep() {
       return NumberFormat.format(this.totalDuration);
-   }
-
-   public final List<TimeSnippetVOPlaceHolder> getTimeSnippetPlaceHolders() {
-      return this.timeSnippetPlaceHolders;
    }
 
    public final String getDescription() {
@@ -99,10 +60,6 @@ public class BusinessDayIncrementVO {
 
    public final int getChargeType() {
       return this.chargeType;
-   }
-
-   public final List<TimeSnippetVO> getTimeSnippets() {
-      return this.timeSnippets;
    }
 
    public boolean isCharged() {

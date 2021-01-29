@@ -198,21 +198,4 @@ public class TimeSnippet {
       timeSnippet.setEndTimeStamp(DateParser.getTime(endValue, date));
       return timeSnippet;
    }
-
-   /**
-    * Creates a copy of the given timeSnippet
-    * 
-    * @param otherTimeSnippet
-    *        the {@link TimeSnippet} to create a copy of
-    * @return a copy of the given timeSnippet
-    */
-   public static TimeSnippet of(TimeSnippet otherTimeSnippet) {
-      if (otherTimeSnippet == null) {
-         return null;
-      }
-      TimeSnippet timeSnippet = new TimeSnippet(otherTimeSnippet.getDate());
-      timeSnippet.setBeginTimeStamp(otherTimeSnippet.getBeginTimeStamp());
-      timeSnippet.setEndTimeStamp(otherTimeSnippet.getEndTimeStamp());
-      return timeSnippet;
-   }
 }

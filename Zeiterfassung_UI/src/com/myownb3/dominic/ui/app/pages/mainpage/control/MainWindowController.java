@@ -87,9 +87,9 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       mainPanel.getChildren().clear();
       mainPanel.getChildren().add(overviewPanel);
 
+      overviewPanelController.show();
       initStage4NewComponent(stage, overviewPanel);
 
-      overviewPanelController.show();
       stage.setOnCloseRequest(overviewPanelController);
       show();
    }
@@ -168,9 +168,12 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       // Nothing to do since this Page only contains to sub pages
    }
 
+   @SuppressWarnings("unchecked")
    public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
       this.timeRecordingTray = timeRecordingTray;
       overviewPanelController.setTimeRecordingTray(timeRecordingTray);
+      Stage stage = getStage((Page<MainWindowPageModel, MainWindowPageModel>) page);
+      overviewPanelController.setMainPanel(stage);
    }
 
    private static Stage getStage(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {

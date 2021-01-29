@@ -13,20 +13,6 @@ import com.myownb3.dominic.timerecording.settings.round.RoundMode;
 class BusinessDayIncrementTest {
 
    @Test
-   void testCalcDurationOfLastIncrement_ZeroIncrements() {
-
-      // Given
-      float expectedDurationOfLastIncrement = 0;
-      BusinessDayIncrement businessDayIncrement = new BusinessDayIncrement(new Date());
-
-      // When
-      float actualDurationOfLastIncrement = businessDayIncrement.calcDurationOfLastIncrement();
-
-      // Then
-      assertThat(actualDurationOfLastIncrement, is(expectedDurationOfLastIncrement));
-   }
-
-   @Test
    void testCalcDurationOfLastIncrement_OneIncrement() {
 
       // Given
@@ -37,25 +23,7 @@ class BusinessDayIncrementTest {
       addTimeSnippet2BDIncrement(businessDayIncrement, startTimeStamp, timeBetweenStartAndStop);
 
       // When
-      float actualDurationOfLastIncrement = businessDayIncrement.calcDurationOfLastIncrement();
-
-      // Then
-      assertThat(actualDurationOfLastIncrement, is(expectedDurationOfLastIncrement));
-   }
-
-   @Test
-   void testCalcDurationOfLastIncrement_TwoIncrement() {
-
-      // Given
-      float expectedDurationOfLastIncrement = 3;
-      BusinessDayIncrement businessDayIncrement = new BusinessDayIncrement(new Date());
-      long startTimeStamp = System.currentTimeMillis();
-      int timeBetweenStartAndStop = 3600 * 1000;
-      addTimeSnippet2BDIncrement(businessDayIncrement, startTimeStamp, timeBetweenStartAndStop);
-      addTimeSnippet2BDIncrement(businessDayIncrement, startTimeStamp + timeBetweenStartAndStop, 3 * timeBetweenStartAndStop);
-
-      // When
-      float actualDurationOfLastIncrement = businessDayIncrement.calcDurationOfLastIncrement();
+      float actualDurationOfLastIncrement = businessDayIncrement.getTotalDuration();
 
       // Then
       assertThat(actualDurationOfLastIncrement, is(expectedDurationOfLastIncrement));

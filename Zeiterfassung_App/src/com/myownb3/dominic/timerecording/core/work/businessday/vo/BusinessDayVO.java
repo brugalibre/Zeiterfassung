@@ -57,8 +57,6 @@ public class BusinessDayVO {
             .stream()//
             .map(BusinessDayIncrementVO::of)//
             .collect(Collectors.toList());
-      businessDayIncrements.stream()//
-            .forEach(businessDayInc -> businessDayInc.addPlaceHolderForMissingCell(this));
       hasNotChargedElements = businessDay.hasNotChargedElements();
       hasIncrementWithDescription = businessDay.hasDescription();
    }
@@ -85,19 +83,6 @@ public class BusinessDayVO {
     */
    public boolean hasNotChargedElements() {
       return hasNotChargedElements;
-   }
-
-   /**
-    * Returns the amount of Begin/End Elements this {@link BusinessDay} has
-    * 
-    * @return the amount of Begin/End Elements this {@link BusinessDay} has
-    */
-   public int getAmountOfVonBisElements() {
-      int counter = 0;
-      for (BusinessDayIncrementVO businessDayIncremental : businessDayIncrements) {
-         counter = Math.max(counter, businessDayIncremental.getTimeSnippets().size());
-      }
-      return counter;
    }
 
    public String getTotalDurationRep() {

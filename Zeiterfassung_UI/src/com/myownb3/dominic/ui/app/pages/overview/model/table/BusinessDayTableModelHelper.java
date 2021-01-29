@@ -8,11 +8,10 @@ import java.util.Objects;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
+import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.myownb3.dominic.timerecording.core.work.businessday.vo.TimeSnippetVO;
-import com.myownb3.dominic.util.utils.StringUtil;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -59,9 +58,11 @@ public class BusinessDayTableModelHelper {
       setNonEditableCellValueFactory(numberTableColumn, "number");
       titleHeaders.add(numberTableColumn);
       TableColumn<BusinessDayIncTableRowValue, String> amountOfHoursTableColumn = new TableColumn<>(TextLabel.AMOUNT_OF_HOURS_LABEL);
+      amountOfHoursTableColumn.setId(TextLabel.AMOUNT_OF_HOURS_LABEL);
       titleHeaders.add(amountOfHoursTableColumn);
       setEditableCellValueFactory(amountOfHoursTableColumn, "totalDuration", changeListener);
       TableColumn<BusinessDayIncTableRowValue, String> ticketTableColumn = new TableColumn<>(TextLabel.TICKET);
+      ticketTableColumn.setId(TextLabel.TICKET);
       titleHeaders.add(ticketTableColumn);
       setEditableCellValueFactory(ticketTableColumn, "ticketNumber", changeListener);
 
@@ -72,23 +73,17 @@ public class BusinessDayTableModelHelper {
          titleHeaders.add(descriptionTableColumn);
       }
 
-      int counter = bussinessDay.getAmountOfVonBisElements();
-      List<TableColumn<BusinessDayIncTableRowValue, String>> beginEndHeaders = new ArrayList<>();
-      for (int i = 0; i < counter; i++) {
-         TableColumn<BusinessDayIncTableRowValue, String> beginTableColumn = new TableColumn<>(TextLabel.VON_LABEL);
-         TableColumn<BusinessDayIncTableRowValue, String> endTableColumn = new TableColumn<>(TextLabel.BIS_LABEL);
-         beginEndHeaders.add(beginTableColumn);
-         beginEndHeaders.add(endTableColumn);
-      }
+      TableColumn<BusinessDayIncTableRowValue, String> beginTableColumn = new TableColumn<>(TextLabel.VON_LABEL);
+      beginTableColumn.setId(TextLabel.VON_LABEL);
+      TableColumn<BusinessDayIncTableRowValue, String> endTableColumn = new TableColumn<>(TextLabel.BIS_LABEL);
+      endTableColumn.setId(TextLabel.BIS_LABEL);
+      beginTableColumn.setCellValueFactory(getTimeSnippetBeginCellValueFactory());
+      beginTableColumn.setCellFactory(getTimeSnippetBeginOrEndCellFactory(beginTableColumn));
+      endTableColumn.setCellValueFactory(getTimeSnippetEndCellValueFactory());
+      endTableColumn.setCellFactory(getTimeSnippetBeginOrEndCellFactory(endTableColumn));
 
-      for (int i = 0; i < beginEndHeaders.size(); i++) {
-         TableColumn<BusinessDayIncTableRowValue, String> tableColumn = beginEndHeaders.get(i);
-
-         tableColumn.setCellValueFactory(getTimeSnippetBeginEndCellValueFactory(i));
-         tableColumn.setCellFactory(getTimeSnippetBeginEndCellFactory(i, tableColumn));
-      }
-
-      titleHeaders.addAll(beginEndHeaders);
+      titleHeaders.add(beginTableColumn);
+      titleHeaders.add(endTableColumn);
 
       TableColumn<BusinessDayIncTableRowValue, String> chargeTypeTableColumn = new TableColumn<>(TextLabel.CHARGE_TYPE_LABEL);
       titleHeaders.add(chargeTypeTableColumn);
@@ -108,27 +103,28 @@ public class BusinessDayTableModelHelper {
       chargeTypeTableColumn.setOnEditCommit(changeListener);
    }
 
-   private Callback<CellDataFeatures<BusinessDayIncTableRowValue, String>, ObservableValue<String>> getTimeSnippetBeginEndCellValueFactory(
-         final int i) {
+   private Callback<CellDataFeatures<BusinessDayIncTableRowValue, String>, ObservableValue<String>> getTimeSnippetBeginCellValueFactory() {
       return cellData -> {
          BusinessDayIncTableRowValue businessDayIncTableCellValue = cellData.getValue();
-         TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue.getTimeSnippet(i);
-         return new SimpleStringProperty(timeSnippet4Index.getBeginOrEnd());
+         TimeSnippetCellValue beginTimeSnippet = businessDayIncTableCellValue.getBeginTimeSnippet();
+         return new SimpleStringProperty(beginTimeSnippet.getBeginOrEnd());
       };
    }
 
-   @SuppressWarnings("unused")
-   private Callback<TableColumn<BusinessDayIncTableRowValue, String>, TableCell<BusinessDayIncTableRowValue, String>> getTimeSnippetBeginEndCellFactory(
-         final int i, TableColumn<BusinessDayIncTableRowValue, String> tableColumn) {
+   private Callback<CellDataFeatures<BusinessDayIncTableRowValue, String>, ObservableValue<String>> getTimeSnippetEndCellValueFactory() {
       return cellData -> {
-         // XXX Ugly hack: cellData.getCellData(i) is null although there is a value
-         // visible on the table
-         if (true || !StringUtil.isEmptyOrNull(cellData.getCellData(i))) {
-            tableColumn.editableProperty().set(true);
-            tableColumn.setOnEditCommit(changeListener);
-            tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-            return new TextFieldTableCell<>(new DefaultStringConverter());
-         }
+         BusinessDayIncTableRowValue businessDayIncTableCellValue = cellData.getValue();
+         TimeSnippetCellValue beginTimeSnippet = businessDayIncTableCellValue.getEndTimeSnippet();
+         return new SimpleStringProperty(beginTimeSnippet.getBeginOrEnd());
+      };
+   }
+
+   private Callback<TableColumn<BusinessDayIncTableRowValue, String>, TableCell<BusinessDayIncTableRowValue, String>> getTimeSnippetBeginOrEndCellFactory(
+         TableColumn<BusinessDayIncTableRowValue, String> tableColumn) {
+      return cellData -> {
+         tableColumn.editableProperty().set(true);
+         tableColumn.setOnEditCommit(changeListener);
+         tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
          return new TextFieldTableCell<>(new DefaultStringConverter());
       };
    }
@@ -187,25 +183,10 @@ public class BusinessDayTableModelHelper {
       return businessDayIncTableCellValue;
    }
 
-   /*
-    * Creates a list which contains all Cells with the content about each
-    * TimeSnippet
-    */
-   private List<TimeSnippetCellValue> getTimeSnippets(BusinessDayIncrementVO bussinessDayIncremental) {
-      // = for all time snippet
-      List<TimeSnippetCellValue> snippetCells = new ArrayList<>();
-      int sequence = 0;
-      for (TimeSnippetVO snippet : bussinessDayIncremental.getTimeSnippets()) {
-         String begin = String.valueOf(snippet.getBeginTimeStampRep());
-         snippetCells.add(TimeSnippetCellValue.of(begin, sequence, ValueTypes.BEGIN));
-         String end = String.valueOf(snippet.getEndTimeStamp());
-         snippetCells.add(TimeSnippetCellValue.of(end, sequence, ValueTypes.END));
-         sequence++;
-      }
-      for (int i = 0; i < bussinessDayIncremental.getTimeSnippetPlaceHolders().size(); i++) {
-         snippetCells.add(TimeSnippetCellValue.of("", sequence, ValueTypes.NONE));
-         sequence++;
-      }
-      return snippetCells;
+   private BeginAndEndCellValue getTimeSnippets(BusinessDayIncrementVO bussinessDayIncremental) {
+      TimeSnippet snippet = bussinessDayIncremental.getCurrentTimeSnippet();
+      String begin = String.valueOf(snippet.getBeginTimeStampRep());
+      String end = String.valueOf(snippet.getEndTimeStamp());
+      return new BeginAndEndCellValue(TimeSnippetCellValue.of(begin, ValueTypes.BEGIN), TimeSnippetCellValue.of(end, ValueTypes.END));
    }
 }

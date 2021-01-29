@@ -3,9 +3,7 @@
  */
 package com.myownb3.dominic.ui.app.pages.overview.model.table;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
@@ -17,7 +15,7 @@ import javafx.scene.control.TableView;
 
 /**
  * The {@link BusinessDayIncTableRowValue} represents a single row in a
- * {@link TableView}. There may be more than one {@link TimeSnippet}
+ * {@link TableView}. There are exactly two {@link TimeSnippet}s - one for the begin and another for the end
  * 
  * @author Dominic
  *
@@ -31,7 +29,7 @@ public class BusinessDayIncTableRowValue {
    private StringProperty chargeTypeProperty;
    private StringProperty isChargedProperty;
 
-   private List<TimeSnippetCellValue> timeSnippets;
+   private BeginAndEndCellValue beginAndEndCellValue;
    private Map<Integer, ValueTypes> valueTypesForIndex;
 
    /**
@@ -45,7 +43,6 @@ public class BusinessDayIncTableRowValue {
       chargeTypeProperty = new SimpleStringProperty();
       isChargedProperty = new SimpleStringProperty();
       valueTypesForIndex = new HashMap<>();
-      timeSnippets = new ArrayList<>();
    }
 
    /**
@@ -63,10 +60,10 @@ public class BusinessDayIncTableRowValue {
          valueTypesForIndex.put(index, ValueTypes.DESCRIPTION);
          index++;
       }
-      for (TimeSnippetCellValue timeSnippetCellValue : timeSnippets) {
-         valueTypesForIndex.put(index, timeSnippetCellValue.getValueType());
-         index++;
-      }
+      valueTypesForIndex.put(index, beginAndEndCellValue.getBeginCellValue().getValueType());
+      index++;
+      valueTypesForIndex.put(index, beginAndEndCellValue.getEndCellValue().getValueType());
+      index++;
       valueTypesForIndex.put(index, ValueTypes.CHARGE_TYPE);
    }
 
@@ -82,41 +79,26 @@ public class BusinessDayIncTableRowValue {
    }
 
    /**
-    * Returns the {@link TimeSnippetCellValue} for the given index
-    * 
-    * @param index
-    *        the index
-    * @return the {@link TimeSnippetCellValue} for the given index
+    * @return the begin {@link TimeSnippetCellValue}
+    * @see BeginAndEndCellValue#getBeginCellValue()
     */
-   public TimeSnippetCellValue getTimeSnippet(int index) {
-      return timeSnippets.get(index);
+   public TimeSnippetCellValue getBeginTimeSnippet() {
+      return beginAndEndCellValue.getBeginCellValue();
    }
 
    /**
-    * Returns the {@link TimeSnippetCellValue} for the given index
-    * 
-    * @param index
-    *        the index
     * @return the {@link TimeSnippetCellValue} for the given index
+    * @see BeginAndEndCellValue#getEndCellValue()
     */
-   public TimeSnippetCellValue getTimeSnippe4RowIndex(int index) {
-      ValueTypes valueTypeForIndex = getChangeValueTypeForIndex(3);
-      int offset = 3;
-      if (valueTypeForIndex == ValueTypes.DESCRIPTION) {
-         offset = 4;
-      }
-      int timeSnippetIndex = index - offset;
-      if (timeSnippetIndex < timeSnippets.size() && timeSnippetIndex >= 0) {
-         return timeSnippets.get(timeSnippetIndex);
-      }
-      return null;
+   public TimeSnippetCellValue getEndTimeSnippet() {
+      return beginAndEndCellValue.getEndCellValue();
    }
 
    /**
     * @param timeSnippets
     */
-   public void setTimeSnippets(List<TimeSnippetCellValue> timeSnippets) {
-      this.timeSnippets = timeSnippets;
+   public void setTimeSnippets(BeginAndEndCellValue beginAndEndCellValue) {
+      this.beginAndEndCellValue = beginAndEndCellValue;
    }
 
    public final String getNumber() {
