@@ -22,10 +22,13 @@ public class NumberFormat {
       try {
          number = format.parse(decimalFormat.format(time / factor));
       } catch (ParseException e) {
-         e.printStackTrace();
          throw new NumberFormatException(e.getLocalizedMessage());
       }
-      return number.floatValue();
+      float floatValue = number.floatValue();
+      if (floatValue == -0.00) {
+         return 0; // avoid a '-0.00' when start is slightly after stop 
+      }
+      return floatValue;
    }
 
    public static float parseFloat(String float2Parse) {

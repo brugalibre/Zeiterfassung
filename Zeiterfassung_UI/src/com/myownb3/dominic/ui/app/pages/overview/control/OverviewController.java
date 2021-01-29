@@ -3,6 +3,8 @@
  */
 package com.myownb3.dominic.ui.app.pages.overview.control;
 
+import static java.util.Objects.requireNonNull;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -24,6 +26,7 @@ import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.FinishAction;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 import com.myownb3.dominic.ui.core.view.Page;
+import com.myownb3.dominic.ui.core.view.table.TableUtil;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -38,6 +41,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
@@ -75,6 +79,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
    private MenuItem changeDescriptionMenue;
 
+   private Stage stage;
 
    @Override
    public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -97,8 +102,10 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
       BusinessDayVO businessDayVO = getDataModel().getBusinessDayVO();
       businessDayTableModel.init(businessDayVO, tableView);
       changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.hasBusinessDayDescription());
+      TableUtil.autoResizeTable(tableView);
+      stage.setWidth(tableView.getPrefWidth());
+      borderPane.setPrefWidth(tableView.getPrefWidth());
    }
-
 
    public void init(MainWindowController mainWindowController) {
       this.mainWindowController = mainWindowController;
@@ -198,10 +205,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
    private void initTable() {
       tableView.setOnMousePressed(this::handleMouseEvent);
       tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-   }
-
-   public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
-      this.timeRecordingTray = timeRecordingTray;
+      tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
    }
 
    private EventHandler<ActionEvent> onDescriptionChange() {
@@ -228,4 +232,13 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
       refresh();
       timeRecordingTray.updateUIStates();
    }
+
+   public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
+      this.timeRecordingTray = requireNonNull(timeRecordingTray);
+   }
+
+   public void setMainPanel(Stage stage) {
+      this.stage = requireNonNull(stage);
+   }
+
 }

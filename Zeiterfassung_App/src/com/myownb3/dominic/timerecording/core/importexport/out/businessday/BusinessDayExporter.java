@@ -11,9 +11,9 @@ import com.coolguys.turbo.Booker;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
+import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.myownb3.dominic.timerecording.core.work.businessday.vo.TimeSnippetVO;
 
 /**
  * The {@link BusinessDayExporter} exports a {@link BusinessDay} into a
@@ -52,7 +52,7 @@ public class BusinessDayExporter {
       builder.append(System.getProperty(LINE_SEPARATOR));
       builder.append(System.getProperty(LINE_SEPARATOR));
 
-      appendTitleHeaderCells(builder, bussinessDay);
+      appendTitleHeaderCells(builder);
 
       // = For each 'Ticket' or Increment of an entire Day
       for (BusinessDayIncrementVO inc : bussinessDay.getBusinessDayIncrements()) {
@@ -64,16 +64,12 @@ public class BusinessDayExporter {
          builder.append(inc.getTotalDurationRep());
          builder.append(CONTENT_SEPPARATOR);
 
-         List<TimeSnippetVO> timeSnippets = inc.getTimeSnippets();
+         TimeSnippet snippet = inc.getCurrentTimeSnippet();
 
-         // = For each single work units of a Ticket
-         for (TimeSnippetVO snippet : timeSnippets) {
-            builder.append(snippet.getBeginTimeStampRep());
-            builder.append(CONTENT_SEPPARATOR);
-            builder.append(snippet.getEndTimeStampRep());
-            builder.append(CONTENT_SEPPARATOR);
-         }
-         addPlaceHolderForMissingBeginEndElements(builder, inc);
+         builder.append(snippet.getBeginTimeStampRep());
+         builder.append(CONTENT_SEPPARATOR);
+         builder.append(snippet.getEndTimeStampRep());
+         builder.append(CONTENT_SEPPARATOR);
          builder.append(ChargeType.getRepresentation(inc.getChargeType()));
          builder.append(CONTENT_SEPPARATOR);
          builder.append(inc.isCharged() ? TextLabel.YES : TextLabel.NO);
@@ -88,7 +84,7 @@ public class BusinessDayExporter {
       return content;
    }
 
-   private void appendTitleHeaderCells(StringBuilder builder, BusinessDayVO bussinessDay) {
+   private void appendTitleHeaderCells(StringBuilder builder) {
 
       builder.append(TextLabel.TICKET);
       builder.append(CONTENT_SEPPARATOR);
@@ -97,7 +93,7 @@ public class BusinessDayExporter {
       builder.append(TextLabel.AMOUNT_OF_HOURS_LABEL);
       builder.append(CONTENT_SEPPARATOR);
 
-      appendBeginEndHeader(builder, bussinessDay);
+      appendBeginEndHeader(builder);
 
       builder.append(TextLabel.CHARGE_TYPE_LABEL);
       builder.append(CONTENT_SEPPARATOR);
@@ -105,28 +101,11 @@ public class BusinessDayExporter {
       builder.append(System.getProperty(LINE_SEPARATOR));
    }
 
-   private void appendBeginEndHeader(StringBuilder builder, BusinessDayVO bussinessDay) {
-
-      int counter = bussinessDay.getAmountOfVonBisElements();
-      for (int i = 0; i < counter; i++) {
-         builder.append(TextLabel.VON_LABEL);
-         builder.append(CONTENT_SEPPARATOR);
-         builder.append(TextLabel.BIS_LABEL);
-         builder.append(CONTENT_SEPPARATOR);
-      }
-   }
-
-   /*
-    * All rows must fit with it content to the title header. Thats why we have to
-    * add some placeholders if this row has less TimeSnipets then the maximum
-    * amount of TimeSnippet-Cells
-    * 
-    */
-   private void addPlaceHolderForMissingBeginEndElements(StringBuilder builder, BusinessDayIncrementVO inc) {
-      for (int i = 0; i < inc.getTimeSnippetPlaceHolders().size(); i++) {
-         builder.append("");
-         builder.append(CONTENT_SEPPARATOR);
-      }
+   private void appendBeginEndHeader(StringBuilder builder) {
+      builder.append(TextLabel.VON_LABEL);
+      builder.append(CONTENT_SEPPARATOR);
+      builder.append(TextLabel.BIS_LABEL);
+      builder.append(CONTENT_SEPPARATOR);
    }
 
    /**

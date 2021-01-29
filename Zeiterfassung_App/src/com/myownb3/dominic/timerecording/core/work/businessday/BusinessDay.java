@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementAdd;
@@ -184,7 +183,6 @@ public class BusinessDay {
    public void addBusinessIncrement(BusinessDayIncrementAdd update) {
       BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(update);
       increments.add(newBusinessDayInc);
-      checkForRedundancys();
    }
 
    /**
@@ -199,7 +197,6 @@ public class BusinessDay {
    public void addBusinessIncrements(BusinessDayIncrementImport businessDayIncrementImport) {
       BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(businessDayIncrementImport);
       increments.add(newBusinessDayInc);
-      checkForRedundancys();
    }
 
    /**
@@ -252,43 +249,6 @@ public class BusinessDay {
       return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE;
    }
 
-   /**
-    * If there exist two or more {@link BusinessDayIncrement} with the same
-    * {@link BusinessDayIncrement#getDescription()} the {@link TimeSnippet} are
-    * moved from the first {@link BusinessDayIncrement} to the other
-    */
-   private void checkForRedundancys() {
-      for (BusinessDayIncrement incToCompareWith : increments) {
-         for (BusinessDayIncrement anotherIncrement : getIncrementsToCheck(incToCompareWith)) {
-            if (incToCompareWith.isSame(anotherIncrement)) {
-               incToCompareWith.transferAllTimeSnipetsToBussinessDayIncrement(anotherIncrement);
-            }
-         }
-      }
-      deleteEmptyIncrements();
-   }
-
-   /**
-    * don't check the increment with itself!
-    */
-   private List<BusinessDayIncrement> getIncrementsToCheck(BusinessDayIncrement incToCompareWith) {
-      return increments.stream()//
-            .filter(inc -> inc != incToCompareWith)//
-            .collect(Collectors.toList());
-   }
-
-   /**
-    * After {@link TimeSnippet} are moved, the {@link BusinessDayIncrement} with no
-    * {@link TimeSnippet} are removed
-    */
-   private void deleteEmptyIncrements() {
-      for (BusinessDayIncrement inc : increments) {
-         if (inc.getTimeSnippets().isEmpty()) {
-            increments.remove(inc);
-         }
-      }
-   }
-
    private Optional<BusinessDayIncrement> getBusinessIncrement(int orderNr) {
       BusinessDayIncrement businessDayIncremental = null;
       for (int i = 0; i < increments.size(); i++) {
@@ -304,7 +264,7 @@ public class BusinessDay {
     * {@link BusinessDay}
     */
    private TimeSnippet getLastTimeSnippet() {
-      return increments.stream().map(BusinessDayIncrement::getTimeSnippets).flatMap(List::stream)
+      return increments.stream().map(BusinessDayIncrement::getCurrentTimeSnippet)
             .sorted(new TimeStampComparator().reversed()).findFirst().orElse(null);
    }
 
@@ -316,12 +276,10 @@ public class BusinessDay {
             businessDayIncremental.setDescription(changedValue.getNewValue());
             break;
          case BEGIN:
-            businessDayIncremental.updateBeginTimeSnippetAndCalculate(changedValue.getFromUptoSequence(),
-                  changedValue.getNewValue());
+            businessDayIncremental.updateBeginTimeSnippetAndCalculate(changedValue.getNewValue());
             break;
          case END:
-            businessDayIncremental.updateEndTimeSnippetAndCalculate(changedValue.getFromUptoSequence(),
-                  changedValue.getNewValue());
+            businessDayIncremental.updateEndTimeSnippetAndCalculate(changedValue.getNewValue());
             break;
          case TICKET_NR:
             businessDayIncremental.setTicketNumber(changedValue.getNewValue());
@@ -341,7 +299,6 @@ public class BusinessDay {
             throw new UnsupportedOperationException(
                   "ChargeType '" + changedValue.getValueTypes() + "' not implemented!");
       }
-      checkForRedundancys();
    }
 
    /*
@@ -353,12 +310,12 @@ public class BusinessDay {
     */
    private static void changeAmountOfTime4BDIncrement(BusinessDayIncrement businessDayIncremental, ChangedValue changedValue) {
       float newTotalDurationOfBDInc = NumberFormat.parseFloatOrDefault(changedValue.getNewValue(), 0);
-      float currentDurationOfLastIncrement = businessDayIncremental.calcDurationOfLastIncrement();
-      float newDurationOfLastSnippet = newTotalDurationOfBDInc - businessDayIncremental.getTotalDuration() + currentDurationOfLastIncrement;
+      float currentDuration = businessDayIncremental.getTotalDuration();
+      float newDuration = newTotalDurationOfBDInc - businessDayIncremental.getTotalDuration() + currentDuration;
 
-      if (newDurationOfLastSnippet > 0) {
-         TimeSnippet lastTimeSnippet = businessDayIncremental.getTimeSnippets().get(businessDayIncremental.getTimeSnippets().size() - 1);
-         lastTimeSnippet.addAdditionallyTime(String.valueOf(newDurationOfLastSnippet));
+      if (newDuration > 0) {
+         TimeSnippet currentTimeSnippet = businessDayIncremental.getCurrentTimeSnippet();
+         currentTimeSnippet.addAdditionallyTime(String.valueOf(newDuration));
       }
    }
 

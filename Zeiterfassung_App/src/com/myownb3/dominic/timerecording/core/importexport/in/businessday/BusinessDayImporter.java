@@ -123,22 +123,22 @@ public class BusinessDayImporter {
          switch (currentValueType) {
             case TICKET_NR:
                parseAndSetTicketNr(importLine, businessDayIncrementImport, currentElementIndex);
-               currentElementIndex = shiftIndex(currentValueType, currentElementIndex, importLine);
-               currentValueType = evalNextValue2Import(currentValueType, importLine, currentElementIndex);
+               currentElementIndex = shiftIndex(currentValueType, currentElementIndex);
+               currentValueType = evalNextValue2Import(currentValueType);
                break;
 
             case DESCRIPTION:
                parseAndSetDescription(importLine, businessDayIncrementImport, currentElementIndex);
-               currentElementIndex = shiftIndex(currentValueType, currentElementIndex, importLine);
-               currentValueType = evalNextValue2Import(currentValueType, importLine, currentElementIndex);
+               currentElementIndex = shiftIndex(currentValueType, currentElementIndex);
+               currentValueType = evalNextValue2Import(currentValueType);
                break;
 
             case BEGIN:
                // Fall through since we work on both at the same time
             case END:
                parseAndAddTimeSnippet(importLine, date, businessDayIncrementImport, currentElementIndex);
-               currentElementIndex = shiftIndex(currentValueType, currentElementIndex, importLine);
-               currentValueType = evalNextValue2Import(currentValueType, importLine, currentElementIndex);
+               currentElementIndex = shiftIndex(currentValueType, currentElementIndex);
+               currentValueType = evalNextValue2Import(currentValueType);
                break;
 
             case CHARGE_TYPE:
@@ -194,7 +194,7 @@ public class BusinessDayImporter {
     * Shifts the index which is used to determine the value of the next element to
     * import depending on the current imported element
     */
-   private int shiftIndex(ValueTypes currentValueType, int currentElementIndex, String importLine) {
+   private int shiftIndex(ValueTypes currentValueType, int currentElementIndex) {
       switch (currentValueType) {
          case TICKET_NR:
             return currentElementIndex + 1;
@@ -202,12 +202,8 @@ public class BusinessDayImporter {
             return currentElementIndex + 2;
          case BEGIN:
             // Plus two since we incremented the index two times while adding a
-            // new time stamp. Continue incrementing as long as there are
-            // 'placeholder' elements
+            // new time stamp.
             currentElementIndex = currentElementIndex + 2;
-            while (!isNexElementNotEmpty(importLine, currentElementIndex)) {
-               currentElementIndex++;
-            }
             return currentElementIndex;
          default:
             // All other cases are ignored
@@ -220,27 +216,17 @@ public class BusinessDayImporter {
     * current imported element and other informations like if the current line
     * has a description or if there are any more 'begin/end' elements
     */
-   private ValueTypes evalNextValue2Import(ValueTypes currentValueType, String importLine, int currentElementIndex) {
+   private ValueTypes evalNextValue2Import(ValueTypes currentValueType) {
       switch (currentValueType) {
          case TICKET_NR:
             return DESCRIPTION;
          case DESCRIPTION:
             return BEGIN;
          case BEGIN:
-            boolean hasMoreElements = hasNextBeginEndElement(importLine, currentElementIndex);
-            return hasMoreElements ? BEGIN : ValueTypes.CHARGE_TYPE;
+            return ValueTypes.CHARGE_TYPE;
          default:
             throw new BusinessDayImportException("Unsupported ValueTypes '" + currentValueType + "'");
       }
-   }
-
-   private boolean hasNextBeginEndElement(String importLine, int currentElementIndex) {
-      boolean hasMoreElements = currentElementIndex < importLine.split(CONTENT_SEPARATOR).length - 2;
-      return hasMoreElements && isNexElementNotEmpty(importLine, currentElementIndex);
-   }
-
-   private boolean isNexElementNotEmpty(String importLine, int currentElementIndex) {
-      return StringUtil.isNotEmptyOrNull(importLine.split(CONTENT_SEPARATOR)[currentElementIndex]);
    }
 
    private Date parseDate(String readLine) {

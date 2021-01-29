@@ -3,12 +3,11 @@
  */
 package com.myownb3.dominic.timerecording.core.work.businessday;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import static java.util.Objects.isNull;
+
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementImport;
@@ -18,7 +17,6 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.util.parser.NumberFormat;
-import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * A {@link BusinessDay} consist of one or more {@link BusinessDayIncrement}.
@@ -29,7 +27,6 @@ import com.myownb3.dominic.util.utils.StringUtil;
  * @author Dominic
  */
 public class BusinessDayIncrement {
-   private List<TimeSnippet> timeSnippets;
    private TimeSnippet currentTimeSnippet;
 
    private Date date;
@@ -40,7 +37,6 @@ public class BusinessDayIncrement {
 
    public BusinessDayIncrement(Date date) {
       this.date = date;
-      timeSnippets = new ArrayList<>();
       ticketNumber = "SYRIUS-";
    }
 
@@ -57,12 +53,10 @@ public class BusinessDayIncrement {
     */
    public void stopCurrentTimeSnippet(Time endTimeStamp) {
       currentTimeSnippet.setEndTimeStamp(endTimeStamp);
-      timeSnippets.add(currentTimeSnippet);
    }
 
    public void resumeLastTimeSnippet() {
       currentTimeSnippet.setEndTimeStamp(null);
-      timeSnippets.remove(currentTimeSnippet);
    }
 
    private void createNewTimeSnippet() {
@@ -73,41 +67,8 @@ public class BusinessDayIncrement {
       return date;
    }
 
-   public List<TimeSnippet> getTimeSnippets() {
-      Collections.sort(timeSnippets, new TimeStampComparator());
-      return Collections.unmodifiableList(timeSnippets);
-   }
-
    public float getTotalDuration() {
       return getTotalDuration(TimeType.DEFAULT);
-   }
-
-   /**
-    * Returns <code>true</code> if this {@link BusinessDayIncrement} and the other
-    * has the same Ticketnumber, and same charge-type and the same description. The
-    * description can be <code>null</code> for both {@link BusinessDayIncrement}
-    * and this method still returns <code>true</code>
-    * 
-    * @param other
-    *        the other BusinessDayIncremental
-    * @return <code>true</code> if this {@link BusinessDayIncrement} is the same as
-    *         the other one
-    */
-   public boolean isSame(BusinessDayIncrement other) {
-      if (other == null) {
-         return false;
-      }
-      if (this == other) {
-         return true;
-      }
-      return this.getTicketNumber().equals(other.getTicketNumber()) && this.getChargeType() == other.getChargeType()//
-            && this.isCharged == other.isCharged() && hasSameDescription(other);
-   }
-
-   private boolean hasSameDescription(BusinessDayIncrement other) {
-      return StringUtil.isEmptyOrNull(other.getDescription()) && StringUtil.isEmptyOrNull(this.getDescription())
-            || (StringUtil.isNotEmptyOrNull(other.getDescription())
-                  && other.getDescription().equals(this.getDescription()));
    }
 
    public void flagAsCharged() {
@@ -115,17 +76,17 @@ public class BusinessDayIncrement {
    }
 
    /**
-    * Calculates the total amount of working minuts of all its increments
+    * Calculates the total amount of working minuts of the current {@link TimeSnippet}
     * 
     * @param type
-    * @return
+    *        the {@link TIME_TYPE}
+    * @return the total amount of working minuts of the current {@link TimeSnippet}
     */
    public float getTotalDuration(TIME_TYPE type) {
-      float sum = 0;
-
-      for (TimeSnippet timeSnippet : timeSnippets) {
-         sum = sum + timeSnippet.getDuration(type);
+      if (isNull(currentTimeSnippet)) {
+         return 0f;
       }
+      float sum = currentTimeSnippet.getDuration(type);
       return NumberFormat.parseFloat(NumberFormat.format(sum));
    }
 
@@ -164,39 +125,20 @@ public class BusinessDayIncrement {
       return chargeType;
    }
 
-   /**
-    * Moves all {@link TimeSnippet} of the current {@link BusinessDayIncrement} to
-    * the given {@link BusinessDayIncrement}. The {@link TimeSnippet}s of the
-    * current {@link BusinessDayIncrement} are removed!
-    * 
-    * @param incrementToAddTimeSnippets
-    */
-   /* package */ void transferAllTimeSnipetsToBussinessDayIncrement(BusinessDayIncrement incrementToAddTimeSnippets) {
-      incrementToAddTimeSnippets.addTimeSnippets(timeSnippets);
-      timeSnippets.clear();
-   }
-
-   private void addTimeSnippets(List<TimeSnippet> newTimeSnippets) {
-      timeSnippets.addAll(newTimeSnippets);
-      Collections.sort(timeSnippets, new TimeStampComparator());
-   }
 
    public boolean isCharged() {
       return isCharged;
    }
 
    /**
-    * Returns the {@link TimeSnippet} at the given positions or <code>null</code>
-    * if there isn't any at this location
+    * Updates the {@link TimeSnippet} at the given index and recalulates the entire
+    * {@link BusinessDay}
+    * 
+    * @param newTimeStampValue
+    *        the new value for the time stamp
     */
-   private Optional<TimeSnippet> getTimeSnippet4Index(int fromUptoSequence) {
-      TimeSnippet timeSnippet = null;
-      for (int i = 0; i < timeSnippets.size(); i++) {
-         if (i == fromUptoSequence) {
-            timeSnippet = timeSnippets.get(i);
-         }
-      }
-      return Optional.ofNullable(timeSnippet);
+   public void updateBeginTimeSnippetAndCalculate(String newTimeStampValue) {
+      currentTimeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue);
    }
 
    /**
@@ -206,21 +148,8 @@ public class BusinessDayIncrement {
     * @param newTimeStampValue
     *        the new value for the time stamp
     */
-   public void updateBeginTimeSnippetAndCalculate(int fromUptoSequence, String newTimeStampValue) {
-      Optional<TimeSnippet> timeSnippetOpt = getTimeSnippet4Index(fromUptoSequence);
-      timeSnippetOpt.ifPresent(timeSnippet -> timeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue));
-   }
-
-   /**
-    * Updates the {@link TimeSnippet} at the given index and recalulates the entire
-    * {@link BusinessDay}
-    * 
-    * @param newTimeStampValue
-    *        the new value for the time stamp
-    */
-   public void updateEndTimeSnippetAndCalculate(int fromUptoSequence, String newTimeStampValue) {
-      Optional<TimeSnippet> timeSnippetOpt = getTimeSnippet4Index(fromUptoSequence);
-      timeSnippetOpt.ifPresent(timeSnippet -> timeSnippet.updateAndSetEndTimeStamp(newTimeStampValue));
+   public void updateEndTimeSnippetAndCalculate(String newTimeStampValue) {
+      currentTimeSnippet.updateAndSetEndTimeStamp(newTimeStampValue);
    }
 
    public static class TimeStampComparator implements Comparator<TimeSnippet> {
@@ -293,19 +222,5 @@ public class BusinessDayIncrement {
       long days = time2Check.getDays();
       Time bdTime = new Time(date.getTime());
       return days > bdTime.getDays();
-   }
-
-   /**
-    * Calculates the duration of the last {@link TimeSnippet} of this {@link BusinessDayIncrement}
-    * 
-    * @return the duration of the last {@link TimeSnippet} of this {@link BusinessDayIncrement}
-    */
-   public float calcDurationOfLastIncrement() {
-      float durationOfLastIncrement = getTotalDuration();
-      for (int i = 0; i < getTimeSnippets().size() - 1; i++) {
-         TimeSnippet timeSnippet = getTimeSnippets().get(i);
-         durationOfLastIncrement = durationOfLastIncrement - timeSnippet.getDuration();
-      }
-      return durationOfLastIncrement;
    }
 }

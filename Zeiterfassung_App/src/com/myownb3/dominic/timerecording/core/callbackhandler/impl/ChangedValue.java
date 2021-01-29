@@ -15,14 +15,11 @@ public class ChangedValue {
    private int sequence; // the sequence of the increment
    private String newValue;
    private ValueTypes valueTypes;
-   private int fromUptoSequence; // the order if the changed value was 'from' or
-   // 'upto'
 
-   private ChangedValue(int sequence, String newValue, ValueTypes valueTypes, int vonBisOrder) {
+   private ChangedValue(int sequence, String newValue, ValueTypes valueTypes) {
       this.sequence = sequence;
       this.newValue = newValue;
       this.valueTypes = valueTypes;
-      this.fromUptoSequence = vonBisOrder;
    }
 
    public int getSequence() {
@@ -37,16 +34,7 @@ public class ChangedValue {
       return valueTypes;
    }
 
-   public int getFromUptoSequence() {
-      return fromUptoSequence;
-   }
-
    public static ChangedValue of(int orderNumber, String newValueAsString, ValueTypes valueTypeForIndex) {
-      return new ChangedValue(orderNumber, newValueAsString, valueTypeForIndex, -1);
-   }
-
-   public static ChangedValue of(int orderNumber, String newValueAsString, ValueTypes valueTypeForIndex,
-         int fromUptoSequence) {
-      return new ChangedValue(orderNumber, newValueAsString, valueTypeForIndex, fromUptoSequence);
+      return new ChangedValue(orderNumber, newValueAsString, valueTypeForIndex);
    }
 }

@@ -11,7 +11,6 @@ import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrem
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 import com.myownb3.dominic.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
-import com.myownb3.dominic.ui.app.pages.overview.model.table.TimeSnippetCellValue;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.FinishAction;
 
 import javafx.event.EventHandler;
@@ -50,20 +49,13 @@ public class BusinessDayChangeHelper implements EventHandler<CellEditEvent<Busin
          uiRefresher.onFinish(FinishAction.ABORT);
          return;
       }
-      int fromUptoSequence = getBeginEndSequence(businessDayIncTableCellValue, tablePosition);
       int orderNumber = Integer.parseInt(businessDayIncTableCellValue.getNumber());
-      handler.handleBusinessDayChanged(ChangedValue.of(orderNumber, newValue, valueType, fromUptoSequence));
+      handler.handleBusinessDayChanged(ChangedValue.of(orderNumber, newValue, valueType));
       uiRefresher.onFinish(FinishAction.FINISH);
    }
 
    private static boolean isNotValidValueType(ValueTypes valueType) {
       // XXX Ugly hack. Since we had to make present values editable
       return valueType == ValueTypes.NONE;
-   }
-
-   private int getBeginEndSequence(BusinessDayIncTableRowValue businessDayIncTableCellValue,
-         TablePosition<BusinessDayIncTableRowValue, String> tablePosition) {
-      TimeSnippetCellValue timeSnippet4Index = businessDayIncTableCellValue.getTimeSnippe4RowIndex(tablePosition.getColumn());
-      return timeSnippet4Index != null ? timeSnippet4Index.getSequence() : -1;
    }
 }

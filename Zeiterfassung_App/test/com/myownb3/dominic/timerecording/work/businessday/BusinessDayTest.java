@@ -18,22 +18,17 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
 public class BusinessDayTest {
 
    @Test
-   public void testChangeDBIncDurationWith2TimeSnippets_IncreaseDuration() {
+   public void testChangeDBIncDurationIncreaseDuration() {
 
       // Given
       String newTotalBDDuration = "2";
       long firstTimeStampStart = System.currentTimeMillis();
       int firstTimeBetweenStartAndStop = 3600 * 1000;
-      int secondTimeBetweenStartAndStop = firstTimeBetweenStartAndStop / 10;
-      long secondTimeStampStart = firstTimeStampStart + firstTimeBetweenStartAndStop;
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
-      TimeSnippet secondSnippet = createTimeSnippet(secondTimeStampStart, secondTimeStampStart + secondTimeBetweenStartAndStop);
       BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, "SYRIUS-1324");
-      BusinessDayIncrementAdd secondInc = createUpdate(secondSnippet, 113, "SYRIUS-1324");
 
       BusinessDay businessDay = new BusinessDay();
       businessDay.addBusinessIncrement(firstInc);
-      businessDay.addBusinessIncrement(secondInc);
 
       ChangedValue changeValue = ChangedValue.of(0, newTotalBDDuration, ValueTypes.AMOUNT_OF_TIME);
 
@@ -42,28 +37,23 @@ public class BusinessDayTest {
 
       // Then
       BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
-      TimeSnippet lastTimeSnippet = businessDayIncrement.getTimeSnippets().get(1);
+      TimeSnippet lastTimeSnippet = businessDayIncrement.getCurrentTimeSnippet();
       assertThat(businessDayIncrement.getTotalDuration(), is(Float.parseFloat(newTotalBDDuration)));
-      assertThat(lastTimeSnippet.getDuration(), is(1.0f));
+      assertThat(lastTimeSnippet.getDuration(), is(2.0f));
    }
 
    @Test
-   public void testChangeDBIncDurationWith2TimeSnippets_DecreaseDuration() {
+   public void testChangeDBIncDurationSnippets_DecreaseDuration() {
 
       // Given
       String newTotalBDDuration = "1.4";
       long firstTimeStampStart = System.currentTimeMillis();
       int firstTimeBetweenStartAndStop = 3600 * 1000;
-      int secondTimeBetweenStartAndStop = firstTimeBetweenStartAndStop * 2;
-      long secondTimeStampStart = firstTimeStampStart + firstTimeBetweenStartAndStop;
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
-      TimeSnippet secondSnippet = createTimeSnippet(secondTimeStampStart, secondTimeStampStart + secondTimeBetweenStartAndStop);
       BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, "SYRIUS-1324");
-      BusinessDayIncrementAdd secondInc = createUpdate(secondSnippet, 113, "SYRIUS-1324");
 
       BusinessDay businessDay = new BusinessDay();
       businessDay.addBusinessIncrement(firstInc);
-      businessDay.addBusinessIncrement(secondInc);
 
       ChangedValue changeValue = ChangedValue.of(0, newTotalBDDuration, ValueTypes.AMOUNT_OF_TIME);
 
@@ -72,9 +62,9 @@ public class BusinessDayTest {
 
       // Then
       BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
-      TimeSnippet lastTimeSnippet = businessDayIncrement.getTimeSnippets().get(1);
+      TimeSnippet lastTimeSnippet = businessDayIncrement.getCurrentTimeSnippet();
       assertThat(businessDayIncrement.getTotalDuration(), is(Float.parseFloat(newTotalBDDuration)));
-      assertThat(lastTimeSnippet.getDuration(), is(0.4f));
+      assertThat(lastTimeSnippet.getDuration(), is(1.4f));
    }
 
    @Test
@@ -82,18 +72,13 @@ public class BusinessDayTest {
 
       // Given
       // This is not possible, since we would have to drop BusinessDayIncrements and time-stamps in order to achive this duration
-      String newTotalBDDuration = "0.9";
-      long firstTimeStampStart = System.currentTimeMillis();
-      int firstTimeBetweenStartAndStop = 3600 * 1000;
-      int secondTimeBetweenStartAndStop = firstTimeBetweenStartAndStop * 2;
-      long secondTimeStampStart = firstTimeStampStart + firstTimeBetweenStartAndStop;
-      TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
-      TimeSnippet secondSnippet = createTimeSnippet(secondTimeStampStart, secondTimeStampStart + secondTimeBetweenStartAndStop);
-      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, "SYRIUS-1324");
+      String newTotalBDDuration = "-1.0";
+      int firstTimeBetweenStartAndStop = 3600 * 1000 * 2;
+      long firstTimeStampStart = System.currentTimeMillis() + firstTimeBetweenStartAndStop;
+      TimeSnippet secondSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
       BusinessDayIncrementAdd secondInc = createUpdate(secondSnippet, 113, "SYRIUS-1324");
 
       BusinessDay businessDay = new BusinessDay();
-      businessDay.addBusinessIncrement(firstInc);
       businessDay.addBusinessIncrement(secondInc);
 
       ChangedValue changeValue = ChangedValue.of(0, newTotalBDDuration, ValueTypes.AMOUNT_OF_TIME);
@@ -103,8 +88,8 @@ public class BusinessDayTest {
 
       // Then - everything remains as it is
       BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
-      TimeSnippet lastTimeSnippet = businessDayIncrement.getTimeSnippets().get(1);
-      assertThat(businessDayIncrement.getTotalDuration(), is(3.0f));
+      TimeSnippet lastTimeSnippet = businessDayIncrement.getCurrentTimeSnippet();
+      assertThat(businessDayIncrement.getTotalDuration(), is(2.0f));
       assertThat(lastTimeSnippet.getDuration(), is(2.0f));
    }
 
