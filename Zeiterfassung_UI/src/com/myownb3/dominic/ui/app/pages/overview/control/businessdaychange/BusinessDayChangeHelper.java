@@ -49,7 +49,7 @@ public class BusinessDayChangeHelper implements EventHandler<CellEditEvent<Busin
          uiRefresher.onFinish(FinishAction.ABORT);
          return;
       }
-      int orderNumber = Integer.parseInt(businessDayIncTableCellValue.getNumber());
+      int orderNumber = Integer.parseInt(businessDayIncTableCellValue.getNumber()) - 1;// minus one, since we start now counting with 1
       handler.handleBusinessDayChanged(ChangedValue.of(orderNumber, newValue, valueType));
       uiRefresher.onFinish(FinishAction.FINISH);
    }

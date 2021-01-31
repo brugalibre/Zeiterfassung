@@ -154,6 +154,6 @@ public class BusinessDayIncTableRowValue {
    }
 
    public int getNumberAsInt() {
-      return Integer.valueOf(getNumber());
+      return Integer.valueOf(getNumber()) - 1;// minus one, since the index start at 1
    }
 }
