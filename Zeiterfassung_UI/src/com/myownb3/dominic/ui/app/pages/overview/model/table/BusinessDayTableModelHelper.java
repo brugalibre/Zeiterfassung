@@ -145,7 +145,7 @@ public class BusinessDayTableModelHelper {
 
    private List<BusinessDayIncTableRowValue> getBusinessDayCells(BusinessDayVO businessDay) {
       List<BusinessDayIncTableRowValue> businessDayCells = new ArrayList<>();
-      int counter = 0;
+      int counter = 1;
       for (BusinessDayIncrementVO bussinessDayIncremental : businessDay.getBusinessDayIncrements()) {
          BusinessDayIncTableRowValue businessDayIncrementalCell = getBusinessDayIncrementalCell(
                bussinessDayIncremental, businessDay.hasIncrementWithDescription(), counter);
