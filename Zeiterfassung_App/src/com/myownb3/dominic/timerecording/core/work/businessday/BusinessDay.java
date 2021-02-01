@@ -10,9 +10,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementAdd;
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementImport;
 import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.timerecording.core.importexport.in.businessday.BusinessDayIncrementImport;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement.TimeStampComparator;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType;
