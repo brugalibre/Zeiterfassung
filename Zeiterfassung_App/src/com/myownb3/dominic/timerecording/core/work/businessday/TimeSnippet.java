@@ -6,8 +6,8 @@ package com.myownb3.dominic.timerecording.core.work.businessday;
 import java.text.ParseException;
 import java.util.Date;
 
-import com.myownb3.dominic.timerecording.core.callbackhandler.TimeSnippedChangedCallbackHandler;
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
