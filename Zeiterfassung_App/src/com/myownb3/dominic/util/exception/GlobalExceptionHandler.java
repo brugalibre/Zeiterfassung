@@ -5,7 +5,7 @@ package com.myownb3.dominic.util.exception;
 
 import java.util.Objects;
 
-import com.myownb3.dominic.timerecording.core.callbackhandler.CallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.UiCallbackHandler;
 
 /**
  * @author Dominic
@@ -13,7 +13,7 @@ import com.myownb3.dominic.timerecording.core.callbackhandler.CallbackHandler;
  */
 public class GlobalExceptionHandler implements Thread.UncaughtExceptionHandler {
 
-   private static CallbackHandler callbackHandler;
+   private static UiCallbackHandler callbackHandler;
 
    public void handle(Throwable thrown) {
       // for EDT exceptions
@@ -37,18 +37,18 @@ public class GlobalExceptionHandler implements Thread.UncaughtExceptionHandler {
     */
    public static void handleGlobalException(Thread thread, Throwable thrown) {
       Objects.requireNonNull(callbackHandler,
-            "We need a CallbackHandler in order to propage the error '" + thrown + "'");
+            "We need a UiCallbackHandler in order to propage the error '" + thrown + "'");
       callbackHandler.onException(thrown, thread);
    }
 
    /**
-    * Registers the given {@link CallbackHandler} as the handler which is used to
+    * Registers the given {@link UiCallbackHandler} as the handler which is used to
     * do call backs if any error occurs
     * 
     * @param callbackHandler
     *        the callback handler
     */
-   public static void registerHandler(CallbackHandler callbackHandler) {
+   public static void registerHandler(UiCallbackHandler callbackHandler) {
       GlobalExceptionHandler.callbackHandler = callbackHandler;
       Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler());
       System.setProperty("sun.awt.exception.handler", GlobalExceptionHandler.class.getName());

@@ -11,7 +11,7 @@ import java.io.IOException;
 import com.myownb3.dominic.launch.exception.ApplicationLaunchException;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.core.callbackhandler.CallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
@@ -36,7 +36,7 @@ public class TimeRecordingLauncher extends Application {
       Runtime.getRuntime().addShutdownHook(createShutdownHook());
 
       TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
-      CallbackHandler callbackHandler = timeRecordingTray.getCallbackHandler();
+      UiCallbackHandler callbackHandler = timeRecordingTray.getCallbackHandler();
 
       TimeRecorder.INSTANCE.setCallbackHandler(callbackHandler);
       GlobalExceptionHandler.registerHandler(callbackHandler);
