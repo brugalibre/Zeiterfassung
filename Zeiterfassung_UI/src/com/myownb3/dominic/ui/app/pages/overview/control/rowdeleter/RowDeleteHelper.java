@@ -5,8 +5,8 @@ package com.myownb3.dominic.ui.app.pages.overview.control.rowdeleter;
 
 import java.util.Optional;
 
-import com.myownb3.dominic.timerecording.core.callbackhandler.BusinessDayChangedCallbackHandler;
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
 import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.myownb3.dominic.ui.app.pages.overview.view.OverviewPage;

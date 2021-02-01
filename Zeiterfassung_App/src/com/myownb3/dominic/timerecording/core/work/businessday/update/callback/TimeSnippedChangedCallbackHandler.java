@@ -1,7 +1,7 @@
-package com.myownb3.dominic.timerecording.core.callbackhandler;
+package com.myownb3.dominic.timerecording.core.work.businessday.update.callback;
 
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 
 public interface TimeSnippedChangedCallbackHandler {
 

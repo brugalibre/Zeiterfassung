@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.core.callbackhandler.TimeSnippedChangedCallbackHandler;
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayChangedCallbackHandlerImpl;
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.BusinessDayIncrementAdd;
-import com.myownb3.dominic.timerecording.core.callbackhandler.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklog;
