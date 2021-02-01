@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.List;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.core.callbackhandler.CallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.myownb3.dominic.timerecording.core.charge.BookerHelper;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.BusinessDayImporter;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
@@ -47,7 +47,7 @@ public class TimeRecorder {
    public static final String VERSION = "1.7.1";
 
    private BusinessDay businessDay;
-   private CallbackHandler callbackHandler;
+   private UiCallbackHandler callbackHandler;
    private WorkStates currentState;
 
    private TimeRecorder() {
@@ -325,7 +325,7 @@ public class TimeRecorder {
       }
    }
 
-   public void setCallbackHandler(CallbackHandler callbackHandler) {
+   public void setCallbackHandler(UiCallbackHandler callbackHandler) {
       this.callbackHandler = callbackHandler;
    }
 }

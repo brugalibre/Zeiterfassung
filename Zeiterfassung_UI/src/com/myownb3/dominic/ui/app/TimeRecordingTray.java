@@ -29,7 +29,7 @@ import com.myownb3.dominic.launch.exception.ApplicationLaunchException;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.core.callbackhandler.CallbackHandler;
+import com.myownb3.dominic.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.myownb3.dominic.timerecording.core.message.Message;
 import com.myownb3.dominic.timerecording.core.message.MessageType;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
@@ -193,13 +193,13 @@ public class TimeRecordingTray {
    }
 
    /**
-    * @return the {@link CallbackHandler} which handles interaction between the
+    * @return the {@link UiCallbackHandler} which handles interaction between the
     *         {@link TimeRecordingTray} and the {@link TimeRecorder} or the
     *         {@link GlobalExceptionHandler}
     */
-   public CallbackHandler getCallbackHandler() {
+   public UiCallbackHandler getCallbackHandler() {
 
-      return new CallbackHandler() {
+      return new UiCallbackHandler() {
 
          @Override
          public void onStop() {
