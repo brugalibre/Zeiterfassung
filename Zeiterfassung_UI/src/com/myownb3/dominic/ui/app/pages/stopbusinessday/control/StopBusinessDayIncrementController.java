@@ -113,6 +113,7 @@ public class StopBusinessDayIncrementController
    @Override
    public void show() {
       super.show();
+      ticketNumberComboBox.getSelectionModel().clearSelection();
       ticketNumberField.requestFocus();// sometimes this also 'selects all'. But not somehow not the first time
       ticketNumberField.selectAll();
    }
