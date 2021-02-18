@@ -1,7 +1,9 @@
 Initiales Set-Up 
 - Eine Kopie vom turbo-bucher.properties in einem Ordner deines Vertrauens anlegen Dein AD-Benutzer & AD-PW eintragen - ansonsten kann sich Chrome nicht in Jira anmelden und somit können auch 
-- die aktuellen Sprint-Tickets nicht ermittelt werden! Allenfalls Rundungseinstellungen und Hot-Key ergänzen Optional kann mit dem key 'boardName' ein Scrum-Board angegeben werden. Anhand diesem wird versucht 
-- die Tickets des aktuellen Sprints zu ermitteln um beim Stoppen einer Aufzeichnung davon auswählen zu können tarten vom .jar via .bat-File. Keine Ahnung warum das nicht mehr ohne geht (ist erst seit Umbau auf Java-FX so)
+  die aktuellen Sprint-Tickets nicht ermittelt werden! 
+- Allenfalls Rundungseinstellungen und Hot-Key ergänzen Optional kann mit dem key 'boardName' ein Scrum-Board angegeben werden. 
+- Anhand diesem wird versucht die Tickets des aktuellen Sprints zu ermitteln um beim Stoppen einer Aufzeichnung davon auswählen zu können tarten vom .jar via .bat-File. 
+  Keine Ahnung warum das nicht mehr ohne geht (ist erst seit Umbau auf Java-FX so)
 
 Aufzeichnung starten:
 - Durch Klick auf den roten Kreis unten in der Info-Leiste
