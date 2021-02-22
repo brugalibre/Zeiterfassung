@@ -12,6 +12,7 @@ import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.myownb3.dominic.ui.core.view.table.EditableCell;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -24,9 +25,7 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
-import javafx.util.converter.DefaultStringConverter;
 
 public class BusinessDayTableModelHelper {
 
@@ -55,21 +54,21 @@ public class BusinessDayTableModelHelper {
       List<TableColumn<BusinessDayIncTableRowValue, String>> titleHeaders = new ArrayList<>();
       TableColumn<BusinessDayIncTableRowValue, String> numberTableColumn = new TableColumn<>(
             TextLabel.NUMMER_LABEL);
-      setNonEditableCellValueFactory(numberTableColumn, "number");
+      setNonEditableCellValueFactory(numberTableColumn, TableConst.NUMBER);
       titleHeaders.add(numberTableColumn);
       TableColumn<BusinessDayIncTableRowValue, String> amountOfHoursTableColumn = new TableColumn<>(TextLabel.AMOUNT_OF_HOURS_LABEL);
       amountOfHoursTableColumn.setId(TextLabel.AMOUNT_OF_HOURS_LABEL);
       titleHeaders.add(amountOfHoursTableColumn);
-      setEditableCellValueFactory(amountOfHoursTableColumn, "totalDuration", changeListener);
+      setEditableCellValueFactory(amountOfHoursTableColumn, TableConst.TOTAL_DURATION);
       TableColumn<BusinessDayIncTableRowValue, String> ticketTableColumn = new TableColumn<>(TextLabel.TICKET);
       ticketTableColumn.setId(TextLabel.TICKET);
       titleHeaders.add(ticketTableColumn);
-      setEditableCellValueFactory(ticketTableColumn, "ticketNumber", changeListener);
+      setEditableCellValueFactory(ticketTableColumn, TableConst.TICKET_NUMBER);
 
       boolean isDescriptionTitleNecessary = bussinessDay.hasIncrementWithDescription();
       if (isDescriptionTitleNecessary) {
          TableColumn<BusinessDayIncTableRowValue, String> descriptionTableColumn = new TableColumn<>(TextLabel.DESCRIPTION_LABEL);
-         setEditableCellValueFactory(descriptionTableColumn, "description", changeListener);
+         setEditableCellValueFactory(descriptionTableColumn, TableConst.DESCRIPTION);
          titleHeaders.add(descriptionTableColumn);
       }
 
@@ -77,10 +76,10 @@ public class BusinessDayTableModelHelper {
       beginTableColumn.setId(TextLabel.VON_LABEL);
       TableColumn<BusinessDayIncTableRowValue, String> endTableColumn = new TableColumn<>(TextLabel.BIS_LABEL);
       endTableColumn.setId(TextLabel.BIS_LABEL);
+      setEditableCellValueFactory(beginTableColumn, TableConst.BEGIN);
       beginTableColumn.setCellValueFactory(getTimeSnippetBeginCellValueFactory());
-      beginTableColumn.setCellFactory(getTimeSnippetBeginOrEndCellFactory(beginTableColumn));
+      setEditableCellValueFactory(endTableColumn, TableConst.END);
       endTableColumn.setCellValueFactory(getTimeSnippetEndCellValueFactory());
-      endTableColumn.setCellFactory(getTimeSnippetBeginOrEndCellFactory(endTableColumn));
 
       titleHeaders.add(beginTableColumn);
       titleHeaders.add(endTableColumn);
@@ -90,7 +89,7 @@ public class BusinessDayTableModelHelper {
       setEditableColumBoxCellFactory(chargeTypeTableColumn);
       TableColumn<BusinessDayIncTableRowValue, String> isChargedTableColumn = new TableColumn<>(TextLabel.CHARGED);
       titleHeaders.add(isChargedTableColumn);
-      setNonEditableCellValueFactory(isChargedTableColumn, "isCharged");
+      setNonEditableCellValueFactory(isChargedTableColumn, TableConst.IS_CHARGED);
       return titleHeaders;
    }
 
@@ -119,28 +118,19 @@ public class BusinessDayTableModelHelper {
       };
    }
 
-   private Callback<TableColumn<BusinessDayIncTableRowValue, String>, TableCell<BusinessDayIncTableRowValue, String>> getTimeSnippetBeginOrEndCellFactory(
-         TableColumn<BusinessDayIncTableRowValue, String> tableColumn) {
-      return cellData -> {
-         tableColumn.editableProperty().set(true);
-         tableColumn.setOnEditCommit(changeListener);
-         tableColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-         return new TextFieldTableCell<>(new DefaultStringConverter());
-      };
-   }
-
    private void setNonEditableCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn, String paramName) {
       tableColumn.setCellValueFactory(new PropertyValueFactory<>(paramName));
    }
 
-   private void setEditableCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn,
-         String paramName, EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener) {
+   private void setEditableCellValueFactory(TableColumn<BusinessDayIncTableRowValue, String> tableColumn, String paramName) {
       tableColumn.setEditable(true);
       tableColumn.setOnEditCommit(changeListener);
-      Callback<TableColumn<BusinessDayIncTableRowValue, String>, TableCell<BusinessDayIncTableRowValue, String>> callback = TextFieldTableCell
-            .forTableColumn();
-      tableColumn.setCellFactory(callback);
+      tableColumn.setCellFactory(column -> createEditableTableCell());
       setNonEditableCellValueFactory(tableColumn, paramName);// For diplaying the value read only
+   }
+
+   private TableCell<BusinessDayIncTableRowValue, String> createEditableTableCell() {
+      return EditableCell.createStringEditCell();
    }
 
    private List<BusinessDayIncTableRowValue> getBusinessDayCells(BusinessDayVO businessDay) {
