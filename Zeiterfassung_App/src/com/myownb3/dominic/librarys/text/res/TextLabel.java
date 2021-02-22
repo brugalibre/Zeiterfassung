@@ -13,7 +13,7 @@ public class TextLabel {
    }
 
    public static final String SHOW_WORKING_HOURS = "Zeige Arbeitsstunden";
-   public static final String APPLICATION_TITLE = "Turbo-Bucher Zeiterfassung";
+   public static final String APPLICATION_TITLE = "Adcubum Zeiterfassung";
    public static final String EXIT_APP = "App beenden";
    public static final String CLOSE_POPUP_MENU = "Menu schliessen";
 
@@ -64,7 +64,7 @@ public class TextLabel {
    public static final String BOOKING_RUNNING = "Abbuchen läuft, lehn zurück und geniess die Show!";
    public static final String REFRESH_TICKET_BACKLOG = "Sprint-Tickets aktualisieren";
    public static final String REFRESH_TICKET_BACKLOG_DONE = "Sprint-Tickets aktualisiert";
-   public static final String REFRESH_TICKET_BACKLOG_NOT_POSSIBLE = "Aktualisierung der Sprint-Tickets nicht m�glich; Konfiguration unvollst�ndig";
+   public static final String REFRESH_TICKET_BACKLOG_NOT_POSSIBLE = "Aktualisierung der Sprint-Tickets nicht möglich; Konfiguration unvollständig";
    public static final String REFRESH_TICKET_BACKLOG_FAILED = "Fehler bei der Aktualisierung der Sprint-Ticket";
 
    public static final String SETTINGS_ROUND_SAVED = "Einstellungen wurden gespeichert";
