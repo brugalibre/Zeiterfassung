@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.JiraResponse;
-import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.ResponseReader;
+import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.responsereader.ResponseReader;
 
 import okhttp3.Credentials;
 import okhttp3.Interceptor;

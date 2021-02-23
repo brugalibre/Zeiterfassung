@@ -1,8 +1,9 @@
-package com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response;
+package com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.responsereader;
 
 import java.io.IOException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.JiraResponse;
 
 import okhttp3.Response;
 

@@ -1,19 +1,18 @@
 package com.myownb3.dominic.timerecording.ticketbacklog;
 
-import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_PW_VALUE_KEY;
-import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_VALUE_KEY;
-
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import com.myownb3.dominic.timerecording.core.workerfactory.ThreadFactory;
-import com.myownb3.dominic.timerecording.settings.Settings;
 import com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
 import com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler.UpdateStatus;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
+import com.myownb3.dominic.timerecording.ticketbacklog.defaulttickets.DefaultTicketReader;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.read.JiraApiReader;
 
@@ -22,20 +21,33 @@ public class TicketBacklog {
    private static final Logger LOG = Logger.getLogger(TicketBacklog.class);
    private JiraApiReader jiraApiReader;
    private TicketBacklogHelper backlogHelper;
-   private List<Ticket> tickets;
+   private Set<Ticket> tickets;
 
    TicketBacklog() {
-      this.backlogHelper = new TicketBacklogHelper();
-      this.jiraApiReader = JiraApiReader.INSTANCE;
-      this.tickets = getDefaultScrumAndMeetingTickets();
+      this(JiraApiReader.INSTANCE);
    }
 
-   private List<Ticket> getDefaultScrumAndMeetingTickets() {
-      List<Ticket> defaultScrumAndMeetingTickets = new ArrayList<>();
-      defaultScrumAndMeetingTickets.add(Ticket.MEETING_TICKET);
-      defaultScrumAndMeetingTickets.add(Ticket.SCRUM_TICKET);
-      defaultScrumAndMeetingTickets.add(Ticket.SCRUM_ARBEITEN_TICKET);
-      return defaultScrumAndMeetingTickets;
+   /**
+    * Constructor for testing purpose only!
+    * 
+    * @param jiraApiReader
+    *        the {@link JiraApiReader}
+    */
+   TicketBacklog(JiraApiReader jiraApiReader) {
+      this.backlogHelper = new TicketBacklogHelper();
+      this.jiraApiReader = jiraApiReader;
+      init();
+   }
+
+   private void init() {
+      jiraApiReader.init();
+      this.tickets = new HashSet<>();
+   }
+
+   private void readDefaultTickets() {
+      List<Ticket> defaultTickets = new DefaultTicketReader(jiraApiReader).readDefaultTickets();
+      LOG.info("Read " + defaultTickets.size() + " default tickets from outside the sprint");
+      this.tickets.addAll(defaultTickets);
    }
 
    /**
@@ -46,19 +58,18 @@ public class TicketBacklog {
     */
    public void initTicketBacklog(UiTicketBacklogCallbackHandler callbackHandler) {
       if (!backlogHelper.hasBordNameConfigured()) {
+         readDefaultTickets();
          LOG.warn("Unable to read the tickets, no board name provided. Check your turbo-bucher.properties!");
          callbackHandler.onTicketBacklogUpdated(UpdateStatus.NOT_CONFIGURED);
          return;
       }
-      String username = Settings.INSTANCE.getSettingsValue(USER_NAME_VALUE_KEY);
-      String pw = Settings.INSTANCE.getSettingsValue(USER_NAME_PW_VALUE_KEY);
-      initTicketBacklogAsync(callbackHandler, username, pw);
+      initTicketBacklogAsync(callbackHandler);
    }
 
-   private void initTicketBacklogAsync(UiTicketBacklogCallbackHandler callbackHandler, String username, String pw) {
+   private void initTicketBacklogAsync(UiTicketBacklogCallbackHandler callbackHandler) {
       String boardName = backlogHelper.getBoardName();
       ThreadFactory.INSTANCE.execute(() -> {
-         JiraApiReadTicketsResult jiraApiReadTicketsResult = initTicketBacklog(boardName, username, pw);
+         JiraApiReadTicketsResult jiraApiReadTicketsResult = initTicketBacklog(boardName);
          callbackHandler.onTicketBacklogUpdated(evalStatus(jiraApiReadTicketsResult));
       });
    }
@@ -67,13 +78,13 @@ public class TicketBacklog {
       return jiraApiReadTicketsResult.isSuccess() ? UpdateStatus.SUCCESS : UpdateStatus.FAIL;
    }
 
-   private JiraApiReadTicketsResult initTicketBacklog(String boardName, String username, String pw) {
-      JiraApiReadTicketsResult jiraApiReadTicketsResult = jiraApiReader.readTicketsFromJira(boardName, username, pw);
+   private JiraApiReadTicketsResult initTicketBacklog(String boardName) {
+      JiraApiReadTicketsResult jiraApiReadTicketsResult = jiraApiReader.readTicketsFromBoard(boardName);
       if (jiraApiReadTicketsResult.isSuccess()) {
          this.tickets.clear();
-         this.tickets.addAll(getDefaultScrumAndMeetingTickets());
          tickets.addAll(jiraApiReadTicketsResult.getTickets());
       }
+      readDefaultTickets();
       return jiraApiReadTicketsResult;
    }
 
@@ -81,6 +92,6 @@ public class TicketBacklog {
     * @return the {@link Ticket}s of this {@link TicketBacklog}
     */
    public List<Ticket> getTickets() {
-      return Collections.unmodifiableList(tickets);
+      return Collections.unmodifiableList(new ArrayList<>(tickets));
    }
 }

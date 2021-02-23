@@ -36,6 +36,9 @@ public class JiraApiConstants {
    /** URL for retrieving all boards */
    public static final String GET_ALL_BOARDS_URL = ADC_JIRA_BASE_URL + "board?type=scrum&startAt=" + START_AT_PLACE_HOLDER;
 
+   /** URL for retrieving details for an issue */
+   public static final String GET_ISSUE_URL = ADC_JIRA_BASE_URL + "issue/";
+
    /** The maximal amount of results which can be provided by jira at once */
    public static final int JIRA_MAX_RESULTS_RETURNED = 50;
 

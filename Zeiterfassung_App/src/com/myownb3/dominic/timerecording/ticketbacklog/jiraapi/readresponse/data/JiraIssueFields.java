@@ -144,7 +144,7 @@ public class JiraIssueFields {
    }
 
    @JsonIgnoreProperties(ignoreUnknown = true)
-   static class JiraIssueType {
+   public static class JiraIssueType {
 
       String subtask;
       private String name;

@@ -1,6 +1,7 @@
 package com.myownb3.dominic.timerecording.ticketbacklog.data.ticket;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraIssue;
@@ -36,13 +37,6 @@ public class TicketAttrs {
       // private 
    }
 
-   public static TicketAttrs of(String ticketNr, String ticketDesc) {
-      TicketAttrs ticketAttrs = new TicketAttrs();
-      ticketAttrs.nr = ticketNr;
-      ticketAttrs.title = ticketDesc;
-      return ticketAttrs;
-   }
-
    public static TicketAttrs of(JiraIssue issue) {
       TicketAttrs ticketAttrs = new TicketAttrs();
       ticketAttrs.assignee = issue.getAssignee();
@@ -50,7 +44,7 @@ public class TicketAttrs {
       ticketAttrs.id = issue.getId();
       ticketAttrs.externalNr = issue.getExternalNr();
       ticketAttrs.epicNr = issue.getEpicNr();
-      ticketAttrs.issueType = IssueType.of(issue.getIssueType());
+      ticketAttrs.issueType = getIssueType(issue);
       ticketAttrs.title = issue.getTitle();
       ticketAttrs.projectCostUnit = issue.getProjectCostUnit();
       ticketAttrs.projectDesc = issue.getProjectDesc();
@@ -63,6 +57,13 @@ public class TicketAttrs {
       ticketAttrs.syriusRelease = issue.getSyriusRelease();
       ticketAttrs.implementationPackage = issue.getImplementationPackage();
       return ticketAttrs;
+   }
+
+   private static IssueType getIssueType(JiraIssue issue) {
+      if (nonNull(issue.getIssueType())) {
+         return IssueType.of(issue.getIssueType());
+      }
+      return null;
    }
 
    public String getNr() {

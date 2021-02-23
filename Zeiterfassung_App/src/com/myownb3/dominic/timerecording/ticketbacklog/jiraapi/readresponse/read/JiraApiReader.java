@@ -1,5 +1,7 @@
 package com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.read;
 
+import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_PW_VALUE_KEY;
+import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_VALUE_KEY;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.BOARD_ID_PLACE_HOLDER;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_ACTIVE_SPRINT_ID_FOR_BOARD_URL;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_ALL_BOARDS_URL;
@@ -10,18 +12,23 @@ import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.J
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.START_AT_PLACE_HOLDER;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.START_AT_PLACE_LITERAL;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.apache.log4j.Logger;
 
+import com.myownb3.dominic.timerecording.settings.Settings;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
+import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.mapresponse.JiraResponseMapper;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraGenericValuesResponse;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraGenericValuesResponse.GenericNameAttrs;
+import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraIssueResponse;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraIssuesResponse;
-import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.JiraGenericValuesResponseReader;
-import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.JiraIssuesResponseReader;
+import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.responsereader.JiraGenericValuesResponseReader;
+import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.responsereader.JiraIssueResponseReader;
+import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.responsereader.JiraIssuesResponseReader;
 
 /**
  * Tries to evaluate the id of the scrum board as well as the id of the current sprint. If successful by doing so,
@@ -45,21 +52,48 @@ public class JiraApiReader {
    }
 
    /**
+    * Constructor for testing purpose only!
+    */
+   JiraApiReader(HttpClient httpClient) {
+      this.httpClient = httpClient;
+   }
+
+   /**
+    * Initializes this {@link JiraApiReader}
+    */
+   public void init() {
+      String username = Settings.INSTANCE.getSettingsValue(USER_NAME_VALUE_KEY);
+      String pw = Settings.INSTANCE.getSettingsValue(USER_NAME_PW_VALUE_KEY);
+      httpClient.setCredentials(username, pw);
+   }
+
+   /**
+    * Reads a single {@link Ticket} for the given Ticket-Nr
+    * 
+    * @param ticketNr
+    *        the given Ticket nr
+    * 
+    * @return a {@link Optional} of a {@link Ticket}
+    */
+   public Optional<Ticket> readTicket4Nr(String ticketNr) {
+      LOG.info("Try to read ticket for ticket-nr '" + ticketNr + "'");
+      String url = JiraApiConstants.GET_ISSUE_URL + ticketNr;
+      JiraIssueResponse jiraIssueResponse = httpClient.callRequestAndParse(new JiraIssueResponseReader(), url);
+      LOG.info("Read successfully ? " + (jiraIssueResponse.isSuccess() ? "yes" : "no"));
+      return JiraResponseMapper.INSTANCE.map2Ticket(jiraIssueResponse);
+   }
+
+   /**
     * Tries to read all issues for the given boards current and active sprint using a get request and returns a
     * {@link JiraApiReadTicketsResult}
     * 
     * @param boardName
     *        the board
-    * @param username
-    *        the username
-    * @param pw
-    *        the password
     * @return a {@link JiraApiReadTicketsResult} which contains any {@link Ticket}s if the request was successfully or none if not (see also
     *         {@link JiraApiReadTicketsResult#isSuccess()}
     */
-   public JiraApiReadTicketsResult readTicketsFromJira(String boardName, String username, String pw) {
+   public JiraApiReadTicketsResult readTicketsFromBoard(String boardName) {
       LOG.info("Try to read the tickets from the current sprint from board '" + boardName + "'");
-      httpClient.setCredentials(username, pw);
       SprintInfo sprintInfo = evalActiveSprint4BoardName(boardName);
       if (sprintInfo.isUnknownSprintId()) {
          return failedResult(sprintInfo, boardName);

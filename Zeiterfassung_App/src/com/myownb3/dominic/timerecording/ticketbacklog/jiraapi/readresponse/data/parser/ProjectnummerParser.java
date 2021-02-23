@@ -1,5 +1,6 @@
 package com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.parser;
 
+import static java.util.Objects.isNull;
 
 /**
  * Helps pasring the project numer and project description from the jira custom field 'customfield_10060'
@@ -20,7 +21,7 @@ public class ProjectnummerParser {
     * @return the project number extracted from the input
     */
    public String getProjectNr(String projektNrAndBez) {
-      if (projektNrAndBez.indexOf(DELIMITER) < 0) {
+      if (isNull(projektNrAndBez) || projektNrAndBez.indexOf(DELIMITER) < 0) {
          return "";
       }
       return projektNrAndBez.substring(0, projektNrAndBez.indexOf(DELIMITER));
@@ -35,7 +36,7 @@ public class ProjectnummerParser {
     * @return the project description extracted from the input
     */
    public String getProjectDesc(String projektNrAndBez) {
-      if (projektNrAndBez.indexOf(DELIMITER) < 0) {
+      if (isNull(projektNrAndBez) || projektNrAndBez.indexOf(DELIMITER) < 0) {
          return "";
       }
       return projektNrAndBez.substring(projektNrAndBez.indexOf(DELIMITER) + 1);
