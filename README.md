@@ -4,6 +4,7 @@ Initiales Set-Up
 - Allenfalls Rundungseinstellungen und Hot-Key ergänzen Optional kann mit dem key 'boardName' ein Scrum-Board angegeben werden. 
 - Anhand diesem wird versucht die Tickets des aktuellen Sprints zu ermitteln um beim Stoppen einer Aufzeichnung davon auswählen zu können tarten vom .jar via .bat-File. 
   Keine Ahnung warum das nicht mehr ohne geht (ist erst seit Umbau auf Java-FX so)
+- Neben den Tickets vom aktuellen Sprint können in einem optionalen 'default-tickets.txt' weitere Ticket-Nr angegeben werden, welche dann beim Erfassen der Zeit zur verfügung stehen
 
 Aufzeichnung starten:
 - Durch Klick auf den roten Kreis unten in der Info-Leiste

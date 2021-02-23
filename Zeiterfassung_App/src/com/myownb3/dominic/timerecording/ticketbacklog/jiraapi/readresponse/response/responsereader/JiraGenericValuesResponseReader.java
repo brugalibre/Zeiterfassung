@@ -1,4 +1,4 @@
-package com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response;
+package com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.responsereader;
 
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraGenericValuesResponse;
 

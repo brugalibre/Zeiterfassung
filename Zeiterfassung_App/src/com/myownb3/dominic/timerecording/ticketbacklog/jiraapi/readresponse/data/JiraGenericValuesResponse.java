@@ -36,7 +36,7 @@ public class JiraGenericValuesResponse extends JiraErrorResponse {
       return values;
    }
 
-   void setValues(List<GenericNameAttrs> values) {
+   public void setValues(List<GenericNameAttrs> values) {
       this.values = values;
    }
 
@@ -49,7 +49,7 @@ public class JiraGenericValuesResponse extends JiraErrorResponse {
          return name;
       }
 
-      void setName(String name) {
+      public void setName(String name) {
          this.name = name;
       }
 
@@ -57,7 +57,7 @@ public class JiraGenericValuesResponse extends JiraErrorResponse {
          return id;
       }
 
-      void setId(String id) {
+      public void setId(String id) {
          this.id = id;
       }
    }

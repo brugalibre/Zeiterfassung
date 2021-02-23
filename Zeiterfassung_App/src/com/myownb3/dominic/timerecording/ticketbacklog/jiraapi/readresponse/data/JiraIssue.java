@@ -17,15 +17,26 @@ public class JiraIssue {
       this.fields = new JiraIssueFields();
    }
 
-   JiraIssueFields getFields() {
-      return fields;
+   /**
+    * Creates a {@link JiraIssue} of the given {@link JiraIssueResponse}
+    * 
+    * @param jiraIssueResponse
+    *        the given {@link JiraIssueResponse}
+    * @return a {@link JiraIssue}
+    */
+   public static JiraIssue of(JiraIssueResponse jiraIssueResponse) {
+      JiraIssue jiraIssue = new JiraIssue();
+      jiraIssue.setFields(jiraIssueResponse.getFields());
+      jiraIssue.setKey(jiraIssueResponse.getKey());
+      jiraIssue.setId(jiraIssueResponse.getId());
+      return jiraIssue;
    }
 
    void setFields(JiraIssueFields fields) {
       this.fields = requireNonNull(fields);
    }
 
-   void setKey(String key) {
+   public void setKey(String key) {
       this.key = key;
    }
 
@@ -115,5 +126,4 @@ public class JiraIssue {
    public String toString() {
       return key + ", titel " + getTitle() + " is subtask: " + !isNotSubtask();
    }
-
 }

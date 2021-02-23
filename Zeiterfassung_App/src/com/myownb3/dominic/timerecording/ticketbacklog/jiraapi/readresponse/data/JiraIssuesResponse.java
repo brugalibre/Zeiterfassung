@@ -38,7 +38,7 @@ public class JiraIssuesResponse extends JiraErrorResponse {
             .collect(Collectors.toList());
    }
 
-   void setIssues(List<JiraIssue> issues) {
+   public void setIssues(List<JiraIssue> issues) {
       this.issues = issues;
    }
 

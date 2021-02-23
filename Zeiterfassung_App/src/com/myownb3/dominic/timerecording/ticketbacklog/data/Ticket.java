@@ -9,22 +9,18 @@ import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data
 
 public class Ticket {
 
-   public static final Ticket SCRUM_ARBEITEN_TICKET = new Ticket("INTA-155", "Buchungsticket: Scrum-Aufwände");
-   public static final Ticket SCRUM_TICKET = new Ticket("INTA-151", "Buchungsticket: Stammprojekt - Scrummaster Arbeiten");
-   public static final Ticket MEETING_TICKET = new Ticket("INTA-147", "Buchungsticket: Stammprojekt - Meeting");
-
    private TicketAttrs ticketAttrs;
    private boolean isCurrentUserAssigned;
    private boolean isSprintTicket;
-
-   private Ticket(String ticketNr, String ticketDesc) {
-      this(TicketAttrs.of(ticketNr, ticketDesc), false);
-   }
 
    private Ticket(TicketAttrs ticketAttrs, boolean isSprintTicket) {
       this.ticketAttrs = ticketAttrs;
       this.isCurrentUserAssigned = isCurrentUserAssigned(ticketAttrs.getAssignee());
       this.isSprintTicket = isSprintTicket;
+   }
+
+   public static Ticket of(JiraIssue issue, boolean isSprintTicket) {
+      return new Ticket(TicketAttrs.of(issue), isSprintTicket);
    }
 
    public static Ticket of(JiraIssue issue) {
@@ -74,8 +70,8 @@ public class Ticket {
 
    @Override
    public String toString() {
-      return "Ticket-Nr = " + ticketAttrs.getNr() + " (" + ticketAttrs.getTitle() + "), projekt-nr = " + ticketAttrs.getProjektNr() + " ("
-            + ticketAttrs.getProjektDesc() + ")";
+      return "Ticket-Nr = " + ticketAttrs.getNr() + " (" + ticketAttrs.getTitle() + "), projekt-nr = " + ticketAttrs.getProjectNr() + " ("
+            + ticketAttrs.getProjectDesc() + ")";
    }
 
    @Override
