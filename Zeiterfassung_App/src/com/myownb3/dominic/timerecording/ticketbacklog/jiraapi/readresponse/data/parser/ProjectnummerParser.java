@@ -1,4 +1,4 @@
-package com.myownb3.dominic.timerecording.ticketbacklog.data;
+package com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.parser;
 
 
 /**
@@ -7,7 +7,7 @@ package com.myownb3.dominic.timerecording.ticketbacklog.data;
  * @author Dominic
  *
  */
-public class ProjektnummerParser {
+public class ProjectnummerParser {
 
    private static final String DELIMITER = " ";
 
@@ -19,7 +19,7 @@ public class ProjektnummerParser {
     *        the input
     * @return the project number extracted from the input
     */
-   public String getProjektNr(String projektNrAndBez) {
+   public String getProjectNr(String projektNrAndBez) {
       if (projektNrAndBez.indexOf(DELIMITER) < 0) {
          return "";
       }
@@ -34,7 +34,7 @@ public class ProjektnummerParser {
     *        the input
     * @return the project description extracted from the input
     */
-   public String getProjektDesc(String projektNrAndBez) {
+   public String getProjectDesc(String projektNrAndBez) {
       if (projektNrAndBez.indexOf(DELIMITER) < 0) {
          return "";
       }
