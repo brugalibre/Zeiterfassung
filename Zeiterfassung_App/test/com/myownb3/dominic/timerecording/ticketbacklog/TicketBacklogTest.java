@@ -2,9 +2,12 @@ package com.myownb3.dominic.timerecording.ticketbacklog;
 
 import static java.util.Objects.nonNull;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -46,6 +49,64 @@ class TicketBacklogTest extends BaseTestWithSettings {
    }
 
    @Test
+   void testGetTicket4Nr_NewTicket() {
+      // Given
+      String ticketNr = "165416574";
+      int expectedAmountOfTicketsAfter = 1;
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .withRetrievedTicket(ticketNr)
+            .buildTestCaseBuilder();
+
+      // When
+      Ticket actualTicket = tcb.ticketBacklog.getTicket4Nr(ticketNr);
+
+      // Then
+      int actualAmountOfTicketsAfter = tcb.ticketBacklog.getTickets().size();
+      verify(tcb.jiraApiReader).readTicket4Nr(eq(ticketNr));
+      assertThat(actualTicket, is(notNullValue()));
+      assertThat(actualAmountOfTicketsAfter, is(expectedAmountOfTicketsAfter));
+   }
+
+   @Test
+   void testGetTicket4Nr_NrIsNull() {
+      // Given
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .buildTestCaseBuilder();
+
+      // When
+      int amountOfTicketsBefore = tcb.ticketBacklog.getTickets().size();
+      Ticket actualTicket = tcb.ticketBacklog.getTicket4Nr(null);
+
+      // Then
+      int amountOfTicketsAfter = tcb.ticketBacklog.getTickets().size();
+      verify(tcb.jiraApiReader).readTicket4Nr(eq(null));
+      assertThat(actualTicket, is(notNullValue()));
+      assertThat(actualTicket.getNr(), is(nullValue()));
+      assertThat(amountOfTicketsBefore, is(amountOfTicketsAfter));
+   }
+
+   @Test
+   void testGetTicket4Nr_ExistingTicket() {
+      // Given
+      String defaultTicketNr = "INTA-147";
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .withRetrievedTicket(defaultTicketNr)
+            .buildTestCaseBuilder();
+
+      // When
+      tcb.ticketBacklog.initTicketBacklog(res -> {
+      });
+      int amountOfTicketsBefore = tcb.ticketBacklog.getTickets().size();
+      Ticket actualTicket = tcb.ticketBacklog.getTicket4Nr(defaultTicketNr);// this must not trigger the jiraApi
+
+      // Then
+      int amountOfTicketsAfter = tcb.ticketBacklog.getTickets().size();
+      verify(tcb.jiraApiReader).readTicket4Nr(eq(defaultTicketNr));// call only once, while initializing the default tickets
+      assertThat(actualTicket, is(notNullValue()));
+      assertThat(amountOfTicketsBefore, is(amountOfTicketsAfter));
+   }
+
+   @Test
    void testInitTicketBacklog_NotConfigured() {
       // Given
       UiTicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
@@ -57,6 +118,7 @@ class TicketBacklogTest extends BaseTestWithSettings {
 
       // Then
       verify(callbackHandler).onTicketBacklogUpdated(eq(UpdateStatus.NOT_CONFIGURED));
+      assertThat(ticketBacklog.getTickets().size(), is(AMOUNT_OF_DEFAULT_TICKETS));
    }
 
    @Test
@@ -67,6 +129,7 @@ class TicketBacklogTest extends BaseTestWithSettings {
       TicketBacklog ticketBacklog = new TestCaseBuilder()
             .withBoardName("blubbl")
             .withOneReadTicket()
+            .withRetrievedTicket("SYRIUS-984")
             .withSuccessfullRead()
             .build();
 
@@ -83,8 +146,9 @@ class TicketBacklogTest extends BaseTestWithSettings {
    void testInitTicketBacklog_ConfiguredAndFail() throws InterruptedException {
       // Given
       UiTicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
-      int expectedSize = AMOUNT_OF_DEFAULT_TICKETS;// Only the default tickets
+      int expectedSize = AMOUNT_OF_DEFAULT_TICKETS;
       TicketBacklog ticketBacklog = new TestCaseBuilder()
+            .withRetrievedTicket("SYRIUS-6354")
             .withBoardName("blubbl")
             .build();
 
@@ -103,13 +167,12 @@ class TicketBacklogTest extends BaseTestWithSettings {
       private boolean isReadBordSuccessfull;
       private String boardName;
       private List<Ticket> readTickets;
-      private String defaultTicketNr;
       private TicketBacklog ticketBacklog;
+      private String receivedTicketNr;
 
       private TestCaseBuilder() {
          this.jiraApiReader = mock(JiraApiReader.class);
          this.readTickets = new ArrayList<>();
-         this.defaultTicketNr = "SYRIUS-1324";
       }
 
       public TestCaseBuilder withOneReadTicket() {
@@ -122,6 +185,18 @@ class TicketBacklogTest extends BaseTestWithSettings {
          return this;
       }
 
+      private TestCaseBuilder withRetrievedTicket(String receivedTicketNr) {
+         this.receivedTicketNr = receivedTicketNr;
+         return this;
+      }
+
+      private Ticket mockTicket(String ticketNr) {
+         Ticket newTicket = mock(Ticket.class);
+         when(newTicket.getNr()).thenReturn(ticketNr);
+         when(newTicket.isBookable()).thenReturn(nonNull(ticketNr));
+         return newTicket;
+      }
+
       private TestCaseBuilder withBoardName(String boardName) {
          this.boardName = boardName;
          return this;
@@ -129,8 +204,17 @@ class TicketBacklogTest extends BaseTestWithSettings {
 
       private TicketBacklog build() {
          Ticket defaultTicket = mock(Ticket.class);
-         when(defaultTicket.getNr()).thenReturn(defaultTicketNr);
+         when(defaultTicket.getNr()).thenReturn("13254548");
          when(jiraApiReader.readTicket4Nr(any())).thenReturn(Optional.of(defaultTicket));
+         for (String ticketNr : DefaultTicketConst.getDefaultScrumtTicketNrs()) {
+            Ticket ticket = mockTicket(ticketNr);
+            doReturn(Optional.of(ticket)).when(jiraApiReader).readTicket4Nr(eq(ticketNr));
+         }
+         doReturn(Optional.empty()).when(jiraApiReader).readTicket4Nr(eq(null));
+         if (nonNull(receivedTicketNr)) {
+            Ticket receivedTicket = mockTicket(receivedTicketNr);
+            doReturn(Optional.of(receivedTicket)).when(jiraApiReader).readTicket4Nr(eq(receivedTicketNr));
+         }
          mockReadTicketsFromBoard();
          if (nonNull(boardName)) {
             saveProperty2Settings("boardName", boardName);

@@ -4,6 +4,7 @@
 package com.myownb3.dominic.timerecording.core.work.businessday;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -16,6 +17,9 @@ import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.i
 import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
+import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklog;
+import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.util.parser.NumberFormat;
 
 /**
@@ -31,13 +35,13 @@ public class BusinessDayIncrement {
 
    private Date date;
    private String description;
-   private String ticketNumber;
+   private Ticket ticket;
    private int chargeType;
    private boolean isCharged;
 
+
    public BusinessDayIncrement(Date date) {
       this.date = date;
-      ticketNumber = "SYRIUS";
    }
 
    /**
@@ -73,6 +77,16 @@ public class BusinessDayIncrement {
 
    public void flagAsCharged() {
       this.isCharged = true;
+   }
+
+   /**
+    * If the {@link Ticket} of this {@link BusinessDayIncrement} is a dummy-Ticket, then it's
+    * read again from the
+    */
+   public void refreshDummyTicket() {
+      if (nonNull(ticket) && ticket.isDummyTicket()) {
+         this.ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticket.getNr());
+      }
    }
 
    /**
@@ -114,20 +128,31 @@ public class BusinessDayIncrement {
    }
 
    public String getTicketNumber() {
-      return ticketNumber;
+      return nonNull(ticket) ? ticket.getNr() : "SYRIUS";
    }
 
-   public void setTicketNumber(String ticketNumber) {
-      this.ticketNumber = ticketNumber;
+   public Ticket getTicket() {
+      return ticket;
+   }
+
+   public void setTicket(Ticket ticket) {
+      this.ticket = ticket;
    }
 
    public int getChargeType() {
       return chargeType;
    }
 
-
    public boolean isCharged() {
       return isCharged;
+   }
+
+   /**
+    * @return <code>true</code> if there this {@link BusinessDayIncrement} contains a {@link Ticket} for which are all relevant value
+    *         present or <code>false</code> if not
+    */
+   public boolean isBookable() {
+      return nonNull(ticket) && ticket.isBookable();
    }
 
    /**
@@ -173,7 +198,7 @@ public class BusinessDayIncrement {
 
       BusinessDayIncrement businessDayIncremental = new BusinessDayIncrement(update.getTimeSnippet().getDate());
       businessDayIncremental.description = update.getDescription();
-      businessDayIncremental.ticketNumber = update.getTicketNo();
+      businessDayIncremental.ticket = update.getTicket();
       businessDayIncremental.chargeType = update.getKindOfService();
       businessDayIncremental.startCurrentTimeSnippet(update.getTimeSnippet().getBeginTimeStamp());
       businessDayIncremental.stopCurrentTimeSnippet(update.getTimeSnippet().getEndTimeStamp());
@@ -196,7 +221,8 @@ public class BusinessDayIncrement {
       }
       BusinessDayIncrement businessDayIncremental = new BusinessDayIncrement(date);
       businessDayIncremental.description = businessDayIncrementImport.getDescription();
-      businessDayIncremental.ticketNumber = businessDayIncrementImport.getTicketNo();
+      TicketBacklog ticketBacklog = TicketBacklogSPI.getTicketBacklog();
+      businessDayIncremental.ticket = ticketBacklog.getTicket4Nr(businessDayIncrementImport.getTicketNo());
       businessDayIncremental.chargeType = businessDayIncrementImport.getKindOfService();
 
       for (TimeSnippet timeSnippet : timeSnippets2Add) {

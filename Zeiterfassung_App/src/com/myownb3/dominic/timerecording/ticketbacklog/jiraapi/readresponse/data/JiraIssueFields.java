@@ -97,7 +97,7 @@ public class JiraIssueFields {
       return summary;
    }
 
-   void setSummary(String summary) {
+   public void setSummary(String summary) {
       this.summary = summary;
    }
 

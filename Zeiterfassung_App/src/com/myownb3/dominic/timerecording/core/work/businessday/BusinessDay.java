@@ -18,6 +18,9 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
+import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklog;
+import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
@@ -97,6 +100,16 @@ public class BusinessDay {
    public void flagBusinessDayAsCharged() {
       increments.stream()//
             .forEach(BusinessDayIncrement::flagAsCharged);
+   }
+
+   /**
+    * All {@link BusinessDayIncrement}s are checked if they have a dummy-{@link Ticket} set
+    * If so, this dummy-Ticket is tried to update. This can be necessary, if the jira-api was not reachable
+    * during the creating of a {@link BusinessDayIncrement}
+    */
+   public void refreshDummyTickets() {
+      increments.stream()
+            .forEach(BusinessDayIncrement::refreshDummyTicket);
    }
 
    /**
@@ -282,7 +295,8 @@ public class BusinessDay {
             businessDayIncremental.updateEndTimeSnippetAndCalculate(changedValue.getNewValue());
             break;
          case TICKET_NR:
-            businessDayIncremental.setTicketNumber(changedValue.getNewValue());
+            TicketBacklog ticketBacklog = TicketBacklogSPI.getTicketBacklog();
+            businessDayIncremental.setTicket(ticketBacklog.getTicket4Nr(changedValue.getNewValue()));
             break;
          case CHARGE_TYPE:
             try {

@@ -27,7 +27,7 @@ public class BusinessDayIncTableRowValue {
    private StringProperty ticketNumberProperty;
    private StringProperty descriptionProperty;
    private StringProperty chargeTypeProperty;
-   private StringProperty isChargedProperty;
+   private StringProperty isBookedProperty;
 
    private BeginAndEndCellValue beginAndEndCellValue;
    private Map<Integer, ValueTypes> valueTypesForIndex;
@@ -41,7 +41,7 @@ public class BusinessDayIncTableRowValue {
       ticketNumberProperty = new SimpleStringProperty();
       descriptionProperty = new SimpleStringProperty();
       chargeTypeProperty = new SimpleStringProperty();
-      isChargedProperty = new SimpleStringProperty();
+      isBookedProperty = new SimpleStringProperty();
       valueTypesForIndex = new HashMap<>();
    }
 
@@ -125,12 +125,12 @@ public class BusinessDayIncTableRowValue {
       return chargeTypeProperty;
    }
 
-   public final String getIsCharged() {
-      return this.isChargedProperty.get();
+   public final String getIsBooked() {
+      return this.isBookedProperty.get();
    }
 
-   public final void setIsCharged(String isCharged) {
-      this.isChargedProperty.set(isCharged);
+   public final void setIsBooked(String isCharged) {
+      this.isBookedProperty.set(isCharged);
    }
 
    public final void setNumber(String number) {

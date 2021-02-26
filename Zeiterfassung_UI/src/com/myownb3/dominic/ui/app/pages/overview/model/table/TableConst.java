@@ -10,7 +10,7 @@ public class TableConst {
    public static final String DESCRIPTION = "description";
    public static final String TICKET_NUMBER = "ticketNumber";
    public static final String TOTAL_DURATION = "totalDuration";
-   public static final String IS_CHARGED = "isCharged";
+   public static final String IS_BOOKED = "isBooked";
    public static final String END = "begin";
    public static final String BEGIN = "end";
 }

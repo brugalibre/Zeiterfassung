@@ -72,7 +72,7 @@ public class BusinessDayExporter {
          builder.append(CONTENT_SEPPARATOR);
          builder.append(ChargeType.getRepresentation(inc.getChargeType()));
          builder.append(CONTENT_SEPPARATOR);
-         builder.append(inc.isCharged() ? TextLabel.YES : TextLabel.NO);
+         builder.append(inc.isBooked() ? TextLabel.YES : TextLabel.NO);
 
          builder.append(System.getProperty(LINE_SEPARATOR));
          content.add(builder.toString());
@@ -95,9 +95,9 @@ public class BusinessDayExporter {
 
       appendBeginEndHeader(builder);
 
-      builder.append(TextLabel.CHARGE_TYPE_LABEL);
+      builder.append(TextLabel.BOOK_TYPE_LABEL);
       builder.append(CONTENT_SEPPARATOR);
-      builder.append(TextLabel.CHARGED);
+      builder.append(TextLabel.BOOKED);
       builder.append(System.getProperty(LINE_SEPARATOR));
    }
 
@@ -144,7 +144,7 @@ public class BusinessDayExporter {
    private List<BusinessDayIncrementVO> getNotChargedIncrements(BusinessDayVO bussinessDay) {
       return bussinessDay.getBusinessDayIncrements()//
             .stream()//
-            .filter(bDayInc -> !bDayInc.isCharged())//
+            .filter(bDayInc -> !bDayInc.isBooked())//
             .collect(Collectors.toList());
    }
 }

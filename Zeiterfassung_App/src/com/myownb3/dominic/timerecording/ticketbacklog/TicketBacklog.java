@@ -51,6 +51,39 @@ public class TicketBacklog {
    }
 
    /**
+    * Evaluates a a {@link Ticket} for the given ticket-nr. If there is no ticket with the given nr, the {@link JiraApiReader} will be
+    * called in order to retrieve it. This {@link Ticket} will then be added to this Backlog if it exists and it's bookable
+    * 
+    * If there is no Ticket for the given number this method returns a dummy-Ticket with only it's ticket-nr set
+    * 
+    * @param ticketNr
+    *        the given Ticket nr
+    * 
+    * @return a {@link Ticket}
+    */
+   public Ticket getTicket4Nr(String ticketNr) {
+      Ticket ticket = findExistingReadNewOrBuildDummyTicket(ticketNr);
+      if (ticket.isBookable()) {
+         tickets.add(ticket);
+      }
+      return ticket;
+   }
+
+   /*
+    * We return always a Ticket. 
+    *    - First we're looking for an existing one.
+    *    - If we don't find anything, we'll ask jira
+    *    - If Jira don't find anything, we create an empty Ticket with the Ticket-Nr as the only set attribute
+    */
+   private Ticket findExistingReadNewOrBuildDummyTicket(String ticketNr) {
+      return tickets.stream()
+            .filter(existingTicket -> existingTicket.getNr().equals(ticketNr))
+            .findFirst()
+            .orElseGet(() -> jiraApiReader.readTicket4Nr(ticketNr)
+                  .orElseGet(() -> Ticket.dummy(ticketNr)));
+   }
+
+   /**
     * Initialises this {@link TicketBacklog} and calls the given callback handler afterwards
     * 
     * @param callbackHandler

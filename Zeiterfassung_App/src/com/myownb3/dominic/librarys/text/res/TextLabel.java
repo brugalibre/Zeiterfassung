@@ -25,7 +25,7 @@ public class TextLabel {
    public static final String AMOUNT_OF_HOURS_LABEL = "Anzahl Stunden";
    public static final String TOTAL_AMOUNT_OF_HOURS_LABEL = "Gesamt Anzahl Stunden: ";
    public static final String TICKET_NUMBER_LABEL = "Ticket-Nr.";
-   public static final String CHARGE_TYPE_LABEL = "Leistungsart";
+   public static final String BOOK_TYPE_LABEL = "Leistungsart";
    public static final String IS_CHARGED_LABEL = "Abgebucht";
    public static final String DESCRIPTION_LABEL = "Beschreibung";
    public static final String VON_LABEL = "Von";
@@ -57,8 +57,11 @@ public class TextLabel {
 
    // Ticket Stuff
    public static final String TICKET = "Ticket";
-   public static final String SUCCESSFULLY_CHARGED_TEXT = "Erfolgreich abgebucht";
-   public static final String CHARGED = "Abgebucht";
+   public static final String SUCCESSFULLY_BOOKED_TEXT = "Erfolgreich abgebucht";
+   public static final Object BOOKING_FAILED_TEXT = "Abbuchen fehlgeschlagen, logs prüfen!";
+   public static final String PARTIAL_SUCCESSFULLY_BOOKED_TEXT = "Abbuchung nur teilweise erfolgreich!";
+   public static final String NOT_BOOKABLE_TICKETS_FOUND_TEXT = "Projektnummern und Leistungsart von Ticket '%s1' prüfen";
+   public static final String BOOKED = "Abgebucht";
    public static final String NO = "Nein";
    public static final String YES = "Ja";
    public static final String BOOKING_RUNNING = "Abbuchen läuft, lehn zurück und geniess die Show!";

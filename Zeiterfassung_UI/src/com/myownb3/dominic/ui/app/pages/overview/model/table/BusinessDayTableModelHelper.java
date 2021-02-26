@@ -84,12 +84,12 @@ public class BusinessDayTableModelHelper {
       titleHeaders.add(beginTableColumn);
       titleHeaders.add(endTableColumn);
 
-      TableColumn<BusinessDayIncTableRowValue, String> chargeTypeTableColumn = new TableColumn<>(TextLabel.CHARGE_TYPE_LABEL);
-      titleHeaders.add(chargeTypeTableColumn);
-      setEditableColumBoxCellFactory(chargeTypeTableColumn);
-      TableColumn<BusinessDayIncTableRowValue, String> isChargedTableColumn = new TableColumn<>(TextLabel.CHARGED);
-      titleHeaders.add(isChargedTableColumn);
-      setNonEditableCellValueFactory(isChargedTableColumn, TableConst.IS_CHARGED);
+      TableColumn<BusinessDayIncTableRowValue, String> bookTypeTableColumn = new TableColumn<>(TextLabel.BOOK_TYPE_LABEL);
+      titleHeaders.add(bookTypeTableColumn);
+      setEditableColumBoxCellFactory(bookTypeTableColumn);
+      TableColumn<BusinessDayIncTableRowValue, String> isBookedTableColumn = new TableColumn<>(TextLabel.BOOKED);
+      titleHeaders.add(isBookedTableColumn);
+      setNonEditableCellValueFactory(isBookedTableColumn, TableConst.IS_BOOKED);
       return titleHeaders;
    }
 
@@ -168,7 +168,7 @@ public class BusinessDayTableModelHelper {
       businessDayIncTableCellValue.setTimeSnippets(getTimeSnippets(bussinessDayIncremental));
       businessDayIncTableCellValue
             .setChargeType(ChargeType.getRepresentation(bussinessDayIncremental.getChargeType()));
-      businessDayIncTableCellValue.setIsCharged(bussinessDayIncremental.isCharged() ? TextLabel.YES : TextLabel.NO);
+      businessDayIncTableCellValue.setIsBooked(bussinessDayIncremental.isBooked() ? TextLabel.YES : TextLabel.NO);
       businessDayIncTableCellValue.setValueTypes(isDescriptionTitleNecessary);
       return businessDayIncTableCellValue;
    }

@@ -23,7 +23,7 @@ public class BusinessDayIncrementVO {
    private String description;
    private String ticketNumber;
    private int chargeType;
-   private boolean isCharged;
+   private boolean isBooked;
 
    private BusinessDayIncrementVO(BusinessDayIncrement businessDayIncremental) {
 
@@ -32,7 +32,7 @@ public class BusinessDayIncrementVO {
       this.ticketNumber = businessDayIncremental.getTicketNumber();
       this.chargeType = businessDayIncremental.getChargeType();
       this.totalDuration = businessDayIncremental.getTotalDuration();
-      this.isCharged = businessDayIncremental.isCharged();
+      this.isBooked = businessDayIncremental.isCharged();
    }
 
    /**
@@ -62,8 +62,8 @@ public class BusinessDayIncrementVO {
       return this.chargeType;
    }
 
-   public boolean isCharged() {
-      return isCharged;
+   public boolean isBooked() {
+      return isBooked;
    }
 
    public final TimeSnippet getCurrentTimeSnippet() {

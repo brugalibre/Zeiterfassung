@@ -1,3 +1,4 @@
+
 /**
  * 
  */
@@ -231,17 +232,9 @@ public class TimeRecordingTray {
 
    private void getBookAndRefreshRunnable() {
       try {
-         bookInternal();
+         TimeRecorder.INSTANCE.book();
       } finally {
          // Make sure the UI is refreshed after the booking
-         updateUIStates();
-      }
-   }
-
-   private void bookInternal() {
-      boolean wasBooked = TimeRecorder.INSTANCE.book();
-      if (wasBooked) {
-         displayMessage(null, TextLabel.SUCCESSFULLY_CHARGED_TEXT, MessageType.INFORMATION);
          updateUIStates();
       }
    }

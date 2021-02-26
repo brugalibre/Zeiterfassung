@@ -37,7 +37,7 @@ public class JiraResponseMapper {
          return Optional.empty();
       }
       JiraIssue jiraIssue = JiraIssue.of(jiraIssueResponse);
-      return Optional.of(Ticket.of(jiraIssue, false));
+      return Optional.of(Ticket.of(jiraIssue, false, false));
    }
 
    /**

@@ -3,6 +3,7 @@
  */
 package com.myownb3.dominic.ui.app.pages.overview.control;
 
+import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 import java.net.URL;
@@ -11,9 +12,9 @@ import java.util.ResourceBundle;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.myownb3.dominic.timerecording.core.workerfactory.ThreadFactory;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
+import com.myownb3.dominic.ui.app.pages.overview.book.service.BookerService;
 import com.myownb3.dominic.ui.app.pages.overview.control.businessdaychange.BusinessDayChangeHelper;
 import com.myownb3.dominic.ui.app.pages.overview.control.descriptionchange.DescriptionAddHelper;
 import com.myownb3.dominic.ui.app.pages.overview.control.rowdeleter.RowDeleteHelper;
@@ -27,8 +28,10 @@ import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 import com.myownb3.dominic.ui.core.view.Page;
 import com.myownb3.dominic.ui.core.view.table.TableUtil;
+import com.myownb3.dominic.ui.util.ExceptionUtil;
 
-import javafx.application.Platform;
+import javafx.concurrent.Worker;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -36,11 +39,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -54,7 +58,10 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
    private MainWindowController mainWindowController;
 
    @FXML
-   private BorderPane borderPane;
+   private ProgressIndicator progressIndicator;
+
+   @FXML
+   private Pane mainPane;
 
    @FXML
    private TableView<BusinessDayIncTableRowValue> tableView;
@@ -73,6 +80,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
    private ContextMenu contextMenu;
 
+   private BookerService bookerService;
    private DescriptionAddHelper descAddHelper;
    private BusinessDayTableModelHelper businessDayTableModel;
    private TimeRecordingTray timeRecordingTray;
@@ -88,12 +96,37 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
    @Override
    public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
+      createBookerService();
       super.initialize(page);
       businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelper(finishAction -> refreshUI()));
       setBinding(dataModel);
-
       initContextMenu();
       initTable();
+   }
+
+   private void createBookerService() {
+      this.bookerService = new BookerService();
+      bookerService.setOnSucceeded(onSucceededHandler());
+      bookerService.setOnFailed(onFailedHandler());
+   }
+
+   private EventHandler<WorkerStateEvent> onFailedHandler() {
+      return workerStateEvent -> {
+         Worker<?> worker = workerStateEvent.getSource();
+         // Not sure if we ever get here without an exception. Well, if so we're doomed
+         if (nonNull(worker.getException())) {
+            ExceptionUtil.showException(Thread.currentThread(), worker.getException());
+         }
+      };
+   }
+
+   private EventHandler<WorkerStateEvent> onSucceededHandler() {
+      return workerStateEvent -> {
+         Boolean res = bookerService.getValue();
+         if (nonNull(res) && res.booleanValue()) {
+            refreshUI();
+         }
+      };
    }
 
    @Override
@@ -104,7 +137,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
       changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.hasBusinessDayDescription());
       TableUtil.autoResizeTable(tableView);
       stage.setWidth(tableView.getPrefWidth());
-      borderPane.setPrefWidth(tableView.getPrefWidth());
+      mainPane.setPrefWidth(tableView.getPrefWidth());
    }
 
    public void init(MainWindowController mainWindowController) {
@@ -139,23 +172,9 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
          mainWindowController.clearBusinessDayContents();
          mainWindowController.dispose();
       } else if (actionEvent.getSource() == bookButton) {
-         bookAsyncAndRefresh();
+         bookerService.book();
       } else if (actionEvent.getSource() == exportButton) {
          timeRecordingTray.export();
-      }
-   }
-
-   private void bookAsyncAndRefresh() {
-      ThreadFactory.INSTANCE.execute(this::getBookAndRefreshRunnable);
-      refreshUI();
-   }
-
-   private void getBookAndRefreshRunnable() {
-      try {
-         TimeRecorder.INSTANCE.book();
-      } finally {
-         // Make sure the UI is refreshed after the booking. If there was an exception and nothing was booked e.g.
-         Platform.runLater(this::refreshUI);
       }
    }
 
@@ -187,6 +206,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
       totalAmountOfTimeLabel.textProperty().bind(getDataModel().getTotalAmountOfTimeLabel());
       totalAmountOfTimeValue.textProperty().bind(getDataModel().getTotalAmountOfTimeValue());
+      bookerService.bind(progressIndicator);
    }
 
    private void initContextMenu() {
