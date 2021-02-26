@@ -3,6 +3,8 @@
  */
 package com.myownb3.dominic.ui.app.inputfield;
 
+import static com.myownb3.dominic.util.parser.NumberFormat.neutralizeDecimalSeparator;
+
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 
@@ -29,13 +31,14 @@ public class InputFieldVerifier {
 
    private boolean verifyTextField(TextField textField) {
 
-      String text = textField.getText().trim();
+      NumberFormat formatter = NumberFormat.getInstance();
+      String text = neutralizeDecimalSeparator(textField.getText().trim(), formatter);
       if (text.isEmpty()) {
+         addOrRemoveErrorStyle(textField, false);
          return false;
       }
       boolean isValidNumber = false;
       try {
-         NumberFormat formatter = NumberFormat.getInstance();
          ParsePosition pos = new ParsePosition(0);
          Number number = formatter.parse(text, pos);
          isValidNumber = number.doubleValue() > 0.0;
