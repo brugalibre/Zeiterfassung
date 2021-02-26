@@ -1,0 +1,300 @@
+package com.myownb3.dominic.timerecording.core.charge.abacus;
+
+import static java.util.Objects.nonNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+import com.adcubum.j2a.abacusconnector.ProjectBookingBean;
+import com.adcubum.j2a.zeiterfassung.AbacusBookingConnector;
+import com.myownb3.dominic.timerecording.core.charge.result.BookResultType;
+import com.myownb3.dominic.timerecording.core.charge.result.BookerResult;
+import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
+import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
+import com.myownb3.dominic.timerecording.core.work.date.Time;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.IssueType;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.TicketAttrs;
+
+class AbacusBookAdapterTest {
+   private static final String USERNAME = "username";
+
+   @Test
+   void testVerifyRefreshDummyTicketsBeforeBooking() {
+
+      // Given
+      AbacusBookingConnector abacusBookingConnector = mock(AbacusBookingConnector.class);
+      AbacusBookerAdapter abacusBookerAdapter = new AbacusBookerAdapter(abacusBookingConnector, USERNAME);
+      BusinessDay businessDay = mock(BusinessDay.class);
+
+      // When
+      abacusBookerAdapter.book(businessDay);
+
+      // Then
+      verify(businessDay).refreshDummyTickets();
+   }
+
+   @Test
+   void testInitConnector_Failed() {
+
+      // Given
+      AbacusBookingConnector abacusBookingConnector = mock(AbacusBookingConnector.class);
+      String username = USERNAME;
+
+      // When
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .withAbacusBookingConnector(abacusBookingConnector)
+            .withUsername(username)
+            .withExceptionWhileFetchingEmployeeNumber()
+            .build();
+
+      // Then
+      verify(tcb.abacusBookingConnector).fetchEmployeeNumber(eq(username));
+      assertThat(tcb.abacusBookAdapter.isInitialized(), is(false));
+   }
+
+   @Test
+   void testInitConnector_Success() {
+
+      // Given
+      String username = USERNAME;
+      AbacusBookingConnector abacusBookingConnector = mock(AbacusBookingConnector.class);
+      when(abacusBookingConnector.fetchEmployeeNumber(eq(username))).thenReturn(1324l);
+
+      // When
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .withAbacusBookingConnector(abacusBookingConnector)
+            .withUsername(username)
+            .build();
+
+      // Then
+      verify(tcb.abacusBookingConnector).fetchEmployeeNumber(eq(username));
+      assertThat(tcb.abacusBookAdapter.isInitialized(), is(true));
+   }
+
+   @Test
+   void testBook_PartialSuccess_WithErrorThrown() {
+
+      // Given
+      AbacusBookingConnector abacusBookingConnector = mock(AbacusBookingConnector.class);
+      String ticketNr = "SYRIUS-654";
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .withAbacusBookingConnector(abacusBookingConnector)
+            .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                  .withTicket(mockTicket(true))
+                  .withTimeSnippet(createTimeSnippet(50))
+                  .build())
+            .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                  .withTicket(mockTicket(true, ticketNr))
+                  .withTimeSnippet(createTimeSnippet(50))
+                  .build())
+            .withExceptionWhileBooking(ticketNr)
+            .build();
+
+      // When
+      BookerResult actualBookResult = tcb.abacusBookAdapter.book(tcb.businessDay);
+
+      // Then
+      assertThat(actualBookResult.getBookResultType(), is(BookResultType.PARTIAL_SUCCESS_WITH_ERROR));
+      verify(tcb.abacusBookingConnector, times(tcb.businessDay.getIncrements().size())).book(any());
+   }
+
+   @Test
+   void testBook_PartialSuccess_WithBookedAndNonBookeable() {
+
+      // Given
+      AbacusBookingConnector abacusBookingConnector = mock(AbacusBookingConnector.class);
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .withAbacusBookingConnector(abacusBookingConnector)
+            .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                  .withTicket(mockTicket(true))
+                  .withTimeSnippet(createTimeSnippet(50))
+                  .build())
+            .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                  .withTicket(mockTicket(false))
+                  .withTimeSnippet(createTimeSnippet(50))
+                  .build())
+            .build();
+
+      // When
+      BookerResult actualBookResult = tcb.abacusBookAdapter.book(tcb.businessDay);
+
+      // Then
+      assertThat(actualBookResult.getBookResultType(), is(BookResultType.PARTIAL_SUCCESS_WITH_NON_BOOKABLE));
+      verify(tcb.abacusBookingConnector).book(any());
+   }
+
+   @Test
+   void testBook_Failure() {
+
+      // Given
+      AbacusBookingConnector abacusBookingConnector = mock(AbacusBookingConnector.class);
+      String ticketNrWhichThrowsException = "65421";
+      String ticketNrWhichWasAlreadyBookedBefore = "1324";
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .withAbacusBookingConnector(abacusBookingConnector)
+            .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                  .withTicket(mockTicket(true, ticketNrWhichThrowsException))
+                  .withTimeSnippet(createTimeSnippet(50))
+                  .build())
+            .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                  .withTicket(mockTicket(true, "1324"))
+                  .withTimeSnippet(createTimeSnippet(50))
+                  .build())
+            .withExceptionWhileBooking(ticketNrWhichThrowsException)
+            .withAlreadyChargedTicket(ticketNrWhichWasAlreadyBookedBefore)
+            .build();
+
+      // When
+      BookerResult actualBookResult = tcb.abacusBookAdapter.book(tcb.businessDay);
+
+      // Then
+      assertThat(actualBookResult.getBookResultType(), is(BookResultType.FAILURE));
+      verify(tcb.abacusBookingConnector, times(tcb.businessDay.getIncrements().size() - 1)).book(any());
+   }
+
+   @Test
+   void testBook_Success() {
+
+      // Given
+      AbacusBookingConnector abacusBookingConnector = mock(AbacusBookingConnector.class);
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .withAbacusBookingConnector(abacusBookingConnector)
+            .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                  .withTicket(mockTicket(true))
+                  .withTimeSnippet(createTimeSnippet(50))
+                  .build())
+            .build();
+
+      // When
+      BookerResult actualBookResult = tcb.abacusBookAdapter.book(tcb.businessDay);
+
+      // Then
+      assertThat(actualBookResult.getBookResultType(), is(BookResultType.SUCCESS));
+      verify(tcb.abacusBookingConnector, times(tcb.businessDay.getIncrements().size())).book(any());
+   }
+
+   private static Ticket mockTicket(boolean isBookable) {
+      return mockTicket(isBookable, "SYRIUS-12345");
+   }
+
+   private static Ticket mockTicket(boolean isBookable, String ticketNr) {
+      Ticket ticket = mock(Ticket.class);
+      TicketAttrs attrs = mock(TicketAttrs.class);
+      when(attrs.getIssueType()).thenReturn(IssueType.BUG);
+      when(attrs.getProjectNr()).thenReturn(1234l);
+      when(attrs.getNr()).thenReturn(ticketNr);
+      when(ticket.getTicketAttrs()).thenReturn(attrs);
+      when(ticket.getNr()).thenReturn(ticketNr);
+      when(ticket.isBookable()).thenReturn(isBookable);
+      return ticket;
+   }
+
+   private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) {
+      Time beginTimeStamp = new Time(System.currentTimeMillis() + timeBetweenBeginAndEnd);
+      TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
+      timeSnippet.setBeginTimeStamp(beginTimeStamp);
+      timeSnippet.setEndTimeStamp(new Time(System.currentTimeMillis() + timeBetweenBeginAndEnd + 10));
+      return timeSnippet;
+   }
+
+   private static class TestCaseBuilder {
+      private BusinessDay businessDay;
+      private AbacusBookerAdapter abacusBookAdapter;
+      private AbacusBookingConnector abacusBookingConnector;
+      private List<BusinessDayIncrementAdd> businessDayIncrementAdds;
+      private String username;
+      private RuntimeException fetchEmployeeException;
+      private String chargedTicketNr;
+      private String ticketNr2ThrowExceptionDuringBooking;
+
+      private TestCaseBuilder() {
+         this.businessDayIncrementAdds = new ArrayList<>();
+         this.businessDay = spy(new BusinessDay(new Date()));
+      }
+
+      public TestCaseBuilder withAlreadyChargedTicket(String chargedTicketNr) {
+         this.chargedTicketNr = chargedTicketNr;
+         return this;
+      }
+
+      public TestCaseBuilder withExceptionWhileBooking(String ticketNr2ThrowExceptionDuringBooking) {
+         this.ticketNr2ThrowExceptionDuringBooking = ticketNr2ThrowExceptionDuringBooking;
+         return this;
+      }
+
+      public TestCaseBuilder withExceptionWhileFetchingEmployeeNumber() {
+         this.fetchEmployeeException = new RuntimeException();
+         return this;
+      }
+
+      public TestCaseBuilder withUsername(String username) {
+         this.username = username;
+         return this;
+      }
+
+      public TestCaseBuilder withBusinessDayIncrementAdd(BusinessDayIncrementAdd businessDayIncrementAdd) {
+         this.businessDayIncrementAdds.add(businessDayIncrementAdd);
+         return this;
+      }
+
+      public TestCaseBuilder withAbacusBookingConnector(AbacusBookingConnector abacusBookingConnector) {
+         this.abacusBookingConnector = abacusBookingConnector;
+         return this;
+      }
+
+      private TestCaseBuilder build() {
+         addBusinessIncrements();
+         doThrowWhileFetching();
+         this.abacusBookAdapter = spy(new AbacusBookerAdapter(abacusBookingConnector, username));
+         doThrowWhileBooking();
+         return this;
+      }
+
+      private void doThrowWhileFetching() {
+         if (nonNull(fetchEmployeeException)) {
+            doThrow(fetchEmployeeException).when(abacusBookingConnector).fetchEmployeeNumber(eq(username));
+         }
+      }
+
+      private void doThrowWhileBooking() {
+         if (nonNull(ticketNr2ThrowExceptionDuringBooking)) {
+            for (BusinessDayIncrement businessDayIncrement : businessDay.getIncrements()) {
+               if (businessDayIncrement.getTicketNumber().equals(ticketNr2ThrowExceptionDuringBooking)) {
+                  ProjectBookingBean bean = mock(ProjectBookingBean.class);
+                  doReturn(bean).when(abacusBookAdapter).map2ProjectBookingBean(eq(businessDayIncrement));
+                  doThrow(new RuntimeException()).when(abacusBookingConnector).book(eq(bean));
+               }
+            }
+         }
+      }
+
+      private void addBusinessIncrements() {
+         for (BusinessDayIncrementAdd businessDayIncrementAdd : businessDayIncrementAdds) {
+            this.businessDay.addBusinessIncrement(businessDayIncrementAdd);
+         }
+         for (BusinessDayIncrement businessDayIncrement : businessDay.getIncrements()) {
+            if (businessDayIncrement.getTicketNumber().equals(chargedTicketNr)) {
+               businessDayIncrement.flagAsCharged();
+            }
+         }
+      }
+   }
+}

@@ -5,6 +5,7 @@ package com.myownb3.dominic.timerecording.core.work.businessday.update.callback.
 
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 
 /**
  * 
@@ -16,7 +17,7 @@ import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
  */
 public class BusinessDayIncrementAdd {
 
-   private String ticketNo;
+   private Ticket ticket;
    private String description;
    private String amountOfHours;
    private int kindOfService;
@@ -26,8 +27,8 @@ public class BusinessDayIncrementAdd {
       // private 
    }
 
-   public final String getTicketNo() {
-      return this.ticketNo;
+   public final Ticket getTicket() {
+      return this.ticket;
    }
 
    public final String getDescription() {
@@ -42,8 +43,8 @@ public class BusinessDayIncrementAdd {
       return this.kindOfService;
    }
 
-   public final void setTicketNo(String ticketNo) {
-      this.ticketNo = ticketNo;
+   public final void setTicket(Ticket ticket) {
+      this.ticket = ticket;
    }
 
    public final void setDescription(String description) {
@@ -67,14 +68,14 @@ public class BusinessDayIncrementAdd {
    }
 
    public static final class BusinessDayIncrementAddBuilder {
-      private String ticketNo;
+      private Ticket ticket;
       private String description;
       private String amountOfHours;
       private int kindOfService;
       private TimeSnippet timeSnippet;
 
-      public BusinessDayIncrementAddBuilder withTicketNo(String ticketNo) {
-         this.ticketNo = ticketNo;
+      public BusinessDayIncrementAddBuilder withTicket(Ticket ticket) {
+         this.ticket = ticket;
          return this;
       }
 
@@ -102,7 +103,7 @@ public class BusinessDayIncrementAdd {
          BusinessDayIncrementAdd businessDayIncrementAdd = new BusinessDayIncrementAdd();
          businessDayIncrementAdd.setTimeSnippet(timeSnippet);
          businessDayIncrementAdd.setDescription(description);
-         businessDayIncrementAdd.setTicketNo(ticketNo);
+         businessDayIncrementAdd.setTicket(ticket);
          businessDayIncrementAdd.setKindOfService(kindOfService);
          businessDayIncrementAdd.setAmountOfHours(amountOfHours);
          return businessDayIncrementAdd;

@@ -1,22 +1,95 @@
 package com.myownb3.dominic.timerecording.work.businessday;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.Date;
+import java.util.GregorianCalendar;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
+import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 
-public class BusinessDayTest {
+class BusinessDayTest {
+
+   @Test
+   public void testRefreshCurrentTicketIsDummyTickets() {
+
+      // Given
+      long firstTimeStampStart = System.currentTimeMillis();
+      TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + 3600 * 1000);
+      Ticket currentTicket = getTicket4Nr();
+      when(currentTicket.isDummyTicket()).thenReturn(true);
+      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, currentTicket);
+
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(firstInc);
+
+      // When
+      businessDay.refreshDummyTickets();
+
+      // Then
+      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
+      assertThat(businessDayIncrement.getTicket(), is(not(currentTicket)));
+      assertThat(businessDayIncrement.getTicket().getNr(), is(currentTicket.getNr()));
+   }
+
+   @Test
+   public void testRefreshCurrentTicketIsNotDummyTickets() {
+
+      // Given
+      long firstTimeStampStart = System.currentTimeMillis();
+      TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + 3600 * 1000);
+      Ticket currentTicket = getTicket4Nr();
+      when(currentTicket.isDummyTicket()).thenReturn(false);
+      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, currentTicket);
+
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(firstInc);
+
+      // When
+      businessDay.refreshDummyTickets();
+
+      // Then
+      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
+      assertThat(businessDayIncrement.getTicket(), is(currentTicket));
+      assertThat(businessDayIncrement.getTicket().getNr(), is(currentTicket.getNr()));
+   }
+
+   @Test
+   public void testRefreshCurrentTicketNoTicketAtAll() {
+
+      // Given
+      long firstTimeStampStart = System.currentTimeMillis();
+      TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + 3600 * 1000);
+      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, null);
+
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(firstInc);
+
+      // When
+      businessDay.refreshDummyTickets();
+
+      // Then
+      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
+      assertThat(businessDayIncrement.getTicket(), is(nullValue()));
+   }
 
    @Test
    public void testChangeDBIncDurationIncreaseDuration() {
@@ -26,7 +99,7 @@ public class BusinessDayTest {
       long firstTimeStampStart = System.currentTimeMillis();
       int firstTimeBetweenStartAndStop = 3600 * 1000;
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
-      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, "SYRIUS-1324");
+      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, getTicket4Nr());
 
       BusinessDay businessDay = new BusinessDay();
       businessDay.addBusinessIncrement(firstInc);
@@ -44,6 +117,136 @@ public class BusinessDayTest {
    }
 
    @Test
+   public void testChangeDBIncDescription() {
+
+      // Given
+      String newDescription = "newDescription";
+      long firstTimeStampStart = System.currentTimeMillis();
+      int firstTimeBetweenStartAndStop = 3600 * 1000;
+      TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
+
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+
+      ChangedValue changeValue = ChangedValue.of(0, newDescription, ValueTypes.DESCRIPTION);
+
+      // When
+      businessDay.changeBusinesDayIncrement(changeValue);
+
+      // Then
+      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
+      assertThat(businessDayIncrement.getDescription(), is(newDescription));
+   }
+
+   @Test
+   public void testChangeDBIncBegin() {
+
+      // Given
+      String newBegin = "10:30";
+      float expectedNewDuration = 0.5f;
+      int firstTimeBetweenStartAndStop = 3600 * 1000;
+      TimeSnippet firstSnippet = createTimeSnippet(firstTimeBetweenStartAndStop, 10);
+
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+      TestTimeSnippedChangedCallbackHandler callbackHandler = new TestTimeSnippedChangedCallbackHandler();
+      businessDay.getIncrements().get(0).getCurrentTimeSnippet().setCallbackHandler(callbackHandler);
+
+      ChangedValue changeValue = ChangedValue.of(0, newBegin, ValueTypes.BEGIN);
+
+      // When
+      businessDay.changeBusinesDayIncrement(changeValue);
+
+      // Then
+      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
+      assertThat(businessDayIncrement.getTotalDuration(), is(expectedNewDuration));
+      assertThat(callbackHandler.changeValue.getValueTypes(), is(ValueTypes.BEGIN));
+      assertThat(callbackHandler.changeValue.getNewValue(), is(newBegin));
+   }
+
+   @Test
+   public void testChangeDBIncEnd() {
+
+      // Given
+      String newBegin = "11:30";
+      float expectedNewDuration = 1.5f;
+      int firstTimeBetweenStartAndStop = 3600 * 1000;
+      TimeSnippet firstSnippet = createTimeSnippet(firstTimeBetweenStartAndStop, 10);
+
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+
+      ChangedValue changeValue = ChangedValue.of(0, newBegin, ValueTypes.END);
+
+      // When
+      businessDay.changeBusinesDayIncrement(changeValue);
+
+      // Then
+      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
+      assertThat(businessDayIncrement.getTotalDuration(), is(expectedNewDuration));
+   }
+
+   @Test
+   public void testChangeDBIncChargeType() {
+
+      // Given
+      int firstTimeBetweenStartAndStop = 3600 * 1000;
+      int expectedNewChargeType = 111;
+      int currentChargeType = 113;
+      TimeSnippet firstSnippet = createTimeSnippet(firstTimeBetweenStartAndStop);
+
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(createUpdate(firstSnippet, currentChargeType, getTicket4Nr()));
+
+      ChangedValue changeValue = ChangedValue.of(0, ChargeType.getRepresentation(expectedNewChargeType), ValueTypes.CHARGE_TYPE);
+
+      // When
+      businessDay.changeBusinesDayIncrement(changeValue);
+
+      // Then
+      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
+      assertThat(businessDayIncrement.getChargeType(), is(expectedNewChargeType));
+   }
+
+   @Test
+   public void testChangeDBIncChargeType_Invalid() {
+
+      // Given
+      int firstTimeBetweenStartAndStop = 3600 * 1000;
+      int currentChargeType = 113;
+      TimeSnippet firstSnippet = createTimeSnippet(firstTimeBetweenStartAndStop);
+
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(createUpdate(firstSnippet, currentChargeType, getTicket4Nr()));
+
+      ChangedValue changeValue = ChangedValue.of(0, "Schnubbedibuuu", ValueTypes.CHARGE_TYPE);
+
+      // When
+      businessDay.changeBusinesDayIncrement(changeValue);
+
+      // Then
+      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
+      assertThat(businessDayIncrement.getChargeType(), is(currentChargeType));
+   }
+
+   @Test
+   public void testChangeDBIncChargeType_InvalidValue() {
+
+      // Given
+      TimeSnippet firstSnippet = createTimeSnippet(3600 * 1000);
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+
+      ChangedValue changeValue = ChangedValue.of(0, "Schnubbedibuuu", ValueTypes.NONE);
+
+      // When
+      Executable ex = () -> businessDay.changeBusinesDayIncrement(changeValue);
+
+      // Then
+      assertThrows(UnsupportedOperationException.class, ex);
+   }
+
+   @Test
    public void testChangeDBIncDurationSnippets_DecreaseDuration() {
 
       // Given
@@ -51,7 +254,7 @@ public class BusinessDayTest {
       long firstTimeStampStart = System.currentTimeMillis();
       int firstTimeBetweenStartAndStop = 3600 * 1000;
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
-      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, "SYRIUS-1324");
+      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, getTicket4Nr());
 
       BusinessDay businessDay = new BusinessDay();
       businessDay.addBusinessIncrement(firstInc);
@@ -77,7 +280,7 @@ public class BusinessDayTest {
       int firstTimeBetweenStartAndStop = 3600 * 1000 * 2;
       long firstTimeStampStart = System.currentTimeMillis() + firstTimeBetweenStartAndStop;
       TimeSnippet secondSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
-      BusinessDayIncrementAdd secondInc = createUpdate(secondSnippet, 113, "SYRIUS-1324");
+      BusinessDayIncrementAdd secondInc = createUpdate(secondSnippet, 113, getTicket4Nr());
 
       BusinessDay businessDay = new BusinessDay();
       businessDay.addBusinessIncrement(secondInc);
@@ -102,10 +305,10 @@ public class BusinessDayTest {
       BusinessDay businessDay = new BusinessDay();
 
       TimeSnippet timeSnippet = createTimeSnippet(0);
-      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, "SYRIUS-1324");
+      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, getTicket4Nr());
 
       TimeSnippet timeSnippetYesterday = createTimeSnippet(0);
-      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, "SYRIUS-1324");
+      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, getTicket4Nr());
 
       businessDay.addBusinessIncrement(updateWithTimeSnippet);
       businessDay.flagBusinessDayAsCharged();
@@ -126,10 +329,10 @@ public class BusinessDayTest {
       BusinessDay businessDay = new BusinessDay();
 
       TimeSnippet timeSnippet = createTimeSnippet(0);
-      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, "SYRIUS-1324");
+      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, getTicket4Nr());
 
       TimeSnippet timeSnippetYesterday = createTimeSnippet(0);
-      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, "SYRIUS-1324");
+      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, getTicket4Nr());
 
       businessDay.addBusinessIncrement(updateWithTimeSnippet);
       businessDay.addBusinessIncrement(updateWithTimeSnippetTomorrow);
@@ -150,10 +353,10 @@ public class BusinessDayTest {
       BusinessDay businessDay = new BusinessDay();
 
       TimeSnippet timeSnippet = createTimeSnippet(0);
-      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, "SYRIUS-1324");
+      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, getTicket4Nr());
 
       TimeSnippet timeSnippetYesterday = createTimeSnippet(-24 * 60 * 3600 * 1000);// One day in Miliseconds
-      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, "SYRIUS-1324");
+      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, getTicket4Nr());
 
       businessDay.addBusinessIncrement(updateWithTimeSnippet);
       businessDay.addBusinessIncrement(updateWithTimeSnippetTomorrow);
@@ -163,6 +366,12 @@ public class BusinessDayTest {
 
       // Then
       assertThat(actualHasElementsFromPrecedentDays, is(expectedHasElementsFromPrecedentDays));
+   }
+
+   private Ticket getTicket4Nr() {
+      Ticket ticket = mock(Ticket.class);
+      when(ticket.getNr()).thenReturn("SYRIUS-1324");
+      return ticket;
    }
 
    @Test
@@ -179,19 +388,25 @@ public class BusinessDayTest {
       assertThat(actualHasElementsFromPrecedentDays, is(expectedHasElementsFromPrecedentDays));
    }
 
-   private BusinessDayIncrementAdd createUpdate(TimeSnippet timeSnippet, int kindOfService, String ticketNo) {
+   private BusinessDayIncrementAdd createUpdate(TimeSnippet timeSnippet, int kindOfService, Ticket ticket) {
       return new BusinessDayIncrementAddBuilder()
             .withTimeSnippet(timeSnippet)
-            .withTicketNo(ticketNo)
+            .withDescription("Default Description")
+            .withTicket(ticket)
             .withKindOfService(kindOfService)
             .build();
    }
 
-   private TimeSnippet createTimeSnippet(int additionalTime) {
-      Time beginTimeStamp = new Time(System.currentTimeMillis() + additionalTime);
+   private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) {
+      return createTimeSnippet(timeBetweenBeginAndEnd, 0);
+   }
+
+   private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd, int hour) {
+      GregorianCalendar startDate = new GregorianCalendar(2020, 1, 1, hour, 0, 0);// year, month, day, hours, min, second
+      Time beginTimeStamp = new Time(startDate.getTimeInMillis());
       TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
-      timeSnippet.setEndTimeStamp(new Time(System.currentTimeMillis() + additionalTime + 10));
+      timeSnippet.setEndTimeStamp(new Time(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
       return timeSnippet;
    }
 
@@ -202,5 +417,14 @@ public class BusinessDayTest {
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(endTimeStamp);
       return timeSnippet;
+   }
+
+   private static class TestTimeSnippedChangedCallbackHandler implements TimeSnippedChangedCallbackHandler {
+      private ChangedValue changeValue;
+
+      @Override
+      public void handleTimeSnippedChanged(ChangedValue changeValue) {
+         this.changeValue = changeValue;
+      }
    }
 }

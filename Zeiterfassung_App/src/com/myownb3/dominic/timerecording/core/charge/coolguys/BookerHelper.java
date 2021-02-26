@@ -1,11 +1,14 @@
 /**
  * 
  */
-package com.myownb3.dominic.timerecording.core.charge;
+package com.myownb3.dominic.timerecording.core.charge.coolguys;
 
 import java.util.List;
 
 import com.coolguys.turbo.Booker;
+import com.myownb3.dominic.timerecording.core.charge.ChargeException;
+import com.myownb3.dominic.timerecording.core.charge.adapter.BookerAdapter;
+import com.myownb3.dominic.timerecording.core.charge.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
@@ -16,11 +19,10 @@ import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
  * 
  * @author Dominic
  */
-public class BookerHelper {
-   private BusinessDay businessDay;
+public class BookerHelper implements BookerAdapter {
 
-   public BookerHelper(BusinessDay businessDay) {
-      this.businessDay = businessDay;
+   public BookerHelper() {
+      // private
    }
 
    /**
@@ -30,13 +32,15 @@ public class BookerHelper {
     * 
     * @see Booker#bookList(List)
     */
-   public void book() {
-      List<String> content2Charge = createBookContent();
+   @Override
+   public BookerResult book(BusinessDay businessDay) {
+      List<String> content2Charge = createBookContent(businessDay);
       bookInternal(content2Charge);
-      flagBusinessDayAsCharged();
+      flagBusinessDayAsCharged(businessDay);
+      return new BookerHelperResult();
    }
 
-   private void flagBusinessDayAsCharged() {
+   private void flagBusinessDayAsCharged(BusinessDay businessDay) {
       businessDay.flagBusinessDayAsCharged();
    }
 
@@ -57,7 +61,7 @@ public class BookerHelper {
     * Collects the data which has to be charged and exports it into a file which is
     * later used by the Turbo-Bucher
     */
-   private List<String> createBookContent() {
+   private List<String> createBookContent(BusinessDay businessDay) {
       synchronized (businessDay) {
          BusinessDayVO businessDayVO = BusinessDayVO.of(businessDay);
          return BusinessDayExporter.INSTANCE.collectContent4TurboBucher(businessDayVO);

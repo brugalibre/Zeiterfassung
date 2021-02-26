@@ -8,7 +8,9 @@ import java.util.List;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.callbackhandler.UiCallbackHandler;
-import com.myownb3.dominic.timerecording.core.charge.BookerHelper;
+import com.myownb3.dominic.timerecording.core.charge.adapter.BookerAdapter;
+import com.myownb3.dominic.timerecording.core.charge.adapter.BookerAdapterFactory;
+import com.myownb3.dominic.timerecording.core.charge.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.BusinessDayImporter;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
 import com.myownb3.dominic.timerecording.core.importexport.in.file.FileImporter;
@@ -44,13 +46,27 @@ public class TimeRecorder {
    /**
     * The version of the application
     */
-   public static final String VERSION = "1.7.1";
+   public static final String VERSION = "1.7.2";
 
    private BusinessDay businessDay;
    private UiCallbackHandler callbackHandler;
    private WorkStates currentState;
+   private BookerAdapter bookAdapter;
+
+   /**
+    * Constructor for testing purpose only!
+    */
+   TimeRecorder(BookerAdapter bookAdapter) {
+      this.bookAdapter = bookAdapter;
+      init();
+   }
 
    private TimeRecorder() {
+      bookAdapter = BookerAdapterFactory.getAdapter();
+      init();
+   }
+
+   void init() {
       currentState = WorkStates.NOT_WORKING;
       businessDay = new BusinessDay();
    }
@@ -108,9 +124,6 @@ public class TimeRecorder {
    }
 
    private void start() {
-      if (currentState == WorkStates.WORKING) {
-         return;
-      }
       currentState = WorkStates.WORKING;
       businessDay.startNewIncremental();
       callbackHandler.onStart();
@@ -120,7 +133,6 @@ public class TimeRecorder {
     * Resumes a previously stopped recording
     */
    public void resume() {
-
       currentState = WorkStates.WORKING;
       businessDay.resumeLastIncremental();
       callbackHandler.onResume();
@@ -185,18 +197,34 @@ public class TimeRecorder {
     *         <code>false</code> if there wasn't anything to do
     */
    public boolean book() {
+      boolean hasBooked = false;
       if (businessDay.hasNotChargedElements()) {
          WorkStates tmpState = currentState;
          currentState = WorkStates.BOOKING;
          try {
-            BookerHelper helper = new BookerHelper(businessDay);
-            helper.book();
-            return true;
+            BookerResult bookResult = bookAdapter.book(businessDay);
+            if (bookResult.hasBooked()) {
+               callbackHandler.displayMessage(Message.of(map2MessageType(bookResult), null, bookResult.getMessage()));
+               hasBooked = true;
+            }
          } finally {
             currentState = tmpState;
          }
       }
-      return false;
+      return hasBooked;
+   }
+
+   private static MessageType map2MessageType(BookerResult bookResult) {
+      switch (bookResult.getBookResultType()) {
+         case SUCCESS:
+            return MessageType.INFORMATION;
+         case PARTIAL_SUCCESS_WITH_ERROR:// fall through
+         case PARTIAL_SUCCESS_WITH_NON_BOOKABLE:
+            return MessageType.WARNING;
+         case FAILURE:
+         default:// fall through
+            return MessageType.ERROR;
+      }
    }
 
    /**

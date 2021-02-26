@@ -1,6 +1,7 @@
 package com.myownb3.dominic.timerecording.ticketbacklog.data;
 
 import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_VALUE_KEY;
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import com.myownb3.dominic.timerecording.settings.Settings;
@@ -12,19 +13,34 @@ public class Ticket {
    private TicketAttrs ticketAttrs;
    private boolean isCurrentUserAssigned;
    private boolean isSprintTicket;
+   private boolean isDummyTicket;
 
-   private Ticket(TicketAttrs ticketAttrs, boolean isSprintTicket) {
+   private Ticket(TicketAttrs ticketAttrs, boolean isSprintTicket, boolean isDummyTicket) {
       this.ticketAttrs = ticketAttrs;
       this.isCurrentUserAssigned = isCurrentUserAssigned(ticketAttrs.getAssignee());
       this.isSprintTicket = isSprintTicket;
+      this.isDummyTicket = isDummyTicket;
    }
 
-   public static Ticket of(JiraIssue issue, boolean isSprintTicket) {
-      return new Ticket(TicketAttrs.of(issue), isSprintTicket);
+   /**
+    * Creates an empty Ticket. Only the Ticket-Nr is set
+    * 
+    * @param ticketNr
+    *        the ticket-nr
+    * @return an empty Ticket. Only the Ticket-Nr is set
+    */
+   public static Ticket dummy(String ticketNr) {
+      JiraIssue jiraIssue = new JiraIssue();
+      jiraIssue.setKey(ticketNr);
+      return Ticket.of(jiraIssue, false, true);
+   }
+
+   public static Ticket of(JiraIssue issue, boolean isSprintTicket, boolean isDummyTicket) {
+      return new Ticket(TicketAttrs.of(issue), isSprintTicket, isDummyTicket);
    }
 
    public static Ticket of(JiraIssue issue) {
-      return new Ticket(TicketAttrs.of(issue), true);
+      return new Ticket(TicketAttrs.of(issue), true, false);
    }
 
    private boolean isCurrentUserAssigned(String assignee) {
@@ -47,6 +63,20 @@ public class Ticket {
    }
 
    /**
+    * @return <code>true</code> if there are all relevant value present or <code>false</code> if not
+    */
+   public boolean isBookable() {
+      return ticketAttrs.isBookable();
+   }
+
+   /**
+    * @return <code>true</code> if this {@link Ticket} is a dummy Ticket since it does not exist in jira or <code>false</code> if not
+    */
+   public boolean isDummyTicket() {
+      return isDummyTicket;
+   }
+
+   /**
     * @return <code>true</code> if the Ticket is part of a sprint or <code>false</code> if it's a common ticket (like the INTA's)
     */
    public boolean isSprintTicket() {
@@ -65,7 +95,11 @@ public class Ticket {
     * @return a representation
     */
    public String getTicketRep() {
-      return this.getNr() + " (" + this.ticketAttrs.getTitle() + ")";
+      String title = this.ticketAttrs.getTitle();
+      if (isNull(title)) {
+         return this.getNr();
+      }
+      return this.getNr() + " (" + title + ")";
    }
 
    @Override

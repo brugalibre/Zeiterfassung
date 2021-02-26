@@ -20,7 +20,6 @@ import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.i
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
-import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklog;
 import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.TicketComparator;
@@ -77,7 +76,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       beginLabelProperty = new SimpleStringProperty(TextLabel.VON_LABEL);
       endLabelProperty = new SimpleStringProperty(TextLabel.BIS_LABEL);
       amountOfHoursLabelProperty = new SimpleStringProperty(TextLabel.AMOUNT_OF_HOURS_LABEL);
-      kindOfServiceLabelProperty = new SimpleStringProperty(TextLabel.CHARGE_TYPE_LABEL);
+      kindOfServiceLabelProperty = new SimpleStringProperty(TextLabel.BOOK_TYPE_LABEL);
       finishButtonText = new SimpleStringProperty(TextLabel.FINISH_BUTTON_TEXT);
       abortButtonText = new SimpleStringProperty(TextLabel.ABORT_BUTTON_TEXT);
       cancelButtonText = new SimpleStringProperty(TextLabel.CANCEL_BUTTON_TEXT);
@@ -150,7 +149,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       inPageModel.getBeginLabelProperty().set(TextLabel.VON_LABEL);
       inPageModel.getEndLabelProperty().set(TextLabel.BIS_LABEL);
       inPageModel.getAmountOfHoursLabelProperty().set(TextLabel.AMOUNT_OF_HOURS_LABEL);
-      inPageModel.getKindOfServiceLabelProperty().set(TextLabel.CHARGE_TYPE_LABEL);
+      inPageModel.getKindOfServiceLabelProperty().set(TextLabel.BOOK_TYPE_LABEL);
       inPageModel.getFinishButtonText().set(TextLabel.FINISH_BUTTON_TEXT);
       inPageModel.getAbortButtonText().set(TextLabel.ABORT_BUTTON_TEXT);
       inPageModel.getCancelButtonText().set(TextLabel.CANCEL_BUTTON_TEXT);
@@ -246,7 +245,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       BusinessDayIncrementAdd update = new BusinessDayIncrementAddBuilder()
             .withTimeSnippet(timeSnippet)
             .withDescription(descriptionProperty.getValue())
-            .withTicketNo(ticketNr)
+            .withTicket(TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticketNr))
             .withKindOfService(kindOfService)
             .build();
       new BusinessDayChangedCallbackHandlerImpl().handleBusinessDayIncrementAdd(update);

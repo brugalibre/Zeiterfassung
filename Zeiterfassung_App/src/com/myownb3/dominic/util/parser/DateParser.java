@@ -16,7 +16,9 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
  */
 public class DateParser {
 
-   private static final String DATE_PATTERN = "HH:mm";
+   private static final String HOUR_MIN_PATTERN = "HH:mm";
+   private static final String DATE_WITH_SEC_PATTERN = "dd-MM-yyyy HH:mm:ss";
+   public static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
 
    private DateParser() {
       // private 
@@ -32,7 +34,7 @@ public class DateParser {
     */
    public static String parse2String(Time time) {
       SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-      df.applyPattern(DATE_PATTERN);
+      df.applyPattern(HOUR_MIN_PATTERN);
       Date date = new Date(time.getTime());
       return df.format(date);
    }
@@ -58,7 +60,7 @@ public class DateParser {
     */
    public static Time getTime(String input, Date currentDate) throws ParseException {
       SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-      df.applyPattern("dd-MM-yyyy HH:mm:ss");
+      df.applyPattern(DATE_WITH_SEC_PATTERN);
 
       // Parse the current Date Value
       String currentDateAsString = df.format(currentDate);

@@ -33,7 +33,7 @@ public class TimeRecordingLauncher extends Application {
    @Override
    public void start(Stage primaryStage) {
       setSystemProperties();
-      Runtime.getRuntime().addShutdownHook(createShutdownHook());
+      initApplication();
 
       TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
       UiCallbackHandler callbackHandler = timeRecordingTray.getCallbackHandler();
@@ -41,11 +41,11 @@ public class TimeRecordingLauncher extends Application {
       TimeRecorder.INSTANCE.setCallbackHandler(callbackHandler);
       GlobalExceptionHandler.registerHandler(callbackHandler);
 
-      initApplication();
-      Platform.runLater(() -> timeRecordingTray.registerSystemtray(primaryStage));
+      timeRecordingTray.registerSystemtray(primaryStage);
    }
 
    private void initApplication() {
+      Runtime.getRuntime().addShutdownHook(createShutdownHook());
       PictureLibrary.loadPictures();
       Platform.setImplicitExit(false);
       createTurboBucherPropertiesFileIfNotExists();

@@ -140,6 +140,13 @@ public class TicketAttrs {
       return assignee;
    }
 
+   /**
+    * @return <code>true</code> if there are all relevant value present or <code>false</code> if not
+    */
+   public boolean isBookable() {
+      return nonNull(projectNr) && !projectNr.isEmpty();
+   }
+
    @Override
    public int hashCode() {
       final int prime = 31;
