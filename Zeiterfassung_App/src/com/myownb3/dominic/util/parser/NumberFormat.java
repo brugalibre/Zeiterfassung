@@ -1,6 +1,9 @@
 package com.myownb3.dominic.util.parser;
 
+import static java.util.Objects.isNull;
+
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 
 public class NumberFormat {
@@ -34,7 +37,8 @@ public class NumberFormat {
    public static float parseFloat(String float2Parse) {
       java.text.NumberFormat format = java.text.NumberFormat.getInstance();
       try {
-         Number number = format.parse(float2Parse);
+         String neutralizedValue2Parse = neutralizeDecimalSeparator(float2Parse, format);
+         Number number = format.parse(neutralizedValue2Parse);
          return number.floatValue();
       } catch (ParseException e) {
          e.printStackTrace();
@@ -55,7 +59,8 @@ public class NumberFormat {
    public static float parseFloatOrDefault(String stringValue2Parse, float defaultReturnValue) {
       java.text.NumberFormat format = java.text.NumberFormat.getInstance();
       try {
-         Number number = format.parse(stringValue2Parse);
+         String neutralizedValue2Parse = neutralizeDecimalSeparator(stringValue2Parse, format);
+         Number number = format.parse(neutralizedValue2Parse);
          return number.floatValue();
       } catch (ParseException e) {
          e.printStackTrace();
@@ -66,6 +71,37 @@ public class NumberFormat {
    public static String format(float number) {
       java.text.NumberFormat format = java.text.NumberFormat.getInstance();
       return format.format(number);
+   }
+
+   /**
+    * Returns the same text value but with a neutralized decimal separator.
+    * e.g. if the user entered '1,15' and the current systems separator is a '.' we return '1.15' and vice versa
+    * 
+    * @param value2Parse
+    *        the value to parse
+    * @param formatter
+    *        the current {@link java.text.NumberFormat} instance
+    * @return a neutralized value
+    */
+   public static String neutralizeDecimalSeparator(String value2Parse, java.text.NumberFormat formatter) {
+      if (isNull(value2Parse)) {
+         return "";
+      }
+      String decimalSeparator = getDecimalFormatSymbols(formatter);
+      return value2Parse.replace(",", decimalSeparator) // for those who use a ',' as decimal separator
+            .replace(".", decimalSeparator);// for those who use a '.' as decimal separator
+   }
+
+   /*
+    * Returns the current decimal format sympol.
+    */
+   private static String getDecimalFormatSymbols(java.text.NumberFormat formatter) {
+      String decimalSeparator = ".";// default
+      if (formatter instanceof DecimalFormat) {
+         DecimalFormatSymbols decimalFormatSymbols = ((DecimalFormat) formatter).getDecimalFormatSymbols();
+         decimalSeparator = String.valueOf(decimalFormatSymbols.getDecimalSeparator());
+      }
+      return decimalSeparator;
    }
 
 }
