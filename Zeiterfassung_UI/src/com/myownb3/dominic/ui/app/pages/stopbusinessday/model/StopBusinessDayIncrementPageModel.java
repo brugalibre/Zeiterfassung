@@ -16,6 +16,7 @@ import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
@@ -241,12 +242,12 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    }
 
    private void addIncrement2BusinessDayInternal(int kindOfService, String ticketNr, TimeSnippet timeSnippet) {
-      BusinessDayIncrementAdd update = new BusinessDayIncrementAdd();
-      update.setTimeSnippet(timeSnippet);
-      update.setDescription(descriptionProperty.getValue());
-      update.setTicketNo(ticketNr);
-      update.setKindOfService(kindOfService);
-
+      BusinessDayIncrementAdd update = new BusinessDayIncrementAddBuilder()
+            .withTimeSnippet(timeSnippet)
+            .withDescription(descriptionProperty.getValue())
+            .withTicketNo(ticketNr)
+            .withKindOfService(kindOfService)
+            .build();
       new BusinessDayChangedCallbackHandlerImpl().handleBusinessDayIncrementAdd(update);
    }
 
