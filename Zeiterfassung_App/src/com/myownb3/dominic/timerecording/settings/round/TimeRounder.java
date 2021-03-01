@@ -48,7 +48,9 @@ public class TimeRounder {
       try (InputStream resourceStream = new FileInputStream(TURBO_BUCHER_PROPERTIES)) {
          prop.load(resourceStream);
          prop.put(RoundMode.PROPERTY_KEY, String.valueOf(roundMode.getAmount()));
-         prop.store(new FileOutputStream(TURBO_BUCHER_PROPERTIES), null);
+         try (FileOutputStream out = new FileOutputStream(TURBO_BUCHER_PROPERTIES)) {
+            prop.store(out, null);
+         }
       } catch (Exception e) {
          e.printStackTrace();
          throw new RounderStoreValueException(e);
