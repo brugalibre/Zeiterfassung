@@ -12,6 +12,7 @@ import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrem
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
+import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
 
@@ -179,11 +180,11 @@ public class BusinessDayTest {
    }
 
    private BusinessDayIncrementAdd createUpdate(TimeSnippet timeSnippet, int kindOfService, String ticketNo) {
-      BusinessDayIncrementAdd update = new BusinessDayIncrementAdd();
-      update.setTimeSnippet(timeSnippet);
-      update.setTicketNo(ticketNo);
-      update.setKindOfService(kindOfService);
-      return update;
+      return new BusinessDayIncrementAddBuilder()
+            .withTimeSnippet(timeSnippet)
+            .withTicketNo(ticketNo)
+            .withKindOfService(kindOfService)
+            .build();
    }
 
    private TimeSnippet createTimeSnippet(int additionalTime) {
