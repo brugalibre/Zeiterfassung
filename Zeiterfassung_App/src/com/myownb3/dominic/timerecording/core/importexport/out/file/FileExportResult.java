@@ -3,6 +3,7 @@ package com.myownb3.dominic.timerecording.core.importexport.out.file;
 public class FileExportResult {
    private boolean success;
    private String errorMsg;
+   private String path;
 
    public FileExportResult() {
       success = true;
@@ -22,5 +23,13 @@ public class FileExportResult {
 
    public void setSuccess(boolean success) {
       this.success = success;
+   }
+
+   public void setPath(String path) {
+      this.path = path;
+   }
+
+   public String getPath() {
+      return path;
    }
 }

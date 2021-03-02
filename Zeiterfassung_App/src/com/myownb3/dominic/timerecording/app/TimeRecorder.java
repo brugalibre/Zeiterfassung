@@ -201,8 +201,10 @@ public class TimeRecorder {
 
    /**
     * Exports the current {@link BusinessDay} to the file system
+    * 
+    * @return the result of the export
     */
-   public void export() {
+   public FileExportResult export() {
       List<String> content = BusinessDayExporter.INSTANCE.exportBusinessDay(BusinessDayVO.of(businessDay));
       FileExportResult fileExportResult = FileExporter.INTANCE.exportWithResult(content);
       if (fileExportResult.isSuccess()) {
@@ -210,6 +212,7 @@ public class TimeRecorder {
       } else {
          callbackHandler.displayMessage(Message.of(MessageType.ERROR, fileExportResult.getErrorMsg(), TextLabel.EXPORT_FAILED_TITLE));
       }
+      return fileExportResult;
    }
 
    /**
