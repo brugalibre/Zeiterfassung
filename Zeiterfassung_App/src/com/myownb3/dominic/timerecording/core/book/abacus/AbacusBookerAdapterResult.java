@@ -1,7 +1,7 @@
-package com.myownb3.dominic.timerecording.core.charge.abacus;
+package com.myownb3.dominic.timerecording.core.book.abacus;
 
-import com.myownb3.dominic.timerecording.core.charge.result.BookerResult;
-import com.myownb3.dominic.timerecording.core.charge.result.BookResultType;
+import com.myownb3.dominic.timerecording.core.book.result.BookResultType;
+import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
 
 public class AbacusBookerAdapterResult implements BookerResult {
 

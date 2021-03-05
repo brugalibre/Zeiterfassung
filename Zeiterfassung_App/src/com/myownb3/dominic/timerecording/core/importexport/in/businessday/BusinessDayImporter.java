@@ -15,8 +15,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.core.charge.ChargeType;
-import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.myownb3.dominic.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
 import com.myownb3.dominic.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.myownb3.dominic.timerecording.core.importexport.out.file.FileExporter;
@@ -179,8 +180,9 @@ public class BusinessDayImporter {
 
    private void parseAndSetChargeType(String importLine, BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex)
          throws InvalidChargeTypeRepresentationException {
+      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
       String chargeType = getElementFromLineAtIndex(importLine, currentElementIndex);
-      int leistungsartForRep = ChargeType.getLeistungsartForRep(chargeType);
+      int leistungsartForRep = serviceCodeAdapter.getServiceCode4Description(chargeType);
       businessDayIncrementImport.setKindOfService(leistungsartForRep);
    }
 

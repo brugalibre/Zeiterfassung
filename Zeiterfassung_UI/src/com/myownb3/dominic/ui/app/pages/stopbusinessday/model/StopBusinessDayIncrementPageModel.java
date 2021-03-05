@@ -3,14 +3,15 @@
  */
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.model;
 
-import static com.myownb3.dominic.ui.app.pages.stopbusinessday.util.StopBusinessDayUtil.areMultipleTicketsEntered;
+import static java.util.Objects.isNull;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.core.charge.ChargeType;
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
@@ -19,14 +20,14 @@ import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.i
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
-import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.TicketComparator;
+import com.myownb3.dominic.ui.app.inputfield.InputFieldVerifier;
 import com.myownb3.dominic.ui.app.pages.combobox.TicketComboboxItem;
-import com.myownb3.dominic.ui.app.pages.stopbusinessday.util.StopBusinessDayUtil;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -35,6 +36,8 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 
 /**
@@ -43,12 +46,16 @@ import javafx.scene.control.Tooltip;
  */
 public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnippedChangedCallbackHandler {
 
+   private static final String TICKET_NO_PATTERN = "(([a-zA-Z0-9-?]+)[-][0-9]+)";
+
    private Property<String> ticketNoProperty;
+   private Property<Ticket> ticketProperty;
    private Property<String> descriptionProperty;
    private StringProperty beginTextFieldProperty;
    private StringProperty endTextFieldProperty;
    private StringProperty amountOfHoursTextFieldProperty;
-   private Property<ObservableList<String>> kindOfServiceTextFieldProperty;
+   private Property<ObservableList<String>> serviceCodesFieldProperty;
+   private Property<SingleSelectionModel<String>> serviceCodesSelectedModelProperty;
    private Property<ObservableList<TicketComboboxItem>> ticketComboboxItemsProperty;
    private Property<ObservableList<Ticket>> ticketsProperty;
 
@@ -57,7 +64,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    private StringProperty beginLabelProperty;
    private StringProperty endLabelProperty;
    private StringProperty amountOfHoursLabelProperty;
-   private StringProperty kindOfServiceLabelProperty;
+   private StringProperty serviceCodesLabelProperty;
 
    private StringProperty finishButtonText;
    private StringProperty abortButtonText;
@@ -76,7 +83,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       beginLabelProperty = new SimpleStringProperty(TextLabel.VON_LABEL);
       endLabelProperty = new SimpleStringProperty(TextLabel.BIS_LABEL);
       amountOfHoursLabelProperty = new SimpleStringProperty(TextLabel.AMOUNT_OF_HOURS_LABEL);
-      kindOfServiceLabelProperty = new SimpleStringProperty(TextLabel.BOOK_TYPE_LABEL);
+      serviceCodesLabelProperty = new SimpleStringProperty(TextLabel.BOOK_TYPE_LABEL);
       finishButtonText = new SimpleStringProperty(TextLabel.FINISH_BUTTON_TEXT);
       abortButtonText = new SimpleStringProperty(TextLabel.ABORT_BUTTON_TEXT);
       cancelButtonText = new SimpleStringProperty(TextLabel.CANCEL_BUTTON_TEXT);
@@ -87,9 +94,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       ticketNoProperty = new SimpleObjectProperty<>(businessDayIncrementVO.getTicketNumber());
       descriptionProperty = new SimpleObjectProperty<>(businessDayIncrementVO.getDescription());
 
-      kindOfServiceTextFieldProperty = new SimpleListProperty<>(
-            FXCollections.observableArrayList(ChargeType.getLeistungsartenRepresentation()));
-
+      serviceCodesFieldProperty = new SimpleListProperty<>(getAllServiceCodeDescriptions());
+      serviceCodesSelectedModelProperty = new SimpleObjectProperty<>();
+      ticketProperty = new SimpleObjectProperty<>();
       this.timeSnippet = businessDayIncrementVO.getCurrentTimeSnippet();
       beginTextFieldProperty = new SimpleStringProperty(
             timeSnippet != null ? timeSnippet.getBeginTimeStampRep() : "");
@@ -101,22 +108,18 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    /**
     * Trys to parse a new {@link Date} from the given timestamp value and sets this
     * value as new begin-time stamp
-    * 
-    * @param newTimeStampValue
-    *        the new begin-time-stamp as String
     */
-   public void updateAndSetBeginTimeStamp(String newTimeStampValue) {
+   public void updateAndSetBeginTimeStamp() {
+      String newTimeStampValue = beginTextFieldProperty.getValue();
       timeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue, false);
    }
 
    /**
     * Trys to parse a new {@link Date} from the given timestamp value and sets this
     * value as new end-time stamp
-    * 
-    * @param newTimeStampValue
-    *        the new begin-time-stamp as String
     */
-   public void updateAndSetEndTimeStamp(String newTimeStampValue) {
+   public void updateAndSetEndTimeStamp() {
+      String newTimeStampValue = endTextFieldProperty.getValue();
       timeSnippet.updateAndSetEndTimeStamp(newTimeStampValue, false);
    }
 
@@ -124,12 +127,11 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     * Trys to parse the given end time stamp (as String) and summs this value up to
     * the given begin Time Stamp
     * 
-    * @param newEndAsString
-    *        the new End-time stamp as String
     * @throws NumberFormatException
     *         if there goes anything wrong while parsing
     */
-   public void addAdditionallyTime(String newEndAsString) {
+   public void addAdditionallyTime() {
+      String newEndAsString = amountOfHoursTextFieldProperty.getValue();
       timeSnippet.addAdditionallyTime(newEndAsString);
    }
 
@@ -149,7 +151,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       inPageModel.getBeginLabelProperty().set(TextLabel.VON_LABEL);
       inPageModel.getEndLabelProperty().set(TextLabel.BIS_LABEL);
       inPageModel.getAmountOfHoursLabelProperty().set(TextLabel.AMOUNT_OF_HOURS_LABEL);
-      inPageModel.getKindOfServiceLabelProperty().set(TextLabel.BOOK_TYPE_LABEL);
+      inPageModel.getServiceCodesLabelProperty().set(TextLabel.BOOK_TYPE_LABEL);
       inPageModel.getFinishButtonText().set(TextLabel.FINISH_BUTTON_TEXT);
       inPageModel.getAbortButtonText().set(TextLabel.ABORT_BUTTON_TEXT);
       inPageModel.getCancelButtonText().set(TextLabel.CANCEL_BUTTON_TEXT);
@@ -158,11 +160,10 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       inPageModel.cancelButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
       inPageModel.getTicketNoProperty().setValue(businessDayIncrementVO.getTicketNumber());
       inPageModel.getDescriptionProperty().setValue(businessDayIncrementVO.getDescription());
+      inPageModel.getTicketProperty().setValue(null);
 
       inPageModel.getAmountOfHoursTextFieldProperty().set(businessDayIncrementVO.getTotalDurationRep());
-
-      inPageModel.getKindOfServiceTextFieldProperty()
-            .setValue(FXCollections.observableArrayList(ChargeType.getLeistungsartenRepresentation()));
+      inPageModel.getServiceCodesFieldProperty().setValue(getAllServiceCodeDescriptions());
       inPageModel.getTicketComboboxItemsProperty().setValue(getTicketComboboxItems());
       inPageModel.getTicketsProperty().setValue(getTickets());
 
@@ -181,11 +182,33 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       return FXCollections.observableList(TicketBacklogSPI.getTicketBacklog().getTickets());
    }
 
+   private static ObservableList<String> getAllServiceCodeDescriptions() {
+      // Initial we'll show all and as soon as the ticket-nr is knonw we filter
+      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+      return FXCollections.observableList(serviceCodeAdapter.getAllServiceCodes());
+   }
+
    private static List<TicketComboboxItem> getTicketsAndMap2ComboboxItems(List<Ticket> tickets) {
       return tickets.stream()
             .sorted(new TicketComparator())
             .map(TicketComboboxItem::of)
             .collect(Collectors.toList());
+   }
+
+   public void handleTicketNumberChanged() {
+      String ticketNr = ticketNoProperty.getValue();
+      Ticket ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticketNr);
+      ticketProperty.setValue(ticket);
+   }
+
+   public void handleTicketChanged() {
+      Ticket newTicket = ticketProperty.getValue();
+      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+      List<String> fetchServiceCodesForProject = serviceCodeAdapter.fetchServiceCodesForProjectNr(newTicket.getTicketAttrs().getProjectNr());
+      serviceCodesFieldProperty.setValue(FXCollections.observableList(fetchServiceCodesForProject));
+      if (isNull(serviceCodesSelectedModelProperty.getValue().getSelectedItem())) {
+         serviceCodesSelectedModelProperty.getValue().selectFirst();
+      }
    }
 
    @Override
@@ -211,41 +234,33 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    }
 
    /**
+    * Validates if the entered ticket-nr is valid
+    * 
+    * @param ticketNumberField
+    *        the {@link TextField} which contains the entered ticket-nr
+    * @param addErrorStyle
+    *        Determines if the style of the given textfield changes if it's valie is invalid
+    * @return <code>true</code> if the entered value is valid or <code>false</code> if not
+    */
+   public boolean isValid(TextField ticketNumberField, boolean addErrorStyle) {
+      return new InputFieldVerifier().isStringMatchingPattern(ticketNumberField, TICKET_NO_PATTERN, addErrorStyle);
+   }
+
+   /**
     * Adds the recorded informations as new {@link BusinessDayIncrement}
     * 
     * @param kindOfService
     *        the kind of service
     */
    public void addIncrement2BusinessDay(int kindOfService) {
-
-      String ticketNoPropValue = ticketNoProperty.getValue();
-      boolean multipleTicketsEntered = areMultipleTicketsEntered(ticketNoPropValue);
-      if (multipleTicketsEntered) {
-         addMultipleaIncrement2BusinessDay(kindOfService, ticketNoPropValue);
-      } else {
-         addIncrement2BusinessDayInternal(kindOfService, ticketNoProperty.getValue(), timeSnippet);
-      }
+      addIncrement2BusinessDayInternal(kindOfService, ticketProperty.getValue(), timeSnippet);
    }
 
-   private void addMultipleaIncrement2BusinessDay(int kindOfService, String ticketNoPropValue) {
-
-      String[] tickets = ticketNoPropValue.split(StopBusinessDayUtil.MULTIPLE_TICKETS_DELIMITER);
-      Time currentBeginTimeStamp = timeSnippet.getBeginTimeStamp();
-
-      for (String ticket : tickets) {
-         TimeSnippet currentTimeSnippet = timeSnippet.createTimeStampForIncrement(currentBeginTimeStamp,
-               tickets.length);
-         addIncrement2BusinessDayInternal(kindOfService, ticket, currentTimeSnippet);
-
-         currentBeginTimeStamp = currentTimeSnippet.getEndTimeStamp();
-      }
-   }
-
-   private void addIncrement2BusinessDayInternal(int kindOfService, String ticketNr, TimeSnippet timeSnippet) {
+   private void addIncrement2BusinessDayInternal(int kindOfService, Ticket ticket, TimeSnippet timeSnippet) {
       BusinessDayIncrementAdd update = new BusinessDayIncrementAddBuilder()
             .withTimeSnippet(timeSnippet)
             .withDescription(descriptionProperty.getValue())
-            .withTicket(TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticketNr))
+            .withTicket(ticket)
             .withKindOfService(kindOfService)
             .build();
       new BusinessDayChangedCallbackHandlerImpl().handleBusinessDayIncrementAdd(update);
@@ -267,12 +282,20 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       return this.endTextFieldProperty;
    }
 
-   public final Property<ObservableList<String>> getKindOfServiceTextFieldProperty() {
-      return this.kindOfServiceTextFieldProperty;
+   public final Property<ObservableList<String>> getServiceCodesFieldProperty() {
+      return this.serviceCodesFieldProperty;
    }
 
    public final StringProperty getTicketNoLabelProperty() {
       return this.ticketNoLabelProperty;
+   }
+
+   public Property<SingleSelectionModel<String>> getServiceCodesSelectedModelProperty() {
+      return serviceCodesSelectedModelProperty;
+   }
+
+   public void setServiceCodesSelectedModelProperty(ObjectProperty<SingleSelectionModel<String>> selectionModelProperty) {
+      this.serviceCodesSelectedModelProperty = selectionModelProperty;
    }
 
    public final StringProperty getDescriptionLabelProperty() {
@@ -287,8 +310,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       return this.endLabelProperty;
    }
 
-   public final StringProperty getKindOfServiceLabelProperty() {
-      return this.kindOfServiceLabelProperty;
+   public final StringProperty getServiceCodesLabelProperty() {
+      return this.serviceCodesLabelProperty;
    }
 
    public final StringProperty getAmountOfHoursTextFieldProperty() {
@@ -325,5 +348,13 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    public Property<ObservableList<Ticket>> getTicketsProperty() {
       return ticketsProperty;
+   }
+
+   public Property<Ticket> getTicketProperty() {
+      return ticketProperty;
+   }
+
+   public void setTicketProperty(Property<Ticket> ticketProperty) {
+      this.ticketProperty = ticketProperty;
    }
 }

@@ -1,4 +1,4 @@
-package com.myownb3.dominic.timerecording.core.charge.result;
+package com.myownb3.dominic.timerecording.core.book.result;
 
 /**
  * Contains the result of a booking

@@ -10,8 +10,8 @@ import java.io.File;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import com.myownb3.dominic.timerecording.core.charge.ChargeType;
-import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.myownb3.dominic.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.core.importexport.in.file.exception.FileImportException;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
@@ -34,6 +34,7 @@ class TimeRecorder_ImportBusinessDayTest extends BaseTestWithSettings {
       boolean actualImported = TimeRecorder.INSTANCE.importBusinessDayFromFile(testImportFile);
 
       // Then
+      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
       assertThat(actualImported, is(true));
       BusinessDayVO bussinessDayVO = TimeRecorder.INSTANCE.getBussinessDayVO();
       assertThat(bussinessDayVO.getBusinessDayIncrements().size(), is(2));
@@ -41,11 +42,11 @@ class TimeRecorder_ImportBusinessDayTest extends BaseTestWithSettings {
       BusinessDayIncrementVO secondBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(secondTicketNr, bussinessDayVO);
       assertThat(firstBusinessDayInc4TicketNr, is(notNullValue()));
       assertThat(firstBusinessDayInc4TicketNr.getDescription(), is("Test"));
-      assertThat(firstBusinessDayInc4TicketNr.getChargeType(), is(ChargeType.getLeistungsartForRep(firstTicketLeistungsartRep)));
+      assertThat(firstBusinessDayInc4TicketNr.getChargeType(), is(serviceCodeAdapter.getServiceCode4Description(firstTicketLeistungsartRep)));
       assertThat(firstBusinessDayInc4TicketNr.getCurrentTimeSnippet().getDuration(), is(firstTicketDuration));
       assertThat(secondBusinessDayInc4TicketNr, is(notNullValue()));
       assertThat(secondBusinessDayInc4TicketNr.getDescription(), is(""));
-      assertThat(secondBusinessDayInc4TicketNr.getChargeType(), is(ChargeType.getLeistungsartForRep(secondTicketLeistungsartRep)));
+      assertThat(secondBusinessDayInc4TicketNr.getChargeType(), is(serviceCodeAdapter.getServiceCode4Description(secondTicketLeistungsartRep)));
       assertThat(secondBusinessDayInc4TicketNr.getCurrentTimeSnippet().getDuration(), is(secondTicketDuration));
    }
 

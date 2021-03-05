@@ -1,14 +1,15 @@
 /**
  * 
  */
-package com.myownb3.dominic.timerecording.core.charge.coolguys;
+package com.myownb3.dominic.timerecording.core.book.coolguys;
 
 import java.util.List;
 
 import com.coolguys.turbo.Booker;
-import com.myownb3.dominic.timerecording.core.charge.ChargeException;
-import com.myownb3.dominic.timerecording.core.charge.adapter.BookerAdapter;
-import com.myownb3.dominic.timerecording.core.charge.result.BookerResult;
+import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapter;
+import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.myownb3.dominic.timerecording.core.book.coolguys.exception.ChargeException;
+import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
@@ -21,8 +22,15 @@ import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
  */
 public class BookerHelper implements BookerAdapter {
 
+   private ChargeType chargeType;
+
    public BookerHelper() {
-      // private
+      this.chargeType = new ChargeType();
+   }
+
+   @Override
+   public ServiceCodeAdapter getServiceCodeAdapter() {
+      return chargeType;
    }
 
    /**

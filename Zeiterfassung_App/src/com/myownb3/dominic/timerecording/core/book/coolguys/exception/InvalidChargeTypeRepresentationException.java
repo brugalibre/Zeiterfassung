@@ -1,6 +1,6 @@
-package com.myownb3.dominic.timerecording.core.charge.exception;
+package com.myownb3.dominic.timerecording.core.book.coolguys.exception;
 
-public class InvalidChargeTypeRepresentationException extends Exception {
+public class InvalidChargeTypeRepresentationException extends RuntimeException {
 
    public InvalidChargeTypeRepresentationException(String msg) {
       super(msg);

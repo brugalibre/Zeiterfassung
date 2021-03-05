@@ -3,14 +3,16 @@
  */
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.control;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import java.awt.Toolkit;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.myownb3.dominic.timerecording.core.charge.ChargeType;
-import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.ui.app.inputfield.AutoCompleteTextField;
 import com.myownb3.dominic.ui.app.inputfield.InputFieldVerifier;
 import com.myownb3.dominic.ui.app.pages.combobox.TicketComboboxItem;
@@ -22,6 +24,8 @@ import com.myownb3.dominic.ui.app.styles.Styles;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -71,9 +75,9 @@ public class StopBusinessDayIncrementController
    private TextField amountOfHoursTextField;
 
    @FXML
-   private Label kindOfServiceLabel;
+   private Label serviceCodesLabel;
    @FXML
-   private ComboBox<String> kindOfServiceComboBox;
+   private ComboBox<String> serviceCodesComboBox;
 
    @FXML
    private Button finishButton;
@@ -87,7 +91,6 @@ public class StopBusinessDayIncrementController
    @Override
    public void initialize(URL url, ResourceBundle resourceBundle) {
       initialize(new StopBusinessDayIncrementPage(this));
-      kindOfServiceComboBox.getSelectionModel().selectFirst();
       ticketNumberComboBox.setCellFactory(createCellFactory());
    }
 
@@ -141,6 +144,7 @@ public class StopBusinessDayIncrementController
    private void setSelectedTicket() {
       if (nonNull(ticketNumberComboBox.getSelectionModel().getSelectedItem())) {
          ticketNumberField.setText(ticketNumberComboBox.getSelectionModel().getSelectedItem().getKey());
+         getDataModel().handleTicketNumberChanged();
       }
    }
 
@@ -162,8 +166,10 @@ public class StopBusinessDayIncrementController
    }
 
    private void dispose(FinishAction finishAction) {
+      serviceCodesComboBox.getStyleClass().removeAll(Styles.INVALID_INPUT_LABEL);
+      ticketNumberField.getStyleClass().removeAll(Styles.INVALID_INPUT_LABEL);
+      amountOfHoursTextField.getStyleClass().removeAll(Styles.INVALID_INPUT_LABEL);
       mainWindowController.finishOrAbortAndDispose(finishAction);
-      amountOfHoursTextField.getStyleClass().remove(Styles.INVALID_INPUT_LABEL);
       ticketNumberField.onDispose();
    }
 
@@ -177,18 +183,20 @@ public class StopBusinessDayIncrementController
    }
 
    private int getSelectedLeistungsart() {
-      String selectedItem = kindOfServiceComboBox.getSelectionModel().getSelectedItem();
-      try {
-         return ChargeType.getLeistungsartForRep(selectedItem);
-      } catch (InvalidChargeTypeRepresentationException e) {
-         // This should never happen here, therefore we throw an Exception
-         throw new IllegalStateException(e);
-      }
+      String selectedItem = serviceCodesComboBox.getSelectionModel().getSelectedItem();
+      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+      return serviceCodeAdapter.getServiceCode4Description(selectedItem);
    }
 
    private boolean isInputValid() {
-      return new InputFieldVerifier().verify(amountOfHoursTextField)
-            && nonNull(kindOfServiceComboBox.getSelectionModel().getSelectedItem());
+      return new InputFieldVerifier().verify(amountOfHoursTextField, true)
+            & validateSelectedServiceCode()
+            & dataModel.isValid(ticketNumberField, true);
+   }
+
+   private boolean validateSelectedServiceCode() {
+      boolean isNonNull = nonNull(serviceCodesComboBox.getSelectionModel().getSelectedItem());
+      return InputFieldVerifier.addOrRemoveErrorStyleAndReturnValidationRes(serviceCodesComboBox, isNonNull);
    }
 
    @Override
@@ -201,14 +209,18 @@ public class StopBusinessDayIncrementController
       beginTextField.textProperty().bindBidirectional(pageModel.getBeginTextFieldProperty());
       endTextField.textProperty().bindBidirectional(pageModel.getEndTextFieldProperty());
       amountOfHoursTextField.textProperty().bindBidirectional(pageModel.getAmountOfHoursTextFieldProperty());
-      kindOfServiceComboBox.itemsProperty().bindBidirectional(pageModel.getKindOfServiceTextFieldProperty());
+      serviceCodesComboBox.itemsProperty().bindBidirectional(pageModel.getServiceCodesFieldProperty());
+      pageModel.setServiceCodesSelectedModelProperty(serviceCodesComboBox.selectionModelProperty());
+      serviceCodesComboBox.itemsProperty().addListener(serviceCodeSelectionChangedListener());
 
       ticketNumberLabel.textProperty().bindBidirectional(pageModel.getTicketNoLabelProperty());
+      ticketNumberField.focusedProperty().addListener(ticketNrChangedListener());
+      getDataModel().getTicketProperty().addListener(ticketChangedListener());
       descriptionLabel.textProperty().bindBidirectional(pageModel.getDescriptionLabelProperty());
       beginLabel.textProperty().bindBidirectional(pageModel.getBeginLabelProperty());
       endLabel.textProperty().bindBidirectional(pageModel.getEndLabelProperty());
       amountOfHoursLabel.textProperty().bindBidirectional(pageModel.getAmountOfHoursLabelProperty());
-      kindOfServiceLabel.textProperty().bindBidirectional(pageModel.getKindOfServiceLabelProperty());
+      serviceCodesLabel.textProperty().bindBidirectional(pageModel.getServiceCodesLabelProperty());
 
       finishButton.textProperty().bindBidirectional(pageModel.getFinishButtonText());
       abortButton.textProperty().bindBidirectional(pageModel.getAbortButtonText());
@@ -218,23 +230,56 @@ public class StopBusinessDayIncrementController
 
       beginTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
          if (oldValue.booleanValue() && !newValue.booleanValue()) {
-            getDataModel().updateAndSetBeginTimeStamp(beginTextField.getText());
+            getDataModel().updateAndSetBeginTimeStamp();
          }
       });
       endTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
          if (oldValue.booleanValue() && !newValue.booleanValue()) {
-            getDataModel().updateAndSetEndTimeStamp(endTextField.getText());
+            getDataModel().updateAndSetEndTimeStamp();
          }
       });
       amountOfHoursTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
          if (hasAmountOfHoursChanged(oldValue, newValue)) {
-            getDataModel().addAdditionallyTime(amountOfHoursTextField.getText());
+            getDataModel().addAdditionallyTime();
          }
       });
    }
 
+   private ChangeListener<ObservableList<String>> serviceCodeSelectionChangedListener() {
+      return (observable, oldValue, newValue) -> {
+         if (!oldValue.equals(newValue)) {
+            serviceCodesComboBox.getSelectionModel().selectFirst();
+         }
+      };
+   }
+
+   private ChangeListener<Ticket> ticketChangedListener() {
+      return (observable, oldTicket, newTicket) -> {
+         if (hasTicketChangedAndIsValid(oldTicket, newTicket)) {
+            getDataModel().handleTicketChanged();
+         }
+      };
+   }
+
+   private static boolean hasTicketChangedAndIsValid(Ticket oldTicket, Ticket newTicket) {
+      return hasTicketChanged(oldTicket, newTicket) && !newTicket.isDummyTicket();
+   }
+
+   private static boolean hasTicketChanged(Ticket oldTicket, Ticket newTicket) {
+      return (isNull(oldTicket) || !oldTicket.equals(newTicket)) && nonNull(newTicket);
+   }
+
+   private ChangeListener<Boolean> ticketNrChangedListener() {
+      return (observable, oldValue, newValue) -> {
+         if (oldValue.booleanValue() && !newValue.booleanValue()
+               && dataModel.isValid(ticketNumberField, false)) {
+            getDataModel().handleTicketNumberChanged();
+         }
+      };
+   }
+
    private boolean hasAmountOfHoursChanged(Boolean oldValue, Boolean newValue) {
-      return oldValue && !newValue && new InputFieldVerifier().verify(amountOfHoursTextField);
+      return oldValue && !newValue && new InputFieldVerifier().verify(amountOfHoursTextField, false);
    }
 
    /**

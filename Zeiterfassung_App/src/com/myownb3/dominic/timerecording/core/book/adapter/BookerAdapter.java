@@ -1,6 +1,6 @@
-package com.myownb3.dominic.timerecording.core.charge.adapter;
+package com.myownb3.dominic.timerecording.core.book.adapter;
 
-import com.myownb3.dominic.timerecording.core.charge.result.BookerResult;
+import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 
@@ -12,6 +12,11 @@ import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrem
  *
  */
 public interface BookerAdapter {
+
+   /**
+    * @return the {@link ServiceCodeAdapter}
+    */
+   public ServiceCodeAdapter getServiceCodeAdapter();
 
    /**
     * Collects from each {@link BusinessDayIncrement} the content to book and calls the implementation depending api to book

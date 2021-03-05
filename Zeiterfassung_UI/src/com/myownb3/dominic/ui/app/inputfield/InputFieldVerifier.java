@@ -7,6 +7,8 @@ import static com.myownb3.dominic.util.parser.NumberFormat.neutralizeDecimalSepa
 
 import java.text.NumberFormat;
 import java.text.ParsePosition;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.myownb3.dominic.ui.app.styles.Styles;
 
@@ -19,16 +21,54 @@ import javafx.scene.control.TextField;
  */
 public class InputFieldVerifier {
 
-   public boolean verify(TextField c) {
-      return verifyTextField(c);
+   /**
+    * Verifies if the text value of the given {@link TextField} matches the given pattern.
+    * If it does not matches the pattern, the {@link Styles#INVALID_INPUT_LABEL} is added to the given TextField
+    * 
+    * @param textField
+    *        the TextLabel which provides the string value to verify
+    * @param patternAsString
+    *        the pattern
+    * @param addErrorStyle
+    *        Determines if the style of the given textfield changes if it's value is invalid
+    * @return <code>true</code> if the text value from the given TextField matches the pattern or <code>false</code> if not
+    */
+   public boolean isStringMatchingPattern(TextField textField, String patternAsString, boolean addErrorStyle) {
+      Pattern pattern = Pattern.compile(patternAsString);
+      Matcher matcher = pattern.matcher(textField.getText());
+      boolean matches = matcher.matches();
+      if (addErrorStyle) {
+         addOrRemoveErrorStyle(textField, matches);
+      }
+      return matches;
    }
 
-   private boolean verifyTextField(TextField textField) {
+   /**
+    * Verifies if the text value of the given {@link TextField} is valid numeric value.
+    * If it's not, then the {@link Styles#INVALID_INPUT_LABEL} is added to the given TextField
+    * 
+    * @param textField
+    *        the TextLabel which provides the string value to verify
+    * @param addErrorStyle
+    *        Determines if the style of the given textfield changes if it's value is invalid
+    * @return <code>true</code> if the text value from the given TextField is valid numeric value or <code>false</code> if not
+    */
+   public boolean verify(TextField c, boolean addErrorStyle) {
+      return verifyTextField(c, addErrorStyle);
+   }
 
+   public static boolean addOrRemoveErrorStyleAndReturnValidationRes(Node node, boolean isInputValid) {
+      addOrRemoveErrorStyle(node, isInputValid);
+      return isInputValid;
+   }
+
+   private boolean verifyTextField(TextField textField, boolean addErrorStyle) {
       NumberFormat formatter = NumberFormat.getInstance();
       String text = neutralizeDecimalSeparator(textField.getText().trim(), formatter);
       if (text.isEmpty()) {
-         addOrRemoveErrorStyle(textField, false);
+         if (addErrorStyle) {
+            addOrRemoveErrorStyle(textField, false);
+         }
          return false;
       }
       boolean isValidNumber = false;
@@ -36,14 +76,16 @@ public class InputFieldVerifier {
          ParsePosition pos = new ParsePosition(0);
          Number number = formatter.parse(text, pos);
          isValidNumber = number.doubleValue() > 0.0;
-      } catch (NumberFormatException e) {
+      } catch (NumberFormatException | NullPointerException e) {
          e.printStackTrace();
       }
-      addOrRemoveErrorStyle(textField, isValidNumber);
+      if (addErrorStyle) {
+         addOrRemoveErrorStyle(textField, isValidNumber);
+      }
       return isValidNumber;
    }
 
-   private void addOrRemoveErrorStyle(Node node, boolean isValid) {
+   private static void addOrRemoveErrorStyle(Node node, boolean isValid) {
       if (isValid) {
          node.getStyleClass().removeAll(Styles.INVALID_INPUT_LABEL);
       } else {

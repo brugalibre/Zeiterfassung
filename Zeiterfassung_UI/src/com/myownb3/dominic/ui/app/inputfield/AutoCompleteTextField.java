@@ -174,7 +174,7 @@ public class AutoCompleteTextField extends TextField {
     * Retrieve the matching text with case insensitiv regex. This way we will find the original sequences (e.g. Bob)
     * even when we looked with 'bob'
     * We also try to be case insensitive -> (?i). 
-    * The regex pattern '?i' is is not enough with characters like 'ä, Ü' and so on. We also need the unicode flag 'u'
+    * The regex pattern '?i' is is not enough with characters like 'ï¿½, ï¿½' and so on. We also need the unicode flag 'u'
     */
    private static Text extractMatchingTextFromTicketString(String enteredText, String ticketRep) {
       enteredText = escapeRegexSensitiveCharacters(enteredText);

@@ -1,13 +1,14 @@
 /**
  * 
  */
-package com.myownb3.dominic.timerecording.core.charge;
+package com.myownb3.dominic.timerecording.core.book.coolguys;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -17,17 +18,18 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
-import com.myownb3.dominic.timerecording.core.charge.exception.InvalidChargeTypeRepresentationException;
+import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.myownb3.dominic.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 
 /**
  * @author Dominic
  *
  */
-public class ChargeType {
+public class ChargeType implements ServiceCodeAdapter {
 
    private static final Logger LOG = Logger.getLogger(ChargeType.class);
 
-   private ChargeType() {
+   public ChargeType() {
       // private 
    }
 
@@ -49,6 +51,7 @@ public class ChargeType {
 
          // Now after sorting create for each a proper representation like 'number' -
          // description
+         addDefaultLeistungsarten();
          for (Integer leistungsart : leistungsartenNr) {
             LEISTUNGSARTEN_MAP.put(leistungsart,
                   leistungsart + " - " + chargeTypesPro.get(String.valueOf(leistungsart)));
@@ -77,7 +80,27 @@ public class ChargeType {
       LEISTUNGSARTEN_MAP.put(164, "164 - bezahlte Abwesenheiten");
    }
 
-   public static String[] getLeistungsartenRepresentation() {
+   @Override
+   public List<String> fetchServiceCodesForProjectNr(long projectNr) {
+      return getAllServiceCodes();// We can't distinguish here between different project-numbers
+   }
+
+   @Override
+   public List<String> getAllServiceCodes() {
+      return Arrays.asList(getLeistungsartenRepresentation());
+   }
+
+   @Override
+   public int getServiceCode4Description(String serviceCodeDesc) {
+      return getLeistungsartForRep(serviceCodeDesc);
+   }
+
+   @Override
+   public String getServiceCodeDescription4ServiceCode(int serviceCode) {
+      return LEISTUNGSARTEN_MAP.get(serviceCode);
+   }
+
+   private static String[] getLeistungsartenRepresentation() {
       List<Integer> leistungsartenIntList = new ArrayList<>(LEISTUNGSARTEN_MAP.keySet());
       List<String> leistungsartenStrings = leistungsartenIntList.stream()//
             .map(LEISTUNGSARTEN_MAP::get)//
@@ -85,7 +108,7 @@ public class ChargeType {
       return leistungsartenStrings.toArray(new String[leistungsartenStrings.size()]);
    }
 
-   public static int getLeistungsartForRep(String leistungsartRep) throws InvalidChargeTypeRepresentationException {
+   private static int getLeistungsartForRep(String leistungsartRep) throws InvalidChargeTypeRepresentationException {
       for (Integer leistungsart : LEISTUNGSARTEN_MAP.keySet()) {
          if (leistungsartRep.equals(LEISTUNGSARTEN_MAP.get(leistungsart))) {
             return leistungsart;
@@ -93,15 +116,5 @@ public class ChargeType {
       }
       throw new InvalidChargeTypeRepresentationException(
             "No Leistungsart found for Description '" + leistungsartRep + "'");
-   }
-
-   /**
-    * Returns the description of the given Charge-Type
-    * 
-    * @param chargeType
-    * @return the description of the given Charge-Type
-    */
-   public static String getRepresentation(int chargeType) {
-      return LEISTUNGSARTEN_MAP.get(chargeType);
    }
 }

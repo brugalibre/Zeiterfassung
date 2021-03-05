@@ -1,4 +1,4 @@
-package com.myownb3.dominic.timerecording.core.charge.abacus;
+package com.myownb3.dominic.timerecording.core.book.abacus;
 
 public class AbacusConst {
 

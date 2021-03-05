@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -12,9 +11,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
-import com.myownb3.dominic.timerecording.core.charge.ChargeType;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
@@ -184,66 +181,6 @@ class BusinessDayTest {
       // Then
       BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
       assertThat(businessDayIncrement.getTotalDuration(), is(expectedNewDuration));
-   }
-
-   @Test
-   public void testChangeDBIncChargeType() {
-
-      // Given
-      int firstTimeBetweenStartAndStop = 3600 * 1000;
-      int expectedNewChargeType = 111;
-      int currentChargeType = 113;
-      TimeSnippet firstSnippet = createTimeSnippet(firstTimeBetweenStartAndStop);
-
-      BusinessDay businessDay = new BusinessDay();
-      businessDay.addBusinessIncrement(createUpdate(firstSnippet, currentChargeType, getTicket4Nr()));
-
-      ChangedValue changeValue = ChangedValue.of(0, ChargeType.getRepresentation(expectedNewChargeType), ValueTypes.CHARGE_TYPE);
-
-      // When
-      businessDay.changeBusinesDayIncrement(changeValue);
-
-      // Then
-      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
-      assertThat(businessDayIncrement.getChargeType(), is(expectedNewChargeType));
-   }
-
-   @Test
-   public void testChangeDBIncChargeType_Invalid() {
-
-      // Given
-      int firstTimeBetweenStartAndStop = 3600 * 1000;
-      int currentChargeType = 113;
-      TimeSnippet firstSnippet = createTimeSnippet(firstTimeBetweenStartAndStop);
-
-      BusinessDay businessDay = new BusinessDay();
-      businessDay.addBusinessIncrement(createUpdate(firstSnippet, currentChargeType, getTicket4Nr()));
-
-      ChangedValue changeValue = ChangedValue.of(0, "Schnubbedibuuu", ValueTypes.CHARGE_TYPE);
-
-      // When
-      businessDay.changeBusinesDayIncrement(changeValue);
-
-      // Then
-      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
-      assertThat(businessDayIncrement.getChargeType(), is(currentChargeType));
-   }
-
-   @Test
-   public void testChangeDBIncChargeType_InvalidValue() {
-
-      // Given
-      TimeSnippet firstSnippet = createTimeSnippet(3600 * 1000);
-      BusinessDay businessDay = new BusinessDay();
-      businessDay.addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
-
-      ChangedValue changeValue = ChangedValue.of(0, "Schnubbedibuuu", ValueTypes.NONE);
-
-      // When
-      Executable ex = () -> businessDay.changeBusinesDayIncrement(changeValue);
-
-      // Then
-      assertThrows(UnsupportedOperationException.class, ex);
    }
 
    @Test
