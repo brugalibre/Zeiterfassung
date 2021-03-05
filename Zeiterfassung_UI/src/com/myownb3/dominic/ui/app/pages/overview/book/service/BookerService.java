@@ -1,7 +1,7 @@
 package com.myownb3.dominic.ui.app.pages.overview.book.service;
 
+import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapter;
 import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapterFactory;
-import com.myownb3.dominic.timerecording.core.charge.adapter.BookerAdapter;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -38,6 +38,6 @@ public class BookerService extends Service<Boolean> {
    public void bind(ProgressIndicator progressIndicator) {
       progressIndicator.visibleProperty().bind(runningProperty());
       progressIndicator.progressProperty().bind(progressProperty());
-      BookerAdapterFactory.getAdapter();
+      BookerAdapterFactory.getAdapter();//TODO
    }
 }

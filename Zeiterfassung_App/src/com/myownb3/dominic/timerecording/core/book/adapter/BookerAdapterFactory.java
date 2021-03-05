@@ -1,8 +1,8 @@
-package com.myownb3.dominic.timerecording.core.charge.adapter;
+package com.myownb3.dominic.timerecording.core.book.adapter;
 
 
-import com.myownb3.dominic.timerecording.core.charge.abacus.AbacusBookerAdapter;
-import com.myownb3.dominic.timerecording.core.charge.coolguys.BookerHelper;
+import com.myownb3.dominic.timerecording.core.book.abacus.AbacusBookerAdapter;
+import com.myownb3.dominic.timerecording.core.book.coolguys.BookerHelper;
 
 public class BookerAdapterFactory {
    private static BookerAdapter bookerAdapter;

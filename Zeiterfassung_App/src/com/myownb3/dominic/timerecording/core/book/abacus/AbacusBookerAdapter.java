@@ -1,4 +1,4 @@
-package com.myownb3.dominic.timerecording.core.charge.abacus;
+package com.myownb3.dominic.timerecording.core.book.abacus;
 
 import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_PW_VALUE_KEY;
 import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_VALUE_KEY;
@@ -15,9 +15,10 @@ import org.apache.log4j.Logger;
 import com.adcubum.j2a.abacusconnector.ProjectBookingBean;
 import com.adcubum.j2a.zeiterfassung.AbacusBookingConnector;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.core.charge.adapter.BookerAdapter;
-import com.myownb3.dominic.timerecording.core.charge.result.BookResultType;
-import com.myownb3.dominic.timerecording.core.charge.result.BookerResult;
+import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapter;
+import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.myownb3.dominic.timerecording.core.book.result.BookResultType;
+import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
@@ -35,12 +36,14 @@ public class AbacusBookerAdapter implements BookerAdapter {
 
    private static final Logger LOG = Logger.getLogger(AbacusBookerAdapter.class);
    private AbacusBookingConnector abacusBookingConnector;
+   private AbacusServiceCodeAdapter serviceCodeAdapter;
    private long employeeNumber;
    private boolean isInitialized;
 
    public AbacusBookerAdapter() {
       String username = Settings.INSTANCE.getSettingsValue(USER_NAME_VALUE_KEY);
       createAbacusBookingConnector(username);
+      this.serviceCodeAdapter = new AbacusServiceCodeAdapter(abacusBookingConnector);
       init(username);
    }
 
@@ -50,7 +53,7 @@ public class AbacusBookerAdapter implements BookerAdapter {
    }
 
    /**
-    * Package private constructor for testing purpose only
+    * Constructor for testing purpose only!
     * 
     * @param abacusBookingConnector
     *        the {@link AbacusBookingConnector}
@@ -58,17 +61,38 @@ public class AbacusBookerAdapter implements BookerAdapter {
     *        the username
     */
    AbacusBookerAdapter(AbacusBookingConnector abacusBookingConnector, String username) {
+      this(abacusBookingConnector, new AbacusServiceCodeAdapter(abacusBookingConnector), username);
+   }
+
+   /**
+    * Package private constructor for testing purpose only
+    * 
+    * @param abacusBookingConnector
+    *        the {@link AbacusBookingConnector}
+    * @param serviceCodeAdapter
+    *        the {@link AbacusServiceCodeAdapter}
+    * @param username
+    *        the username
+    */
+   AbacusBookerAdapter(AbacusBookingConnector abacusBookingConnector, AbacusServiceCodeAdapter serviceCodeAdapter, String username) {
       this.abacusBookingConnector = abacusBookingConnector;
+      this.serviceCodeAdapter = serviceCodeAdapter;
       init(username);
    }
 
    private void init(String username) {
+      serviceCodeAdapter.init();
       fetchEmployeeNumber(username);
       this.isInitialized = employeeNumber > 0;
    }
 
    public boolean isInitialized() {
       return isInitialized;
+   }
+
+   @Override
+   public ServiceCodeAdapter getServiceCodeAdapter() {
+      return serviceCodeAdapter;
    }
 
    @Override

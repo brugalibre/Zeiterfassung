@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Objects;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.core.charge.ChargeType;
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
@@ -95,11 +96,17 @@ public class BusinessDayTableModelHelper {
 
    private void setEditableColumBoxCellFactory(
          TableColumn<BusinessDayIncTableRowValue, String> chargeTypeTableColumn) {
+      List<String> allServiceCodes = readAllServiceCodes();
       chargeTypeTableColumn.setCellValueFactory(cellData -> cellData.getValue().chargeTypeProperty());
-      chargeTypeTableColumn
-            .setCellFactory(ComboBoxTableCell.forTableColumn(ChargeType.getLeistungsartenRepresentation()));
+      // We should probably write our own cell factory in order to dynamically evaluate the possible service codes for the given Ticket
+      chargeTypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(allServiceCodes.toArray(new String[] {})));
       chargeTypeTableColumn.editableProperty().set(true);
       chargeTypeTableColumn.setOnEditCommit(changeListener);
+   }
+
+   private static List<String> readAllServiceCodes() {
+      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+      return serviceCodeAdapter.getAllServiceCodes();
    }
 
    private Callback<CellDataFeatures<BusinessDayIncTableRowValue, String>, ObservableValue<String>> getTimeSnippetBeginCellValueFactory() {
@@ -163,11 +170,11 @@ public class BusinessDayTableModelHelper {
          String cellValue = bussinessDayIncremental.hasDescription() ? bussinessDayIncremental.getDescription() : "";
          businessDayIncTableCellValue.setDescription(cellValue);
       }
-
+      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
       // create Cells for all TimeSnippet's
       businessDayIncTableCellValue.setTimeSnippets(getTimeSnippets(bussinessDayIncremental));
       businessDayIncTableCellValue
-            .setChargeType(ChargeType.getRepresentation(bussinessDayIncremental.getChargeType()));
+            .setChargeType(serviceCodeAdapter.getServiceCodeDescription4ServiceCode(bussinessDayIncremental.getChargeType()));
       businessDayIncTableCellValue.setIsBooked(bussinessDayIncremental.isBooked() ? TextLabel.YES : TextLabel.NO);
       businessDayIncTableCellValue.setValueTypes(isDescriptionTitleNecessary);
       return businessDayIncTableCellValue;

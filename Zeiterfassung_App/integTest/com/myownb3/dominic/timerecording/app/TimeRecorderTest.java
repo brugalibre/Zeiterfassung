@@ -21,10 +21,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapter;
+import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.myownb3.dominic.timerecording.core.book.result.BookResultType;
+import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.callbackhandler.UiCallbackHandler;
-import com.myownb3.dominic.timerecording.core.charge.adapter.BookerAdapter;
-import com.myownb3.dominic.timerecording.core.charge.result.BookerResult;
-import com.myownb3.dominic.timerecording.core.charge.result.BookResultType;
 import com.myownb3.dominic.timerecording.core.message.Message;
 import com.myownb3.dominic.timerecording.core.message.MessageType;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
@@ -243,6 +244,46 @@ class TimeRecorderTest extends BaseTestWithSettings {
       BusinessDayIncrementVO businessDayIncrement = TimeRecorder.INSTANCE.getBussinessDayVO().getBusinessDayIncrements().get(0);
       assertThat(businessDayIncrement.getDescription(), is(newDescription));
       assertThat(bussinessDayVO.hasIncrementWithDescription(), is(true));
+   }
+
+   @Test
+   public void testChangeDBIncChargeType() {
+
+      // Given
+      int kindOfService = 113;
+      int expectedNewChargeType = 111;
+      new TestCaseBuilder(TimeRecorder.INSTANCE)
+            .withBusinessDayIncrement("SYRIUS-11111", "Test", kindOfService, 3600 * 1000)
+            .build();
+
+      ChangedValue changeValue = ChangedValue.of(0, "111 - Meeting", ValueTypes.CHARGE_TYPE);
+
+      // When
+      TimeRecorder.INSTANCE.changeBusinesDayIncrement(changeValue);
+
+      // Then
+      BusinessDayIncrementVO businessDayIncrement = TimeRecorder.INSTANCE.getBussinessDayVO().getBusinessDayIncrements().get(0);
+      assertThat(businessDayIncrement.getChargeType(), is(expectedNewChargeType));
+   }
+
+   @Test
+   public void testChangeDBIncChargeType_Invalid() {
+
+      // Given
+      // Given
+      int currentServiceCode = 113;
+      new TestCaseBuilder(TimeRecorder.INSTANCE)
+            .withBusinessDayIncrement("SYRIUS-11111", "Test", currentServiceCode, 3600 * 1000)
+            .build();
+
+      ChangedValue changeValue = ChangedValue.of(0, "Schubedibuuu", ValueTypes.CHARGE_TYPE);
+
+      // When
+      TimeRecorder.INSTANCE.changeBusinesDayIncrement(changeValue);
+
+      // Then
+      BusinessDayIncrementVO businessDayIncrement = TimeRecorder.INSTANCE.getBussinessDayVO().getBusinessDayIncrements().get(0);
+      assertThat(businessDayIncrement.getChargeType(), is(currentServiceCode));
    }
 
    @Test
@@ -531,6 +572,11 @@ class TimeRecorderTest extends BaseTestWithSettings {
          this.hasBooked = hasBooked;
          this.bookResultType = bookResultType;
          this.delayDuringBooking = delayDuringBooking;
+      }
+
+      @Override
+      public ServiceCodeAdapter getServiceCodeAdapter() {
+         return mock(ServiceCodeAdapter.class);
       }
 
       @Override

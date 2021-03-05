@@ -7,10 +7,11 @@ import java.io.File;
 import java.util.List;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapter;
+import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapterFactory;
+import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.callbackhandler.UiCallbackHandler;
-import com.myownb3.dominic.timerecording.core.charge.adapter.BookerAdapter;
-import com.myownb3.dominic.timerecording.core.charge.adapter.BookerAdapterFactory;
-import com.myownb3.dominic.timerecording.core.charge.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.BusinessDayImporter;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
 import com.myownb3.dominic.timerecording.core.importexport.in.file.FileImporter;
@@ -345,6 +346,13 @@ public class TimeRecorder {
     */
    public boolean hasBusinessDayDescription() {
       return businessDay.hasDescription();
+   }
+
+   /**
+    * @return the {@link ServiceCodeAdapter} of this {@link TimeRecorder}
+    */
+   public ServiceCodeAdapter getServiceCodeAdapter() {
+      return bookAdapter.getServiceCodeAdapter();
    }
 
    /**

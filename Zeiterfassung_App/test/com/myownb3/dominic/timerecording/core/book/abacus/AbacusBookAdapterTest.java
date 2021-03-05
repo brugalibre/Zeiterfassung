@@ -1,4 +1,4 @@
-package com.myownb3.dominic.timerecording.core.charge.abacus;
+package com.myownb3.dominic.timerecording.core.book.abacus;
 
 import static java.util.Objects.nonNull;
 import static org.hamcrest.CoreMatchers.is;
@@ -21,8 +21,8 @@ import org.junit.jupiter.api.Test;
 
 import com.adcubum.j2a.abacusconnector.ProjectBookingBean;
 import com.adcubum.j2a.zeiterfassung.AbacusBookingConnector;
-import com.myownb3.dominic.timerecording.core.charge.result.BookResultType;
-import com.myownb3.dominic.timerecording.core.charge.result.BookerResult;
+import com.myownb3.dominic.timerecording.core.book.result.BookResultType;
+import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
@@ -34,6 +34,7 @@ import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.IssueType;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.TicketAttrs;
 
 class AbacusBookAdapterTest {
+
    private static final String USERNAME = "username";
 
    @Test
@@ -61,6 +62,7 @@ class AbacusBookAdapterTest {
       // When
       TestCaseBuilder tcb = new TestCaseBuilder()
             .withAbacusBookingConnector(abacusBookingConnector)
+            .withAbacusServiceCodeAdapter(mock(AbacusServiceCodeAdapter.class))
             .withUsername(username)
             .withExceptionWhileFetchingEmployeeNumber()
             .build();
@@ -81,6 +83,7 @@ class AbacusBookAdapterTest {
       // When
       TestCaseBuilder tcb = new TestCaseBuilder()
             .withAbacusBookingConnector(abacusBookingConnector)
+            .withAbacusServiceCodeAdapter(mock(AbacusServiceCodeAdapter.class))
             .withUsername(username)
             .build();
 
@@ -97,6 +100,7 @@ class AbacusBookAdapterTest {
       String ticketNr = "SYRIUS-654";
       TestCaseBuilder tcb = new TestCaseBuilder()
             .withAbacusBookingConnector(abacusBookingConnector)
+            .withAbacusServiceCodeAdapter(mock(AbacusServiceCodeAdapter.class))
             .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
                   .withTicket(mockTicket(true))
                   .withTimeSnippet(createTimeSnippet(50))
@@ -123,6 +127,7 @@ class AbacusBookAdapterTest {
       AbacusBookingConnector abacusBookingConnector = mock(AbacusBookingConnector.class);
       TestCaseBuilder tcb = new TestCaseBuilder()
             .withAbacusBookingConnector(abacusBookingConnector)
+            .withAbacusServiceCodeAdapter(mock(AbacusServiceCodeAdapter.class))
             .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
                   .withTicket(mockTicket(true))
                   .withTimeSnippet(createTimeSnippet(50))
@@ -150,6 +155,7 @@ class AbacusBookAdapterTest {
       String ticketNrWhichWasAlreadyBookedBefore = "1324";
       TestCaseBuilder tcb = new TestCaseBuilder()
             .withAbacusBookingConnector(abacusBookingConnector)
+            .withAbacusServiceCodeAdapter(mock(AbacusServiceCodeAdapter.class))
             .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
                   .withTicket(mockTicket(true, ticketNrWhichThrowsException))
                   .withTimeSnippet(createTimeSnippet(50))
@@ -175,8 +181,10 @@ class AbacusBookAdapterTest {
 
       // Given
       AbacusBookingConnector abacusBookingConnector = mock(AbacusBookingConnector.class);
+      AbacusServiceCodeAdapter abacusServiceCodeAdapter = mock(AbacusServiceCodeAdapter.class);
       TestCaseBuilder tcb = new TestCaseBuilder()
             .withAbacusBookingConnector(abacusBookingConnector)
+            .withAbacusServiceCodeAdapter(abacusServiceCodeAdapter)
             .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
                   .withTicket(mockTicket(true))
                   .withTimeSnippet(createTimeSnippet(50))
@@ -189,6 +197,7 @@ class AbacusBookAdapterTest {
       // Then
       assertThat(actualBookResult.getBookResultType(), is(BookResultType.SUCCESS));
       verify(tcb.abacusBookingConnector, times(tcb.businessDay.getIncrements().size())).book(any());
+      verify(abacusServiceCodeAdapter).init();
    }
 
    private static Ticket mockTicket(boolean isBookable) {
@@ -224,6 +233,7 @@ class AbacusBookAdapterTest {
       private RuntimeException fetchEmployeeException;
       private String chargedTicketNr;
       private String ticketNr2ThrowExceptionDuringBooking;
+      private AbacusServiceCodeAdapter abacusServiceCodeAdapter;
 
       private TestCaseBuilder() {
          this.businessDayIncrementAdds = new ArrayList<>();
@@ -260,10 +270,15 @@ class AbacusBookAdapterTest {
          return this;
       }
 
+      public TestCaseBuilder withAbacusServiceCodeAdapter(AbacusServiceCodeAdapter abacusServiceCodeAdapter) {
+         this.abacusServiceCodeAdapter = abacusServiceCodeAdapter;
+         return this;
+      }
+
       private TestCaseBuilder build() {
          addBusinessIncrements();
          doThrowWhileFetching();
-         this.abacusBookAdapter = spy(new AbacusBookerAdapter(abacusBookingConnector, username));
+         this.abacusBookAdapter = spy(new AbacusBookerAdapter(abacusBookingConnector, abacusServiceCodeAdapter, username));
          doThrowWhileBooking();
          return this;
       }

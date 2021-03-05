@@ -1,9 +1,9 @@
-package com.myownb3.dominic.timerecording.core.charge.coolguys;
+package com.myownb3.dominic.timerecording.core.book.coolguys;
 
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.core.charge.ChargeException;
-import com.myownb3.dominic.timerecording.core.charge.result.BookerResult;
-import com.myownb3.dominic.timerecording.core.charge.result.BookResultType;
+import com.myownb3.dominic.timerecording.core.book.coolguys.exception.ChargeException;
+import com.myownb3.dominic.timerecording.core.book.result.BookResultType;
+import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
 
 /**
  * The {@link BookerHelperResult} only exists if the booking was successful. Otherwise we throw an {@link ChargeException}

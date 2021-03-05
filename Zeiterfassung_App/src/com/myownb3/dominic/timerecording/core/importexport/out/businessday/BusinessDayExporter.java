@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.coolguys.turbo.Booker;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.core.charge.ChargeType;
+import com.myownb3.dominic.timerecording.app.TimeRecorder;
+import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
@@ -70,7 +70,8 @@ public class BusinessDayExporter {
          builder.append(CONTENT_SEPPARATOR);
          builder.append(snippet.getEndTimeStampRep());
          builder.append(CONTENT_SEPPARATOR);
-         builder.append(ChargeType.getRepresentation(inc.getChargeType()));
+         ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+         builder.append(serviceCodeAdapter.getServiceCodeDescription4ServiceCode(inc.getChargeType()));
          builder.append(CONTENT_SEPPARATOR);
          builder.append(inc.isBooked() ? TextLabel.YES : TextLabel.NO);
 
