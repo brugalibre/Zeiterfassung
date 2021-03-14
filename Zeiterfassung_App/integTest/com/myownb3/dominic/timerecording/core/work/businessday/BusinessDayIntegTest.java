@@ -14,10 +14,9 @@ import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.i
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
-import com.myownb3.dominic.timerecording.test.BaseTestWithSettings;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 
-public class BusinessDayIntegTest extends BaseTestWithSettings {
+public class BusinessDayIntegTest {
 
    @Test
    public void testChangeDBIncTicketNr() {

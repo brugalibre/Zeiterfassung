@@ -1,10 +1,9 @@
 package com.myownb3.dominic.timerecording.ticketbacklog.data;
 
-import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_VALUE_KEY;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-import com.myownb3.dominic.timerecording.settings.Settings;
+import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.TicketAttrs;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraIssue;
 
@@ -44,7 +43,7 @@ public class Ticket {
    }
 
    private boolean isCurrentUserAssigned(String assignee) {
-      String currentUserName = Settings.INSTANCE.getSettingsValue(USER_NAME_VALUE_KEY);
+      String currentUserName = AuthenticationService.INSTANCE.getUsername();
       return nonNull(currentUserName) && currentUserName.equalsIgnoreCase(assignee);
    }
 

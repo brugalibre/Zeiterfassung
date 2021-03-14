@@ -1,0 +1,178 @@
+/*
+*		FLATBEE by KarlTheBee´
+* An javafx css style for a smooth & flat user interface
+* Website : github.com/karlthebee/flatbee
+* Mail    : karlthebee@gmail.com
+*
+*	Version 1.0.0
+*
+* The license is pretty much a CC-BY-NC 4.0 license (https://creativecommons.org/licenses/by-nc/4.0/).
+* In simple (non legal) english : 
+* you can modify and distribute it, ship in in your application, 
+* but not use/sell it commercially.
+* And you have to give credits, 
+* like "FlatBee theme by karlthebee (https://github.com/karlthebee/flatbee)"
+*/
+
+	/*
+	* These are values you can edit safely.
+	The "color" is your main color (in this case greenish)
+	*/
+{
+	-color : #2ecc71;
+	-white : #ffffff;
+	-adcblue : rgb(0,69,135);
+	-brightadcblue : derive(-adcblue,+25%);
+	-black : #444444dd;
+	-abort : #e74c3c;
+	-lightslategray: #778899;
+}
+
+.root{
+	-fx-background-color : -white;
+	-fx-fill-width : true;
+	-fx-color : -adcblue;
+	-fx-fill-height : true;
+	-fx-font-family: 'Segoe UI';
+	/* remove the ugly focus shade */
+	-fx-focus-color : transparent;
+	-fx-faint-focus-color: transparent;
+}
+
+.loginFailedLabel {
+    -fx-background-color: #F08080;
+    -fx-background-radius:2;
+    -fx-border-radius:2;
+    -fx-border-width: 1 1 1 1;
+    -fx-background-insets: 1;
+    -fx-font-weight: bold;
+}
+
+.invalidLabel {
+    -fx-border-color: red;
+    -fx-background-radius:2;
+    -fx-border-radius:2;
+    -fx-border-width: 1 1 1 1;
+    -fx-background-insets: 1;
+	
+	-fx-text-box-border: #DBB1B1 ;
+    -fx-control-inner-background: #FFF0F0 ;
+    -fx-focus-color: #FF2020 ;
+    -fx-faint-focus-color: #FF202020 ;
+}
+
+.invalidLabel:focused {
+    -fx-border-color: red;
+    -fx-background-radius:2;
+	-fx-border-radius:2;
+    -fx-border-width: 1 1 1 1;
+    -fx-background-insets: 1;
+	
+	-fx-text-box-border: #DBB1B1 ;
+    -fx-control-inner-background: #FFF0F0 ;
+    -fx-focus-color: #FF2020 ;
+    -fx-faint-focus-color: #FF202020 ;
+}
+
+.boldLabel2 {
+	-fx-font-weight: bold;
+	-fx-font-size : 12.0;
+}
+
+
+/*
+ * **********
+ * LABELS
+ * **********
+*/
+.label{
+	 -fx-text-fill : -black;
+ }
+ 
+/*
+ * **********
+ * BUTTONS
+ * **********
+ * 
+ */
+.button {
+	-fx-background-color : -adcblue,-adcblue,-adcblue,-adcblue;
+
+    -fx-text-fill: white;
+	-fx-font-size: 12px;
+	-fx-font-weight: bold;
+}
+
+.button:pressed {
+    -fx-background-color: -adcblue;
+    -fx-text-fill: white;
+}
+.button:default{
+	-fx-background-color : -adcblue;
+}
+.button:cancel{
+	-fx-background-color : -abort;
+}
+
+.button:focused {
+   -fx-color : -brightadcblue;
+   -fx-focus-color : -brightadcblue;
+   -fx-border-color: -white;
+   -fx-background-color: -brightadcblue;
+   -fx-background-radius:2;
+   -fx-border-width: 1 1 1 1;
+   -fx-background-insets: 1;
+}
+
+.button:armed {
+    -fx-color: -white;				
+}
+ 
+/*
+ *
+ * **********
+ * TEXT FIELDS
+ * **********
+ * 
+ */
+ .text-field {
+	-fx-highlight-fill : -adcblue;
+	-fx-highlight-text-fill : -white;
+}
+
+.text-field:focused {
+	-fx-text-fill: -black;
+	-fx-border-color: -brightadcblue;
+	-fx-border-radius:2;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-insets: 1;
+ }
+
+*/
+/*
+ * **********
+ * Any pane
+ * **********
+ * 
+ */
+.anchorpane{
+    -fx-background-color: -white;
+}
+
+.pane{
+    -fx-background-color: -white;
+}
+
+/*
+ * **********
+ * H,- und VBox
+ * **********
+ * 
+ */
+.hbox {
+    -fx-background-color: -white;
+}
+
+.vbox {
+    -fx-background-color: -white;
+}

@@ -4,6 +4,7 @@
 package com.myownb3.dominic.ui.app.inputfield;
 
 import static com.myownb3.dominic.util.parser.NumberFormat.neutralizeDecimalSeparator;
+import static java.util.Objects.nonNull;
 
 import java.text.NumberFormat;
 import java.text.ParsePosition;
@@ -11,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.myownb3.dominic.ui.app.styles.Styles;
+import com.myownb3.dominic.util.utils.StringUtil;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
@@ -60,6 +62,15 @@ public class InputFieldVerifier {
    public static boolean addOrRemoveErrorStyleAndReturnValidationRes(Node node, boolean isInputValid) {
       addOrRemoveErrorStyle(node, isInputValid);
       return isInputValid;
+   }
+
+   public boolean verifyString(Node node, String value) {
+      return addOrRemoveErrorStyleAndReturnValidationRes(node, !StringUtil.isEmptyOrNull(value));
+   }
+
+   public boolean verifyString(Node node, char[] value) {
+      // I don't care about empty passwords so.. feel free
+      return addOrRemoveErrorStyleAndReturnValidationRes(node, nonNull(value) && value.length > 0);
    }
 
    private boolean verifyTextField(TextField textField, boolean addErrorStyle) {

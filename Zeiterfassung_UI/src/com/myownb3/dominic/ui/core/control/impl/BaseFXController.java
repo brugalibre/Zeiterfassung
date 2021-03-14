@@ -6,6 +6,7 @@ package com.myownb3.dominic.ui.core.control.impl;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import com.myownb3.dominic.ui.core.control.Controller;
 import com.myownb3.dominic.ui.core.model.PageModel;
@@ -43,7 +44,17 @@ public abstract class BaseFXController<I extends PageModel, O extends PageModel>
       initDataModel((I) dataModel);
       super.show();
       Optional<Stage> optionalStage = getStage(page);
-      optionalStage.ifPresent(Stage::show);
+      optionalStage.ifPresent(showStage());
+   }
+
+   private Consumer<? super Stage> showStage() {
+      return page.isBlocking() ? Stage::showAndWait : Stage::show;
+   }
+
+   @Override
+   public void hide() {
+      Optional<Stage> optionalStage = getStage(page);
+      optionalStage.ifPresent(Stage::hide);
    }
 
    private Optional<Stage> getStage(Page<?, ?> page) {
@@ -57,5 +68,12 @@ public abstract class BaseFXController<I extends PageModel, O extends PageModel>
    @SuppressWarnings("rawtypes")
    public Node getPageContent() {
       return ((AbstractFXPage) this.page).getRootParent();
+   }
+
+   protected Stage getStage() {
+      FXPageContent pageContent = (FXPageContent) page.getContent();
+      return pageContent
+            .getStage()
+            .orElseThrow(IllegalStateException::new);
    }
 }

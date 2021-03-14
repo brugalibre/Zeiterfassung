@@ -31,6 +31,11 @@ public interface Controller<I extends PageModel, O extends PageModel> {
    public void show();
 
    /**
+    * Leads this {@link Controller} to hides it's content
+    */
+   void hide();
+
+   /**
     * Forces this Controller to refresh it's content and, if desired, the content
     * of it's subpages
     */

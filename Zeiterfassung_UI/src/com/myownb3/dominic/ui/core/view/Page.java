@@ -47,4 +47,9 @@ public interface Page<I extends PageModel, O extends PageModel> {
     * Hides this {@link Page}
     */
    public void hide();
+
+   /**
+    * @return <code>true</code> if the caller is blocked until this page is hidden or <code>false</code> if not
+    */
+   public boolean isBlocking();
 }

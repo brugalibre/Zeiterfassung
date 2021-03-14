@@ -9,6 +9,9 @@ Initiales Set-Up
 - Starten der Anwendung direkt via .jar, falls das nicht klappt via .bat-File bzw. exe-File
 - Neben den Tickets vom aktuellen Sprint können in einem optionalen 'default-tickets.txt' weitere Ticket-Nr angegeben werden, welche dann beim Erfassen der Zeit zur verfügung stehen
 
+Login:
+- Rechtsklick auf den roten/grünen Kreis in der Info-Leiste und dann das Menu 'Login' auswählen. Anschliessend erfolgt die Verifzierung durch die Eingabe von Benutzername & Passwort
+
 Aufzeichnung starten:
 - Durch Klick auf den roten Kreis unten in der Info-Leiste
 - Durch Drücken der Tastenkombination, welche im turbo-bucher.properties definiert werden kann (Property StartStopHotKey)

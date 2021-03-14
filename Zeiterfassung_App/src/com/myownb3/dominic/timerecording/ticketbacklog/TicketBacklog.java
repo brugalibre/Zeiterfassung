@@ -36,11 +36,6 @@ public class TicketBacklog {
    TicketBacklog(JiraApiReader jiraApiReader) {
       this.backlogHelper = new TicketBacklogHelper();
       this.jiraApiReader = jiraApiReader;
-      init();
-   }
-
-   private void init() {
-      jiraApiReader.init();
       this.tickets = new HashSet<>();
    }
 

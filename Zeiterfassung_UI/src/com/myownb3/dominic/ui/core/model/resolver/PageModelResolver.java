@@ -12,6 +12,7 @@ import com.myownb3.dominic.ui.core.model.PageModel;
  * 
  * @author Dominic Stalder
  */
+@FunctionalInterface
 public interface PageModelResolver<I extends PageModel, O extends PageModel> {
 
    /**

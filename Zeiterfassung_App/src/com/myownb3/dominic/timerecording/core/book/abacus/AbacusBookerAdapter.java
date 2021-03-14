@@ -1,8 +1,5 @@
 package com.myownb3.dominic.timerecording.core.book.abacus;
 
-import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_PW_VALUE_KEY;
-import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_VALUE_KEY;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -14,6 +11,9 @@ import org.apache.log4j.Logger;
 
 import com.adcubum.j2a.abacusconnector.ProjectBookingBean;
 import com.adcubum.j2a.zeiterfassung.AbacusBookingConnector;
+import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
+import com.adcubum.timerecording.security.login.auth.AuthenticationService;
+import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapter;
 import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
@@ -22,7 +22,6 @@ import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
-import com.myownb3.dominic.timerecording.settings.Settings;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.TicketAttrs;
 
@@ -32,7 +31,7 @@ import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.TicketAttrs;
  * @author Dominic
  *
  */
-public class AbacusBookerAdapter implements BookerAdapter {
+public class AbacusBookerAdapter implements BookerAdapter, UserAuthenticatedObservable {
 
    private static final Logger LOG = Logger.getLogger(AbacusBookerAdapter.class);
    private AbacusBookingConnector abacusBookingConnector;
@@ -41,27 +40,19 @@ public class AbacusBookerAdapter implements BookerAdapter {
    private boolean isInitialized;
 
    public AbacusBookerAdapter() {
-      String username = Settings.INSTANCE.getSettingsValue(USER_NAME_VALUE_KEY);
-      createAbacusBookingConnector(username);
+      AuthenticationService.INSTANCE.registerUserAuthenticatedObservable(this);
+      this.abacusBookingConnector = new AbacusBookingConnector("", "", "http://", -1);// explizit invalid arguments
       this.serviceCodeAdapter = new AbacusServiceCodeAdapter(abacusBookingConnector);
-      init(username);
-   }
-
-   private void createAbacusBookingConnector(String username) {
-      String pw = Settings.INSTANCE.getSettingsValue(USER_NAME_PW_VALUE_KEY);
-      this.abacusBookingConnector = new AbacusBookingConnector(username, pw, AbacusConst.DEFAULT_END_POINT, AbacusConst.DEFAULT_MANDANT);
    }
 
    /**
     * Constructor for testing purpose only!
     * 
     * @param abacusBookingConnector
-    *        the {@link AbacusBookingConnector}
-    * @param username
-    *        the username
+    *        the {@link AbacusBookingConnector}*
     */
-   AbacusBookerAdapter(AbacusBookingConnector abacusBookingConnector, String username) {
-      this(abacusBookingConnector, new AbacusServiceCodeAdapter(abacusBookingConnector), username);
+   AbacusBookerAdapter(AbacusBookingConnector abacusBookingConnector) {
+      this(abacusBookingConnector, new AbacusServiceCodeAdapter(abacusBookingConnector));
    }
 
    /**
@@ -71,19 +62,27 @@ public class AbacusBookerAdapter implements BookerAdapter {
     *        the {@link AbacusBookingConnector}
     * @param serviceCodeAdapter
     *        the {@link AbacusServiceCodeAdapter}
-    * @param username
-    *        the username
     */
-   AbacusBookerAdapter(AbacusBookingConnector abacusBookingConnector, AbacusServiceCodeAdapter serviceCodeAdapter, String username) {
+   AbacusBookerAdapter(AbacusBookingConnector abacusBookingConnector, AbacusServiceCodeAdapter serviceCodeAdapter) {
       this.abacusBookingConnector = abacusBookingConnector;
       this.serviceCodeAdapter = serviceCodeAdapter;
-      init(username);
+   }
+
+   AbacusBookingConnector createAbacusBookingConnector(AuthenticationContext authenticationContext) {
+      return new AbacusBookingConnector(authenticationContext.getUsername(), String.valueOf(authenticationContext.getUserPw()),
+            AbacusConst.DEFAULT_END_POINT, AbacusConst.DEFAULT_MANDANT);
    }
 
    private void init(String username) {
       serviceCodeAdapter.init();
       fetchEmployeeNumber(username);
       this.isInitialized = employeeNumber > 0;
+   }
+
+   @Override
+   public void userAuthenticated(AuthenticationContext authenticationContext) {
+      abacusBookingConnector = createAbacusBookingConnector(authenticationContext);
+      init(authenticationContext.getUsername());
    }
 
    public boolean isInitialized() {
@@ -97,7 +96,6 @@ public class AbacusBookerAdapter implements BookerAdapter {
 
    @Override
    public BookerResult book(BusinessDay businessDay) {
-      businessDay.refreshDummyTickets();
       List<BusinessDayIncrement> currentIncrements2Book = getNotBookedIncrements(businessDay); // We need the increments, which were not booked at the very begining in order to determine the success of the current booking
       bookBusinessDay(businessDay);
       return createBookResult(currentIncrements2Book);

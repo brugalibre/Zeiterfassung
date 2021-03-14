@@ -57,6 +57,12 @@ public class TimeRecorder {
    /**
     * Constructor for testing purpose only!
     */
+   TimeRecorder(BookerAdapter bookAdapter, BusinessDay businessDay) {
+      this.bookAdapter = bookAdapter;
+      this.businessDay = businessDay;
+      currentState = WorkStates.NOT_WORKING;
+   }
+
    TimeRecorder(BookerAdapter bookAdapter) {
       this.bookAdapter = bookAdapter;
       init();
@@ -242,6 +248,14 @@ public class TimeRecorder {
          callbackHandler.displayMessage(Message.of(MessageType.ERROR, fileExportResult.getErrorMsg(), TextLabel.EXPORT_FAILED_TITLE));
       }
       return fileExportResult;
+   }
+
+   /**
+    * Is called after the user was successfully loged-in
+    */
+   public void onSuccessfullyLogin() {
+      // This is necessary if the user startet the recording while he/she was offline
+      businessDay.refreshDummyTickets();
    }
 
    /**

@@ -15,9 +15,8 @@ import com.myownb3.dominic.timerecording.core.book.coolguys.exception.InvalidCha
 import com.myownb3.dominic.timerecording.core.importexport.in.file.exception.FileImportException;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.myownb3.dominic.timerecording.test.BaseTestWithSettings;
 
-class TimeRecorder_ImportBusinessDayTest extends BaseTestWithSettings {
+class TimeRecorder_ImportBusinessDayTest {
 
    @Test
    void testImportBusinessDayFromFile_Success() throws InvalidChargeTypeRepresentationException {

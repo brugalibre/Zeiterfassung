@@ -31,7 +31,7 @@ public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
     * 
     */
    protected AbstractFXPage() {
-      this(null);
+      this(null, false);
    }
 
    @Override
@@ -42,22 +42,24 @@ public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
    /**
     * Creates a new AbstractFXPage
     * 
+    * @param isBlocking
+    *        <code>true</code> if the caller is blocked until this page is hidden or <code>false</code> if not
     * @param stage
     * 
     */
-   protected AbstractFXPage(Stage stage) {
-      super();
+   protected AbstractFXPage(Stage stage, boolean isBlocking) {
+      super(isBlocking);
       initializeFXMLContent(Optional.ofNullable(stage));
    }
 
    @Override
    public void hide() {
-      getStageOptional().ifPresent(Stage::hide);
+      getController().hide();
    }
 
    @Override
    public void show() {
-      getStageOptional().ifPresent(Stage::show);
+      getController().show();
    }
 
    protected Optional<Stage> getStageOptional() {

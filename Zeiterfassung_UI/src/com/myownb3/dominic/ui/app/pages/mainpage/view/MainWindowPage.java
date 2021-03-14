@@ -22,7 +22,7 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
     * @param stage
     */
    public MainWindowPage(TimeRecordingTray timeRecordingTray, Stage stage) {
-      super(stage);
+      super(stage, false);
       getMainWindowPageController().setTimeRecordingTray(timeRecordingTray);
    }
 

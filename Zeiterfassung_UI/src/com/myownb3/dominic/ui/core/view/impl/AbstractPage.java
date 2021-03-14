@@ -22,13 +22,25 @@ import com.myownb3.dominic.ui.core.view.PageContent;
 public abstract class AbstractPage<I extends PageModel, O extends PageModel> implements Page<I, O> {
    private Controller<I, O> controller;
    protected PageContent pageContent;
+   protected boolean isBlocking;
 
-   protected AbstractPage() {
+   /**
+    * 
+    * @param isBlocking
+    *        <code>true</code> if the caller is blocked until this page is hidden or <code>false</code> if not
+    */
+   protected AbstractPage(boolean isBlocking) {
       super();
+      this.isBlocking = isBlocking;
       initialize();
    }
 
    protected abstract void initialize();
+
+   @Override
+   public boolean isBlocking() {
+      return isBlocking;
+   }
 
    /**
     * @return the controller
