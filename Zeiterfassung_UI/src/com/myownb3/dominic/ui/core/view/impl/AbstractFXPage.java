@@ -14,6 +14,7 @@ import com.myownb3.dominic.ui.core.view.Page;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -106,6 +107,7 @@ public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
    protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) {
       Pane content = loader.getRoot();
       setContent(new FXPageContent(optionalStage, content));
+      optionalStage.ifPresent(stage -> stage.setScene(new Scene(loader.getRoot())));
    }
 
    /**
@@ -176,16 +178,6 @@ public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
    protected String getUIStyleResource() {
       String path = "/" + getClass().getPackage().getName() + "/" + getClass().getSimpleName();
       return path.replace(".", "/") + ".css";
-   }
-
-   @Override
-   public void refresh() {
-      getRootNode().requestLayout();
-   }
-
-   @Override
-   public boolean isVisible() {
-      return getRootNode().isVisible();
    }
 
    /**

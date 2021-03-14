@@ -10,6 +10,9 @@ import javafx.util.converter.DefaultStringConverter;
 
 /**
  * 
+ * It's basically an editable javafx.scene.control.TableCell which starts a commit by pressing the tab key
+ * It supports custom TextField instances if desired
+ * 
  * Siehe https://gist.github.com/james-d/be5bbd6255a4640a5357
  * 
  * @author james-d

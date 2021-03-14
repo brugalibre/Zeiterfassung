@@ -9,10 +9,8 @@ import java.text.NumberFormat;
 import java.text.ParsePosition;
 
 import com.myownb3.dominic.ui.app.styles.Styles;
-import com.myownb3.dominic.util.utils.StringUtil;
 
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 
 /**
@@ -23,10 +21,6 @@ public class InputFieldVerifier {
 
    public boolean verify(TextField c) {
       return verifyTextField(c);
-   }
-
-   public boolean verifyNotNull(ComboBox<String> comboBox) {
-      return verifyComboBoxValueNotNull(comboBox);
    }
 
    private boolean verifyTextField(TextField textField) {
@@ -47,15 +41,6 @@ public class InputFieldVerifier {
       }
       addOrRemoveErrorStyle(textField, isValidNumber);
       return isValidNumber;
-   }
-
-   private boolean verifyComboBoxValueNotNull(ComboBox<String> comboBox) {
-
-      String text = comboBox.getSelectionModel().getSelectedItem();
-      boolean isValid = !StringUtil.isEmptyOrNull(text);
-
-      addOrRemoveErrorStyle(comboBox, isValid);
-      return isValid;
    }
 
    private void addOrRemoveErrorStyle(Node node, boolean isValid) {

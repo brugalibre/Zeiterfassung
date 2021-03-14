@@ -22,7 +22,6 @@ import com.myownb3.dominic.ui.core.view.PageContent;
 public abstract class AbstractPage<I extends PageModel, O extends PageModel> implements Page<I, O> {
    private Controller<I, O> controller;
    protected PageContent pageContent;
-   protected boolean isDirty;
 
    protected AbstractPage() {
       super();
@@ -54,10 +53,5 @@ public abstract class AbstractPage<I extends PageModel, O extends PageModel> imp
    @Override
    public PageContent getContent() {
       return pageContent;
-   }
-
-   @Override
-   public void setDirty(boolean isDirty) {
-      this.isDirty = isDirty;
    }
 }

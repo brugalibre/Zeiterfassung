@@ -25,6 +25,7 @@ import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.TicketComparator;
 import com.myownb3.dominic.ui.app.pages.combobox.TicketComboboxItem;
+import com.myownb3.dominic.ui.app.pages.stopbusinessday.util.StopBusinessDayUtil;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
 import javafx.beans.property.Property;
@@ -229,7 +230,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    private void addMultipleaIncrement2BusinessDay(int kindOfService, String ticketNoPropValue) {
 
-      String[] tickets = ticketNoPropValue.split(";");
+      String[] tickets = ticketNoPropValue.split(StopBusinessDayUtil.MULTIPLE_TICKETS_DELIMITER);
       Time currentBeginTimeStamp = timeSnippet.getBeginTimeStamp();
 
       for (String ticket : tickets) {

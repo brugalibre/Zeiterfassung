@@ -15,10 +15,10 @@ import com.myownb3.dominic.ui.core.model.PageModel;
 public interface PageModelResolver<I extends PageModel, O extends PageModel> {
 
    /**
-    * Resolved the {@link PageModel}
+    * Resolves the {@link PageModel}
     * 
     * @param dataModelIn
     * @return the new resolved {@link PageModel}
     */
-   public O resolvePageVO(I dataModelIn);
+   public O resolvePageModel(I dataModelIn);
 }

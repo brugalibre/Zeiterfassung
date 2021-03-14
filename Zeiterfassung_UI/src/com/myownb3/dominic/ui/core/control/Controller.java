@@ -34,7 +34,7 @@ public interface Controller<I extends PageModel, O extends PageModel> {
     * Forces this Controller to refresh it's content and, if desired, the content
     * of it's subpages
     */
-   public void refresh(boolean withSubPages);
+   public void refresh();
 
    /**
     * Returns the current set data model
