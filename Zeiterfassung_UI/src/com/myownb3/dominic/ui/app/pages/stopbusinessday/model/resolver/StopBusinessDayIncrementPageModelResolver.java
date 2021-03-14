@@ -16,7 +16,7 @@ public class StopBusinessDayIncrementPageModelResolver
       implements PageModelResolver<StopBusinessDayIncrementPageModel, StopBusinessDayIncrementPageModel> {
 
    @Override
-   public StopBusinessDayIncrementPageModel resolvePageVO(StopBusinessDayIncrementPageModel inPageModel) {
+   public StopBusinessDayIncrementPageModel resolvePageModel(StopBusinessDayIncrementPageModel inPageModel) {
 
       BusinessDayIncrementVO currentBussinessDayIncremental = TimeRecorder.INSTANCE.getCurrentBussinessDayIncrement();
       if (inPageModel == null) {

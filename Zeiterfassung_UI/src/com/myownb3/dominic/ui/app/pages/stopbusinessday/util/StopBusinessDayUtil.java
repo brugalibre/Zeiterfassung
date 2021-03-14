@@ -1,8 +1,11 @@
 package com.myownb3.dominic.ui.app.pages.stopbusinessday.util;
 
+import com.myownb3.dominic.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 public class StopBusinessDayUtil {
+   /** The delimiter between multiple added Tickets on the {@link StopBusinessDayIncrementPage} */
+   public static final String MULTIPLE_TICKETS_DELIMITER = ";";
 
    private StopBusinessDayUtil() {
       // private 
@@ -17,6 +20,6 @@ public class StopBusinessDayUtil {
     *         otherwise <code>false</code>
     */
    public static boolean areMultipleTicketsEntered(String ticketsAsString) {
-      return StringUtil.isNotEmptyOrNull(ticketsAsString) && ticketsAsString.contains(";");
+      return StringUtil.isNotEmptyOrNull(ticketsAsString) && ticketsAsString.contains(MULTIPLE_TICKETS_DELIMITER);
    }
 }

@@ -65,7 +65,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     */
    public void refreshStopBusinessDayPage() {
       if (stopBusinessDayIncrementPanel.isVisible()) {
-         stopBusinessDayIncrementPanelController.refresh(true);
+         stopBusinessDayIncrementPanelController.refresh();
       }
    }
 
@@ -154,7 +154,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
    }
 
    @Override
-   protected void refresh() {
+   public void refresh() {
       timeRecordingTray.updateUIStates();
    }
 

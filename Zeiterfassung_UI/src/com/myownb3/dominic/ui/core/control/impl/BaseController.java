@@ -37,7 +37,7 @@ public abstract class BaseController<I extends PageModel, O extends PageModel>
       this.page = page;
       PageModelResolver<I, O> newPageModelResolver = createPageModelResolver();
       setPageModelResolver(newPageModelResolver);
-      dataModel = newPageModelResolver.resolvePageVO(null);
+      dataModel = newPageModelResolver.resolvePageModel(null);
       setBinding(dataModel);
    }
 
@@ -57,7 +57,7 @@ public abstract class BaseController<I extends PageModel, O extends PageModel>
     * @return
     */
    protected O updateIncomingVO(I dataModelIn) {
-      return pageModelResolver.resolvePageVO(dataModelIn);
+      return pageModelResolver.resolvePageModel(dataModelIn);
    }
 
    /**
@@ -72,20 +72,11 @@ public abstract class BaseController<I extends PageModel, O extends PageModel>
    // SHOW & REFRESH //
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   protected void refresh() {
+   @Override
+   public void refresh() {
       if (page.isDirty()) {
          show();
       }
-   }
-
-   @Override
-   public void refresh(boolean withSubPages) {
-      if (withSubPages) {
-         refresh();
-      }
-      // Nothing to do in the else case. Since in this case, we only want to refresh
-      // this controllers content, this should be done by the appropriate
-      // BaseController.
    }
 
    /**

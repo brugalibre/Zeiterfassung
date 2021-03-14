@@ -34,32 +34,9 @@ public interface Page<I extends PageModel, O extends PageModel> {
    }
 
    /**
-    * Defines weather this Page is dirty or not
-    * 
-    * @param isDirty
-    *        - this value is <code>true</code> if the page is set to dirty
-    *        or <code>false</code> if not.
-    */
-   public void setDirty(boolean isDirty);
-
-   /**
-    * Returns <code>true</code> if this Page is currently visible. Otherwise
-    * <code>false</code>
-    * 
-    * @return <code>true</code> if this Page is currently visible. Otherwise
-    *         <code>false</code>
-    */
-   public boolean isVisible();
-
-   /**
     * @return the {@link PageContent} of this Page
     */
    public PageContent getContent();
-
-   /**
-    * Refreshes this Page
-    */
-   public void refresh();
 
    /**
     * Shows this {@link Page}

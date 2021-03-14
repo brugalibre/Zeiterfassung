@@ -3,16 +3,12 @@
  */
 package com.myownb3.dominic.ui.app.pages.mainpage.view;
 
-import java.util.Optional;
-
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.app.pages.mainpage.model.MainWindowPageModel;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
 import com.myownb3.dominic.ui.core.view.impl.AbstractFXPage;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -28,12 +24,6 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
    public MainWindowPage(TimeRecordingTray timeRecordingTray, Stage stage) {
       super(stage);
       getMainWindowPageController().setTimeRecordingTray(timeRecordingTray);
-   }
-
-   @Override
-   protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) {
-      super.initializeScene(loader, optionalStage);
-      optionalStage.ifPresent(stage -> stage.setScene(new Scene(loader.getRoot())));
    }
 
    public void showOverviewView() {
