@@ -15,13 +15,12 @@ import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 
-import com.myownb3.dominic.timerecording.test.BaseTestWithSettings;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.JiraResponse;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.responsereader.ResponseReader;
 
-class JiraApiReaderIntegTest extends BaseTestWithSettings {
+class JiraApiReaderIntegTest {
 
    private static final String REST_AGILE_API_PATH = ADC_JIRA_BOARD_BASE_URL.replace(ADC_JIRA_HOST, "");
    private static final String LOCALHOST = "127.0.0.1";

@@ -26,10 +26,9 @@ import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
-import com.myownb3.dominic.timerecording.test.BaseTestWithSettings;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 
-class TimeRecorder_ExportBusinessDayTest extends BaseTestWithSettings {
+class TimeRecorder_ExportBusinessDayTest {
 
    @Test
    void testExpotBusinessDayFromFile_Success() throws IOException {

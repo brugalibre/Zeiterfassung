@@ -4,7 +4,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,14 +18,14 @@ class AbacusBookerAdapterTest {
    void testGetServiceCodeAdapter() {
       // Given
       AbacusBookingConnector abacusBookingConnector = mock(AbacusBookingConnector.class);
-      AbacusBookerAdapter abacusBookerAdapter = new AbacusBookerAdapter(abacusBookingConnector, "test");
+      AbacusBookerAdapter abacusBookerAdapter = new AbacusBookerAdapter(abacusBookingConnector);
 
       // When
       ServiceCodeAdapter serviceCodeAdapter = abacusBookerAdapter.getServiceCodeAdapter();
-      serviceCodeAdapter.getAllServiceCodes();
+      List<String> allServiceCodes = serviceCodeAdapter.getAllServiceCodes();
 
       // Then
-      assertThat(serviceCodeAdapter, is(notNullValue()));
-      verify(abacusBookingConnector).fetchAllServiceCodes();
+      assertThat(allServiceCodes, is(notNullValue()));
+      assertThat(allServiceCodes.size(), is(DefaultServiceCodes.getDefaultServiceCodes().values().size()));
    }
 }

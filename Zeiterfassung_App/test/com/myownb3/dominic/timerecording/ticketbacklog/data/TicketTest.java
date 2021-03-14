@@ -9,15 +9,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.myownb3.dominic.timerecording.settings.common.Const;
-import com.myownb3.dominic.timerecording.test.BaseTestWithSettings;
+import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraIssue;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraIssueAssignee;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraIssueFields;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraIssueResponse;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.jiraissuefields.GenericNameIdObject;
 
-class TicketTest extends BaseTestWithSettings {
+class TicketTest {
 
    @Test
    void testTicketRepresentation() {
@@ -76,7 +75,7 @@ class TicketTest extends BaseTestWithSettings {
 
       // Given
       String username = "hampi";
-      saveProperty2Settings(Const.USER_NAME_VALUE_KEY, username);
+      AuthenticationService.INSTANCE.doUserAuthentication(username, "123".toCharArray());
       Ticket sprintTicketAssigned = new TicketBuilder("SYRIUS-ZZZZZ")
             .isSprintTicket(true)
             .withAssignee(username)
@@ -149,7 +148,6 @@ class TicketTest extends BaseTestWithSettings {
 
       // Given
       String username = "hampi";
-      saveProperty2Settings(Const.USER_NAME_VALUE_KEY, username);
       Ticket ticketAssigned = new TicketBuilder("SYRIUS-ZZZZ")
             .withAssignee(username)
             .build();

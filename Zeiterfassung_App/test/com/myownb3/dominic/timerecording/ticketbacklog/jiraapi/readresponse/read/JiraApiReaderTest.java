@@ -1,10 +1,10 @@
 package com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.read;
 
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.BOARD_ID_PLACE_HOLDER;
+import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_ACTIVE_SPRINT_ID_FOR_BOARD_URL;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_ALL_BOARDS_URL;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_FUTURE_SPRINT_IDS_FOR_BOARD_URL;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_ISSUES_4_BOARD_URL;
-import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_ACTIVE_SPRINT_ID_FOR_BOARD_URL;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.SPRINT_ID_PLACE_HOLDER;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.START_AT_PLACE_HOLDER;
@@ -17,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import com.myownb3.dominic.timerecording.test.BaseTestWithSettings;
+import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.IssueType;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.TicketAttrs;
@@ -46,7 +47,23 @@ import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.resp
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.responsereader.JiraIssueResponseReader;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.response.responsereader.JiraIssuesResponseReader;
 
-class JiraApiReaderTest extends BaseTestWithSettings {
+class JiraApiReaderTest {
+
+   @Test
+   void testUserAuthenticated() {
+      // Given
+      String pwd = "";
+      String username = "";
+      AuthenticationContext atuhenticationContext = new AuthenticationContext(username, () -> pwd.toCharArray());
+      HttpClient httpClient = mock(HttpClient.class);
+      JiraApiReader jiraApiReader = new JiraApiReader(httpClient);
+
+      // When
+      jiraApiReader.userAuthenticated(atuhenticationContext);
+
+      // When
+      verify(httpClient).setCredentials(eq(username), eq(pwd));
+   }
 
    @Test
    void testReadTicket4Id_VerifyProjectDescAndNr() {

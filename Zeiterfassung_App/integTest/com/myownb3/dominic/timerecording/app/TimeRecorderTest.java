@@ -51,6 +51,20 @@ class TimeRecorderTest extends BaseTestWithSettings {
    }
 
    @Test
+   void testRefreshDummyTickets() {
+
+      // Given
+      BusinessDay businessDay = mock(BusinessDay.class);
+      TimeRecorder timeRecorder = new TimeRecorder(mock(BookerAdapter.class), businessDay);
+
+      // When
+      timeRecorder.onSuccessfullyLogin();
+
+      // Then
+      verify(businessDay).refreshDummyTickets();
+   }
+
+   @Test
    void testRemoveBusinessIncrementAtIndexOutOfBounds() {
       // Given
       String ticketNr = "SYRIUS-4321";

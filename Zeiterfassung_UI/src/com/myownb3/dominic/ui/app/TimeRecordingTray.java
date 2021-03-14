@@ -24,6 +24,9 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.UIManager;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
+import com.adcubum.timerecording.security.login.auth.AuthenticationService;
+import com.adcubum.timerecording.security.login.callback.LoginCallbackHandler;
+import com.adcubum.timerecording.security.login.callback.LoginEndState;
 import com.myownb3.dominic.launch.exception.ApplicationLaunchException;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
@@ -41,6 +44,7 @@ import com.myownb3.dominic.ui.app.pages.mainpage.view.MainWindowPage;
 import com.myownb3.dominic.ui.app.settings.hotkey.HotKeyManager;
 import com.myownb3.dominic.ui.app.tray.TrayIconDelegate;
 import com.myownb3.dominic.ui.app.tray.TrayIconDelegateImpl;
+import com.myownb3.dominic.ui.security.login.auth.UiAuthenticationService;
 import com.myownb3.dominic.ui.util.ExceptionUtil;
 import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
@@ -51,11 +55,12 @@ import javafx.stage.Stage;
  * @author Dominic
  * 
  */
-public class TimeRecordingTray {
+public class TimeRecordingTray implements LoginCallbackHandler {
    private JMenuItem showHoursItem;
    private JMenuItem startTurboBucher;
    private JMenuItem showImportDialogItem;
    private JMenuItem refreshTicketBacklogMenuItem;
+   private JMenuItem doUserAuthenticationMenuItem;
    private MainWindowPage mainWindowPage;
    private TrayIconDelegate trayIcon;
 
@@ -73,6 +78,7 @@ public class TimeRecordingTray {
       createRefreshTicketBacklogMenuItem();
       createShowHoursMenuItem();
       createStartTurboBucherMenuItem();
+      createDoUserAuthenticationMenuItem();
       createImportAufzeichnungMenueItem();
       JPopupMenu popupMenu = createPopupMenu(settingsRoundMenu, exitItem, closePopupItem);
       popupMenuSupplier.setJMenuePopup(popupMenu);
@@ -82,7 +88,6 @@ public class TimeRecordingTray {
       trayIcon.addMouseMotionListener(getMouseMotionListener());
       trayIcon.addMouseListener(getMouseListener(popupMenu));
       HotKeyManager.INSTANCE.registerHotKey(this::handleUserInteractionAndShowInputIfStopped);
-      initTicketBacklog();
    }
 
    private void initTicketBacklog() {
@@ -93,7 +98,7 @@ public class TimeRecordingTray {
    private void handleTicketBacklogUpdated(UpdateStatus status) {
       Platform.runLater(() -> {
          mainWindowPage.refreshStopBusinessDayPage();
-         refreshTicketBacklogMenuItem.setEnabled(true);
+         refreshTicketBacklogMenuItem.setEnabled(AuthenticationService.INSTANCE.isUserAuthenticated());
          displayMessage(status);
       });
    }
@@ -141,8 +146,21 @@ public class TimeRecordingTray {
       Platform.runLater(() -> mainWindowPage.showImportDialog());
    }
 
-   private void showOverviewView() {
+   private void doUserAuthentication() {
+      doUserAuthenticationMenuItem.setEnabled(false);
+      Platform.runLater(() -> UiAuthenticationService.doUserAuthentication(this));
+   }
 
+   @Override
+   public void onLoginEnd(LoginEndState loginEndState) {
+      if (loginEndState == LoginEndState.SUCCESSFULLY) {
+         initTicketBacklog();
+         TimeRecorder.INSTANCE.onSuccessfullyLogin();
+      }
+      updateUIStates();
+   }
+
+   private void showOverviewView() {
       Platform.runLater(() -> mainWindowPage.showOverviewView());
    }
 
@@ -167,8 +185,12 @@ public class TimeRecordingTray {
     */
    public void updateUIStates() {
       boolean isNotBooking = !TimeRecorder.INSTANCE.isBooking();
+      boolean isUserAuthenticated = AuthenticationService.INSTANCE.isUserAuthenticated();
+      boolean hasNotChargedElements = TimeRecorder.INSTANCE.hasNotChargedElements();
       showHoursItem.setEnabled(TimeRecorder.INSTANCE.hasContent() && isNotBooking);
       startTurboBucher.setEnabled(TimeRecorder.INSTANCE.hasNotChargedElements() && isNotBooking);
+      startTurboBucher.setEnabled(isUserAuthenticated && hasNotChargedElements && isNotBooking);
+      doUserAuthenticationMenuItem.setEnabled(!isUserAuthenticated);
       showImportDialogItem.setEnabled(hasNoContentAndIsNotRecording() && isNotBooking);
    }
 
@@ -294,6 +316,13 @@ public class TimeRecordingTray {
    private void createRefreshTicketBacklogMenuItem() {
       refreshTicketBacklogMenuItem = new JMenuItem(TextLabel.REFRESH_TICKET_BACKLOG);
       refreshTicketBacklogMenuItem.addActionListener(actionEvent -> initTicketBacklog());
+      refreshTicketBacklogMenuItem.setEnabled(AuthenticationService.INSTANCE.isUserAuthenticated());
+   }
+
+   private void createDoUserAuthenticationMenuItem() {
+      doUserAuthenticationMenuItem = new JMenuItem(TextLabel.LOGIN_LABEL);
+      doUserAuthenticationMenuItem.addActionListener(actionEvent -> doUserAuthentication());
+      doUserAuthenticationMenuItem.setEnabled(false);// initially false, because the login is triggered during start up
    }
 
    private void createShowHoursMenuItem() {
@@ -365,6 +394,7 @@ public class TimeRecordingTray {
       popupMenu.add(startTurboBucher);
       popupMenu.add(showHoursItem);
       popupMenu.addSeparator();
+      popupMenu.add(doUserAuthenticationMenuItem);
       popupMenu.add(closePopupItem);
       popupMenu.add(exitItem);
       return popupMenu;

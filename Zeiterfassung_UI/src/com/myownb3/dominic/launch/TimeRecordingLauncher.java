@@ -13,6 +13,7 @@ import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
+import com.myownb3.dominic.ui.security.login.auth.UiAuthenticationService;
 import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
 import javafx.application.Application;
@@ -42,6 +43,7 @@ public class TimeRecordingLauncher extends Application {
       GlobalExceptionHandler.registerHandler(callbackHandler);
 
       timeRecordingTray.registerSystemtray(primaryStage);
+      UiAuthenticationService.doUserAuthentication(timeRecordingTray);
    }
 
    private void initApplication() {

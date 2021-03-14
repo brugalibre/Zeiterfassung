@@ -3,6 +3,7 @@
  */
 package com.myownb3.dominic.ui.app.pages.overview.model;
 
+import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
@@ -36,7 +37,7 @@ public class OverviewPageModel implements PageModel {
     */
    public OverviewPageModel(BusinessDayVO businessDayVO) {
       this.businessDayVO = businessDayVO;
-      isChargeButtonDisabled = new SimpleBooleanProperty(TimeRecorder.INSTANCE.isBooking() || !businessDayVO.hasNotChargedElements());
+      isChargeButtonDisabled = new SimpleBooleanProperty(isBookButtonDisabled(businessDayVO));
       isClearButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
       isExportButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
 
@@ -55,7 +56,7 @@ public class OverviewPageModel implements PageModel {
     */
    public static OverviewPageModel of(OverviewPageModel inPageModel, BusinessDayVO businessDayVO) {
       inPageModel.businessDayVO = businessDayVO;
-      inPageModel.getIsChargeButtonDisabled().setValue(TimeRecorder.INSTANCE.isBooking() || !businessDayVO.hasNotChargedElements());
+      inPageModel.getIsChargeButtonDisabled().setValue(isBookButtonDisabled(businessDayVO));
       inPageModel.getIsClearButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
       inPageModel.getIsExportButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
 
@@ -68,6 +69,11 @@ public class OverviewPageModel implements PageModel {
       String totalDurationRep = businessDayVO.getTotalDurationRep();
       inPageModel.getTotalAmountOfTimeValue().set(totalDurationRep);
       return inPageModel;
+   }
+
+   private static boolean isBookButtonDisabled(BusinessDayVO businessDayVO) {
+      boolean isUserNotAuthenticated = !AuthenticationService.INSTANCE.isUserAuthenticated();
+      return TimeRecorder.INSTANCE.isBooking() || !businessDayVO.hasNotChargedElements() || isUserNotAuthenticated;
    }
 
    /**

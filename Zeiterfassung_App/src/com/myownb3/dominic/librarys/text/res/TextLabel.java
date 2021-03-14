@@ -84,4 +84,10 @@ public class TextLabel {
    public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS =
          "Es sind noch Elemente von vergangenen Tagen vorhanden! Diese zuerst abbuchen bzw. löschen";
    public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE = "Start einer neuen Aufzeichnung nicht möglich!";
+
+   // Login Stuff
+   public static final String LOGIN_LABEL = "Login";
+   public static final String USERNAME_FIELD_PROMPT = "ADUser";
+   public static final String USER_PW_FIELD_PROMPT = "AD-Password";
+   public static final String LOGIN_FAILED_LABEL = "Login fehlgeschlagen!";
 }

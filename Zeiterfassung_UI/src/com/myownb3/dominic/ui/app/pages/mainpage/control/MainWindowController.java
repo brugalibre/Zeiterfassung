@@ -19,7 +19,6 @@ import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.dialog.FileImportDialogHelper;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;
 import com.myownb3.dominic.ui.core.view.Page;
-import com.myownb3.dominic.ui.core.view.impl.FXPageContent;
 
 import javafx.fxml.FXML;
 import javafx.scene.layout.Region;
@@ -54,7 +53,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       overviewPanelController.init(this);
       stopBusinessDayIncrementPanelController.setMainWindowController(this);
 
-      Stage stage = getStage(mainWindowPage);
+      Stage stage = getStage();
       stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
       stage.getIcons().add(PictureLibrary.getClockImageIcon());
       fileImportHelper = new FileImportDialogHelper();
@@ -168,18 +167,10 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       // Nothing to do since this Page only contains two sub pages
    }
 
-   @SuppressWarnings("unchecked")
    public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
       this.timeRecordingTray = timeRecordingTray;
       overviewPanelController.setTimeRecordingTray(timeRecordingTray);
-      Stage stage = getStage((Page<MainWindowPageModel, MainWindowPageModel>) page);
+      Stage stage = getStage();
       overviewPanelController.setMainPanel(stage);
-   }
-
-   private static Stage getStage(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {
-      FXPageContent pageContent = (FXPageContent) mainWindowPage.getContent();
-      return pageContent
-            .getStage()
-            .orElseThrow(IllegalStateException::new);
    }
 }

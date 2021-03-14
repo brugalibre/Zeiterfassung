@@ -1,7 +1,5 @@
 package com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.read;
 
-import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_PW_VALUE_KEY;
-import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_VALUE_KEY;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.BOARD_ID_PLACE_HOLDER;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_ACTIVE_SPRINT_ID_FOR_BOARD_URL;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_ALL_BOARDS_URL;
@@ -21,7 +19,9 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
-import com.myownb3.dominic.timerecording.settings.Settings;
+import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
+import com.adcubum.timerecording.security.login.auth.AuthenticationService;
+import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.mapresponse.JiraApiReadTicketsResult;
@@ -45,14 +45,14 @@ import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.resp
  * @author Dominic
  *
  */
-public class JiraApiReader {
+public class JiraApiReader implements UserAuthenticatedObservable {
 
    public static final JiraApiReader INSTANCE = new JiraApiReader();
    private static final Logger LOG = Logger.getLogger(JiraApiReader.class);
    private HttpClient httpClient;
 
    private JiraApiReader() {
-      httpClient = new HttpClient();
+      this(new HttpClient());
    }
 
    /**
@@ -60,15 +60,12 @@ public class JiraApiReader {
     */
    JiraApiReader(HttpClient httpClient) {
       this.httpClient = httpClient;
+      AuthenticationService.INSTANCE.registerUserAuthenticatedObservable(this);
    }
 
-   /**
-    * Initializes this {@link JiraApiReader}
-    */
-   public void init() {
-      String username = Settings.INSTANCE.getSettingsValue(USER_NAME_VALUE_KEY);
-      String pw = Settings.INSTANCE.getSettingsValue(USER_NAME_PW_VALUE_KEY);
-      httpClient.setCredentials(username, pw);
+   @Override
+   public void userAuthenticated(AuthenticationContext authenticationContext) {
+      httpClient.setCredentials(authenticationContext.getUsername(), String.valueOf(authenticationContext.getUserPw()));
    }
 
    /**
