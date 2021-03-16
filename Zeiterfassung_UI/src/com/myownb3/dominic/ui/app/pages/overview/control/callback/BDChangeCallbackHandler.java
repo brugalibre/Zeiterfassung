@@ -3,7 +3,6 @@
  */
 package com.myownb3.dominic.ui.app.pages.overview.control.callback;
 
-import com.myownb3.dominic.ui.app.pages.overview.control.businessdaychange.BusinessDayChangeHelper;
 import com.myownb3.dominic.ui.app.pages.overview.control.descriptionchange.DescriptionAddHelper;
 import com.myownb3.dominic.ui.app.pages.stopbusinessday.control.FinishAction;
 

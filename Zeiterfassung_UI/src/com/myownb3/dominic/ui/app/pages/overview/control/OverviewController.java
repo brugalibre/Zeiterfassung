@@ -15,7 +15,8 @@ import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.app.pages.mainpage.control.MainWindowController;
 import com.myownb3.dominic.ui.app.pages.overview.book.service.BookerService;
-import com.myownb3.dominic.ui.app.pages.overview.control.businessdaychange.BusinessDayChangeHelper;
+import com.myownb3.dominic.ui.app.pages.overview.control.businessdaychange.StringBusinessDayChangeHelper;
+import com.myownb3.dominic.ui.app.pages.overview.control.businessdaychange.TicketBusinessDayChangeHelper;
 import com.myownb3.dominic.ui.app.pages.overview.control.descriptionchange.DescriptionAddHelper;
 import com.myownb3.dominic.ui.app.pages.overview.control.rowdeleter.RowDeleteHelper;
 import com.myownb3.dominic.ui.app.pages.overview.model.OverviewPageModel;
@@ -98,7 +99,8 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
    public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
       createBookerService();
       super.initialize(page);
-      businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelper(finishAction -> refreshUI()));
+      businessDayTableModel = new BusinessDayTableModelHelper(new StringBusinessDayChangeHelper(finishAction -> refreshUI()),
+            new TicketBusinessDayChangeHelper(finishAction -> refreshUI()));
       setBinding(dataModel);
       initContextMenu();
       initTable();

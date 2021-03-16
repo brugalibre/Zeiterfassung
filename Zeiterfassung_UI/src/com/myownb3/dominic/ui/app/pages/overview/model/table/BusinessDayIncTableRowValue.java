@@ -8,7 +8,10 @@ import java.util.Map;
 
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TableView;
@@ -24,7 +27,7 @@ public class BusinessDayIncTableRowValue {
 
    private StringProperty numberProperty;
    private StringProperty totalDurationProperty;
-   private StringProperty ticketNumberProperty;
+   private ObjectProperty<Ticket> ticketProperty;
    private StringProperty descriptionProperty;
    private StringProperty chargeTypeProperty;
    private StringProperty isBookedProperty;
@@ -38,7 +41,7 @@ public class BusinessDayIncTableRowValue {
    public BusinessDayIncTableRowValue() {
       numberProperty = new SimpleStringProperty();
       totalDurationProperty = new SimpleStringProperty();
-      ticketNumberProperty = new SimpleStringProperty();
+      ticketProperty = new SimpleObjectProperty<>();
       descriptionProperty = new SimpleStringProperty();
       chargeTypeProperty = new SimpleStringProperty();
       isBookedProperty = new SimpleStringProperty();
@@ -54,7 +57,7 @@ public class BusinessDayIncTableRowValue {
       index++;
       valueTypesForIndex.put(index, ValueTypes.AMOUNT_OF_TIME);
       index++;
-      valueTypesForIndex.put(index, ValueTypes.TICKET_NR);
+      valueTypesForIndex.put(index, ValueTypes.TICKET);
       index++;
       if (isDescriptionTitleNecessary) {
          valueTypesForIndex.put(index, ValueTypes.DESCRIPTION);
@@ -109,10 +112,6 @@ public class BusinessDayIncTableRowValue {
       return this.totalDurationProperty.get();
    }
 
-   public final String getTicketNumber() {
-      return this.ticketNumberProperty.get();
-   }
-
    public final String getDescription() {
       return this.descriptionProperty.get();
    }
@@ -141,10 +140,6 @@ public class BusinessDayIncTableRowValue {
       this.totalDurationProperty.set(totalDuration);
    }
 
-   public final void setTicketNumber(String ticketNumber) {
-      this.ticketNumberProperty.set(ticketNumber);
-   }
-
    public final void setDescription(String description) {
       this.descriptionProperty.set(description);
    }
@@ -155,5 +150,13 @@ public class BusinessDayIncTableRowValue {
 
    public int getNumberAsInt() {
       return Integer.valueOf(getNumber()) - 1;// minus one, since the index start at 1
+   }
+
+   public ObjectProperty<Ticket> getTicketProperty() {
+      return ticketProperty;
+   }
+
+   public void setTicket(Ticket ticket) {
+      this.ticketProperty.set(ticket);
    }
 }

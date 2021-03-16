@@ -18,8 +18,6 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
-import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklog;
-import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
@@ -294,9 +292,8 @@ public class BusinessDay {
          case END:
             businessDayIncremental.updateEndTimeSnippetAndCalculate(changedValue.getNewValue());
             break;
-         case TICKET_NR:
-            TicketBacklog ticketBacklog = TicketBacklogSPI.getTicketBacklog();
-            businessDayIncremental.setTicket(ticketBacklog.getTicket4Nr(changedValue.getNewValue()));
+         case TICKET:
+            businessDayIncremental.setTicket(changedValue.getNewTicket());
             break;
          case CHARGE_TYPE:
             try {

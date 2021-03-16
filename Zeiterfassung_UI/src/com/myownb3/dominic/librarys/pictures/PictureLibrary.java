@@ -14,10 +14,10 @@ import javax.swing.ImageIcon;
  */
 public class PictureLibrary {
 
-   private static boolean loaded;
    private static Image workingImage;
    private static Image notWorkingImage;
    private static javafx.scene.image.Image clockImageIcon;
+   private static javafx.scene.image.Image warningIcon;
    private static ImageIcon notWorkingImageIcon;
    private static ImageIcon workingImageIcon;
 
@@ -30,24 +30,15 @@ public class PictureLibrary {
     * pictures in a none static method
     */
    public static void loadPictures() {
-      if (loaded) {
-         return;
-      }
-      new PictureLibrary().getPictures();
-      loaded = true;
-   }
+      URL notWorkingUrl = PictureLibrary.class.getResource(getPath() + "/not_working.png");
+      notWorkingImageIcon = new ImageIcon(notWorkingUrl);
+      notWorkingImage = notWorkingImageIcon.getImage();
 
-   /**
-    * loads the pictures from the directory
-    */
-   private void getPictures() {
-      final URL notWorkingUrl = getClass().getResource(getPath() + "/not_working.png");
-      setNotWorkingImageIcon((new ImageIcon(notWorkingUrl).getImage()));
-
-      final URL workingUrl = getClass().getResource(getPath() + "/working.png");
-      setWorkingImageIcon((new ImageIcon(workingUrl).getImage()));
-
-      setClockImageIcon(new javafx.scene.image.Image(getPath() + "/clock.png"));
+      URL workingUrl = PictureLibrary.class.getResource(getPath() + "/working.png");
+      workingImageIcon = new ImageIcon(workingUrl);
+      workingImage = workingImageIcon.getImage();
+      clockImageIcon = new javafx.scene.image.Image(getPath() + "/clock.png");
+      warningIcon = SVGReader.loadSVG(getPath() + "/warning.svg");
    }
 
    /**
@@ -70,23 +61,15 @@ public class PictureLibrary {
       return workingImageIcon;
    }
 
-   public static void setWorkingImageIcon(Image working) {
-      PictureLibrary.workingImage = working;
-   }
-
    public static ImageIcon getNotWorkingImageIcon() {
       return notWorkingImageIcon;
-   }
-
-   public static void setNotWorkingImageIcon(Image notWorking) {
-      PictureLibrary.notWorkingImage = notWorking;
    }
 
    public static javafx.scene.image.Image getClockImageIcon() {
       return clockImageIcon;
    }
 
-   public static void setClockImageIcon(javafx.scene.image.Image clockImageIcon) {
-      PictureLibrary.clockImageIcon = clockImageIcon;
+   public static javafx.scene.image.Image getWarningIcon() {
+      return warningIcon;
    }
 }

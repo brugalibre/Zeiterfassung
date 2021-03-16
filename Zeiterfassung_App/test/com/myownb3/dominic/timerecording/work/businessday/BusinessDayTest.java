@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
@@ -24,6 +26,57 @@ import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 
 class BusinessDayTest {
+   @Test
+   public void testChangeDBIncTicketNr() {
+
+      // Given
+      String newTicketNr = "ABES-1324";
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(createUpdate(createTimeSnippet(3600 * 1000, 10), 113, getTicket4Nr()));
+
+      ChangedValue changeValue = ChangedValue.of(0, newTicketNr, ValueTypes.TICKET_NR);
+
+      // When
+      Executable exe = () -> businessDay.changeBusinesDayIncrement(changeValue);
+
+      // Then
+      assertThrows(UnsupportedOperationException.class, exe);
+   }
+
+   @Test
+   public void testChangeNothingJustNullValues() {
+
+      // Given
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(createUpdate(createTimeSnippet(3600 * 1000, 10), 113, getTicket4Nr()));
+
+
+      // When
+      Executable exe = () -> ChangedValue.of(0, "", ValueTypes.NONE);
+
+      // Then
+      assertThrows(IllegalStateException.class, exe);
+   }
+
+   @Test
+   public void testChangeDBIncTicket() {
+
+      // Given
+      Ticket newTicket = Ticket.dummy("ABES-1324");
+      TimeSnippet firstSnippet = createTimeSnippet(3600 * 1000, 10);
+
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+
+      ChangedValue changeValue = ChangedValue.of(0, newTicket, ValueTypes.TICKET);
+
+      // When
+      businessDay.changeBusinesDayIncrement(changeValue);
+
+      // Then
+      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
+      assertThat(businessDayIncrement.getTicket().getNr(), is(newTicket.getNr()));
+   }
 
    @Test
    public void testRefreshCurrentTicketIsDummyTickets() {

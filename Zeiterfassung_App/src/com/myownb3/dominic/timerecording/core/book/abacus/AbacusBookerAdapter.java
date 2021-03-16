@@ -135,7 +135,7 @@ public class AbacusBookerAdapter implements BookerAdapter, UserAuthenticatedObse
             stringBuilder.append(TextLabel.PARTIAL_SUCCESSFULLY_BOOKED_TEXT);
             for (BusinessDayIncrement businessDayIncrement : getNotBookableIncrements(businessDayIncrements)) {
                stringBuilder.append("\n");
-               stringBuilder.append(String.format(TextLabel.NOT_BOOKABLE_TICKETS_FOUND_TEXT, businessDayIncrement.getTicketNumber()));
+               stringBuilder.append(String.format(TextLabel.NOT_BOOKABLE_TICKETS_FOUND_TEXT, businessDayIncrement.getTicket().getNr()));
             }
             break;
          case FAILURE:

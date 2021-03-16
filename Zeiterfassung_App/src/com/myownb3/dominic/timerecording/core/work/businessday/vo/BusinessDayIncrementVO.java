@@ -5,6 +5,7 @@ package com.myownb3.dominic.timerecording.core.work.businessday.vo;
 
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.util.parser.NumberFormat;
 import com.myownb3.dominic.util.utils.StringUtil;
 
@@ -21,7 +22,7 @@ public class BusinessDayIncrementVO {
 
    private float totalDuration;
    private String description;
-   private String ticketNumber;
+   private Ticket ticket;
    private int chargeType;
    private boolean isBooked;
 
@@ -29,7 +30,7 @@ public class BusinessDayIncrementVO {
 
       this.currentTimeSnippet = businessDayIncremental.getCurrentTimeSnippet();
       this.description = businessDayIncremental.getDescription();
-      this.ticketNumber = businessDayIncremental.getTicketNumber();
+      this.ticket = businessDayIncremental.getTicket();
       this.chargeType = businessDayIncremental.getChargeType();
       this.totalDuration = businessDayIncremental.getTotalDuration();
       this.isBooked = businessDayIncremental.isCharged();
@@ -54,8 +55,12 @@ public class BusinessDayIncrementVO {
       return this.description != null ? description : "";
    }
 
-   public final String getTicketNumber() {
-      return this.ticketNumber;
+   public Ticket getTicket() {
+      return ticket;
+   }
+
+   public String getTicketNumber() {
+      return ticket != null ? ticket.getNr() : "SYRIUS";
    }
 
    public final int getChargeType() {
