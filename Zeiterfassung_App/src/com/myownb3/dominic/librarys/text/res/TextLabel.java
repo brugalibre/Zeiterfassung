@@ -60,7 +60,11 @@ public class TextLabel {
    public static final String SUCCESSFULLY_BOOKED_TEXT = "Erfolgreich abgebucht";
    public static final Object BOOKING_FAILED_TEXT = "Abbuchen fehlgeschlagen, logs prüfen!";
    public static final String PARTIAL_SUCCESSFULLY_BOOKED_TEXT = "Abbuchung nur teilweise erfolgreich!";
+
    public static final String NOT_BOOKABLE_TICKETS_FOUND_TEXT = "Projektnummern und Leistungsart von Ticket '%s1' prüfen";
+   public static final String NOT_BOOKABLE_TICKET_TOOLTIP = "Ticket nicht abbuchbar, Projektnummer und Leistungsart prüfen";
+   public static final String TICKET_DOES_NOT_EXIST_TOOLTIP = "Ticket existiert in Jira nicht";
+
    public static final String BOOKED = "Abgebucht";
    public static final String NO = "Nein";
    public static final String YES = "Ja";

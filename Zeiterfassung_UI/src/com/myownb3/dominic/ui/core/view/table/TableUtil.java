@@ -1,5 +1,7 @@
 package com.myownb3.dominic.ui.core.view.table;
 
+import com.myownb3.dominic.ui.app.pages.overview.model.table.BusinessDayTableModelHelper;
+
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TableView;
@@ -50,6 +52,9 @@ public class TableUtil {
          if (isNotEmpty(column, i)) {
             textNode = new Text(column.getCellData(i).toString());
             double calcwidth = textNode.getLayoutBounds().getWidth();
+            if (BusinessDayTableModelHelper.TICKET_COLUMN_ID.equals(column.getId())) {// nicht sehr schön, aber irgendwie gibt die Spalte viel zu viel platz an, als sie wirklich benötigt..
+               calcwidth = calcwidth / 10;
+            }
             max = Math.max(max, calcwidth);
          }
       }

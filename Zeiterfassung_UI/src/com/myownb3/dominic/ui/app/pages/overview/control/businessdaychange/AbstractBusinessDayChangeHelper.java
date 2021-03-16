@@ -19,30 +19,31 @@ import javafx.scene.control.TablePosition;
 
 /**
  * 
- * The {@link BusinessDayChangeHelper} helps to change a
+ * The {@link AbstractBusinessDayChangeHelper} helps to change a
  * {@link BusinessDayIncrement}. It listens on the table cell and calls the
  * action to change the underlying {@link BusinessDay} if the values
  * of the table-view changes
  * 
  * @author Dominic
+ * @param <T>
  * 
  */
-public class BusinessDayChangeHelper implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> {
+public abstract class AbstractBusinessDayChangeHelper<T> implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, T>> {
 
    private BDChangeCallbackHandler uiRefresher;
    private BusinessDayChangedCallbackHandler handler;
 
-   public BusinessDayChangeHelper(BDChangeCallbackHandler uiRefresher) {
+   protected AbstractBusinessDayChangeHelper(BDChangeCallbackHandler uiRefresher) {
       this.uiRefresher = uiRefresher;
       this.handler = new BusinessDayChangedCallbackHandlerImpl();
    }
 
    @Override
-   public void handle(CellEditEvent<BusinessDayIncTableRowValue, String> event) {
+   public void handle(CellEditEvent<BusinessDayIncTableRowValue, T> event) {
 
       BusinessDayIncTableRowValue businessDayIncTableCellValue = event.getRowValue();
-      TablePosition<BusinessDayIncTableRowValue, String> tablePosition = event.getTablePosition();
-      String newValue = event.getNewValue();
+      TablePosition<BusinessDayIncTableRowValue, T> tablePosition = event.getTablePosition();
+      T newValue = event.getNewValue();
 
       ValueTypes valueType = businessDayIncTableCellValue.getChangeValueTypeForIndex(tablePosition.getColumn());
       if (isNotValidValueType(valueType)) {

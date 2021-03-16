@@ -128,10 +128,6 @@ public class BusinessDayIncrement {
       this.chargeType = serviceCodeAdapter.getServiceCode4Description(chargeTypeRep);
    }
 
-   public String getTicketNumber() {
-      return nonNull(ticket) ? ticket.getNr() : "SYRIUS";
-   }
-
    public Ticket getTicket() {
       return ticket;
    }

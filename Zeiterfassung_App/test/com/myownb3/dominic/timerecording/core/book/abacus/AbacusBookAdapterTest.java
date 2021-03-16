@@ -299,7 +299,8 @@ class AbacusBookAdapterTest {
       private void doThrowWhileBooking() {
          if (nonNull(ticketNr2ThrowExceptionDuringBooking)) {
             for (BusinessDayIncrement businessDayIncrement : businessDay.getIncrements()) {
-               if (businessDayIncrement.getTicketNumber().equals(ticketNr2ThrowExceptionDuringBooking)) {
+               String ticketNr = businessDayIncrement.getTicket().getNr();
+               if (ticketNr.equals(ticketNr2ThrowExceptionDuringBooking)) {
                   ProjectBookingBean bean = mock(ProjectBookingBean.class);
                   doReturn(bean).when(abacusBookAdapter).map2ProjectBookingBean(eq(businessDayIncrement));
                   doThrow(new RuntimeException()).when(abacusBookingConnector).book(eq(bean));
@@ -313,7 +314,8 @@ class AbacusBookAdapterTest {
             this.businessDay.addBusinessIncrement(businessDayIncrementAdd);
          }
          for (BusinessDayIncrement businessDayIncrement : businessDay.getIncrements()) {
-            if (businessDayIncrement.getTicketNumber().equals(chargedTicketNr)) {
+            String ticketNr = businessDayIncrement.getTicket().getNr();
+            if (ticketNr.equals(chargedTicketNr)) {
                businessDayIncrement.flagAsCharged();
             }
          }

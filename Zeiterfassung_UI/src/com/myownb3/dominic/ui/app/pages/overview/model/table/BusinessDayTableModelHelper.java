@@ -13,6 +13,7 @@ import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.ui.core.view.table.EditableCell;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -30,14 +31,18 @@ import javafx.util.Callback;
 
 public class BusinessDayTableModelHelper {
 
+   public static final String TICKET_COLUMN_ID = TextLabel.TICKET;
    private List<BusinessDayIncTableRowValue> colmnValues;
-   private List<TableColumn<BusinessDayIncTableRowValue, String>> columnNames;
+   private List<TableColumn<BusinessDayIncTableRowValue, ?>> columnNames;
    private EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener;
+   private EventHandler<CellEditEvent<BusinessDayIncTableRowValue, Ticket>> ticketChangeListener;
 
-   public BusinessDayTableModelHelper(EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener) {
+   public BusinessDayTableModelHelper(EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener,
+         EventHandler<CellEditEvent<BusinessDayIncTableRowValue, Ticket>> ticketChangeListener) {
       columnNames = new ArrayList<>();
       colmnValues = new ArrayList<>();
       this.changeListener = changeListener;
+      this.ticketChangeListener = ticketChangeListener;
    }
 
    public void init(BusinessDayVO bussinessDay, TableView<BusinessDayIncTableRowValue> tableView) {
@@ -51,8 +56,8 @@ public class BusinessDayTableModelHelper {
       tableView.setItems(observableList);
    }
 
-   private List<TableColumn<BusinessDayIncTableRowValue, String>> getTableHeaders(BusinessDayVO bussinessDay) {
-      List<TableColumn<BusinessDayIncTableRowValue, String>> titleHeaders = new ArrayList<>();
+   private List<TableColumn<BusinessDayIncTableRowValue, ?>> getTableHeaders(BusinessDayVO bussinessDay) {
+      List<TableColumn<BusinessDayIncTableRowValue, ?>> titleHeaders = new ArrayList<>();
       TableColumn<BusinessDayIncTableRowValue, String> numberTableColumn = new TableColumn<>(
             TextLabel.NUMMER_LABEL);
       setNonEditableCellValueFactory(numberTableColumn, TableConst.NUMBER);
@@ -61,10 +66,10 @@ public class BusinessDayTableModelHelper {
       amountOfHoursTableColumn.setId(TextLabel.AMOUNT_OF_HOURS_LABEL);
       titleHeaders.add(amountOfHoursTableColumn);
       setEditableCellValueFactory(amountOfHoursTableColumn, TableConst.TOTAL_DURATION);
-      TableColumn<BusinessDayIncTableRowValue, String> ticketTableColumn = new TableColumn<>(TextLabel.TICKET);
-      ticketTableColumn.setId(TextLabel.TICKET);
+      TableColumn<BusinessDayIncTableRowValue, Ticket> ticketTableColumn = new TableColumn<>(TextLabel.TICKET);
+      ticketTableColumn.setId(TICKET_COLUMN_ID);
       titleHeaders.add(ticketTableColumn);
-      setEditableCellValueFactory(ticketTableColumn, TableConst.TICKET_NUMBER);
+      setEditableTicketCellValueFactory(ticketTableColumn);
 
       boolean isDescriptionTitleNecessary = bussinessDay.hasIncrementWithDescription();
       if (isDescriptionTitleNecessary) {
@@ -136,6 +141,13 @@ public class BusinessDayTableModelHelper {
       setNonEditableCellValueFactory(tableColumn, paramName);// For diplaying the value read only
    }
 
+   private void setEditableTicketCellValueFactory(TableColumn<BusinessDayIncTableRowValue, Ticket> tableColumn) {
+      tableColumn.setCellFactory(callback -> EditableTicketCell.createTicketEditCell());
+      tableColumn.setCellValueFactory(tableRowValue -> tableRowValue.getValue().getTicketProperty());
+      tableColumn.setOnEditCommit(ticketChangeListener);
+      tableColumn.setEditable(true);
+   }
+
    private TableCell<BusinessDayIncTableRowValue, String> createEditableTableCell() {
       return EditableCell.createStringEditCell();
    }
@@ -164,7 +176,7 @@ public class BusinessDayTableModelHelper {
 
       businessDayIncTableCellValue.setNumber(String.valueOf(no));
       businessDayIncTableCellValue.setTotalDuration(bussinessDayIncremental.getTotalDurationRep());
-      businessDayIncTableCellValue.setTicketNumber(bussinessDayIncremental.getTicketNumber());
+      businessDayIncTableCellValue.setTicket(bussinessDayIncremental.getTicket());
 
       if (isDescriptionTitleNecessary) {
          String cellValue = bussinessDayIncremental.hasDescription() ? bussinessDayIncremental.getDescription() : "";

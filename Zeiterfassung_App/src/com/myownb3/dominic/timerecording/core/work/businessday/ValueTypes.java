@@ -2,6 +2,8 @@ package com.myownb3.dominic.timerecording.core.work.businessday;
 
 public enum ValueTypes {
 
+   /** The Jira-Ticket itself */
+   TICKET,
    /** Number of the Jira-Ticket */
    TICKET_NR,
    /** The additionally description of the charging */
