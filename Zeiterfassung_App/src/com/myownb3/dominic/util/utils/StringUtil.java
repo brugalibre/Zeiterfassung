@@ -14,7 +14,7 @@ public class StringUtil {
    }
 
    public static boolean isNotEmptyOrNull(String toCheck) {
-      return toCheck != null && !toCheck.trim().isEmpty();
+      return !isEmptyOrNull(toCheck);
    }
 
    public static boolean isEmptyOrNull(String toCheck) {
