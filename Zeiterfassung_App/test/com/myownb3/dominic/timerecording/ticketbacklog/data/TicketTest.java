@@ -15,6 +15,7 @@ import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraIssueAssignee;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraIssueFields;
 import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.JiraIssueResponse;
+import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.jiraissuefields.GenericNameIdObject;
 
 class TicketTest extends BaseTestWithSettings {
 
@@ -110,6 +111,40 @@ class TicketTest extends BaseTestWithSettings {
    }
 
    @Test
+   void testIsSprintTicket_WithAndWithoutSprintId() {
+
+      // Given
+      String sprintId1 = "1";
+      String sprintId2 = "2";
+      Ticket ticketWithSprintId1 = new TicketBuilder("SYRIUS-234")
+            .withSprintId(sprintId1)
+            .build();
+      Ticket ticketWithSprintId2 = new TicketBuilder("SYRIUS-123")
+            .withSprintId(sprintId1)
+            .build();
+      Ticket ticketWithoutSprintId1 = new TicketBuilder("ZZZZ")
+            .build();
+      Ticket anotherTicket2WithSprintId2 = new TicketBuilder("SYRIUS-ZZ")
+            .withSprintId(sprintId2)
+            .build();
+      Ticket anotherTicketWithSprintId2 = new TicketBuilder("SYRIUS-YYY")
+            .withSprintId(sprintId2)
+            .build();
+      List<Ticket> tickets =
+            Arrays.asList(ticketWithSprintId1, anotherTicket2WithSprintId2, ticketWithoutSprintId1, anotherTicketWithSprintId2, ticketWithSprintId2);
+
+      // When
+      Collections.sort(tickets, new TicketComparator());
+
+      // Then
+      assertThat(tickets.get(0), is(ticketWithSprintId2));
+      assertThat(tickets.get(1), is(ticketWithSprintId1));
+      assertThat(tickets.get(2), is(anotherTicketWithSprintId2));
+      assertThat(tickets.get(3), is(anotherTicket2WithSprintId2));
+      assertThat(tickets.get(4), is(ticketWithoutSprintId1));
+   }
+
+   @Test
    void testIsSprintTicket_SortForTheSakeOfSeTestabdeckung() {
 
       // Given
@@ -171,12 +206,21 @@ class TicketTest extends BaseTestWithSettings {
       private JiraIssueFields jiraIssueFields;
       private boolean isSprintTicket;
       private boolean isDummyTicket;
+      private GenericNameIdObject sprintIdObject;
 
       private TicketBuilder(String ticketNr) {
          this.jiraIssueFields = new JiraIssueFields();
          this.jiraIssueResponse = new JiraIssueResponse();
+         this.sprintIdObject = new GenericNameIdObject();
          jiraIssueResponse.setFields(jiraIssueFields);
          jiraIssueResponse.setKey(ticketNr);
+         jiraIssueResponse.setId(ticketNr);
+         jiraIssueFields.setSprint(sprintIdObject);
+      }
+
+      public TicketBuilder withSprintId(String sprintId) {
+         this.sprintIdObject.setId(sprintId);
+         return this;
       }
 
       private TicketBuilder isSprintTicket(boolean isSprintTicket) {

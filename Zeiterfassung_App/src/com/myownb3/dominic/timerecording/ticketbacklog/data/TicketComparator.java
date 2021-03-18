@@ -1,6 +1,11 @@
 package com.myownb3.dominic.timerecording.ticketbacklog.data;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 import java.util.Comparator;
+
+import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.TicketAttrs;
 
 public class TicketComparator implements Comparator<Ticket> {
 
@@ -18,6 +23,26 @@ public class TicketComparator implements Comparator<Ticket> {
       } else if (!t2.isCurrentUserAssigned() && t1.isCurrentUserAssigned()) {
          return -1;
       }
-      return t1.getNr().compareTo(t2.getNr());
+      return compareSprintId(t1, t2);
+   }
+
+   private int compareSprintId(Ticket t1, Ticket t2) {
+      TicketAttrs ticketAttrs1 = t1.getTicketAttrs();
+      TicketAttrs ticketAttrs2 = t2.getTicketAttrs();
+      int compareValue = 0;
+      // Tickets which belongs to the same sprint, should be grouped together 
+      if (nonNull(ticketAttrs1.getSprintId()) && nonNull(ticketAttrs2.getSprintId())) {
+         compareValue = ticketAttrs1.getSprintId().compareTo(ticketAttrs2.getSprintId());
+      } else {
+         if (nonNull(ticketAttrs1.getSprintId()) && isNull(ticketAttrs2.getSprintId())) {
+            compareValue = -1;
+         } else if (isNull(ticketAttrs1.getSprintId()) && nonNull(ticketAttrs2.getSprintId())) {
+            compareValue = 1;
+         }
+      }
+      if (compareValue == 0) {
+         return t1.getNr().compareTo(t2.getNr());
+      }
+      return compareValue;
    }
 }

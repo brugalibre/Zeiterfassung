@@ -30,7 +30,7 @@ public class HttpClient {
     * Creates a new {@link HttpClient} without any credentials
     */
    HttpClient() {
-      this.okHttpClient = buildOkHttpClient(10);
+      this.okHttpClient = buildOkHttpClient(20);
       this.credentials = "";
    }
 

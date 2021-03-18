@@ -232,7 +232,7 @@ class TicketBacklogTest extends BaseTestWithSettings {
          if (!isReadBordSuccessfull) {
             ex = new RuntimeException();
          }
-         when(jiraApiReader.readTicketsFromBoard(any())).thenReturn(JiraApiReadTicketsResult.of(readTickets, ex));
+         when(jiraApiReader.readTicketsFromBoardAndSprints(any(), any())).thenReturn(JiraApiReadTicketsResult.of(readTickets, ex));
       }
    }
 

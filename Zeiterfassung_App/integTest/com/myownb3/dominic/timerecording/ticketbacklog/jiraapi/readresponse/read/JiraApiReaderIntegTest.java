@@ -11,6 +11,8 @@ import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readrespon
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.util.Collections;
+
 import org.junit.jupiter.api.Test;
 
 import com.myownb3.dominic.timerecording.test.BaseTestWithSettings;
@@ -40,7 +42,8 @@ class JiraApiReaderIntegTest extends BaseTestWithSettings {
             .build();
 
       // When
-      JiraApiReadTicketsResult ticketsFromBoard = tcb.jiraApiReader.readTicketsFromBoard(JiraApiTestReadConst.BOARD_NAME);
+      JiraApiReadTicketsResult ticketsFromBoard =
+            tcb.jiraApiReader.readTicketsFromBoardAndSprints(JiraApiTestReadConst.BOARD_NAME, Collections.emptyList());
       assertThat(ticketsFromBoard.getTickets().size(), is(1));
       Ticket ticket = ticketsFromBoard.getTickets().get(0);
       assertThat(ticket.getNr(), is(ISSUE_NR));

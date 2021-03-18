@@ -1,8 +1,10 @@
 package com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data.jiraissuefields.GenericNameIdObject;
 
 /**
  * The class {@link JiraIssueFields} contains all information and fields which can read from a jira-Ticket using the jira-api
@@ -23,6 +25,8 @@ public class JiraIssueFields {
    private String customfield_10000;
    private String customfield_11516;
    private String customfield_10550;
+   private GenericNameIdObject resolution;
+   private GenericNameIdObject sprint;
 
    public JiraIssueFields() {
       customfield_10060 = new JiraIssueGenericValueObject();
@@ -31,6 +35,8 @@ public class JiraIssueFields {
       issuetype = new JiraIssueType();
       customfield_11310 = new JiraIssueThemaInfos();
       fixVersions = new JiraFixVersionsType[] {};
+      resolution = new GenericNameIdObject();
+      sprint = new GenericNameIdObject();
    }
 
    public JiraIssueThemaInfos getCustomfield_11310() {
@@ -105,6 +111,20 @@ public class JiraIssueFields {
       return Boolean.valueOf(issuetype.subtask);
    }
 
+   public boolean isNotDone() {
+      return isNull(resolution.getId());
+   }
+
+   public void setResolution(GenericNameIdObject resolution) {
+      if (nonNull(resolution)) {
+         this.resolution = resolution;
+      }
+   }
+
+   public GenericNameIdObject getResolution() {
+      return resolution;
+   }
+
    public JiraIssueAssignee getAssignee() {
       return assignee;
    }
@@ -140,6 +160,16 @@ public class JiraIssueFields {
       if (nonNull(fixVersions)) {
          // the ObjectMapper may call this with null
          this.fixVersions = fixVersions;
+      }
+   }
+
+   public GenericNameIdObject getSprint() {
+      return sprint;
+   }
+
+   public void setSprint(GenericNameIdObject sprint) {
+      if (nonNull(sprint)) {
+         this.sprint = sprint;
       }
    }
 
