@@ -2,6 +2,7 @@ package com.myownb3.dominic.util.parser;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -11,8 +12,34 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 class NumberFormatTest {
+
+   @Test
+   void testInvalidValue2ParseGetDefault() {
+      // Given
+      String input = "abc";
+      float defaultValue = 349f;
+
+      // When
+      float actualValue = com.myownb3.dominic.util.parser.NumberFormat.parseFloatOrDefault(input, defaultValue);
+
+      // Then
+      assertThat(actualValue, is(defaultValue));
+   }
+
+   @Test
+   void testInvalidValue2ParseThrowNumberFormatException() {
+      // Given
+      String input = "abc";
+
+      // When
+      Executable exe = () -> com.myownb3.dominic.util.parser.NumberFormat.parseFloat(input);
+
+      // Then
+      assertThrows(NumberFormatException.class, exe);
+   }
 
    @Test
    void testNeutralizeDecimalSeparator_SwissLocale() {
