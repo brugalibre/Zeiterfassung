@@ -15,6 +15,8 @@ import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.data
  */
 public class TicketAttrs {
    private String assignee;
+   private String sprintId;
+   private String sprintName;
    private String id;
    private String nr;
    private String externalNr;
@@ -56,6 +58,8 @@ public class TicketAttrs {
       ticketAttrs.syriusExtension = issue.getSyriusExtension();
       ticketAttrs.syriusRelease = issue.getSyriusRelease();
       ticketAttrs.implementationPackage = issue.getImplementationPackage();
+      ticketAttrs.sprintId = issue.getSprintId();
+      ticketAttrs.sprintName = issue.getSprintName();
       return ticketAttrs;
    }
 
@@ -138,6 +142,14 @@ public class TicketAttrs {
 
    public String getAssignee() {
       return assignee;
+   }
+
+   public String getSprintId() {
+      return sprintId;
+   }
+
+   public String getSprintName() {
+      return sprintName;
    }
 
    /**

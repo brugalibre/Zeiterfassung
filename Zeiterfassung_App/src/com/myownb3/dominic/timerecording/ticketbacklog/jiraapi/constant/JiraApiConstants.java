@@ -33,6 +33,9 @@ public class JiraApiConstants {
    /** URL for retrieving the sprint id for an active sprint and a given board id */
    public static final String GET_ACTIVE_SPRINT_ID_FOR_BOARD_URL = ADC_JIRA_BOARD_BASE_URL + "/" + BOARD_ID_PLACE_HOLDER + "/sprint?state=active";
 
+   /** URL for retrieving all issues for a specific board id */
+   public static final String GET_FUTURE_SPRINT_IDS_FOR_BOARD_URL = ADC_JIRA_BOARD_BASE_URL + "/" + BOARD_ID_PLACE_HOLDER + "/sprint?state=future";
+
    /** URL for retrieving all boards */
    public static final String GET_ALL_BOARDS_URL = ADC_JIRA_BASE_URL + "board?type=scrum&startAt=" + START_AT_PLACE_HOLDER;
 

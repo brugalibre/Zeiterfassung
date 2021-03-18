@@ -28,6 +28,18 @@ public class JiraIssuesResponse extends JiraErrorResponse {
       this.issues = new ArrayList<>();
    }
 
+   /**
+    * Removes all {@link JiraIssue} which are a subtask
+    * 
+    * @return the {@link JiraIssuesResponse}
+    */
+   public JiraIssuesResponse filterDoneTasks() {
+      this.issues = issues.stream()
+            .filter(JiraIssue::isNotDone)
+            .collect(Collectors.toList());
+      return this;
+   }
+
    public List<JiraIssue> getIssues() {
       return issues;
    }

@@ -101,8 +101,9 @@ public class TicketBacklog {
 
    private void initTicketBacklogAsync(UiTicketBacklogCallbackHandler callbackHandler) {
       String boardName = backlogHelper.getBoardName();
+      List<String> sprintNames = backlogHelper.getSprintNames();
       ThreadFactory.INSTANCE.execute(() -> {
-         JiraApiReadTicketsResult jiraApiReadTicketsResult = initTicketBacklog(boardName);
+         JiraApiReadTicketsResult jiraApiReadTicketsResult = initTicketBacklog(boardName, sprintNames);
          callbackHandler.onTicketBacklogUpdated(evalStatus(jiraApiReadTicketsResult));
       });
    }
@@ -111,8 +112,8 @@ public class TicketBacklog {
       return jiraApiReadTicketsResult.isSuccess() ? UpdateStatus.SUCCESS : UpdateStatus.FAIL;
    }
 
-   private JiraApiReadTicketsResult initTicketBacklog(String boardName) {
-      JiraApiReadTicketsResult jiraApiReadTicketsResult = jiraApiReader.readTicketsFromBoard(boardName);
+   private JiraApiReadTicketsResult initTicketBacklog(String boardName, List<String> sprintNames) {
+      JiraApiReadTicketsResult jiraApiReadTicketsResult = jiraApiReader.readTicketsFromBoardAndSprints(boardName, sprintNames);
       if (jiraApiReadTicketsResult.isSuccess()) {
          this.tickets.clear();
          tickets.addAll(jiraApiReadTicketsResult.getTickets());

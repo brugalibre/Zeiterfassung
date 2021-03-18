@@ -48,6 +48,14 @@ public class JiraIssue {
       this.id = id;
    }
 
+   public String getSprintId() {
+      return fields.getSprint().getId();
+   }
+
+   public String getSprintName() {
+      return fields.getSprint().getName();
+   }
+
    public String getId() {
       return id;
    }
@@ -111,6 +119,10 @@ public class JiraIssue {
 
    public boolean isNotSubtask() {
       return !fields.isSubTask();
+   }
+
+   public boolean isNotDone() {
+      return fields.isNotDone();
    }
 
    public String getTitle() {

@@ -1,6 +1,9 @@
 package com.myownb3.dominic.ui.app.pages.combobox;
 
+import static java.util.Objects.nonNull;
+
 import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
+import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.TicketAttrs;
 
 public class TicketComboboxItem {
    private Ticket ticket;
@@ -15,7 +18,14 @@ public class TicketComboboxItem {
 
    @Override
    public String toString() {
-      return ticket.getTicketRep();
+      String sprintId = getSprintId();
+      String sprintSuffix = nonNull(sprintId) ? " (" + sprintId + ")" : "";
+      return ticket.getTicketRep() + sprintSuffix;
+   }
+
+   private String getSprintId() {
+      TicketAttrs ticketAttrs = ticket.getTicketAttrs();
+      return ticketAttrs.getSprintName();
    }
 
    public String getKey() {

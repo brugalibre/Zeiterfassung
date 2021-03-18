@@ -5,6 +5,7 @@ import static com.myownb3.dominic.timerecording.settings.common.Const.USER_NAME_
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.BOARD_ID_PLACE_HOLDER;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_ACTIVE_SPRINT_ID_FOR_BOARD_URL;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_ALL_BOARDS_URL;
+import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_FUTURE_SPRINT_IDS_FOR_BOARD_URL;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.GET_ISSUES_4_BOARD_URL;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.MAX_RESULTS;
@@ -12,8 +13,11 @@ import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.J
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.START_AT_PLACE_HOLDER;
 import static com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.constant.JiraApiConstants.START_AT_PLACE_LITERAL;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -89,17 +93,34 @@ public class JiraApiReader {
     * 
     * @param boardName
     *        the board
+    * @param sprintNames
+    *        a list with sprint names
     * @return a {@link JiraApiReadTicketsResult} which contains any {@link Ticket}s if the request was successfully or none if not (see also
     *         {@link JiraApiReadTicketsResult#isSuccess()}
     */
-   public JiraApiReadTicketsResult readTicketsFromBoard(String boardName) {
+   public JiraApiReadTicketsResult readTicketsFromBoardAndSprints(String boardName, List<String> sprintNames) {
       LOG.info("Try to read the tickets from the current sprint from board '" + boardName + "'");
       SprintInfo sprintInfo = evalActiveSprint4BoardName(boardName);
       if (sprintInfo.isUnknownSprintId()) {
          return failedResult(sprintInfo, boardName);
       }
       JiraIssuesResponse activeSprintIssues = createUrlAndReadIssuesFromJira(sprintInfo);
+      readAndApplyFutureSprintTickets(activeSprintIssues, sprintInfo.boardId, sprintNames);
       return JiraResponseMapper.INSTANCE.map2TicketResult(activeSprintIssues);
+   }
+
+   private void readAndApplyFutureSprintTickets(JiraIssuesResponse activeSprintIssues, String boardId, List<String> sprintNames) {
+      LOG.info("Try to read the tickets for the future sprints '" + (sprintNames.isEmpty() ? "all" : sprintNames.toString() + "'"));
+      getFutureSprintInfos(boardId)
+            .stream()
+            .filter(isRelevantSprint(sprintNames))
+            .map(this::createUrlAndReadIssuesFromJira)
+            .map(JiraIssuesResponse::filterDoneTasks)
+            .forEach(activeSprintIssues::applyFromOther);
+   }
+
+   private Predicate<SprintInfo> isRelevantSprint(List<String> sprintNames) {
+      return sprintInfo -> sprintNames.isEmpty() || sprintNames.contains(sprintInfo.sprintName);
    }
 
    private SprintInfo evalActiveSprint4BoardName(String boardName) {
@@ -123,6 +144,15 @@ public class JiraApiReader {
       } while (SprintInfo.isUnknown(boardId) && index < MAX_RESULTS);
       LOG.info("Got board id " + boardId + " for board name '" + boardName + "'");
       return boardId;
+   }
+
+   private List<SprintInfo> getFutureSprintInfos(String boardId) {
+      String getFutureSprintIdUrl = GET_FUTURE_SPRINT_IDS_FOR_BOARD_URL.replace(BOARD_ID_PLACE_HOLDER, boardId);
+      JiraGenericValuesResponse jiraGetSprintIdResponse = httpClient.callRequestAndParse(new JiraGenericValuesResponseReader(), getFutureSprintIdUrl);
+      return jiraGetSprintIdResponse.getValues()
+            .stream()
+            .map(buildSprintInfo(boardId))
+            .collect(Collectors.toList());
    }
 
    private SprintInfo getActiveSprintInfo(String boardId) {
@@ -153,6 +183,7 @@ public class JiraApiReader {
     */
    private JiraIssuesResponse createUrlAndReadIssuesFromJira(SprintInfo sprintInfo) {
       String url = createGetIssues4BoardUrl(sprintInfo);
+      LOG.info("Trying to get issues for sprint '" + sprintInfo.sprintId + "' (" + sprintInfo.sprintName + ")");
       return readIssuesFromJira(url);
    }
 
