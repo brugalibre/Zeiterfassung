@@ -82,4 +82,8 @@ public class AuthenticationService {
    public boolean isUserAuthenticated() {
       return isAuthenticated;
    }
+
+   public void setUserCredentialsAuthenticator(UserCredentialsAuthenticator userCredentialsAuthenticator) {
+      this.userCredentialsAuthenticator = userCredentialsAuthenticator;
+   }
 }
