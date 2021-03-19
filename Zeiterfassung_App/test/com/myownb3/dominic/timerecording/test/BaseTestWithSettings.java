@@ -1,18 +1,19 @@
 package com.myownb3.dominic.timerecording.test;
 
 import static com.myownb3.dominic.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Properties;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import com.myownb3.dominic.timerecording.settings.Settings;
 
 public class BaseTestWithSettings {
 
@@ -31,15 +32,24 @@ public class BaseTestWithSettings {
       Files.delete(file.toPath());
    }
 
+   @Test
+   public void testUnknownPropertieFile() {
+
+      // Given
+      String propertieName = "file";
+      String propertyName = "key";
+      String propertyValue = "value";
+
+      // When
+      Executable exec = () -> Settings.INSTANCE.saveValueToProperties(propertyName, propertyValue, propertieName);
+      // Then
+      assertThrows(IllegalStateException.class, exec);
+   }
+
    protected static void saveProperty2Settings(String propertyName, String propertyValue) {
-      Properties prop = new Properties();
-      try (InputStream resourceStream = new FileInputStream(ZEITERFASSUNG_PROPERTIES)) {
-         prop.load(resourceStream);
-         prop.put(propertyName, propertyValue);
-         try (FileOutputStream out = new FileOutputStream(ZEITERFASSUNG_PROPERTIES)) {
-            prop.store(out, null);
-         }
-      } catch (Exception e) {
+      try {
+         Settings.INSTANCE.saveValueToProperties(propertyName, propertyValue, ZEITERFASSUNG_PROPERTIES);
+      } catch (IllegalStateException e) {
          fail(e);
       }
    }

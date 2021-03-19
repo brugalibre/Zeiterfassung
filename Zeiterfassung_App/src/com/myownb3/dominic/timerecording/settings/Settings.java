@@ -1,8 +1,9 @@
 package com.myownb3.dominic.timerecording.settings;
 
-import static com.myownb3.dominic.timerecording.settings.common.Const.TURBO_BUCHER_PROPERTIES;
+import static com.myownb3.dominic.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -23,12 +24,40 @@ public class Settings {
     * @return the value asociated with the given key
     */
    public String getSettingsValue(String settingValueKey) {
-      try (InputStream resourceStream = new FileInputStream(TURBO_BUCHER_PROPERTIES)) {
+      return getSettingsValue(settingValueKey, ZEITERFASSUNG_PROPERTIES);
+   }
+
+   public String getSettingsValue(String settingValueKey, String propFile) {
+      try (InputStream resourceStream = new FileInputStream(propFile)) {
          return evalSettingValueForKey(resourceStream, settingValueKey);
       } catch (IOException e) {
          throw new IllegalStateException(e);
       }
    }
+
+   /**
+    * Saves a new value
+    * 
+    * @param key
+    *        the key
+    * @param value
+    *        the value
+    * @param propertiesFile
+    *        the name of the properties file
+    */
+   public void saveValueToProperties(String key, String value, String propertiesFile) {
+      Properties prop = new Properties();
+      try (InputStream resourceStream = new FileInputStream(propertiesFile)) {
+         prop.load(resourceStream);
+         prop.put(key, value);
+         try (FileOutputStream out = new FileOutputStream(propertiesFile)) {
+            prop.store(out, null);
+         }
+      } catch (Exception e) {
+         throw new IllegalStateException(e);
+      }
+   }
+
 
    private String evalSettingValueForKey(InputStream resourceStream, String settingValueKey) throws IOException {
       Properties prop = new Properties();

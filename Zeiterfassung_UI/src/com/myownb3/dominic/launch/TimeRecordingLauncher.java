@@ -51,8 +51,8 @@ public class TimeRecordingLauncher extends Application {
       Runtime.getRuntime().addShutdownHook(createShutdownHook());
       PictureLibrary.loadPictures();
       Platform.setImplicitExit(false);
-      createPropertieFileIfNotExists(ZEITERFASSUNG_PROPERTIES);
       createPropertieFileIfNotExists(TURBO_BUCHER_PROPERTIES);
+      createPropertieFileIfNotExists(ZEITERFASSUNG_PROPERTIES);
    }
 
    private static void setSystemProperties() {
