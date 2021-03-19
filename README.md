@@ -1,6 +1,7 @@
 Initiales Set-Up 
-- Eine Kopie vom turbo-bucher.properties in einem Ordner deines Vertrauens anlegen Dein AD-Benutzer & AD-PW eintragen - ansonsten kann sich Chrome nicht in Jira anmelden und somit können auch 
-  die aktuellen Sprint-Tickets nicht ermittelt werden! 
+- Eine Kopie vom zeiterfassung.properties & turbo-bucher.properties in einem Ordner deines Vertrauens anlegen.
+- Im turbo-bucher.properties braucht es nur zwei Einträge: 'loginPagem' und 'baseURL'
+- Die übrige Konfiguration wird im zeiterfassung.properties eingetragen
 - Optional kann mit dem key 'boardName' ein Scrum-Board angegeben werden. Anhand diesem Boardnamen werden alle Tickets des aktuellen Sprints ermittelt
 - Falls Tickets von weiteren Sprints angezeigt werden sollen (z.B. ein ready-4-sprint oder ein analyse-sprint) kann mit dem key 'sprintNames' eine Liste von Semikolon separierten Sprint-Namen angegeben werden (z.B. sprintNames=sprintName1;sprintName2)
 - Zusätzlich kann in einem optionalen 'default-tickets.txt' weitere Ticket-Nr angegeben werden, welche dann beim Erfassen der Zeit zur verfügung stehen. Die Ticket-Nr in diesem

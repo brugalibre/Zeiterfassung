@@ -1,6 +1,6 @@
 package com.myownb3.dominic.timerecording.test;
 
-import static com.myownb3.dominic.timerecording.settings.common.Const.TURBO_BUCHER_PROPERTIES;
+import static com.myownb3.dominic.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
@@ -18,7 +18,7 @@ public class BaseTestWithSettings {
 
    @BeforeEach
    public void setUp() throws IOException {
-      File file = new File(TURBO_BUCHER_PROPERTIES);
+      File file = new File(ZEITERFASSUNG_PROPERTIES);
       file.createNewFile();
       if (!file.exists()) {
          throw new IllegalStateException();
@@ -27,16 +27,16 @@ public class BaseTestWithSettings {
 
    @AfterEach
    public void cleanUp() throws IOException {
-      File file = new File(TURBO_BUCHER_PROPERTIES);
+      File file = new File(ZEITERFASSUNG_PROPERTIES);
       Files.delete(file.toPath());
    }
 
    protected static void saveProperty2Settings(String propertyName, String propertyValue) {
       Properties prop = new Properties();
-      try (InputStream resourceStream = new FileInputStream(TURBO_BUCHER_PROPERTIES)) {
+      try (InputStream resourceStream = new FileInputStream(ZEITERFASSUNG_PROPERTIES)) {
          prop.load(resourceStream);
          prop.put(propertyName, propertyValue);
-         try (FileOutputStream out = new FileOutputStream(TURBO_BUCHER_PROPERTIES)) {
+         try (FileOutputStream out = new FileOutputStream(ZEITERFASSUNG_PROPERTIES)) {
             prop.store(out, null);
          }
       } catch (Exception e) {

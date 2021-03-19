@@ -1,6 +1,6 @@
 package com.myownb3.dominic.ui.app.settings.hotkey;
 
-import static com.myownb3.dominic.timerecording.settings.common.Const.TURBO_BUCHER_PROPERTIES;
+import static com.myownb3.dominic.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 import static java.util.Objects.nonNull;
 
 import java.io.FileInputStream;
@@ -42,7 +42,7 @@ public class HotKeyManager {
 
    private String evalHotKey() {
       String hotKey = null;
-      try (InputStream resourceStream = new FileInputStream(TURBO_BUCHER_PROPERTIES)) {
+      try (InputStream resourceStream = new FileInputStream(ZEITERFASSUNG_PROPERTIES)) {
          hotKey = evalHotKeyFromProperties(resourceStream);
       } catch (IOException e) {
          throw new HotKeyRegisterException(e);

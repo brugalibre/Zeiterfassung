@@ -4,6 +4,7 @@
 package com.myownb3.dominic.launch;
 
 import static com.myownb3.dominic.timerecording.settings.common.Const.TURBO_BUCHER_PROPERTIES;
+import static com.myownb3.dominic.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +51,8 @@ public class TimeRecordingLauncher extends Application {
       Runtime.getRuntime().addShutdownHook(createShutdownHook());
       PictureLibrary.loadPictures();
       Platform.setImplicitExit(false);
-      createTurboBucherPropertiesFileIfNotExists();
+      createPropertieFileIfNotExists(ZEITERFASSUNG_PROPERTIES);
+      createPropertieFileIfNotExists(TURBO_BUCHER_PROPERTIES);
    }
 
    private static void setSystemProperties() {
@@ -58,12 +60,12 @@ public class TimeRecordingLauncher extends Application {
       System.setProperty("prism.verbose", "true");
    }
 
-   private void createTurboBucherPropertiesFileIfNotExists() {
-      File file = new File(TURBO_BUCHER_PROPERTIES);
+   private void createPropertieFileIfNotExists(String propertiesFileName) {
+      File file = new File(propertiesFileName);
       if (!file.exists()) {
          try {
             if (!file.createNewFile()) {
-               throw new ApplicationLaunchException("Unable to create the '" + TURBO_BUCHER_PROPERTIES + "' file!");
+               throw new ApplicationLaunchException("Unable to create the '" + propertiesFileName + "' file!");
             }
          } catch (IOException e) {
             throw new ApplicationLaunchException(e);

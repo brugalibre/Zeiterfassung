@@ -3,7 +3,7 @@
  */
 package com.myownb3.dominic.timerecording.settings.round;
 
-import static com.myownb3.dominic.timerecording.settings.common.Const.TURBO_BUCHER_PROPERTIES;
+import static com.myownb3.dominic.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -45,10 +45,10 @@ public class TimeRounder {
 
    private void saveValueToProperties(RoundMode roundMode) {
       Properties prop = new Properties();
-      try (InputStream resourceStream = new FileInputStream(TURBO_BUCHER_PROPERTIES)) {
+      try (InputStream resourceStream = new FileInputStream(ZEITERFASSUNG_PROPERTIES)) {
          prop.load(resourceStream);
          prop.put(RoundMode.PROPERTY_KEY, String.valueOf(roundMode.getAmount()));
-         try (FileOutputStream out = new FileOutputStream(TURBO_BUCHER_PROPERTIES)) {
+         try (FileOutputStream out = new FileOutputStream(ZEITERFASSUNG_PROPERTIES)) {
             prop.store(out, null);
          }
       } catch (Exception e) {
