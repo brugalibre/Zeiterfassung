@@ -4,7 +4,11 @@
 package com.myownb3.dominic.timerecording.core.book.coolguys;
 
 import java.util.List;
+import java.util.function.Supplier;
 
+import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
+import com.adcubum.timerecording.security.login.auth.AuthenticationService;
+import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
 import com.coolguys.turbo.Booker;
 import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapter;
 import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
@@ -20,12 +24,23 @@ import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
  * 
  * @author Dominic
  */
-public class BookerHelper implements BookerAdapter {
+public class BookerHelper implements BookerAdapter, UserAuthenticatedObservable {
 
    private ChargeType chargeType;
+   private Supplier<char[]> userPwdSupplier;
+   private String username;
 
    public BookerHelper() {
       this.chargeType = new ChargeType();
+      this.username = "";
+      this.userPwdSupplier = () -> new char[] {};
+      AuthenticationService.INSTANCE.registerUserAuthenticatedObservable(this);
+   }
+
+   @Override
+   public void userAuthenticated(AuthenticationContext authenticationContext) {
+      this.username = authenticationContext.getUsername();
+      this.userPwdSupplier = authenticationContext::getUserPw; // still evil but on the other hand still better than saving it plain text.. 
    }
 
    @Override
@@ -57,7 +72,7 @@ public class BookerHelper implements BookerAdapter {
     */
    private void bookInternal(List<String> content) {
       try {
-         Booker booker = new Booker();
+         Booker booker = new Booker(username, userPwdSupplier);
          booker.bookList(content);
       } catch (Exception e) {
          e.printStackTrace();
