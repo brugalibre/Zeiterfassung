@@ -15,9 +15,11 @@ import javax.swing.ImageIcon;
 public class PictureLibrary {
 
    private static boolean loaded;
-   private static Image workingImageIcon;
-   private static Image notWorkingImageIcon;
+   private static Image workingImage;
+   private static Image notWorkingImage;
    private static javafx.scene.image.Image clockImageIcon;
+   private static ImageIcon notWorkingImageIcon;
+   private static ImageIcon workingImageIcon;
 
    private PictureLibrary() {
       // Private constructor
@@ -56,20 +58,28 @@ public class PictureLibrary {
       return path.replace(".", "/");
    }
 
-   public static Image getWorkingImageIcon() {
+   public static Image getWorkingImage() {
+      return workingImage;
+   }
+
+   public static Image getNotWorkingImage() {
+      return notWorkingImage;
+   }
+
+   public static ImageIcon getWorkingImageIcon() {
       return workingImageIcon;
    }
 
    public static void setWorkingImageIcon(Image working) {
-      PictureLibrary.workingImageIcon = working;
+      PictureLibrary.workingImage = working;
    }
 
-   public static Image getNotWorkingImageIcon() {
+   public static ImageIcon getNotWorkingImageIcon() {
       return notWorkingImageIcon;
    }
 
    public static void setNotWorkingImageIcon(Image notWorking) {
-      PictureLibrary.notWorkingImageIcon = notWorking;
+      PictureLibrary.notWorkingImage = notWorking;
    }
 
    public static javafx.scene.image.Image getClockImageIcon() {
