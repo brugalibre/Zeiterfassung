@@ -1,7 +1,9 @@
 package com.myownb3.dominic.ui.core.dialog;
 
+import java.awt.Component;
 import java.awt.TextArea;
 import java.awt.Toolkit;
+import java.awt.TrayIcon.MessageType;
 
 import javax.swing.JOptionPane;
 
@@ -35,5 +37,28 @@ public class DialogManager extends JOptionPane {
       Toolkit.getDefaultToolkit().beep();
       showConfirmDialog(null, SwingUtil.getDisplayArea(TextLabel.EXCEPTION_DIALOG_MESSAGE, printStackTrace), title,
             CLOSED_OPTION, ERROR_MESSAGE);
+   }
+
+   public static void showDialog(Component parent, String messageTitle, String message, MessageType messageType) {
+      showConfirmDialog(parent, message, messageTitle, CLOSED_OPTION, map2Int(messageType));
+   }
+
+   private static int map2Int(MessageType messageType) {
+      int messageTypoe;
+      switch (messageType) {
+         case ERROR:
+            messageTypoe = 0;
+            break;
+         case WARNING:
+            messageTypoe = 2;
+            break;
+         case INFO:
+            messageTypoe = 1;
+            break;
+         default:
+            messageTypoe = -1;
+            break;
+      }
+      return messageTypoe;
    }
 }

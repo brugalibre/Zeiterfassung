@@ -3,9 +3,7 @@
  */
 package com.myownb3.dominic.ui.app;
 
-import java.awt.AWTException;
 import java.awt.Color;
-import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.MouseEvent;
@@ -40,6 +38,8 @@ import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler.UpdateStatus;
 import com.myownb3.dominic.ui.app.pages.mainpage.view.MainWindowPage;
 import com.myownb3.dominic.ui.app.settings.hotkey.HotKeyManager;
+import com.myownb3.dominic.ui.app.tray.TrayIconDelegate;
+import com.myownb3.dominic.ui.app.tray.TrayIconDelegateImpl;
 import com.myownb3.dominic.ui.util.ExceptionUtil;
 import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
@@ -51,12 +51,12 @@ import javafx.stage.Stage;
  * 
  */
 public class TimeRecordingTray {
-   private TrayIcon trayIcon;
    private JMenuItem showHoursItem;
    private JMenuItem startTurboBucher;
    private JMenuItem showImportDialogItem;
    private JMenuItem refreshTicketBacklogMenuItem;
    private MainWindowPage mainWindowPage;
+   private TrayIconDelegate trayIcon;
 
    public void registerSystemtray(Stage primaryStage) {
 
@@ -150,12 +150,12 @@ public class TimeRecordingTray {
    }
 
    private void startWorking() {
-      trayIcon.setImage(PictureLibrary.getWorkingImageIcon());
+      trayIcon.setImage(PictureLibrary.getWorkingImage());
       updateUIStates();
    }
 
    private void stopWorking() {
-      trayIcon.setImage(PictureLibrary.getNotWorkingImageIcon());
+      trayIcon.setImage(PictureLibrary.getNotWorkingImage());
       trayIcon.setToolTip(TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
       showHoursItem.setEnabled(false);
       startTurboBucher.setEnabled(false);
@@ -173,18 +173,6 @@ public class TimeRecordingTray {
 
    private boolean hasNoContentAndIsNotRecording() {
       return !TimeRecorder.INSTANCE.hasContent() && !TimeRecorder.INSTANCE.isRecordindg();
-   }
-
-   /**
-    * Shows the given {@link Throwable}
-    * 
-    * @param thread
-    *        the thread which caught the throwable
-    * @param thrown
-    *        the thrown throwable
-    */
-   private void showException(Thread thread, Throwable thrown) {
-      ExceptionUtil.showException(thread, thrown);
    }
 
    public void clearBusinessDayContents() {
@@ -218,7 +206,7 @@ public class TimeRecordingTray {
 
          @Override
          public void onException(Throwable thrown, Thread thread) {
-            showException(thread, thrown);
+            ExceptionUtil.showException(thread, thrown);
          }
 
          @Override
@@ -239,8 +227,6 @@ public class TimeRecordingTray {
     */
    public void book() {
       ThreadFactory.INSTANCE.execute(this::getBookAndRefreshRunnable);
-      wait(500);
-      updateUIStates();
    }
 
    private void getBookAndRefreshRunnable() {
@@ -275,7 +261,6 @@ public class TimeRecordingTray {
    }
 
    public void importBusinessDayFromFile(File selectedFile) {
-
       boolean success = TimeRecorder.INSTANCE.importBusinessDayFromFile(selectedFile);
       if (success) {
          displayMessage(null, TextLabel.IMPORT_SUCESSFULL, MessageType.INFORMATION);
@@ -287,7 +272,6 @@ public class TimeRecordingTray {
    }
 
    private void displayMessage(String messageTitle, String message, MessageType messageType) {
-
       trayIcon.displayMessage(messageTitle, message, getTryIconErrorForMessageType(messageType));
       if (messageType == MessageType.ERROR) {
          Toolkit.getDefaultToolkit().beep();
@@ -326,17 +310,8 @@ public class TimeRecordingTray {
    }
 
    private void addTrayIconToSystemTray() {
-      if (SystemTray.isSupported()) {
-         try {
-            SystemTray tray = SystemTray.getSystemTray();
-            trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImageIcon(), TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
-            tray.add(trayIcon);
-         } catch (AWTException e) {
-            throw new ApplicationLaunchException(e);
-         }
-      } else {
-         throw new ApplicationLaunchException("SystemTray auf aktuellem System nicht verfügbar!");
-      }
+      trayIcon = new TrayIconDelegateImpl();
+      trayIcon.show();
    }
 
    private MouseMotionListener getMouseMotionListener() {
@@ -348,7 +323,9 @@ public class TimeRecordingTray {
          }
 
          @Override
-         public void mouseDragged(MouseEvent arg0) {/*no-op*/}
+         public void mouseDragged(MouseEvent mouseEvent) {
+            trayIcon.onMouseDragged(mouseEvent);
+         }
       };
    }
 
@@ -356,16 +333,12 @@ public class TimeRecordingTray {
       return new MouseListener() {
          @Override
          public void mouseReleased(MouseEvent e) {
-            if (e.isPopupTrigger()) {
-               handlePopupTrigger(popupMenu, e);
-            }
+            handleMouseEvent(popupMenu, e);
          }
 
          @Override
          public void mousePressed(MouseEvent e) {
-            if (e.isPopupTrigger()) {
-               handlePopupTrigger(popupMenu, e);
-            }
+            handleMouseEvent(popupMenu, e);
          }
 
          @Override
@@ -379,14 +352,12 @@ public class TimeRecordingTray {
             if (e.getButton() == MouseEvent.BUTTON1) {
                handleUserInteractionAndShowInputIfStopped();
             } else if (e.isPopupTrigger()) {
-               handlePopupTrigger(popupMenu, e);
+               handleMouseEvent(popupMenu, e);
             }
          }
 
-         private void handlePopupTrigger(JPopupMenu popupMenu, MouseEvent e) {
-            popupMenu.setLocation(e.getX(), e.getY());
-            popupMenu.setInvoker(popupMenu);
-            popupMenu.setVisible(true);
+         private void handleMouseEvent(JPopupMenu popupMenu, MouseEvent e) {
+            trayIcon.onMouseEvent(popupMenu, e);
          }
       };
    }
@@ -475,14 +446,6 @@ public class TimeRecordingTray {
             return TrayIcon.MessageType.INFO;
          default:
             return TrayIcon.MessageType.NONE;
-      }
-   }
-
-   private void wait(int amount) {
-      try {
-         Thread.sleep(amount);
-      } catch (InterruptedException e) {
-         e.printStackTrace();// ignore
       }
    }
 }
