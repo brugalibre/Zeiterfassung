@@ -23,7 +23,7 @@ class NumberFormatTest {
       float defaultValue = 349f;
 
       // When
-      float actualValue = com.myownb3.dominic.util.parser.NumberFormat.parseFloatOrDefault(input, defaultValue);
+      float actualValue = com.adcubum.util.parser.NumberFormat.parseFloatOrDefault(input, defaultValue);
 
       // Then
       assertThat(actualValue, is(defaultValue));
@@ -35,7 +35,7 @@ class NumberFormatTest {
       String input = "abc";
 
       // When
-      Executable exe = () -> com.myownb3.dominic.util.parser.NumberFormat.parseFloat(input);
+      Executable exe = () -> com.adcubum.util.parser.NumberFormat.parseFloat(input);
 
       // Then
       assertThrows(NumberFormatException.class, exe);
@@ -49,7 +49,7 @@ class NumberFormatTest {
 
       // When
       NumberFormat numberFormat = NumberFormat.getInstance(Locale.forLanguageTag("de_CH"));
-      String neutralizedInput = com.myownb3.dominic.util.parser.NumberFormat.neutralizeDecimalSeparator(input, numberFormat);
+      String neutralizedInput = com.adcubum.util.parser.NumberFormat.neutralizeDecimalSeparator(input, numberFormat);
 
       // Then
       assertThat(neutralizedInput, is(expectedInput));
@@ -63,7 +63,7 @@ class NumberFormatTest {
 
       // When
       DecimalFormat numberFormat = mockDecimalFormat();
-      String neutralizedInput = com.myownb3.dominic.util.parser.NumberFormat.neutralizeDecimalSeparator(input, numberFormat);
+      String neutralizedInput = com.adcubum.util.parser.NumberFormat.neutralizeDecimalSeparator(input, numberFormat);
 
       // Then
       assertThat(neutralizedInput, is(expectedInput));
@@ -77,7 +77,7 @@ class NumberFormatTest {
 
       // When
       DecimalFormat numberFormat = mock(DecimalFormat.class);
-      String neutralizedInput = com.myownb3.dominic.util.parser.NumberFormat.neutralizeDecimalSeparator(input, numberFormat);
+      String neutralizedInput = com.adcubum.util.parser.NumberFormat.neutralizeDecimalSeparator(input, numberFormat);
 
       // Then
       assertThat(neutralizedInput, is(expectedInput));

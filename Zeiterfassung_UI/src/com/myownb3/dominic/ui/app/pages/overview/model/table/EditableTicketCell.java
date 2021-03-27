@@ -2,9 +2,9 @@ package com.myownb3.dominic.ui.app.pages.overview.model.table;
 
 import static java.util.Objects.nonNull;
 
+import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
-import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.myownb3.dominic.ui.core.view.table.EditableCell;
 

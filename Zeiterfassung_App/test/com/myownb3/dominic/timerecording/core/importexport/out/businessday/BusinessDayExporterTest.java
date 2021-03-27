@@ -12,12 +12,12 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.myownb3.dominic.timerecording.core.work.date.Time;
 
 class BusinessDayExporterTest {
 

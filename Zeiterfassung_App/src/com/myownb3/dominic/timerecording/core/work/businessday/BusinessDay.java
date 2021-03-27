@@ -8,19 +8,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.jira.data.Ticket;
-import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.settings.round.TimeRounder;
+import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeType;
+import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
+import com.adcubum.util.parser.NumberFormat;
+import com.adcubum.util.utils.StringUtil;
 import com.myownb3.dominic.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.BusinessDayIncrementImport;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement.TimeStampComparator;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
-import com.myownb3.dominic.timerecording.core.work.date.Time;
-import com.myownb3.dominic.timerecording.core.work.date.TimeType;
-import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
-import com.myownb3.dominic.timerecording.settings.round.TimeRounder;
-import com.myownb3.dominic.util.parser.NumberFormat;
-import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * The {@link BusinessDay} defines an entire day full of work. Such a day may

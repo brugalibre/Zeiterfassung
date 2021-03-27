@@ -21,13 +21,14 @@ import org.junit.jupiter.api.Test;
 
 import com.adcubum.j2a.abacusconnector.ProjectBookingBean;
 import com.adcubum.j2a.zeiterfassung.AbacusBookingConnector;
+import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.IssueType;
 import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.security.login.auth.TestAuthenticationService;
 import com.adcubum.timerecording.security.login.auth.usercredentials.UserCredentialsAuthenticator;
-import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.core.book.result.BookResultType;
 import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
@@ -35,7 +36,6 @@ import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrem
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
-import com.myownb3.dominic.timerecording.core.work.date.Time;
 
 class AbacusBookAdapterTest {
 

@@ -3,7 +3,7 @@ package com.myownb3.dominic.ui.util;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.adcubum.librarys.text.res.TextLabel;
 import com.myownb3.dominic.ui.core.dialog.DialogManager;
 
 /**

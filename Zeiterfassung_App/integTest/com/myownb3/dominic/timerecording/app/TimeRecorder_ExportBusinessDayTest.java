@@ -18,15 +18,15 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
+import com.adcubum.timerecording.importexport.in.file.FileImporter;
+import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 import com.adcubum.timerecording.jira.data.Ticket;
-import com.myownb3.dominic.timerecording.core.callbackhandler.UiCallbackHandler;
-import com.myownb3.dominic.timerecording.core.importexport.in.file.FileImporter;
-import com.myownb3.dominic.timerecording.core.importexport.out.file.FileExportResult;
-import com.myownb3.dominic.timerecording.core.message.Message;
+import com.adcubum.timerecording.message.Message;
+import com.adcubum.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
-import com.myownb3.dominic.timerecording.core.work.date.Time;
 
 class TimeRecorder_ExportBusinessDayTest {
 

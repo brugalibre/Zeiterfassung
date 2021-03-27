@@ -3,8 +3,8 @@
  */
 package com.myownb3.dominic.ui.app.pages.overview.model;
 
+import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
-import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.myownb3.dominic.ui.core.model.PageModel;

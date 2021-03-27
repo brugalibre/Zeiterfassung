@@ -1,6 +1,6 @@
 package com.myownb3.dominic.ui.security.login.auth.model;
 
-import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.adcubum.librarys.text.res.TextLabel;
 import com.myownb3.dominic.ui.core.model.PageModel;
 
 import javafx.beans.property.Property;

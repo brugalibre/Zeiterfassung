@@ -20,15 +20,16 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.jira.data.Ticket;
-import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.message.Message;
+import com.adcubum.timerecording.message.MessageType;
+import com.adcubum.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapter;
 import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.myownb3.dominic.timerecording.core.book.result.BookResultType;
 import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
-import com.myownb3.dominic.timerecording.core.callbackhandler.UiCallbackHandler;
-import com.myownb3.dominic.timerecording.core.message.Message;
-import com.myownb3.dominic.timerecording.core.message.MessageType;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
@@ -37,7 +38,6 @@ import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.i
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.test.BaseTestWithSettings;
 
 class TimeRecorderTest extends BaseTestWithSettings {

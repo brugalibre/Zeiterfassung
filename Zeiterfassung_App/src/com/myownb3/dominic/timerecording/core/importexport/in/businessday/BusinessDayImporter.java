@@ -3,9 +3,9 @@
  */
 package com.myownb3.dominic.timerecording.core.importexport.in.businessday;
 
+import static com.adcubum.util.utils.StringUtil.isNotEmptyOrNull;
 import static com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes.BEGIN;
 import static com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes.DESCRIPTION;
-import static com.myownb3.dominic.util.utils.StringUtil.isNotEmptyOrNull;
 import static java.util.Objects.requireNonNull;
 
 import java.text.ParseException;
@@ -14,18 +14,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.importexport.out.file.FileExporter;
+import com.adcubum.util.parser.DateParser;
+import com.adcubum.util.utils.StringUtil;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.myownb3.dominic.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.myownb3.dominic.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
 import com.myownb3.dominic.timerecording.core.importexport.out.businessday.BusinessDayExporter;
-import com.myownb3.dominic.timerecording.core.importexport.out.file.FileExporter;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
-import com.myownb3.dominic.util.parser.DateParser;
-import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * The {@link BusinessDayImporter} is used to import a {@link BusinessDay} from

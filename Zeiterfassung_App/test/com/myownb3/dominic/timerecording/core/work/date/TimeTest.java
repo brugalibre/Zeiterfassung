@@ -5,7 +5,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import com.myownb3.dominic.timerecording.settings.round.RoundMode;
+import com.adcubum.timerecording.settings.round.RoundMode;
+import com.adcubum.timerecording.work.date.Time;
 
 class TimeTest {
 

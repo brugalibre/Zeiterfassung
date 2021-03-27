@@ -8,11 +8,11 @@ import static java.util.Objects.requireNonNull;
 
 import java.awt.Toolkit;
 
+import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.security.login.auth.AuthenticationResult;
 import com.adcubum.timerecording.security.login.callback.LoginCallbackHandler;
 import com.adcubum.timerecording.security.login.callback.LoginEndState;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
-import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.ui.app.inputfield.InputFieldVerifier;
 import com.myownb3.dominic.ui.core.control.impl.BaseFXController;
 import com.myownb3.dominic.ui.core.model.resolver.PageModelResolver;

@@ -9,7 +9,7 @@ import static java.util.Objects.requireNonNull;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.adcubum.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;

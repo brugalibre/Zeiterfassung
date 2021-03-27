@@ -1,6 +1,6 @@
 package com.myownb3.dominic.ui.app.settings.hotkey;
 
-import static com.myownb3.dominic.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
+import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 import static java.util.Objects.nonNull;
 
 import java.io.FileInputStream;

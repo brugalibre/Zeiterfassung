@@ -3,19 +3,19 @@
  */
 package com.myownb3.dominic.launch;
 
-import static com.myownb3.dominic.timerecording.settings.common.Const.TURBO_BUCHER_PROPERTIES;
-import static com.myownb3.dominic.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
+import static com.adcubum.timerecording.settings.common.Const.TURBO_BUCHER_PROPERTIES;
+import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 
 import java.io.File;
 import java.io.IOException;
 
+import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
+import com.adcubum.util.exception.GlobalExceptionHandler;
 import com.myownb3.dominic.launch.exception.ApplicationLaunchException;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
-import com.myownb3.dominic.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
 import com.myownb3.dominic.ui.security.login.auth.UiAuthenticationService;
-import com.myownb3.dominic.util.exception.GlobalExceptionHandler;
 
 import javafx.application.Application;
 import javafx.application.Platform;
