@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import com.adcubum.timerecording.jira.data.Ticket;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.myownb3.dominic.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
@@ -20,7 +21,6 @@ import com.myownb3.dominic.timerecording.core.work.date.TimeType;
 import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
 import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklog;
 import com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.util.parser.NumberFormat;
 
 /**

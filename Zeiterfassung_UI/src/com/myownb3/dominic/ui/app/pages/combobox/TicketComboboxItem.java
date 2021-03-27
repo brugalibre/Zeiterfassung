@@ -2,8 +2,8 @@ package com.myownb3.dominic.ui.app.pages.combobox;
 
 import static java.util.Objects.nonNull;
 
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.TicketAttrs;
+import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 
 public class TicketComboboxItem {
    private Ticket ticket;

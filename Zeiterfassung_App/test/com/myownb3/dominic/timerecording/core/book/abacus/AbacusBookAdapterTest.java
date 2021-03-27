@@ -21,6 +21,9 @@ import org.junit.jupiter.api.Test;
 
 import com.adcubum.j2a.abacusconnector.ProjectBookingBean;
 import com.adcubum.j2a.zeiterfassung.AbacusBookingConnector;
+import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.IssueType;
+import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.security.login.auth.TestAuthenticationService;
 import com.adcubum.timerecording.security.login.auth.usercredentials.UserCredentialsAuthenticator;
@@ -33,9 +36,6 @@ import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.IssueType;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.TicketAttrs;
 
 class AbacusBookAdapterTest {
 

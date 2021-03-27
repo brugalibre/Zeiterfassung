@@ -10,9 +10,9 @@ import java.awt.Toolkit;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.adcubum.timerecording.jira.data.Ticket;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.ui.app.inputfield.AutoCompleteTextField;
 import com.myownb3.dominic.ui.app.inputfield.InputFieldVerifier;
 import com.myownb3.dominic.ui.app.pages.combobox.TicketComboboxItem;

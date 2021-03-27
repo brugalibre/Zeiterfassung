@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.adcubum.timerecording.jira.data.Ticket;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
@@ -13,7 +14,6 @@ import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 import com.myownb3.dominic.ui.core.view.table.EditableCell;
 
 import javafx.beans.property.SimpleStringProperty;

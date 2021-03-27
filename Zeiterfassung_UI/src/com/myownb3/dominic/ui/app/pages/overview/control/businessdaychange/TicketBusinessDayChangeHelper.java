@@ -1,6 +1,6 @@
 package com.myownb3.dominic.ui.app.pages.overview.control.businessdaychange;
 
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
+import com.adcubum.timerecording.jira.data.Ticket;
 import com.myownb3.dominic.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
 
 public class TicketBusinessDayChangeHelper extends AbstractBusinessDayChangeHelper<Ticket> {

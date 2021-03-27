@@ -3,9 +3,9 @@
  */
 package com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl;
 
+import com.adcubum.timerecording.jira.data.Ticket;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 
 /**
  * 

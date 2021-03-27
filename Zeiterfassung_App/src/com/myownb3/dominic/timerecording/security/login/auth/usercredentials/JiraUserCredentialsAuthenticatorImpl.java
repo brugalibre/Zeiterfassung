@@ -1,10 +1,10 @@
 package com.myownb3.dominic.timerecording.security.login.auth.usercredentials;
 
+import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.usercredentials.UserCredentialsAuthenticator;
 import com.myownb3.dominic.timerecording.settings.Settings;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
-import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.read.JiraApiReader;
 import com.myownb3.dominic.util.utils.StringUtil;
 
 public class JiraUserCredentialsAuthenticatorImpl implements UserCredentialsAuthenticator {

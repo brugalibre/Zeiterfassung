@@ -20,6 +20,7 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import com.adcubum.timerecording.jira.data.Ticket;
 import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapter;
 import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
@@ -38,7 +39,6 @@ import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayInc
 import com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.myownb3.dominic.timerecording.core.work.date.Time;
 import com.myownb3.dominic.timerecording.test.BaseTestWithSettings;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 
 class TimeRecorderTest extends BaseTestWithSettings {
 

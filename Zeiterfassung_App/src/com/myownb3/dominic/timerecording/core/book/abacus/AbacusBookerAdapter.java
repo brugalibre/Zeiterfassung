@@ -11,6 +11,8 @@ import org.apache.log4j.Logger;
 
 import com.adcubum.j2a.abacusconnector.ProjectBookingBean;
 import com.adcubum.j2a.zeiterfassung.AbacusBookingConnector;
+import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
@@ -22,8 +24,6 @@ import com.myownb3.dominic.timerecording.core.book.result.BookerResult;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.ticket.TicketAttrs;
 
 /**
  * The {@link AbacusBookerAdapter} books directly into the abacus interface

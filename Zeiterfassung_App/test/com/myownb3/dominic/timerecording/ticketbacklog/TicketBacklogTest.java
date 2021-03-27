@@ -22,13 +22,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
+import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketConst;
+import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.myownb3.dominic.timerecording.test.BaseTestWithSettings;
 import com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
 import com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler.UpdateStatus;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
-import com.myownb3.dominic.timerecording.ticketbacklog.defaulttickets.DefaultTicketConst;
-import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.mapresponse.JiraApiReadTicketsResult;
-import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.read.JiraApiReader;
 
 @RunWith(JUnitPlatform.class)
 class TicketBacklogTest extends BaseTestWithSettings {

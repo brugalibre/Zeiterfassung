@@ -6,9 +6,9 @@ package com.myownb3.dominic.ui.app.pages.overview.model.table;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.adcubum.timerecording.jira.data.Ticket;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
