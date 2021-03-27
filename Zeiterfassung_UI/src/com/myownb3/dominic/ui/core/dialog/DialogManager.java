@@ -7,7 +7,7 @@ import java.awt.TrayIcon.MessageType;
 
 import javax.swing.JOptionPane;
 
-import com.myownb3.dominic.librarys.text.res.TextLabel;
+import com.adcubum.librarys.text.res.TextLabel;
 import com.myownb3.dominic.ui.util.SwingUtil;
 
 /**

@@ -6,14 +6,14 @@ package com.myownb3.dominic.timerecording.core.work.businessday;
 import java.text.ParseException;
 import java.util.Date;
 
+import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeType;
+import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
+import com.adcubum.util.parser.DateParser;
+import com.adcubum.util.parser.NumberFormat;
+import com.adcubum.util.utils.StringUtil;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
-import com.myownb3.dominic.timerecording.core.work.date.Time;
-import com.myownb3.dominic.timerecording.core.work.date.TimeType;
-import com.myownb3.dominic.timerecording.core.work.date.TimeType.TIME_TYPE;
-import com.myownb3.dominic.util.parser.DateParser;
-import com.myownb3.dominic.util.parser.NumberFormat;
-import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * Defines a period, that begin with the {@link #beginTimeStamp} and ends with

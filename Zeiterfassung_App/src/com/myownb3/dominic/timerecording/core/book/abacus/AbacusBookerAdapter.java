@@ -11,12 +11,12 @@ import org.apache.log4j.Logger;
 
 import com.adcubum.j2a.abacusconnector.ProjectBookingBean;
 import com.adcubum.j2a.zeiterfassung.AbacusBookingConnector;
+import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
-import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapter;
 import com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.myownb3.dominic.timerecording.core.book.result.BookResultType;

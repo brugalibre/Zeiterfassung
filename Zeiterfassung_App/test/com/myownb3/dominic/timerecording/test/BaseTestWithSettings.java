@@ -1,6 +1,6 @@
 package com.myownb3.dominic.timerecording.test;
 
-import static com.myownb3.dominic.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
+import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import com.myownb3.dominic.timerecording.settings.Settings;
+import com.adcubum.timerecording.settings.Settings;
 
 public class BaseTestWithSettings {
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.myownb3.dominic.timerecording.settings.Settings;
+import com.adcubum.timerecording.settings.Settings;
 
 public class TicketBacklogHelper {
    private static final String BOARD_NAME_VALUE_KEY = "boardName";

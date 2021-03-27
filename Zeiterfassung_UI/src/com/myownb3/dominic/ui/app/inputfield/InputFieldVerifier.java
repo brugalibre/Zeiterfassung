@@ -3,7 +3,7 @@
  */
 package com.myownb3.dominic.ui.app.inputfield;
 
-import static com.myownb3.dominic.util.parser.NumberFormat.neutralizeDecimalSeparator;
+import static com.adcubum.util.parser.NumberFormat.neutralizeDecimalSeparator;
 import static java.util.Objects.nonNull;
 
 import java.text.NumberFormat;
@@ -11,8 +11,8 @@ import java.text.ParsePosition;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.adcubum.util.utils.StringUtil;
 import com.myownb3.dominic.ui.app.styles.Styles;
-import com.myownb3.dominic.util.utils.StringUtil;
 
 import javafx.scene.Node;
 import javafx.scene.control.TextField;

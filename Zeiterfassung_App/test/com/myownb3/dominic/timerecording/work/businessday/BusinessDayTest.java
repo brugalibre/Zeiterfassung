@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.work.date.Time;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
@@ -23,7 +24,6 @@ import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.T
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
-import com.myownb3.dominic.timerecording.core.work.date.Time;
 
 class BusinessDayTest {
    @Test

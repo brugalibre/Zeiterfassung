@@ -1,0 +1,22 @@
+plugins {
+    // Apply the java-library plugin for API and implementation separation.
+    id 'java-library'
+    id 'eclipse'
+    id 'java'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    // Use JCenter for resolving dependencies.
+    jcenter()
+}
+
+dependencies {
+	// https://mvnrepository.com/artifact/joda-time/joda-time
+	implementation group: 'joda-time', name: 'joda-time', version: '2.10.10'
+	
+	// https://mvnrepository.com/artifact/log4j/log4j
+	implementation group: 'log4j', name: 'log4j', version: '1.2.17'
+}

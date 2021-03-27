@@ -4,10 +4,10 @@
 package com.myownb3.dominic.timerecording.core.work.businessday.vo;
 
 import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.util.parser.NumberFormat;
+import com.adcubum.util.utils.StringUtil;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
-import com.myownb3.dominic.util.parser.NumberFormat;
-import com.myownb3.dominic.util.utils.StringUtil;
 
 /**
  * The {@link BusinessDayIncrementVO} is used whenever a we need

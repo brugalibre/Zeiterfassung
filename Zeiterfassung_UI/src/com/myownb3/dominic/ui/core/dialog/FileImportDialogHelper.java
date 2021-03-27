@@ -2,8 +2,8 @@ package com.myownb3.dominic.ui.core.dialog;
 
 import java.io.File;
 
-import com.myownb3.dominic.librarys.text.res.TextLabel;
-import com.myownb3.dominic.timerecording.core.importexport.in.file.FileImporter;
+import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.importexport.in.file.FileImporterImpl;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -33,7 +33,7 @@ public class FileImportDialogHelper {
    public File showImportDialogAndReturnFile(Stage stage) {
       fileChooser.setTitle(TextLabel.SHOW_IMPORT_DIALOG_TITLE);
       FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-            "Aufzeichnungen (*." + FileImporter.FILE_EXTENSION + ")", "*." + FileImporter.FILE_EXTENSION);
+            "Aufzeichnungen (*." + FileImporterImpl.FILE_EXTENSION + ")", "*." + FileImporterImpl.FILE_EXTENSION);
       fileChooser.getExtensionFilters().add(extFilter);
       return fileChooser.showOpenDialog(stage);
    }

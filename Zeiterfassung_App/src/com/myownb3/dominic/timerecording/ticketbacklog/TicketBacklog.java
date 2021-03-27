@@ -8,13 +8,13 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketReader;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
+import com.adcubum.timerecording.workerfactory.ThreadFactory;
 
-import src.com.myownb3.dominic.timerecording.core.importexport.in.file.FileImporter;
-import src.com.myownb3.dominic.timerecording.core.workerfactory.ThreadFactory;
 import src.com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
 import src.com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler.UpdateStatus;
 

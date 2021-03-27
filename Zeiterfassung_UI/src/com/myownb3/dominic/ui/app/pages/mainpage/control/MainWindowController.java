@@ -5,8 +5,8 @@ package com.myownb3.dominic.ui.app.pages.mainpage.control;
 
 import java.io.File;
 
+import com.adcubum.librarys.text.res.TextLabel;
 import com.myownb3.dominic.librarys.pictures.PictureLibrary;
-import com.myownb3.dominic.librarys.text.res.TextLabel;
 import com.myownb3.dominic.timerecording.app.TimeRecorder;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 import com.myownb3.dominic.ui.app.TimeRecordingTray;
