@@ -259,7 +259,7 @@ public class TimeRecorder {
    }
 
    /**
-    * First the {@link FileImporter} imports the given {@link File} and fills
+    * First the {@link FileImporterImpl} imports the given {@link File} and fills
     * it's content into a list. Later the {@link BusinessDayImporter} uses this
     * lists in order to import a a new {@link BusinessDay}
     * 

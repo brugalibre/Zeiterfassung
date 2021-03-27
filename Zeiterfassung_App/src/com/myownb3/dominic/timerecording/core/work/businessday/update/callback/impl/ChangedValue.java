@@ -3,9 +3,9 @@ package com.myownb3.dominic.timerecording.core.work.businessday.update.callback.
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
+import com.adcubum.timerecording.jira.data.Ticket;
 import com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
 
 /**
  * The {@link ChangedValue} contains information about a value of a

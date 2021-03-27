@@ -8,13 +8,15 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.myownb3.dominic.timerecording.core.workerfactory.ThreadFactory;
-import com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
-import com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler.UpdateStatus;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
-import com.myownb3.dominic.timerecording.ticketbacklog.defaulttickets.DefaultTicketReader;
-import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.mapresponse.JiraApiReadTicketsResult;
-import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.read.JiraApiReader;
+import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketReader;
+import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
+
+import src.com.myownb3.dominic.timerecording.core.importexport.in.file.FileImporter;
+import src.com.myownb3.dominic.timerecording.core.workerfactory.ThreadFactory;
+import src.com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
+import src.com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler.UpdateStatus;
 
 public class TicketBacklog {
 
@@ -40,7 +42,7 @@ public class TicketBacklog {
    }
 
    private void readDefaultTickets() {
-      List<Ticket> defaultTickets = new DefaultTicketReader(jiraApiReader).readDefaultTickets();
+      List<Ticket> defaultTickets = new DefaultTicketReader(jiraApiReader, FileImporter.INTANCE).readDefaultTickets();
       LOG.info("Read " + defaultTickets.size() + " default tickets from outside the sprint");
       this.tickets.addAll(defaultTickets);
    }

@@ -10,9 +10,9 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.myownb3.dominic.timerecording.test.BaseTestWithSettings;
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
-import com.myownb3.dominic.timerecording.ticketbacklog.jiraapi.readresponse.read.JiraApiReader;
 
 class JiraUserCredentialsAuthenticatorImplTest extends BaseTestWithSettings {
 

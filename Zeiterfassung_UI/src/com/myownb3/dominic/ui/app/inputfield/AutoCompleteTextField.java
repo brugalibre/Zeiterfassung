@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.myownb3.dominic.timerecording.ticketbacklog.data.Ticket;
+import com.adcubum.timerecording.jira.data.Ticket;
 import com.myownb3.dominic.ui.app.styles.Styles;
 
 import javafx.beans.property.Property;
