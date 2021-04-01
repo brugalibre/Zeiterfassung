@@ -1,5 +1,5 @@
 /bin/
 /turbo-bucher.properties
-/.classpath
 /ZeiterfassungSecureKeyStore.jks
 /zeiterfassung.properties
+/.gradle/
