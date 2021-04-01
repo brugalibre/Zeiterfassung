@@ -1,0 +1,30 @@
+plugins {
+    // Apply the java-library plugin for API and implementation separation.
+    id 'java-library'
+    id 'eclipse'
+    id 'java'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    // Use JCenter for resolving dependencies.
+    jcenter()
+}
+
+dependencies {
+	
+	// https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-all
+	implementation group: 'org.apache.xmlgraphics', name: 'batik-all', version: '1.14', ext: 'pom'	
+	
+	// https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-transcoder
+	implementation group: 'org.apache.xmlgraphics', name: 'batik-transcoder', version: '1.7'
+		
+	// https://mvnrepository.com/artifact/com.github.tulskiy/jkeymaster
+	implementation group: 'com.github.tulskiy', name: 'jkeymaster', version: '1.1'
+		
+	// https://logging.apache.org/log4j/log4j-2.1/maven-artifacts.html
+	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.1'
+  	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.1'
+}
