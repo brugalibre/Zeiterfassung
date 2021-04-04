@@ -12,12 +12,14 @@ public class FileSystemUtil {
    }
 
    /**
+    * Returns the path as String to the users home directory. Note that this path always ends with the file systems separator
+    * 
     * @return the path as String to the users home directory
     */
    public static String getHomeDir() {
       FileSystemView filesys = FileSystemView.getFileSystemView();
       File homeDirectory = filesys.getHomeDirectory();
-      return homeDirectory.getPath();
+      return homeDirectory.getPath() + getDefaultFileSystemSeparator();
    }
 
    /**

@@ -29,6 +29,7 @@ import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 import com.adcubum.timerecording.importexport.out.file.FileExporter;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageType;
+import com.adcubum.util.utils.FileSystemUtil;
 
 /**
  * Responsible for recording the time. The {@link TimeRecorder} consist of one
@@ -236,19 +237,34 @@ public class TimeRecorder {
    }
 
    /**
-    * Exports the current {@link BusinessDay} to the file system
+    * Exports the current {@link BusinessDay} to the users home-directory
     * 
     * @return the result of the export
     */
    public FileExportResult export() {
-      List<String> content = BusinessDayExporter.INSTANCE.exportBusinessDay(BusinessDayVO.of(businessDay));
-      FileExportResult fileExportResult = FileExporter.INTANCE.exportWithResult(content);
+      return export(FileSystemUtil.getHomeDir());
+   }
+
+   private FileExportResult export(String path2Export) {
+      FileExportResult fileExportResult = exportSilently(path2Export);
       if (fileExportResult.isSuccess()) {
          callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.SUCESSFULLY_EXPORTED));
       } else {
          callbackHandler.displayMessage(Message.of(MessageType.ERROR, fileExportResult.getErrorMsg(), TextLabel.EXPORT_FAILED_TITLE));
       }
       return fileExportResult;
+   }
+
+   /**
+    * Exports the current {@link BusinessDay} to the given path and ignores any result
+    * 
+    * @param path2Export
+    *        the path
+    * @return the result of the export
+    */
+   public FileExportResult exportSilently(String path2Export) {
+      List<String> content = BusinessDayExporter.INSTANCE.exportBusinessDay(BusinessDayVO.of(businessDay));
+      return FileExporter.INTANCE.exportWithResult(content, path2Export);
    }
 
    /**
