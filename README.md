@@ -35,6 +35,7 @@ Aufzeichnung exportieren:
 - Sollte ein Abbuchen nicht möglich sein, kann die aktuelle Aufzeichnung exportiert werden
 - Dazu einfach via Kontext-Menü 'Zeige Arbeitsstunden' auf die Übersichtsseite navigieren und von dor aus auf 'Exportieren' klicken
 - Export erfolgt auf den Desktop
+- Ebenfalls erfolgt automatisch ein Export auf den Desktop wenn die App beendet wird und Aufzeichnungen vorhanden sind. Damit soll ein ungewollter Datenverlust z.B. beim Herunterfahren des PCs vorgebeugt werden
 
 Leistungsarten:
 - Per Default sind folgende Leistungsarten unterstützt:

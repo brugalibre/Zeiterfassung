@@ -16,6 +16,7 @@ import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.security.login.auth.UiAuthenticationService;
 import com.adcubum.util.exception.GlobalExceptionHandler;
+import com.adcubum.util.utils.FileSystemUtil;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -78,9 +79,10 @@ public class TimeRecordingLauncher extends Application {
     * BusinessDay in case the application is shutdown by accident
     */
    private static Thread createShutdownHook() {
+      String homeDir = FileSystemUtil.getHomeDir();
       return new Thread(() -> {
          if (TimeRecorder.INSTANCE.hasContent()) {
-            TimeRecorder.INSTANCE.export();
+            TimeRecorder.INSTANCE.exportSilently(homeDir);
          }
       });
    }
