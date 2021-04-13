@@ -9,6 +9,7 @@ import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROP
 import java.io.File;
 import java.io.IOException;
 
+import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.launch.exception.ApplicationLaunchException;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
@@ -19,7 +20,6 @@ import com.adcubum.util.exception.GlobalExceptionHandler;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import src.com.myownb3.dominic.timerecording.app.TimeRecorder;
 
 /**
  * @author Dominic

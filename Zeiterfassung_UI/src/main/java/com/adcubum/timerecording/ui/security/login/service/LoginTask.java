@@ -6,9 +6,9 @@ import java.util.function.Supplier;
 
 import com.adcubum.timerecording.security.login.auth.AuthenticationResult;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
+import com.adcubum.timerecording.security.login.auth.usercredentials.JiraUserCredentialsAuthenticatorImpl;
 
 import javafx.concurrent.Task;
-import src.com.myownb3.dominic.timerecording.security.login.auth.usercredentials.JiraUserCredentialsAuthenticatorImpl;
 
 public class LoginTask extends Task<AuthenticationResult> {
 

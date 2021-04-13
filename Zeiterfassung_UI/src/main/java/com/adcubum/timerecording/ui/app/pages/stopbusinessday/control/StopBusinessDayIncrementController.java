@@ -10,6 +10,8 @@ import java.awt.Toolkit;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.ui.app.inputfield.AutoCompleteTextField;
 import com.adcubum.timerecording.ui.app.inputfield.InputFieldVerifier;
@@ -35,8 +37,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
-import src.com.myownb3.dominic.timerecording.app.TimeRecorder;
-import src.com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
 
 /**
  * @author Dominic

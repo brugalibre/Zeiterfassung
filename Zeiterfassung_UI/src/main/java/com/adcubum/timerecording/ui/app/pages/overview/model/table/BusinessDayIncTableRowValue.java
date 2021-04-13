@@ -6,6 +6,8 @@ package com.adcubum.timerecording.ui.app.pages.overview.model.table;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.jira.data.Ticket;
 
 import javafx.beans.property.ObjectProperty;
@@ -13,8 +15,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TableView;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 
 /**
  * The {@link BusinessDayIncTableRowValue} represents a single row in a

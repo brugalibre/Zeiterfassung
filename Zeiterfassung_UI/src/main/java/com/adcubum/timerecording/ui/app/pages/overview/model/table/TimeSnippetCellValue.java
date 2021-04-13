@@ -3,13 +3,13 @@
  */
 package com.adcubum.timerecording.ui.app.pages.overview.model.table;
 
+import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.ui.app.pages.overview.view.OverviewPage;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
 
 /**
  * 

@@ -6,6 +6,8 @@ package com.adcubum.timerecording.ui.app.pages.mainpage.control;
 import java.io.File;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.app.pages.mainpage.model.MainWindowPageModel;
@@ -22,8 +24,6 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import src.com.myownb3.dominic.timerecording.app.TimeRecorder;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
 
 /**
  * @author Dominic

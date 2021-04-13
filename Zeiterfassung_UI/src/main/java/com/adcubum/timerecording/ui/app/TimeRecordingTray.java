@@ -25,7 +25,9 @@ import javax.swing.UIManager;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
+import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.launch.exception.ApplicationLaunchException;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.message.Message;
@@ -35,6 +37,8 @@ import com.adcubum.timerecording.security.login.callback.LoginCallbackHandler;
 import com.adcubum.timerecording.security.login.callback.LoginEndState;
 import com.adcubum.timerecording.settings.round.RoundMode;
 import com.adcubum.timerecording.settings.round.TimeRounder;
+import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
+import com.adcubum.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler.UpdateStatus;
 import com.adcubum.timerecording.ui.app.pages.mainpage.view.MainWindowPage;
 import com.adcubum.timerecording.ui.app.settings.hotkey.HotKeyManager;
 import com.adcubum.timerecording.ui.app.tray.TrayIconDelegate;
@@ -46,10 +50,6 @@ import com.adcubum.util.exception.GlobalExceptionHandler;
 
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import src.com.myownb3.dominic.timerecording.app.TimeRecorder;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
-import src.com.myownb3.dominic.timerecording.ticketbacklog.TicketBacklogSPI;
-import src.com.myownb3.dominic.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler.UpdateStatus;
 
 /**
  * @author Dominic

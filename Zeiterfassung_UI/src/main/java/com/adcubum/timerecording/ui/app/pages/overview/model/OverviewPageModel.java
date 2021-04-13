@@ -4,6 +4,8 @@
 package com.adcubum.timerecording.ui.app.pages.overview.model;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 
@@ -11,8 +13,6 @@ import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import src.com.myownb3.dominic.timerecording.app.TimeRecorder;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 
 /**
  * @author Dominic

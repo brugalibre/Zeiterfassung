@@ -21,6 +21,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-transcoder
 	implementation group: 'org.apache.xmlgraphics', name: 'batik-transcoder', version: '1.7'
 		
+	// https://mvnrepository.com/artifact/commons-io/commons-io.
+	// We have to 'force' 2.8.0 here, because the batik transcoder uses 1.1 which overrides all other dependencies of the other projects.. :/
+	implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
+		
 	// https://mvnrepository.com/artifact/com.github.tulskiy/jkeymaster
 	implementation group: 'com.github.tulskiy', name: 'jkeymaster', version: '1.1'
 		

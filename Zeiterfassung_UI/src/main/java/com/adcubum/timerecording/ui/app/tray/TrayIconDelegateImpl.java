@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.launch.exception.ApplicationLaunchException;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.ui.core.dialog.DialogManager;
@@ -31,7 +32,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import src.com.myownb3.dominic.timerecording.app.TimeRecorder;
 
 public class TrayIconDelegateImpl implements TrayIconDelegate {
 

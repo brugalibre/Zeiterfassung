@@ -1,7 +1,8 @@
 package com.adcubum.timerecording.ui.app.pages.overview.book.service;
 
+import com.adcubum.timerecording.app.TimeRecorder;
+
 import javafx.concurrent.Task;
-import src.com.myownb3.dominic.timerecording.app.TimeRecorder;
 
 public class BookTask extends Task<Boolean> {
 
