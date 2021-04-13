@@ -5,6 +5,8 @@ package com.adcubum.timerecording.ui.app.pages.overview.control.rowdeleter;
 
 import java.util.Optional;
 
+import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
+import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.adcubum.timerecording.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.adcubum.timerecording.ui.app.pages.overview.view.OverviewPage;
@@ -12,8 +14,6 @@ import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishActi
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.TableView;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
 
 /**
  * The {@link RowDeleteHelper} helps deleting a single row from the

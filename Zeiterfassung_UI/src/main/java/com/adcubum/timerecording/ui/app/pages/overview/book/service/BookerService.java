@@ -1,10 +1,11 @@
 package com.adcubum.timerecording.ui.app.pages.overview.book.service;
 
+import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
+import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
+
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.control.ProgressIndicator;
-import src.com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapter;
-import src.com.myownb3.dominic.timerecording.core.book.adapter.BookerAdapterFactory;
 
 /**
  * The {@link BookerService} does the actually boking stuff like. It creates a {@link BookTask}

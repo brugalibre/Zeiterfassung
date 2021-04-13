@@ -3,11 +3,10 @@
  */
 package com.adcubum.timerecording.ui.app.pages.overview.model.resolver;
 
+import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.ui.app.pages.overview.model.OverviewPageModel;
 import com.adcubum.timerecording.ui.core.model.resolver.PageModelResolver;
-
-import src.com.myownb3.dominic.timerecording.app.TimeRecorder;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 
 /**
  * @author Dominic

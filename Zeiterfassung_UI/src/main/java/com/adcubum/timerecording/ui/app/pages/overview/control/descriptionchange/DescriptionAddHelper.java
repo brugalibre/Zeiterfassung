@@ -7,6 +7,8 @@ import static com.adcubum.timerecording.core.work.businessday.ValueTypes.DESCRIP
 
 import java.util.Optional;
 
+import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.adcubum.timerecording.ui.app.pages.overview.view.OverviewPage;
@@ -22,8 +24,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 
 /**
  * 

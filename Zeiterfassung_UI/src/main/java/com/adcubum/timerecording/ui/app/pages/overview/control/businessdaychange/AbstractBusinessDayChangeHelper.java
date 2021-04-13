@@ -3,6 +3,12 @@
  */
 package com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange;
 
+import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.core.work.businessday.ValueTypes;
+import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
+import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishAction;
@@ -10,12 +16,6 @@ import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishActi
 import javafx.event.EventHandler;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TablePosition;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.BusinessDay;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.BusinessDayIncrement;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 
 /**
  * 

@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.app.pages.mainpage.control.MainWindowController;
 import com.adcubum.timerecording.ui.app.pages.overview.book.service.BookerService;
@@ -46,8 +48,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import src.com.myownb3.dominic.timerecording.app.TimeRecorder;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 
 /**
  * @author Dominic

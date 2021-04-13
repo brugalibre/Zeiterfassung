@@ -7,6 +7,12 @@ import java.util.List;
 import java.util.Objects;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.ValueTypes;
+import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
+import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.ui.core.view.table.EditableCell;
 
@@ -22,12 +28,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
-import src.com.myownb3.dominic.timerecording.app.TimeRecorder;
-import src.com.myownb3.dominic.timerecording.core.book.adapter.ServiceCodeAdapter;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.TimeSnippet;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.ValueTypes;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
-import src.com.myownb3.dominic.timerecording.core.work.businessday.vo.BusinessDayVO;
 
 public class BusinessDayTableModelHelper {
 
