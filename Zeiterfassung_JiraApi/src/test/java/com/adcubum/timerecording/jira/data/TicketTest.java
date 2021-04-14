@@ -14,9 +14,10 @@ import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueAssigne
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueFields;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.jiraissuefields.GenericNameIdObject;
+import com.adcubum.timerecording.jira.test.BaseTestWithSettings;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 
-class TicketTest {
+class TicketTest extends BaseTestWithSettings {
 
    @Test
    void testTicketRepresentation() {
