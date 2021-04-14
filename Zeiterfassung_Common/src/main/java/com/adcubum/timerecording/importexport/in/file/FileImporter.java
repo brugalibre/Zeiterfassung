@@ -4,7 +4,8 @@ import java.io.File;
 import java.util.List;
 
 /**
- * The {@link FileImporterImpl} is an abstraction of an actual implementation which imports a text based {@link File}
+ * The {@link FileImporter} is responsible for importing a text based file. It does so by reading it's content line by line
+ * resulting in returning a {@link List} of {@link String}s
  * 
  * @author Dominic
  *
