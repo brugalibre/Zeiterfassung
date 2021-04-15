@@ -64,6 +64,12 @@ public class InputFieldVerifier {
       return isInputValid;
    }
 
+   public static void removeErrorStyle(Node... nodes) {
+      for (Node node : nodes) {
+         addOrRemoveErrorStyle(node, true);
+      }
+   }
+
    public boolean verifyString(Node node, String value) {
       return addOrRemoveErrorStyleAndReturnValidationRes(node, !StringUtil.isEmptyOrNull(value));
    }

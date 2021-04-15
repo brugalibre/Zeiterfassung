@@ -25,6 +25,7 @@ public class TextLabel {
    public static final String AMOUNT_OF_HOURS_LABEL = "Anzahl Stunden";
    public static final String TOTAL_AMOUNT_OF_HOURS_LABEL = "Gesamt Anzahl Stunden: ";
    public static final String TICKET_NUMBER_LABEL = "Ticket-Nr.";
+   public static final String MULTIPLE_TICKETS_NUMBER_LABEL = "Mehrere Ticket-Nr.";
    public static final String BOOK_TYPE_LABEL = "Leistungsart";
    public static final String IS_CHARGED_LABEL = "Abgebucht";
    public static final String DESCRIPTION_LABEL = "Beschreibung";

@@ -3,6 +3,7 @@
  */
 package com.adcubum.timerecording.ui.app.pages.stopbusinessday.control;
 
+import static com.adcubum.util.utils.StringUtil.isEmptyOrNull;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -48,6 +49,13 @@ public class StopBusinessDayIncrementController
 
    @FXML
    private Label ticketNumberLabel;
+
+   @FXML
+   private Label multipleTicketsNumberLabel;
+
+   @FXML
+   private TextField multipleTicketsNumberField;
+
    @FXML
    private ComboBox<TicketComboboxItem> ticketNumberComboBox;
 
@@ -116,6 +124,8 @@ public class StopBusinessDayIncrementController
    @Override
    public void show() {
       super.show();
+      disableOrEnable(multipleTicketsNumberField, true);
+      disableOrEnable(ticketNumberField, false);
       ticketNumberComboBox.getSelectionModel().clearSelection();
       ticketNumberField.requestFocus();// sometimes this also 'selects all'. But not somehow not the first time
       ticketNumberField.selectAll();
@@ -189,9 +199,25 @@ public class StopBusinessDayIncrementController
    }
 
    private boolean isInputValid() {
+      InputFieldVerifier.removeErrorStyle(multipleTicketsNumberField, ticketNumberField);
+      boolean isValidSelectedServiceCode = validateSelectedServiceCode();
+      boolean isTicketNoInputValid = isTicketNoInputValid();
+      boolean isMultiTicketNoInputValid = isMultiTicketNoInputValid();
       return new InputFieldVerifier().verify(amountOfHoursTextField, true)
-            & validateSelectedServiceCode()
-            & dataModel.isValid(ticketNumberField, true);
+            && isValidSelectedServiceCode
+            && isTicketNoInputValid
+            && isMultiTicketNoInputValid;
+   }
+
+   private boolean isMultiTicketNoInputValid() {
+      return multipleTicketsNumberField.isDisable()
+            || isEmptyOrNull(multipleTicketsNumberField.getText())
+            || dataModel.isMultiTicketNoValid(multipleTicketsNumberField, true);
+   }
+
+   private boolean isTicketNoInputValid() {
+      return ticketNumberField.isDisable()
+            || dataModel.isTicketNoValid(ticketNumberField, true);
    }
 
    private boolean validateSelectedServiceCode() {
@@ -202,9 +228,11 @@ public class StopBusinessDayIncrementController
    @Override
    protected void setBinding(StopBusinessDayIncrementPageModel pageModel) {
       descriptionTextField.textProperty().bindBidirectional(pageModel.getDescriptionProperty());
-      ticketNumberField.textProperty().bindBidirectional(pageModel.getTicketNoProperty());
       ticketNumberComboBox.itemsProperty().bindBidirectional(pageModel.getTicketComboboxItemsProperty());
+      ticketNumberField.textProperty().bindBidirectional(pageModel.getTicketNoProperty());
       ticketNumberField.keyWordsProperty().bindBidirectional(pageModel.getTicketsProperty());
+      multipleTicketsNumberField.textProperty().bindBidirectional(pageModel.getMultipleTicketsNoFieldProperty());
+      multipleTicketsNumberField.focusedProperty().addListener(multiTicketNrsChangedListener());
 
       beginTextField.textProperty().bindBidirectional(pageModel.getBeginTextFieldProperty());
       endTextField.textProperty().bindBidirectional(pageModel.getEndTextFieldProperty());
@@ -213,6 +241,7 @@ public class StopBusinessDayIncrementController
       pageModel.setServiceCodesSelectedModelProperty(serviceCodesComboBox.selectionModelProperty());
       serviceCodesComboBox.itemsProperty().addListener(serviceCodeSelectionChangedListener());
 
+      multipleTicketsNumberLabel.textProperty().bindBidirectional(pageModel.getMultipleTicketsNoLabelProperty());
       ticketNumberLabel.textProperty().bindBidirectional(pageModel.getTicketNoLabelProperty());
       ticketNumberField.focusedProperty().addListener(ticketNrChangedListener());
       getDataModel().getTicketProperty().addListener(ticketChangedListener());
@@ -256,6 +285,7 @@ public class StopBusinessDayIncrementController
    private ChangeListener<Ticket> ticketChangedListener() {
       return (observable, oldTicket, newTicket) -> {
          if (hasTicketChangedAndIsValid(oldTicket, newTicket)) {
+            ticketNumberField.setDisable(false);
             getDataModel().handleTicketChanged();
          }
       };
@@ -271,11 +301,33 @@ public class StopBusinessDayIncrementController
 
    private ChangeListener<Boolean> ticketNrChangedListener() {
       return (observable, oldValue, newValue) -> {
-         if (oldValue.booleanValue() && !newValue.booleanValue()
-               && dataModel.isValid(ticketNumberField, false)) {
-            getDataModel().handleTicketNumberChanged();
+         if (oldValue.booleanValue() && !newValue.booleanValue()) {
+            if (dataModel.isTicketNoValid(ticketNumberField, false)) {
+               getDataModel().handleTicketNumberChanged();
+               disableOrEnable(multipleTicketsNumberField, true);
+            } else {
+               disableOrEnable(multipleTicketsNumberField, !isEmptyOrNull(ticketNumberField.getText()));
+            }
+         } else if (isEmptyOrNull(ticketNumberField.getText())) {
+            enableMultipleTicketsNumberField();
          }
       };
+   }
+
+   private void disableOrEnable(TextField textField, boolean disable) {
+      textField.setDisable(disable);
+      if (disable) {
+         InputFieldVerifier.removeErrorStyle(textField);
+      }
+   }
+
+   private ChangeListener<Boolean> multiTicketNrsChangedListener() {
+      return (observable, oldValue, newValue) -> disableOrEnable(ticketNumberField, !isEmptyOrNull(multipleTicketsNumberField.getText()));
+   }
+
+   private void enableMultipleTicketsNumberField() {
+      disableOrEnable(multipleTicketsNumberField, false);
+      dataModel.getTicketProperty().setValue(null);
    }
 
    private boolean hasAmountOfHoursChanged(Boolean oldValue, Boolean newValue) {
