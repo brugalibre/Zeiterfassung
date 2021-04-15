@@ -134,7 +134,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
    @Override
    public void show() {
       super.show();
-      BusinessDayVO businessDayVO = getDataModel().getBusinessDayVO();
+      BusinessDayVO businessDayVO = dataModel.getBusinessDayVO();
       businessDayTableModel.init(businessDayVO, tableView);
       changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.hasBusinessDayDescription());
       TableUtil.autoResizeTable(tableView);
@@ -198,16 +198,16 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
    @Override
    protected void setBinding(OverviewPageModel pageVO) {
-      bookButton.disableProperty().bind(getDataModel().getIsChargeButtonDisabled());
-      clearButton.disableProperty().bind(getDataModel().getIsClearButtonDisabled());
-      exportButton.disableProperty().bind(getDataModel().getIsExportButtonDisabled());
+      bookButton.disableProperty().bind(dataModel.getIsChargeButtonDisabled());
+      clearButton.disableProperty().bind(dataModel.getIsClearButtonDisabled());
+      exportButton.disableProperty().bind(dataModel.getIsExportButtonDisabled());
 
-      bookButton.textProperty().bind(getDataModel().getBookButtonLabel());
-      clearButton.textProperty().bind(getDataModel().getClearButtonLabel());
-      exportButton.textProperty().bind(getDataModel().getExportButtonLabel());
+      bookButton.textProperty().bind(dataModel.getBookButtonLabel());
+      clearButton.textProperty().bind(dataModel.getClearButtonLabel());
+      exportButton.textProperty().bind(dataModel.getExportButtonLabel());
 
-      totalAmountOfTimeLabel.textProperty().bind(getDataModel().getTotalAmountOfTimeLabel());
-      totalAmountOfTimeValue.textProperty().bind(getDataModel().getTotalAmountOfTimeValue());
+      totalAmountOfTimeLabel.textProperty().bind(dataModel.getTotalAmountOfTimeLabel());
+      totalAmountOfTimeValue.textProperty().bind(dataModel.getTotalAmountOfTimeValue());
       bookerService.bind(progressIndicator);
    }
 

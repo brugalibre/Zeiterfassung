@@ -154,7 +154,7 @@ public class StopBusinessDayIncrementController
    private void setSelectedTicket() {
       if (nonNull(ticketNumberComboBox.getSelectionModel().getSelectedItem())) {
          ticketNumberField.setText(ticketNumberComboBox.getSelectionModel().getSelectedItem().getKey());
-         getDataModel().handleTicketNumberChanged();
+         dataModel.handleTicketNumberChanged();
       }
    }
 
@@ -185,7 +185,7 @@ public class StopBusinessDayIncrementController
 
    private void submit() {
       if (isInputValid()) {
-         getDataModel().addIncrement2BusinessDay(getSelectedLeistungsart());
+         dataModel.addIncrement2BusinessDay(getSelectedLeistungsart());
          dispose(FinishAction.FINISH);
       } else {
          Toolkit.getDefaultToolkit().beep();
@@ -244,7 +244,7 @@ public class StopBusinessDayIncrementController
       multipleTicketsNumberLabel.textProperty().bindBidirectional(pageModel.getMultipleTicketsNoLabelProperty());
       ticketNumberLabel.textProperty().bindBidirectional(pageModel.getTicketNoLabelProperty());
       ticketNumberField.focusedProperty().addListener(ticketNrChangedListener());
-      getDataModel().getTicketProperty().addListener(ticketChangedListener());
+      dataModel.getTicketProperty().addListener(ticketChangedListener());
       descriptionLabel.textProperty().bindBidirectional(pageModel.getDescriptionLabelProperty());
       beginLabel.textProperty().bindBidirectional(pageModel.getBeginLabelProperty());
       endLabel.textProperty().bindBidirectional(pageModel.getEndLabelProperty());
@@ -259,17 +259,17 @@ public class StopBusinessDayIncrementController
 
       beginTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
          if (oldValue.booleanValue() && !newValue.booleanValue()) {
-            getDataModel().updateAndSetBeginTimeStamp();
+            dataModel.updateAndSetBeginTimeStamp();
          }
       });
       endTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
          if (oldValue.booleanValue() && !newValue.booleanValue()) {
-            getDataModel().updateAndSetEndTimeStamp();
+            dataModel.updateAndSetEndTimeStamp();
          }
       });
       amountOfHoursTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
          if (hasAmountOfHoursChanged(oldValue, newValue)) {
-            getDataModel().addAdditionallyTime();
+            dataModel.addAdditionallyTime();
          }
       });
    }
@@ -286,7 +286,7 @@ public class StopBusinessDayIncrementController
       return (observable, oldTicket, newTicket) -> {
          if (hasTicketChangedAndIsValid(oldTicket, newTicket)) {
             ticketNumberField.setDisable(false);
-            getDataModel().handleTicketChanged();
+            dataModel.handleTicketChanged();
          }
       };
    }
@@ -303,7 +303,7 @@ public class StopBusinessDayIncrementController
       return (observable, oldValue, newValue) -> {
          if (oldValue.booleanValue() && !newValue.booleanValue()) {
             if (dataModel.isTicketNoValid(ticketNumberField, false)) {
-               getDataModel().handleTicketNumberChanged();
+               dataModel.handleTicketNumberChanged();
                disableOrEnable(multipleTicketsNumberField, true);
             } else {
                disableOrEnable(multipleTicketsNumberField, !isEmptyOrNull(ticketNumberField.getText()));
