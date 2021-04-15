@@ -97,11 +97,6 @@ public abstract class BaseController<I extends PageModel, O extends PageModel>
    // GETTER AND SETTER //
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   @Override
-   public O getDataModel() {
-      return dataModel;
-   }
-
    /**
     * @param pageModelResolver
     *        the PageModelResolver to set

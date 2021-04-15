@@ -84,7 +84,7 @@ public class LoginController extends BaseFXController<LoginPageModel, LoginPageM
    }
 
    private void createLoginService() {
-      this.loginService = new LoginService(() -> getDataModel().getUsername(), this::getUserPwd);
+      this.loginService = new LoginService(() -> dataModel.getUsername(), this::getUserPwd);
       loginService.setOnSucceeded(onSucceededHandler());
       loginService.setOnFailed(onFailedHandler());
    }
@@ -158,7 +158,7 @@ public class LoginController extends BaseFXController<LoginPageModel, LoginPageM
    }
 
    private boolean isValid(InputFieldVerifier inputFieldVerifier) {
-      return inputFieldVerifier.verifyString(userNameField, getDataModel().getUsername())
+      return inputFieldVerifier.verifyString(userNameField, dataModel.getUsername())
             && inputFieldVerifier.verifyString(userPwdField, userPwdField.getText().toCharArray());
    }
 

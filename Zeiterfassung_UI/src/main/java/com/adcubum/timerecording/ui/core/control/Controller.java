@@ -40,11 +40,4 @@ public interface Controller<I extends PageModel, O extends PageModel> {
     * of it's subpages
     */
    public void refresh();
-
-   /**
-    * Returns the current set data model
-    * 
-    * @return the current set data model
-    */
-   public O getDataModel();
 }
