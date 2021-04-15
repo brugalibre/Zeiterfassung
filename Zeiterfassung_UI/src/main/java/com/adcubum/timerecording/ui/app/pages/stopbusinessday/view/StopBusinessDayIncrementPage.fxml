@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -13,13 +14,14 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="290.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController">
+<AnchorPane prefHeight="320.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController">
    <children>
       <HBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox prefWidth="100.0" spacing="5.0">
                <children>
                   <Label fx:id="ticketNumberLabel" prefHeight="30.0" text="ticketNumberLabel" />
+                  <Label fx:id="multipleTicketsNumberLabel" prefHeight="30.0" text="multipleTicketNumberLabel" />
                   <Label fx:id="descriptionLabel" prefHeight="30.0" text="descriptionLabel" />
                   <Label fx:id="beginLabel" prefHeight="30.0" text="beginLabel" />
                   <Label fx:id="endLabel" prefHeight="30.0" text="endLabel" />
@@ -38,6 +40,7 @@
                         <ComboBox fx:id="ticketNumberComboBox" maxWidth="5.0" onAction="#onAction" prefHeight="30.0" prefWidth="5.0" style="-fx-font-weight: normal;" />
                      </children>
                   </HBox>
+                  <TextField fx:id="multipleTicketsNumberField" prefHeight="30.0" />
                   <TextField fx:id="descriptionTextField" prefHeight="30.0" />
                   <TextField id="beginTextField" fx:id="beginTextField" prefHeight="30.0" />
                   <TextField id="endTextField" fx:id="endTextField" prefHeight="30.0" />

@@ -3,7 +3,11 @@
  */
 package com.adcubum.timerecording.ui.app.pages.stopbusinessday.model;
 
+import static com.adcubum.timerecording.jira.constants.TicketConst.MULTI_TICKET_DELIMITER;
+import static com.adcubum.timerecording.jira.constants.TicketConst.MULTI_TICKET_NO_PATTERN;
+import static com.adcubum.timerecording.jira.constants.TicketConst.TICKET_NO_PATTERN;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +30,7 @@ import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.timerecording.ui.app.inputfield.InputFieldVerifier;
 import com.adcubum.timerecording.ui.app.pages.combobox.TicketComboboxItem;
 import com.adcubum.timerecording.ui.core.model.PageModel;
+import com.adcubum.timerecording.work.date.Time;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
@@ -46,9 +51,8 @@ import javafx.scene.control.Tooltip;
  */
 public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnippedChangedCallbackHandler {
 
-   private static final String TICKET_NO_PATTERN = "(([a-zA-Z0-9-?]+)[-][0-9]+)";
-
    private Property<String> ticketNoProperty;
+   private StringProperty multipleTicketsNoFieldProperty;
    private Property<Ticket> ticketProperty;
    private Property<String> descriptionProperty;
    private StringProperty beginTextFieldProperty;
@@ -60,6 +64,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    private Property<ObservableList<Ticket>> ticketsProperty;
 
    private StringProperty ticketNoLabelProperty;
+   private StringProperty multipleTicketsNoLabelProperty;
    private StringProperty descriptionLabelProperty;
    private StringProperty beginLabelProperty;
    private StringProperty endLabelProperty;
@@ -79,6 +84,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    public StopBusinessDayIncrementPageModel(BusinessDayIncrementVO businessDayIncrementVO) {
 
       ticketNoLabelProperty = new SimpleStringProperty(TextLabel.TICKET_NUMBER_LABEL);
+      multipleTicketsNoLabelProperty = new SimpleStringProperty(TextLabel.MULTIPLE_TICKETS_NUMBER_LABEL);
       descriptionLabelProperty = new SimpleStringProperty(TextLabel.DESCRIPTION_LABEL);
       beginLabelProperty = new SimpleStringProperty(TextLabel.VON_LABEL);
       endLabelProperty = new SimpleStringProperty(TextLabel.BIS_LABEL);
@@ -92,6 +98,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
       amountOfHoursTextFieldProperty = new SimpleStringProperty(businessDayIncrementVO.getTotalDurationRep());
       ticketNoProperty = new SimpleObjectProperty<>(businessDayIncrementVO.getTicketNumber());
+      multipleTicketsNoFieldProperty = new SimpleStringProperty();
       descriptionProperty = new SimpleObjectProperty<>(businessDayIncrementVO.getDescription());
 
       serviceCodesFieldProperty = new SimpleListProperty<>(getAllServiceCodeDescriptions());
@@ -147,6 +154,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
       inPageModel.timeSnippet = businessDayIncrementVO.getCurrentTimeSnippet();
       inPageModel.getTicketNoLabelProperty().set(TextLabel.TICKET_NUMBER_LABEL);
+      inPageModel.getMultipleTicketsNoLabelProperty().set(TextLabel.MULTIPLE_TICKETS_NUMBER_LABEL);
       inPageModel.getDescriptionLabelProperty().set(TextLabel.DESCRIPTION_LABEL);
       inPageModel.getBeginLabelProperty().set(TextLabel.VON_LABEL);
       inPageModel.getEndLabelProperty().set(TextLabel.BIS_LABEL);
@@ -159,6 +167,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       inPageModel.abortButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
       inPageModel.cancelButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
       inPageModel.getTicketNoProperty().setValue(businessDayIncrementVO.getTicketNumber());
+      inPageModel.getMultipleTicketsNoFieldProperty().setValue("");
       inPageModel.getDescriptionProperty().setValue(businessDayIncrementVO.getDescription());
       inPageModel.getTicketProperty().setValue(null);
 
@@ -213,9 +222,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    @Override
    public void handleTimeSnippedChanged(ChangedValue changeValue) {
-
       switch (changeValue.getValueTypes()) {
-
          case BEGIN:
             amountOfHoursTextFieldProperty.set(timeSnippet.getDurationRep());
             beginTextFieldProperty.set(timeSnippet.getBeginTimeStampRep());
@@ -234,6 +241,19 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    }
 
    /**
+    * Validates if the entered ticket-nrs are valid
+    * 
+    * @param multiTicketNumberField
+    *        the {@link TextField} which contains the entered ticket-nr
+    * @param addErrorStyle
+    *        Determines if the style of the given textfield changes if it's valie is invalid
+    * @return <code>true</code> if the entered value is valid or <code>false</code> if not
+    */
+   public boolean isMultiTicketNoValid(TextField multiTicketNumberField, boolean addErrorStyle) {
+      return new InputFieldVerifier().isStringMatchingPattern(multiTicketNumberField, MULTI_TICKET_NO_PATTERN, addErrorStyle);
+   }
+
+   /**
     * Validates if the entered ticket-nr is valid
     * 
     * @param ticketNumberField
@@ -242,7 +262,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     *        Determines if the style of the given textfield changes if it's valie is invalid
     * @return <code>true</code> if the entered value is valid or <code>false</code> if not
     */
-   public boolean isValid(TextField ticketNumberField, boolean addErrorStyle) {
+   public boolean isTicketNoValid(TextField ticketNumberField, boolean addErrorStyle) {
       return new InputFieldVerifier().isStringMatchingPattern(ticketNumberField, TICKET_NO_PATTERN, addErrorStyle);
    }
 
@@ -253,7 +273,22 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     *        the kind of service
     */
    public void addIncrement2BusinessDay(int kindOfService) {
-      addIncrement2BusinessDayInternal(kindOfService, ticketProperty.getValue(), timeSnippet);
+      if (nonNull(ticketProperty.getValue())) {
+         addIncrement2BusinessDayInternal(kindOfService, ticketProperty.getValue(), timeSnippet);
+      } else {
+         addMultipleaIncrement2BusinessDay(kindOfService, multipleTicketsNoFieldProperty.getValue());
+      }
+   }
+
+   private void addMultipleaIncrement2BusinessDay(int kindOfService, String ticketNoPropValue) {
+      String[] ticketNrs = ticketNoPropValue.split(MULTI_TICKET_DELIMITER);
+      Time currentBeginTimeStamp = timeSnippet.getBeginTimeStamp();
+      for (String ticketNr : ticketNrs) {
+         TimeSnippet currentTimeSnippet = timeSnippet.createTimeStampForIncrement(currentBeginTimeStamp, ticketNrs.length);
+         Ticket ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticketNr);
+         addIncrement2BusinessDayInternal(kindOfService, ticket, currentTimeSnippet);
+         currentBeginTimeStamp = currentTimeSnippet.getEndTimeStamp();
+      }
    }
 
    private void addIncrement2BusinessDayInternal(int kindOfService, Ticket ticket, TimeSnippet timeSnippet) {
@@ -268,6 +303,10 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    public final Property<String> getTicketNoProperty() {
       return this.ticketNoProperty;
+   }
+
+   public final StringProperty getMultipleTicketsNoFieldProperty() {
+      return this.multipleTicketsNoFieldProperty;
    }
 
    public final Property<String> getDescriptionProperty() {
@@ -288,6 +327,10 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    public final StringProperty getTicketNoLabelProperty() {
       return this.ticketNoLabelProperty;
+   }
+
+   public final StringProperty getMultipleTicketsNoLabelProperty() {
+      return this.multipleTicketsNoLabelProperty;
    }
 
    public Property<SingleSelectionModel<String>> getServiceCodesSelectedModelProperty() {
