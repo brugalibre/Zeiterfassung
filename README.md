@@ -13,6 +13,37 @@ Initiales Set-Up
 Login:
 - Rechtsklick auf den roten/grünen Kreis in der Info-Leiste und dann das Menu 'Login' auswählen. Anschliessend erfolgt die Verifzierung durch die Eingabe von Benutzername & Passwort
 
+Überblick:
+- Die Anwendung kann auf zwei verschiedene Arten genutzt werden:
+  - Aufzeichnen der Arbeitsstunden während dem Tag via Start/Stop. Auf diese Art werden die Arbeitsstunden laufend erfasst, sobald die Tätigkeit gewechselt wird
+  - Aufzeichnen von 'Kommen & Gehen' bei Ankunft bzw. Verlassen des Arbeitsplatzes. Hierbei werden die Arbeitsstunden erst am Ende des Tages erfasst
+  - Die beiden Modi können kombiniert werden. Allerdings kann keine Aufzeichnung gestartet werden wenn Kommen/Gehen aktiv ist und vice versa
+
+Kommen/Gehen: Kommen:
+- Rechtsklick auf den roten Kreis in der Info-Leiste und dann auf den Menu-Eintrag 'Kommen/Gehen' klicken
+- Alternativ durch Drücken der Tastenkombination, welche im turbo-bucher.properties definiert werden kann (Property ComeOrGoHotKey)
+- Dadurch wird ein 'Kommen' registriert und der rote Kreis verfäbt sich blau
+
+Kommen/Gehen: Gehen:
+- Rechtsklick auf den blauen Kreis in der Info-Leiste und dann auf den Menu-Eintrag 'Kommen/Gehen' klicken
+- Alternativ durch Drücken der Tastenkombination
+- Dadurch wird ein 'Gehen' registriert und der blaue Kreis verfäbt sich rot und das aktuelle 'Kommen/'Gehen' ist somit vollständig
+
+Kommen/Gehen: Arbeitsstunden erfassen:
+- Rechtsklick auf den roten Kreis in der Info-Leiste und dann auf den Menu-Eintrag 'Zeige Kommen/Gehen' klicken
+- Dadurch wird eine Übersicht aller Kommen/Gehen angezeigt
+- Mit dem Button 'Starte Zeiteingabe' wird ein Wizzard gestartet welcher pro Kommen/Gehen eine Eingabe-Maske zeigt
+- Auf dieser Maske werden alle nötigen Informationen des bearbeiteten Tickets eingetragen (Ticket-Nr, Leistungsart usw.)
+- Der Begin kann jeweils nicht verändert werden
+- Das Ende kann kleiner gewählt werden, nicht aber grösser als das Ende des 'Gehen'
+- Alternativ zum 'Ende' kann auch direkt die Anzahl Stunden eingegeben werden
+- Überschreitet diese Anzahl Stunden das Ende des 'Gehen' wird autmatisch dieses Ende gesetzt 
+- Wird ein kleineres 'Ende' eingegeben und 'Weiter' geklickt startet der Dialog mit dem eingegebenen End-Datum als neuer Begin
+- Dies wird so lange wiederholt bis die Arbeitsstunden für das letzte 'Kommen/Gehen' erfasst wurden.-
+- Beim letzten Eintrag wird anstelle von 'Weiter' 'Fertig' angezeigt und beim Klick darauf wird der Dialog beendet und die erfassten Stunden sind wie gewohnt in
+der Übersichtsseite ersichtlich
+- Klick auf 'Abbrechen' verwirft die gemachten Erfassungen
+
 Aufzeichnung starten:
 - Durch Klick auf den roten Kreis unten in der Info-Leiste
 - Durch Drücken der Tastenkombination, welche im turbo-bucher.properties definiert werden kann (Property StartStopHotKey)

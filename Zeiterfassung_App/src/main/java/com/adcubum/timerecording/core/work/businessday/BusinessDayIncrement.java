@@ -241,9 +241,6 @@ public class BusinessDayIncrement {
     *         before the given date. Otherwise return <code>false</code>
     */
    public boolean isBefore(Time time2Check) {
-
-      long days = time2Check.getDays();
-      Time bdTime = new Time(date.getTime());
-      return days > bdTime.getDays();
+      return new Time(date.getTime()).isBefore(time2Check);
    }
 }

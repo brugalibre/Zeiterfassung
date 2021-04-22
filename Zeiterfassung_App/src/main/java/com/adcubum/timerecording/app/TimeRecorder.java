@@ -19,6 +19,7 @@ import com.adcubum.timerecording.core.work.WorkStates;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
@@ -49,7 +50,7 @@ public class TimeRecorder {
    /**
     * The version of the application
     */
-   public static final String VERSION = "1.7.3";
+   public static final String VERSION = "1.8.0";
 
    private BusinessDay businessDay;
    private UiCallbackHandler callbackHandler;
@@ -94,18 +95,27 @@ public class TimeRecorder {
      *          </li>
      *	</ul>
      * @formatter:on
+    * @param comeOrGo <code>true</code> if the user started/stopped a come or go or <code>false</code> if the user started/stopped a recording
      * @return <code>true</code> if the {@link TimeRecorder} is working or
      *         <code>false</code> if not
      */
-   public boolean handleUserInteraction() {
+   public boolean handleUserInteraction(boolean comeOrGo) {
       switch (currentState) {
          case NOT_WORKING:
-            tryStartIfPossible();
+            if (comeOrGo) {
+               tryComeIfPossible();
+            } else {
+               tryStartIfPossible();
+            }
             return false;
-
          case WORKING:
             stop();
             return true;
+         case COME_AND_GO:
+            if (comeOrGo) {
+               go();
+            }
+            return false;
          case BOOKING:
             return false;
          default:
@@ -122,6 +132,18 @@ public class TimeRecorder {
       }
    }
 
+   private void tryComeIfPossible() {
+      if (businessDay.hasComeAndGoesFromPrecedentDays()) {
+         callbackHandler.displayMessage(Message.of(MessageType.ERROR,
+               TextLabel.COME_NOT_POSSIBLE_PRECEDENT_ELEMENTS, TextLabel.COME_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE));
+      } else if (businessDay.hasElementsFromPrecedentDays()) {
+         callbackHandler.displayMessage(Message.of(MessageType.ERROR,
+               TextLabel.COME_NOT_POSSIBLE_PRECEDENT_ELEMENTS, TextLabel.COME_NOT_POSSIBLE_PRECEDENT_BDINCREMENTS_TITLE));
+      } else {
+         come();
+      }
+   }
+
    /*
     * Stops the current recording. This leads the {@link TimeRecorder} to switch into the status {@link WorkStates#NOT_WORKING}.
     * Also the UI is shown in order to enter the Ticket-No
@@ -130,6 +152,18 @@ public class TimeRecorder {
       businessDay.stopCurrentIncremental();
       currentState = WorkStates.NOT_WORKING;
       callbackHandler.onStop();
+   }
+
+   private void go() {
+      currentState = WorkStates.NOT_WORKING;
+      businessDay.comeOrGo();
+      callbackHandler.onGo();
+   }
+
+   private void come() {
+      currentState = WorkStates.COME_AND_GO;
+      businessDay.comeOrGo();
+      callbackHandler.onCome();
    }
 
    private void start() {
@@ -156,6 +190,13 @@ public class TimeRecorder {
     */
    public void clear() {
       businessDay.clearFinishedIncrements();
+   }
+
+   /**
+    * removes all recorded {@link BusinessDayIncrement}
+    */
+   public void clearComeAndGoes() {
+      businessDay.clearComeAndGoes();
    }
 
    /**
@@ -192,6 +233,13 @@ public class TimeRecorder {
     */
    public void changeBusinesDayIncrement(ChangedValue changeValue) {
       businessDay.changeBusinesDayIncrement(changeValue);
+   }
+
+   /**
+    * Flags all {@link ComeAndGo}es of the {@link BusinessDay} as recorded
+    */
+   public void flagBusinessDayComeAndGoesAsRecorded() {
+      businessDay.flagComeAndGoesAsRecorded();
    }
 
    /////////////////////////////////////////////////////////////////////////////////////////////
@@ -319,6 +367,8 @@ public class TimeRecorder {
             return businessDay.getCapturingInactiveSinceMsg();
          case WORKING:
             return businessDay.getCapturingActiveSinceMsg();
+         case COME_AND_GO:
+            return businessDay.getComeAndGoMsg();
          case BOOKING:
             return TextLabel.BOOKING_RUNNING;
          default:

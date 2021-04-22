@@ -28,6 +28,8 @@ import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.launch.exception.ApplicationLaunchException;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.message.Message;
@@ -61,6 +63,8 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    private JMenuItem showImportDialogItem;
    private JMenuItem refreshTicketBacklogMenuItem;
    private JMenuItem doUserAuthenticationMenuItem;
+   private JMenuItem comeAndGoItem;
+   private JMenuItem showComeAndGoItem;
    private MainWindowPage mainWindowPage;
    private TrayIconDelegate trayIcon;
 
@@ -80,6 +84,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       createStartTurboBucherMenuItem();
       createDoUserAuthenticationMenuItem();
       createImportAufzeichnungMenueItem();
+      createComeAndGoMenueItem();
       JPopupMenu popupMenu = createPopupMenu(settingsRoundMenu, exitItem, closePopupItem);
       popupMenuSupplier.setJMenuePopup(popupMenu);
 
@@ -136,6 +141,20 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       return closePopupMenuItem;
    }
 
+   private void createComeAndGoMenueItem() {
+      comeAndGoItem = new JMenuItem(TextLabel.COME_OR_GO);
+      comeAndGoItem.addActionListener(actionEvent -> comeOrGo());
+      comeAndGoItem.setEnabled(true);
+      showComeAndGoItem = new JMenuItem(TextLabel.SHOW_COME_OR_GO);
+      showComeAndGoItem.addActionListener(actionEvent -> showComeAndGoOverview());
+      showComeAndGoItem.setEnabled(false);
+   }
+
+   private void comeOrGo() {
+      TimeRecorder.INSTANCE.handleUserInteraction(true);
+      showComeAndGoItem.setEnabled(true);
+   }
+
    private void createImportAufzeichnungMenueItem() {
       showImportDialogItem = new JMenuItem(TextLabel.SHOW_IMPORT_DIALOG_MENU_ITEM);
       showImportDialogItem.addActionListener(actionEvent -> showImportDialog());
@@ -164,6 +183,10 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       Platform.runLater(() -> mainWindowPage.showOverviewView());
    }
 
+   private void showComeAndGoOverview() {
+      Platform.runLater(() -> mainWindowPage.showComeAndGoOverview());
+   }
+
    private void showInputMask() {
       Platform.runLater(() -> mainWindowPage.showInputMask());
    }
@@ -173,9 +196,18 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       updateUIStates();
    }
 
+   private void handleCome() {
+      trayIcon.setImage(PictureLibrary.getComeOrGoImage());
+      updateUIStates();
+   }
+
+   private void handleGo() {
+      trayIcon.setImage(PictureLibrary.getNotWorkingImage());
+      updateUIStates();
+   }
+
    private void stopWorking() {
       trayIcon.setImage(PictureLibrary.getNotWorkingImage());
-      trayIcon.setToolTip(TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
       showHoursItem.setEnabled(false);
       startTurboBucher.setEnabled(false);
    }
@@ -184,14 +216,19 @@ public class TimeRecordingTray implements LoginCallbackHandler {
     * Updates the states of the button & elements
     */
    public void updateUIStates() {
+      BusinessDayVO bussinessDayVO = TimeRecorder.INSTANCE.getBussinessDayVO();
+      ComeAndGoes comeAndGoes = bussinessDayVO.getComeAndGoes();
       boolean isNotBooking = !TimeRecorder.INSTANCE.isBooking();
       boolean isUserAuthenticated = AuthenticationService.INSTANCE.isUserAuthenticated();
       boolean hasNotChargedElements = TimeRecorder.INSTANCE.hasNotChargedElements();
+      boolean hasNoComeAndGoes = comeAndGoes.getComeAndGoEntries().isEmpty();
       showHoursItem.setEnabled(TimeRecorder.INSTANCE.hasContent() && isNotBooking);
       startTurboBucher.setEnabled(TimeRecorder.INSTANCE.hasNotChargedElements() && isNotBooking);
       startTurboBucher.setEnabled(isUserAuthenticated && hasNotChargedElements && isNotBooking);
       doUserAuthenticationMenuItem.setEnabled(!isUserAuthenticated);
-      showImportDialogItem.setEnabled(hasNoContentAndIsNotRecording() && isNotBooking);
+      showImportDialogItem.setEnabled(hasNoContentAndIsNotRecording() && isNotBooking && hasNoComeAndGoes);
+      comeAndGoItem.setEnabled(!TimeRecorder.INSTANCE.isRecordindg());
+      showComeAndGoItem.setEnabled(!comeAndGoes.getComeAndGoEntries().isEmpty());
    }
 
    private boolean hasNoContentAndIsNotRecording() {
@@ -236,11 +273,21 @@ public class TimeRecordingTray implements LoginCallbackHandler {
          public void displayMessage(Message message) {
             TimeRecordingTray.this.displayMessage(message.getMessageTitle(), message.getMessage(), message.getMessageType());
          }
+
+         @Override
+         public void onCome() {
+            handleCome();
+         }
+
+         @Override
+         public void onGo() {
+            handleGo();
+         }
       };
    }
 
    private void handleUserInteractionAndShowInputIfStopped() {
-      if (TimeRecorder.INSTANCE.handleUserInteraction()) {
+      if (TimeRecorder.INSTANCE.handleUserInteraction(false)) {
          showInputMask();
       }
    }
@@ -393,6 +440,9 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       popupMenu.add(showImportDialogItem);
       popupMenu.add(startTurboBucher);
       popupMenu.add(showHoursItem);
+      popupMenu.addSeparator();
+      popupMenu.add(showComeAndGoItem);
+      popupMenu.add(comeAndGoItem);
       popupMenu.addSeparator();
       popupMenu.add(doUserAuthenticationMenuItem);
       popupMenu.add(closePopupItem);

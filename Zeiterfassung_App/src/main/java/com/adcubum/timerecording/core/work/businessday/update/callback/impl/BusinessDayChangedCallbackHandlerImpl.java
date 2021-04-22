@@ -19,4 +19,9 @@ public class BusinessDayChangedCallbackHandlerImpl implements BusinessDayChanged
    public void handleBusinessDayChanged(ChangedValue changeValue) {
       TimeRecorder.INSTANCE.changeBusinesDayIncrement(changeValue);
    }
+
+   @Override
+   public void flagBusinessDayComeAndGoesAsRecorded() {
+      TimeRecorder.INSTANCE.flagBusinessDayComeAndGoesAsRecorded();
+   }
 }

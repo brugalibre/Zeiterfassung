@@ -13,7 +13,7 @@ class DateParserTest {
    void testConvertInputWithNoLeadingZero() throws ParseException {
       // Given
       String input1 = "700";
-      String expectedConvertedInput = "07:00:00";
+      String expectedConvertedInput = "07:00";
       String input2 = "7:00";
 
       // When
@@ -28,8 +28,8 @@ class DateParserTest {
    @Test
    void testConvertInputWithDoublePoints() throws ParseException {
       // Given
-      String input = "15:20:00";
-      String expectedConvertedInput = "15:20:00";
+      String input = "15:20";
+      String expectedConvertedInput = "15:20";
 
       // When
       String actualConvertedInput = DateParser.convertInput(input);
@@ -42,7 +42,7 @@ class DateParserTest {
    void testConvertInputInputWithLotsOfZeros() throws ParseException {
       // Given
       String input = "101000000000000";
-      String expectedConvertedInput = "10:10:00";
+      String expectedConvertedInput = "10:10";
 
       // When
       String actualConvertedInput = DateParser.convertInput(input);
@@ -55,7 +55,7 @@ class DateParserTest {
    void testConvertInputWithoutDoublePoints() throws ParseException {
       // Given
       String input = "101100";
-      String expectedConvertedInput = "10:11:00";
+      String expectedConvertedInput = "10:11";
 
       // When
       String actualConvertedInput = DateParser.convertInput(input);
@@ -68,7 +68,7 @@ class DateParserTest {
    void testConvertInputWithoutSec() throws ParseException {
       // Given
       String input = "1010";
-      String expectedConvertedInput = "10:10:00";
+      String expectedConvertedInput = "10:10";
 
       // When
       String actualConvertedInput = DateParser.convertInput(input);

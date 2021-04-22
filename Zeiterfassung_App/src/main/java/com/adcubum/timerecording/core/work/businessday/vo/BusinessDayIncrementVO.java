@@ -5,6 +5,7 @@ package com.adcubum.timerecording.core.work.businessday.vo;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.jira.constants.TicketConst;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.util.parser.NumberFormat;
 import com.adcubum.util.utils.StringUtil;
@@ -60,7 +61,7 @@ public class BusinessDayIncrementVO {
    }
 
    public String getTicketNumber() {
-      return ticket != null ? ticket.getNr() : "SYRIUS";
+      return ticket != null ? ticket.getNr() : TicketConst.DEFAULT_TICKET_NAME;
    }
 
    public final int getChargeType() {

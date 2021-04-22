@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="rootPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.adcubum.timerecording.ui.app.pages.comeandgo.control.ComeAndGoOverviewController">
+   <children>
+      <StackPane>
+         <children>
+            <BorderPane fx:id="comeAndGoOverviewPane" prefHeight="130.0" prefWidth="290.0">
+               <top>
+                  <Label fx:id="comeAndGoesLabel" text="" BorderPane.alignment="CENTER_LEFT">
+                     <BorderPane.margin>
+                        <Insets bottom="5.0" left="5.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </top>
+               <center>
+                  <ScrollPane hbarPolicy="NEVER" prefWidth="290.0" BorderPane.alignment="CENTER">
+                     <content>
+                        <VBox fx:id="comeAndGoesContent" minHeight="5.0" minWidth="5.0" spacing="5.0">
+                           <padding>
+                              <Insets bottom="5.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                     <BorderPane.margin>
+                        <Insets bottom="5.0" />
+                     </BorderPane.margin>
+                  </ScrollPane>
+               </center>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="5.0" top="10.0" />
+               </padding>
+               <bottom>
+                  <GridPane hgap="5.0" BorderPane.alignment="CENTER">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Button fx:id="startAddBDIncrementButton" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="140.0" text="Start Button" />
+                        <Button fx:id="clearAllComeAndGoes" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="140.0" text="Clear All" GridPane.columnIndex="1" />
+                     </children>
+                  </GridPane>
+               </bottom>
+            </BorderPane>
+            <fx:include fx:id="addBDIncrementContentPane" source="../../stopbusinessday/view/StopBusinessDayIncrementPage.fxml" />
+         </children>
+      </StackPane>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</AnchorPane>

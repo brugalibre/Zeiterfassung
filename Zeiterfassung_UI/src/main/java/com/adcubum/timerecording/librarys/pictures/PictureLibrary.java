@@ -18,6 +18,8 @@ public class PictureLibrary {
    private static Image notWorkingImage;
    private static javafx.scene.image.Image clockImageIcon;
    private static javafx.scene.image.Image warningIcon;
+   private static ImageIcon comeOrGoImageIcon;
+   private static Image comeOrGoImage;
    private static ImageIcon notWorkingImageIcon;
    private static ImageIcon workingImageIcon;
 
@@ -33,6 +35,10 @@ public class PictureLibrary {
       URL notWorkingUrl = PictureLibrary.class.getResource(getPath() + "/not_working.png");
       notWorkingImageIcon = new ImageIcon(notWorkingUrl);
       notWorkingImage = notWorkingImageIcon.getImage();
+
+      URL comeOrGoImageIconUrl = PictureLibrary.class.getResource(getPath() + "/comeorgo.png");
+      comeOrGoImageIcon = new ImageIcon(comeOrGoImageIconUrl);
+      comeOrGoImage = comeOrGoImageIcon.getImage();
 
       URL workingUrl = PictureLibrary.class.getResource(getPath() + "/working.png");
       workingImageIcon = new ImageIcon(workingUrl);
@@ -63,6 +69,14 @@ public class PictureLibrary {
 
    public static ImageIcon getNotWorkingImageIcon() {
       return notWorkingImageIcon;
+   }
+
+   public static ImageIcon getComeOrGoImageIcon() {
+      return comeOrGoImageIcon;
+   }
+
+   public static Image getComeOrGoImage() {
+      return comeOrGoImage;
    }
 
    public static javafx.scene.image.Image getClockImageIcon() {

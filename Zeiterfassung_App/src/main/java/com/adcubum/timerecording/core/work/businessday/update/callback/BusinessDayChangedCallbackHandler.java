@@ -2,6 +2,7 @@ package com.adcubum.timerecording.core.work.businessday.update.callback;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 
@@ -32,4 +33,9 @@ public interface BusinessDayChangedCallbackHandler {
     *        the {@link BusinessDayIncrement} to add
     */
    public void handleBusinessDayIncrementAdd(BusinessDayIncrementAdd businessDayIncrementAdd);
+
+   /**
+    * Flags all {@link ComeAndGo}es of the {@link BusinessDay} as recorded
+    */
+   public void flagBusinessDayComeAndGoesAsRecorded();
 }

@@ -22,7 +22,6 @@ public class BusinessDayIncrementImport {
 
    private String ticketNo;
    private String description;
-   private String amountOfHours;
    private int kindOfService;
    private List<TimeSnippet> timeSnippets;
 
@@ -36,10 +35,6 @@ public class BusinessDayIncrementImport {
 
    public final String getDescription() {
       return this.description;
-   }
-
-   public final String getAmountOfHours() {
-      return this.amountOfHours;
    }
 
    public final int getKindOfService() {
@@ -60,10 +55,6 @@ public class BusinessDayIncrementImport {
 
    public void setTimeSnippets(List<TimeSnippet> timeSnippets) {
       this.timeSnippets = timeSnippets;
-   }
-
-   public final void setAmountOfHours(String amountOfHours) {
-      this.amountOfHours = amountOfHours;
    }
 
    public final void setKindOfService(int kindOfService) {

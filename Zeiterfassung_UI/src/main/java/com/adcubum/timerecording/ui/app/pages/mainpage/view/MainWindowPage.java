@@ -30,6 +30,10 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
       getMainWindowPageController().showOverviewView(getStage());
    }
 
+   public void showComeAndGoOverview() {
+      getMainWindowPageController().showComeAndGoOverview(getStage());
+   }
+
    public void showInputMask() {
       getMainWindowPageController().showInputMask(getStage());
    }

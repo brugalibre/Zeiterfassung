@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 
 /**
  * The {@link BusinessDayVO} is used whenever a we need
@@ -25,6 +26,7 @@ public class BusinessDayVO {
    private Date date;
    private boolean hasNotChargedElements;
    private boolean hasIncrementWithDescription;
+   private ComeAndGoes ComeAndGoes;
 
    /**
     * Returns the default representation of a date using the pattern 'dd.MM.yyyy'
@@ -59,6 +61,7 @@ public class BusinessDayVO {
             .collect(Collectors.toList());
       hasNotChargedElements = businessDay.hasNotChargedElements();
       hasIncrementWithDescription = businessDay.hasDescription();
+      this.ComeAndGoes = businessDay.getComeAndGoes();
    }
 
    public final List<BusinessDayIncrementVO> getBusinessDayIncrements() {
@@ -87,6 +90,10 @@ public class BusinessDayVO {
 
    public String getTotalDurationRep() {
       return String.valueOf(totalDuration);
+   }
+
+   public ComeAndGoes getComeAndGoes() {
+      return ComeAndGoes;
    }
 
    /**

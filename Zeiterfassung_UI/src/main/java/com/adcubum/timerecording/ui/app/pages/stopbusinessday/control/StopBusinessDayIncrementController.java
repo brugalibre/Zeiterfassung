@@ -6,10 +6,12 @@ package com.adcubum.timerecording.ui.app.pages.stopbusinessday.control;
 import static com.adcubum.util.utils.StringUtil.isEmptyOrNull;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 import java.awt.Toolkit;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
@@ -17,7 +19,6 @@ import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.ui.app.inputfield.AutoCompleteTextField;
 import com.adcubum.timerecording.ui.app.inputfield.InputFieldVerifier;
 import com.adcubum.timerecording.ui.app.pages.combobox.TicketComboboxItem;
-import com.adcubum.timerecording.ui.app.pages.mainpage.control.MainWindowController;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.model.StopBusinessDayIncrementPageModel;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.model.resolver.StopBusinessDayIncrementPageModelResolver;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
@@ -94,7 +95,7 @@ public class StopBusinessDayIncrementController extends BaseFXController<PageMod
    @FXML
    private Button abortButton;
 
-   private MainWindowController mainWindowController;
+   private Consumer<FinishAction> onFinishHandler;
 
    @Override
    public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -139,7 +140,7 @@ public class StopBusinessDayIncrementController extends BaseFXController<PageMod
    }
 
    @FXML
-   private void onAction(ActionEvent actionEvent) {
+   protected void onAction(ActionEvent actionEvent) {
       if (isFinish(actionEvent)) {
          submit();
       } else if (actionEvent.getSource() == abortButton) {
@@ -179,8 +180,9 @@ public class StopBusinessDayIncrementController extends BaseFXController<PageMod
       serviceCodesComboBox.getStyleClass().removeAll(Styles.INVALID_INPUT_LABEL);
       ticketNumberField.getStyleClass().removeAll(Styles.INVALID_INPUT_LABEL);
       amountOfHoursTextField.getStyleClass().removeAll(Styles.INVALID_INPUT_LABEL);
-      mainWindowController.finishOrAbortAndDispose(finishAction);
+      endTextField.getStyleClass().removeAll(Styles.INVALID_INPUT_LABEL);
       ticketNumberField.onDispose();
+      onFinishHandler.accept(finishAction);
    }
 
    private void submit() {
@@ -235,6 +237,7 @@ public class StopBusinessDayIncrementController extends BaseFXController<PageMod
       multipleTicketsNumberField.focusedProperty().addListener(multiTicketNrsChangedListener());
 
       beginTextField.textProperty().bindBidirectional(pageModel.getBeginTextFieldProperty());
+      beginTextField.editableProperty().bind(pageModel.getIsBeginTextFieldEnabledProperty());
       endTextField.textProperty().bindBidirectional(pageModel.getEndTextFieldProperty());
       amountOfHoursTextField.textProperty().bindBidirectional(pageModel.getAmountOfHoursTextFieldProperty());
       serviceCodesComboBox.itemsProperty().bindBidirectional(pageModel.getServiceCodesFieldProperty());
@@ -252,7 +255,9 @@ public class StopBusinessDayIncrementController extends BaseFXController<PageMod
       serviceCodesLabel.textProperty().bindBidirectional(pageModel.getServiceCodesLabelProperty());
 
       finishButton.textProperty().bindBidirectional(pageModel.getFinishButtonText());
+      finishButton.tooltipProperty().bind(pageModel.getFinishButtonToolTipTextProperty());
       abortButton.textProperty().bindBidirectional(pageModel.getAbortButtonText());
+      abortButton.disableProperty().bind(pageModel.getIsAbortButtonDisabledProperty());
       cancelButton.textProperty().bindBidirectional(pageModel.getCancelButtonText());
       abortButton.tooltipProperty().bind(pageModel.getAbortButtonToolTipText());
       cancelButton.tooltipProperty().bind(pageModel.getCancelButtonToolTipText());
@@ -334,10 +339,7 @@ public class StopBusinessDayIncrementController extends BaseFXController<PageMod
       return oldValue && !newValue && new InputFieldVerifier().verify(amountOfHoursTextField, false);
    }
 
-   /**
-    * @param mainWindowController;
-    */
-   public void setMainWindowController(MainWindowController mainWindowController) {
-      this.mainWindowController = mainWindowController;
+   public void setOnFinishHandler(Consumer<FinishAction> onFinishHandler) {
+      this.onFinishHandler = requireNonNull(onFinishHandler);
    }
 }

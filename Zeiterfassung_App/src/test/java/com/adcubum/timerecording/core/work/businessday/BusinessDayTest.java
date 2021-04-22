@@ -1,4 +1,4 @@
-package com.adcubum.timerecording.work.businessday;
+package com.adcubum.timerecording.core.work.businessday;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -8,24 +8,54 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import com.adcubum.timerecording.core.work.businessday.BusinessDay;
-import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
-import com.adcubum.timerecording.core.work.businessday.ValueTypes;
+import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
 import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.util.parser.DateParser;
 
-class BusinessDayTest {
+class BusinessDayTest extends BaseTestWithSettings {
+
+   @Test
+   void testGetComeAndGoMsgWithoutComeAndGoes() {
+      // Given
+      BusinessDay businessDay = new BusinessDay();
+
+      // When
+      Executable exe = () -> businessDay.getComeAndGoMsg();
+
+      // Then
+      assertThrows(IllegalStateException.class, exe);
+   }
+
+   @Test
+   void testGetCapturingSinceMsgWithUnfinishedIncrement() {
+      // Given
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.startNewIncremental();
+      BusinessDayIncrement currentBussinessDayIncremental = businessDay.getCurrentBussinessDayIncremental();
+      TimeSnippet currentTimeSnippet = currentBussinessDayIncremental.getCurrentTimeSnippet();
+
+      // When
+      String actualCapturingInactiveSinceMsg = businessDay.getCapturingActiveSinceMsg();
+
+      // Then
+      assertThat(actualCapturingInactiveSinceMsg, is(TextLabel.CAPTURING_ACTIVE_SINCE + " " + currentTimeSnippet.getBeginTimeStamp()));
+   }
+
    @Test
    public void testChangeDBIncTicketNr() {
 
@@ -356,6 +386,54 @@ class BusinessDayTest {
 
       // Then
       assertThat(actualHasElementsFromPrecedentDays, is(expectedHasElementsFromPrecedentDays));
+   }
+
+   @Test
+   void testHasComeAndGoesFromPrecedentDays_PrecedentComeAndGoes() throws ParseException {
+
+      // Given
+      boolean expectedHasComeAndGoesFromPrecedentDays = true;
+      String dateAsString = "01-02-2020";
+      String comeHourAndMinAsString = "10:00";
+      String goHourAndMinAsString = "12:00";
+      Time come = createTime(dateAsString, comeHourAndMinAsString);
+      Time go = createTime(dateAsString, goHourAndMinAsString);
+      ComeAndGoes comeAndGoes = ComeAndGoesImpl.of()
+            .comeOrGo(come)
+            .comeOrGo(go);
+      BusinessDay businessDay = new BusinessDay(new Date(), comeAndGoes);
+
+
+      // When
+      boolean actualHasComeAndGoesFromPrecedentDays = businessDay.hasComeAndGoesFromPrecedentDays();
+
+      // Then
+      assertThat(actualHasComeAndGoesFromPrecedentDays, is(expectedHasComeAndGoesFromPrecedentDays));
+   }
+
+   @Test
+   void testHasComeAndGoesFromPrecedentDays_PrecedentNoComeAndGoes() throws ParseException {
+
+      // Given
+      boolean expectedHasComeAndGoesFromPrecedentDays = false;
+      Time come = new Time();
+      Time go = new Time();
+      ComeAndGoes comeAndGoes = ComeAndGoesImpl.of()
+            .comeOrGo(come)
+            .comeOrGo(go);
+      BusinessDay businessDay = new BusinessDay(new Date(), comeAndGoes);
+
+
+      // When
+      boolean actualHasComeAndGoesFromPrecedentDays = businessDay.hasComeAndGoesFromPrecedentDays();
+
+      // Then
+      assertThat(actualHasComeAndGoesFromPrecedentDays, is(expectedHasComeAndGoesFromPrecedentDays));
+   }
+
+   private Time createTime(String dateAsString, String comeHourAndMinAsString) throws ParseException {
+      Date parsedDate = DateParser.parse2Date(dateAsString + " " + comeHourAndMinAsString, DateParser.DATE_PATTERN);
+      return new Time(parsedDate.getTime());
    }
 
    private Ticket getTicket4Nr() {
