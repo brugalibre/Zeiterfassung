@@ -7,5 +7,6 @@
 	<children>
 	    <fx:include fx:id="overviewPanel" source="../../overview/view/OverviewPage.fxml" />
 	    <fx:include fx:id="stopBusinessDayIncrementPanel" source="../../stopbusinessday/view/StopBusinessDayIncrementPage.fxml" />
+	    <fx:include fx:id="comeAndGoOverviewPanel" source="../../comeandgo/view/ComeAndGoOverviewPage.fxml" />
  	</children>
 </StackPane>

@@ -141,5 +141,11 @@ class TimeRecorder_ExportBusinessDayTest {
       public void displayMessage(Message message) {
 
       }
+
+      @Override
+      public void onCome() {}
+
+      @Override
+      public void onGo() {}
    }
 }

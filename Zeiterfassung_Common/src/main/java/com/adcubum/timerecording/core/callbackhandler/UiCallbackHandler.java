@@ -46,4 +46,14 @@ public interface UiCallbackHandler {
     *        the message to show
     */
    public void displayMessage(Message message);
+
+   /**
+    * Is called whenever a user has 'come'. This means, the user is marked as present at work
+    */
+   public void onCome();
+
+   /**
+    * Is called whenever a user has 'gone'. This means, the user is marked as afk
+    */
+   public void onGo();
 }

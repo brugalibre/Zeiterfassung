@@ -18,12 +18,11 @@ import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
-import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.jira.data.TicketComparator;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
@@ -32,8 +31,10 @@ import com.adcubum.timerecording.ui.app.pages.combobox.TicketComboboxItem;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.work.date.Time;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -51,6 +52,7 @@ import javafx.scene.control.Tooltip;
  */
 public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnippedChangedCallbackHandler {
 
+   private BusinessDayChangedCallbackHandler businessDayChangedCallbackHandler;
    private Property<String> ticketNoProperty;
    private StringProperty multipleTicketsNoFieldProperty;
    private Property<Ticket> ticketProperty;
@@ -76,13 +78,18 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    private StringProperty cancelButtonText;
    private ObservableValue<Tooltip> abortButtonToolTipText;
    private ObservableValue<Tooltip> cancelButtonToolTipText;
+   private ObservableValue<Tooltip> finishButtonToolTipTextProperty;
    private TimeSnippet timeSnippet;
+   private Time maxEndTime;// defines the max. value for the 'end'-time. 0 means there is no max value
+   private BooleanProperty isAbortButtonDisabledProperty;
+   private BooleanProperty isBeginTextFieldEnabledProperty;
+   private boolean isLastIncrementAmongOthers;
 
    /**
     * Creates a new {@link StopBusinessDayIncrementPageModel}
     */
-   public StopBusinessDayIncrementPageModel(BusinessDayIncrementVO businessDayIncrementVO) {
-
+   public StopBusinessDayIncrementPageModel(StopBusinessDayIncrementPageModelConstructorInfo pageModelConstructorInfo) {
+      this.businessDayChangedCallbackHandler = pageModelConstructorInfo.getBusinessDayChangedCallbackHandler();
       ticketNoLabelProperty = new SimpleStringProperty(TextLabel.TICKET_NUMBER_LABEL);
       multipleTicketsNoLabelProperty = new SimpleStringProperty(TextLabel.MULTIPLE_TICKETS_NUMBER_LABEL);
       descriptionLabelProperty = new SimpleStringProperty(TextLabel.DESCRIPTION_LABEL);
@@ -93,23 +100,32 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       finishButtonText = new SimpleStringProperty(TextLabel.FINISH_BUTTON_TEXT);
       abortButtonText = new SimpleStringProperty(TextLabel.ABORT_BUTTON_TEXT);
       cancelButtonText = new SimpleStringProperty(TextLabel.CANCEL_BUTTON_TEXT);
-      abortButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
-      cancelButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
+      setAbortButtonToolTipText(new SimpleObjectProperty<>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT)));
+      setFinishButtonToolTipTextProperty(new SimpleObjectProperty<>(new Tooltip(pageModelConstructorInfo.getFinishContinueButtonToolTipText())));
+      setCancelButtonToolTipText(new SimpleObjectProperty<>(new Tooltip(pageModelConstructorInfo.getAbortButtonToolTipText())));
 
-      amountOfHoursTextFieldProperty = new SimpleStringProperty(businessDayIncrementVO.getTotalDurationRep());
-      ticketNoProperty = new SimpleObjectProperty<>(businessDayIncrementVO.getTicketNumber());
+      amountOfHoursTextFieldProperty = new SimpleStringProperty(pageModelConstructorInfo.getTotalDurationRep());
+      ticketNoProperty = new SimpleObjectProperty<>(pageModelConstructorInfo.getTicketNumber());
       multipleTicketsNoFieldProperty = new SimpleStringProperty();
-      descriptionProperty = new SimpleObjectProperty<>(businessDayIncrementVO.getDescription());
+      descriptionProperty = new SimpleObjectProperty<>(pageModelConstructorInfo.getDescription());
 
       serviceCodesFieldProperty = new SimpleListProperty<>(getAllServiceCodeDescriptions());
       serviceCodesSelectedModelProperty = new SimpleObjectProperty<>();
       ticketProperty = new SimpleObjectProperty<>();
-      this.timeSnippet = businessDayIncrementVO.getCurrentTimeSnippet();
+      this.timeSnippet = pageModelConstructorInfo.getTimeSnippet();
+      if (nonNull(this.timeSnippet)) {
+         timeSnippet.setCallbackHandler(this);
+      }
       beginTextFieldProperty = new SimpleStringProperty(
-            timeSnippet != null ? timeSnippet.getBeginTimeStampRep() : "");
-      endTextFieldProperty = new SimpleStringProperty(timeSnippet != null ? timeSnippet.getEndTimeStampRep() : "");
+            getTimeSnippet() != null ? getTimeSnippet().getBeginTimeStampRep() : "");
+      endTextFieldProperty = new SimpleStringProperty(getTimeSnippet() != null ? getTimeSnippet().getEndTimeStampRep() : "");
       ticketComboboxItemsProperty = new SimpleListProperty<>(getTicketComboboxItems());
       ticketsProperty = new SimpleListProperty<>(getTickets());
+      isAbortButtonDisabledProperty = new SimpleBooleanProperty(!pageModelConstructorInfo.isAbortEnabled());
+      isBeginTextFieldEnabledProperty = new SimpleBooleanProperty(pageModelConstructorInfo.isBeginTextFieldEnabled());
+      this.setMaxEndTime(pageModelConstructorInfo.getMaxEndTime());
+      this.setIsLastIncrementAmongOthers(pageModelConstructorInfo.isLastIncrementAmongOthers());
+      onEndTimeStampChanged(pageModelConstructorInfo.getFinishContinueButtonToolTipText());
    }
 
    /**
@@ -118,7 +134,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     */
    public void updateAndSetBeginTimeStamp() {
       String newTimeStampValue = beginTextFieldProperty.getValue();
-      timeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue, false);
+      getTimeSnippet().updateAndSetBeginTimeStamp(newTimeStampValue, false);
    }
 
    /**
@@ -127,7 +143,44 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     */
    public void updateAndSetEndTimeStamp() {
       String newTimeStampValue = endTextFieldProperty.getValue();
-      timeSnippet.updateAndSetEndTimeStamp(newTimeStampValue, false);
+      getTimeSnippet().updateAndSetEndTimeStamp(newTimeStampValue, false);
+   }
+
+   /*
+    * If we can add more than one BusinessDayIncrement, the Finish-Button is renamed to 'next' instead of 'finished'
+    * when ever the entered end time is less then the max value
+    * We have to set 'next' in the following situations:
+    *    - the end value of the current increment is less than the allowed max value
+    *    - the end value is exactly the allowed value but there are other increments
+    */
+   public void onEndTimeStampChanged() {
+      String currentFinishComeAndGoButtonTooltipText =
+            isMultipleBDincCreatingEnabled() ? TextLabel.FINISH_COME_AND_GO_BUTTON_TOOLTIP_TEXT : TextLabel.FINISH_BUTTON_TOOLTIP_TEXT;
+      onEndTimeStampChanged(currentFinishComeAndGoButtonTooltipText);
+   }
+
+   protected void onEndTimeStampChanged(String currentFinishComeAndGoButtonTooltipText) {
+      getFinishButtonText().set(TextLabel.FINISH_BUTTON_TEXT);
+      getFinishButtonToolTipTextProperty().getValue().setText(currentFinishComeAndGoButtonTooltipText);
+      if (isEndValueNonNull()) {
+         boolean isEndTimeSmallerMaxValue = isEndTimeSmallerMaxValue();
+         if (hasNextIncrements()
+               && isEndTimeSmallerMaxValue) {
+            getFinishButtonText().set(TextLabel.NEXT_BUTTON_TEXT);
+            getFinishButtonToolTipTextProperty().getValue().setText(TextLabel.CONTINUE_COME_AND_GO_BUTTON_TOOLTIP_TEXT);
+         } else if (!isEndTimeSmallerMaxValue) {
+            timeSnippet.setEndTimeStamp(maxEndTime);
+         }
+      }
+   }
+
+   private boolean hasNextIncrements() {
+      return getTimeSnippet().getEndTimeStamp().getMinutes() < maxEndTime.getMinutes()
+            || !isLastIncrementAmongOthers();
+   }
+
+   private boolean isEndValueNonNull() {
+      return nonNull(getTimeSnippet()) && nonNull(getTimeSnippet().getEndTimeStamp());
    }
 
    /**
@@ -139,7 +192,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     */
    public void addAdditionallyTime() {
       String newEndAsString = amountOfHoursTextFieldProperty.getValue();
-      timeSnippet.addAdditionallyTime(newEndAsString);
+      getTimeSnippet().addAdditionallyTime(newEndAsString);
    }
 
    /**
@@ -149,10 +202,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     *        the given {@link StopBusinessDayIncrementPageModel}
     * @return the given {@link StopBusinessDayIncrementPageModel}
     */
-   public static StopBusinessDayIncrementPageModel of(StopBusinessDayIncrementPageModel inPageModel,
-         BusinessDayIncrementVO businessDayIncrementVO) {
-
-      inPageModel.timeSnippet = businessDayIncrementVO.getCurrentTimeSnippet();
+   public static <T extends StopBusinessDayIncrementPageModel> T of(T inPageModel,
+         StopBusinessDayIncrementPageModelConstructorInfo pageModelConstructorInfo) {
+      inPageModel.setBusinessDayChangedCallbackHandler(pageModelConstructorInfo.getBusinessDayChangedCallbackHandler());
       inPageModel.getTicketNoLabelProperty().set(TextLabel.TICKET_NUMBER_LABEL);
       inPageModel.getMultipleTicketsNoLabelProperty().set(TextLabel.MULTIPLE_TICKETS_NUMBER_LABEL);
       inPageModel.getDescriptionLabelProperty().set(TextLabel.DESCRIPTION_LABEL);
@@ -164,21 +216,31 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       inPageModel.getAbortButtonText().set(TextLabel.ABORT_BUTTON_TEXT);
       inPageModel.getCancelButtonText().set(TextLabel.CANCEL_BUTTON_TEXT);
 
-      inPageModel.abortButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT));
-      inPageModel.cancelButtonToolTipText = new SimpleObjectProperty<>(new Tooltip(TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT));
-      inPageModel.getTicketNoProperty().setValue(businessDayIncrementVO.getTicketNumber());
+      inPageModel.getAbortButtonToolTipText().getValue().setText(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT);
+      inPageModel.getFinishButtonToolTipTextProperty().getValue().setText(pageModelConstructorInfo.getFinishContinueButtonToolTipText());
+      inPageModel.getCancelButtonToolTipText().getValue().setText(pageModelConstructorInfo.getAbortButtonToolTipText());
+      inPageModel.getTicketNoProperty().setValue(pageModelConstructorInfo.getTicketNumber());
       inPageModel.getMultipleTicketsNoFieldProperty().setValue("");
-      inPageModel.getDescriptionProperty().setValue(businessDayIncrementVO.getDescription());
+      inPageModel.getDescriptionProperty().setValue(pageModelConstructorInfo.getDescription());
       inPageModel.getTicketProperty().setValue(null);
 
-      inPageModel.getAmountOfHoursTextFieldProperty().set(businessDayIncrementVO.getTotalDurationRep());
+      inPageModel.getAmountOfHoursTextFieldProperty().set(pageModelConstructorInfo.getTotalDurationRep());
       inPageModel.getServiceCodesFieldProperty().setValue(getAllServiceCodeDescriptions());
       inPageModel.getTicketComboboxItemsProperty().setValue(getTicketComboboxItems());
       inPageModel.getTicketsProperty().setValue(getTickets());
 
-      inPageModel.timeSnippet.setCallbackHandler(inPageModel);
-      inPageModel.getBeginTextFieldProperty().set(inPageModel.timeSnippet.getBeginTimeStampRep());
-      inPageModel.getEndTextFieldProperty().set(inPageModel.timeSnippet.getEndTimeStampRep());
+      inPageModel.setTimeSnippet(pageModelConstructorInfo.getTimeSnippet());
+      boolean isTimeSnippetNonNull = nonNull(inPageModel.getTimeSnippet());
+      if (isTimeSnippetNonNull) {
+         inPageModel.getTimeSnippet().setCallbackHandler(inPageModel);
+      }
+      inPageModel.getBeginTextFieldProperty().set(isTimeSnippetNonNull ? inPageModel.getTimeSnippet().getBeginTimeStampRep() : "");
+      inPageModel.getEndTextFieldProperty().set(isTimeSnippetNonNull ? inPageModel.getTimeSnippet().getEndTimeStampRep() : "");
+      inPageModel.getIsAbortButtonDisabledProperty().set(!pageModelConstructorInfo.isAbortEnabled());
+      inPageModel.getIsBeginTextFieldEnabledProperty().set(pageModelConstructorInfo.isBeginTextFieldEnabled());
+      inPageModel.setMaxEndTime(pageModelConstructorInfo.getMaxEndTime());
+      inPageModel.setIsLastIncrementAmongOthers(pageModelConstructorInfo.isLastIncrementAmongOthers());
+      inPageModel.onEndTimeStampChanged(pageModelConstructorInfo.getFinishContinueButtonToolTipText());
       return inPageModel;
    }
 
@@ -224,15 +286,16 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    public void handleTimeSnippedChanged(ChangedValue changeValue) {
       switch (changeValue.getValueTypes()) {
          case BEGIN:
-            amountOfHoursTextFieldProperty.set(timeSnippet.getDurationRep());
-            beginTextFieldProperty.set(timeSnippet.getBeginTimeStampRep());
+            amountOfHoursTextFieldProperty.set(getTimeSnippet().getDurationRep());
+            beginTextFieldProperty.set(getTimeSnippet().getBeginTimeStampRep());
             break;
          case END:
-            amountOfHoursTextFieldProperty.set(timeSnippet.getDurationRep());
-            endTextFieldProperty.set(timeSnippet.getEndTimeStampRep());
+            amountOfHoursTextFieldProperty.set(getTimeSnippet().getDurationRep());
+            endTextFieldProperty.set(getTimeSnippet().getEndTimeStampRep());
+            onEndTimeStampChanged();
             break;
          case AMOUNT_OF_TIME:
-            endTextFieldProperty.set(timeSnippet.getEndTimeStampRep());
+            endTextFieldProperty.set(getTimeSnippet().getEndTimeStampRep());
             break;
          default:
             // ignore
@@ -267,6 +330,22 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    }
 
    /**
+    * Returns <code>true</code> if the entered value for the end-time stamp is smaller then the allowed max. value
+    * 
+    * @return <code>true</code> if the entered value for the end-time stamp is smaller then the allowed max. value
+    */
+   private boolean isEndTimeSmallerMaxValue() {
+      if (isMultipleBDincCreatingEnabled()) {
+         return maxEndTime.getMinutes() >= timeSnippet.getEndTimeStamp().getMinutes();
+      }
+      return true;
+   }
+
+   private boolean isMultipleBDincCreatingEnabled() {
+      return maxEndTime.getMinutes() > 0;
+   }
+
+   /**
     * Adds the recorded informations as new {@link BusinessDayIncrement}
     * 
     * @param kindOfService
@@ -274,7 +353,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     */
    public void addIncrement2BusinessDay(int kindOfService) {
       if (nonNull(ticketProperty.getValue())) {
-         addIncrement2BusinessDayInternal(kindOfService, ticketProperty.getValue(), timeSnippet);
+         addIncrement2BusinessDayInternal(kindOfService, ticketProperty.getValue(), getTimeSnippet());
       } else {
          addMultipleaIncrement2BusinessDay(kindOfService, multipleTicketsNoFieldProperty.getValue());
       }
@@ -282,9 +361,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    private void addMultipleaIncrement2BusinessDay(int kindOfService, String ticketNoPropValue) {
       String[] ticketNrs = ticketNoPropValue.split(MULTI_TICKET_DELIMITER);
-      Time currentBeginTimeStamp = timeSnippet.getBeginTimeStamp();
+      Time currentBeginTimeStamp = getTimeSnippet().getBeginTimeStamp();
       for (String ticketNr : ticketNrs) {
-         TimeSnippet currentTimeSnippet = timeSnippet.createTimeStampForIncrement(currentBeginTimeStamp, ticketNrs.length);
+         TimeSnippet currentTimeSnippet = getTimeSnippet().createTimeStampForIncrement(currentBeginTimeStamp, ticketNrs.length);
          Ticket ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticketNr);
          addIncrement2BusinessDayInternal(kindOfService, ticket, currentTimeSnippet);
          currentBeginTimeStamp = currentTimeSnippet.getEndTimeStamp();
@@ -298,7 +377,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
             .withTicket(ticket)
             .withKindOfService(kindOfService)
             .build();
-      new BusinessDayChangedCallbackHandlerImpl().handleBusinessDayIncrementAdd(update);
+      businessDayChangedCallbackHandler.handleBusinessDayIncrementAdd(update);
    }
 
    public final Property<String> getTicketNoProperty() {
@@ -377,6 +456,10 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       return this.cancelButtonText;
    }
 
+   public ObservableValue<Tooltip> getFinishButtonToolTipTextProperty() {
+      return finishButtonToolTipTextProperty;
+   }
+
    public ObservableValue<Tooltip> getAbortButtonToolTipText() {
       return abortButtonToolTipText;
    }
@@ -399,5 +482,57 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    public void setTicketProperty(Property<Ticket> ticketProperty) {
       this.ticketProperty = ticketProperty;
+   }
+
+   public void setBusinessDayChangedCallbackHandler(BusinessDayChangedCallbackHandler businessDayChangedCallbackHandler) {
+      this.businessDayChangedCallbackHandler = businessDayChangedCallbackHandler;
+   }
+
+   public void setTimeSnippet(TimeSnippet timeSnippet) {
+      this.timeSnippet = timeSnippet;
+   }
+
+   public void setAbortButtonToolTipText(ObservableValue<Tooltip> abortButtonToolTipText) {
+      this.abortButtonToolTipText = abortButtonToolTipText;
+   }
+
+   public void setFinishButtonToolTipTextProperty(ObservableValue<Tooltip> finishButtonToolTipText) {
+      this.finishButtonToolTipTextProperty = finishButtonToolTipText;
+   }
+
+   public void setCancelButtonToolTipText(ObservableValue<Tooltip> cancelButtonToolTipText) {
+      this.cancelButtonToolTipText = cancelButtonToolTipText;
+   }
+
+   public TimeSnippet getTimeSnippet() {
+      return timeSnippet;
+   }
+
+   public BooleanProperty getIsAbortButtonDisabledProperty() {
+      return isAbortButtonDisabledProperty;
+   }
+
+   public BooleanProperty getIsBeginTextFieldEnabledProperty() {
+      return isBeginTextFieldEnabledProperty;
+   }
+
+   public void setMaxEndTime(Time maxEndTime) {
+      this.maxEndTime = maxEndTime;
+   }
+
+   public void setIsLastIncrementAmongOthers(boolean isLastIncrementAmongOthers) {
+      this.isLastIncrementAmongOthers = isLastIncrementAmongOthers;
+   }
+
+   public boolean isLastIncrementAmongOthers() {
+      return isLastIncrementAmongOthers;
+   }
+
+   public BusinessDayChangedCallbackHandler getBusinessDayChangedCallbackHandler() {
+      return businessDayChangedCallbackHandler;
+   }
+
+   public Time getMaxEndTime() {
+      return maxEndTime;
    }
 }

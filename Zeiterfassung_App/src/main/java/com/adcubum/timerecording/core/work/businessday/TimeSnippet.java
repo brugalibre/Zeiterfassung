@@ -3,6 +3,8 @@
  */
 package com.adcubum.timerecording.core.work.businessday;
 
+import static java.util.Objects.requireNonNull;
+
 import java.text.ParseException;
 import java.util.Date;
 
@@ -32,6 +34,24 @@ public class TimeSnippet {
 
    public TimeSnippet(Date date) {
       this.date = date;
+   }
+
+   public TimeSnippet(Time time) {
+      this.date = new Date(time.getTime());
+   }
+
+   /**
+    * Creates a copy of the given {@link TimeSnippet}
+    * 
+    * @param otherTimeSnippet
+    *        the other {@link TimeSnippet} to create a copy of
+    */
+   public TimeSnippet(TimeSnippet otherTimeSnippet) {
+      requireNonNull(otherTimeSnippet);
+      this.date = otherTimeSnippet.date;
+      this.beginTimeStamp = otherTimeSnippet.beginTimeStamp;
+      this.endTimeStamp = otherTimeSnippet.endTimeStamp;
+      this.callbackHandler = otherTimeSnippet.callbackHandler;
    }
 
    /**
@@ -117,8 +137,10 @@ public class TimeSnippet {
     * @return the amount of minutes between the start, and end-point
     */
    public float getDuration(TIME_TYPE type) {
-      Time endTimeSnippet = (endTimeStamp != null ? endTimeStamp : new Time(System.currentTimeMillis()));
-      long time = endTimeSnippet.getTime() - getBeginTimeStamp().getTime();
+      long now = System.currentTimeMillis();
+      Time endTimeSnippet = (endTimeStamp != null ? endTimeStamp : new Time(now));
+      Time tmpBeginTimeStamp = (beginTimeStamp != null ? beginTimeStamp : new Time(now));
+      long time = endTimeSnippet.getTime() - tmpBeginTimeStamp.getTime();
       int factor = (int) Time.getTimeRefactorValue(type);
 
       return NumberFormat.parse(time, factor);

@@ -12,6 +12,9 @@ import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayIncrementImport;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement.TimeStampComparator;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.jira.data.Ticket;
@@ -43,12 +46,24 @@ public class BusinessDay {
    private CopyOnWriteArrayList<BusinessDayIncrement> increments;
    // the current increment which has been started but not yet finished so far
    private BusinessDayIncrement currentBussinessDayIncremental;
+   // the amount of times a user comes and goes during the day
+   private ComeAndGoes comeAndGoes;
 
    /**
     * Creates a new {@link BusinessDay}
     */
    public BusinessDay() {
       initialize(new Date());
+   }
+
+   /**
+    * Creates a new {@link BusinessDay}
+    * Constructor only for testing purpose!
+    */
+   BusinessDay(Date date, ComeAndGoes comeAndGoes) {
+      increments = new CopyOnWriteArrayList<>();
+      currentBussinessDayIncremental = new BusinessDayIncrement(date);
+      this.comeAndGoes = comeAndGoes;
    }
 
    /**
@@ -64,14 +79,28 @@ public class BusinessDay {
    private void initialize(Date date) {
       increments = new CopyOnWriteArrayList<>();
       currentBussinessDayIncremental = new BusinessDayIncrement(date);
+      this.comeAndGoes = ComeAndGoesImpl.of();
    }
 
    /**
     * Resumes the {@link #currentBussinessDayIncremental}
     */
    public void resumeLastIncremental() {
-
       currentBussinessDayIncremental.resumeLastTimeSnippet();
+   }
+
+   /**
+    * triggers a manually come or go
+    */
+   public void comeOrGo() {
+      comeAndGoes = comeAndGoes.comeOrGo();
+   }
+
+   /**
+    * Flags all {@link ComeAndGo}es of the {@link BusinessDay} as recorded
+    */
+   public void flagComeAndGoesAsRecorded() {
+      comeAndGoes = comeAndGoes.flagComeAndGoesAsRecorded();
    }
 
    /**
@@ -138,9 +167,18 @@ public class BusinessDay {
 
    /**
     * Deletes all {@link BusinessDayIncrement} which are already finished
+    * Also this deletes al {@link ComeAndGo}es which are done
     */
    public void clearFinishedIncrements() {
       increments.clear();
+      clearComeAndGoes();
+   }
+
+   /**
+    * Deletes all {@link ComeAndGo}es which are done
+    */
+   public void clearComeAndGoes() {
+      comeAndGoes = comeAndGoes.clearDoneComeAndGoes();
    }
 
    public float getTotalDuration() {
@@ -153,6 +191,10 @@ public class BusinessDay {
 
    public List<BusinessDayIncrement> getIncrements() {
       return increments;
+   }
+
+   public ComeAndGoes getComeAndGoes() {
+      return comeAndGoes;
    }
 
    /**
@@ -234,7 +276,20 @@ public class BusinessDay {
     */
    public boolean hasElementsFromPrecedentDays() {
       Time now = new Time();
-      return increments.stream().anyMatch(bDayInc -> bDayInc.isBefore(now));
+      return increments.stream()
+            .anyMatch(bDayInc -> bDayInc.isBefore(now));
+   }
+
+   /**
+    * Verifies if there is any {@link ComeAndGo} which was recorded e.g.
+    * during a preceding day
+    * 
+    * @return <code>true</code> if there is at least one
+    *         {@link ComeAndGo} which was recorded on a preceding day or
+    *         <code>false</code> if not
+    */
+   public boolean hasComeAndGoesFromPrecedentDays() {
+      return comeAndGoes.hasComeAndGoesFromPrecedentDays();
    }
 
    /**
@@ -246,6 +301,20 @@ public class BusinessDay {
       TimeSnippet startPoint = currentBussinessDayIncremental.getCurrentTimeSnippet();
       String time = startPoint.getDuration() > 0 ? " (" + startPoint.getDuration() + "h)" : "";
       return TextLabel.CAPTURING_ACTIVE_SINCE + " " + startPoint.getBeginTimeStamp() + time;
+   }
+
+   /**
+    * @return a message representing the come and go state
+    */
+   public String getComeAndGoMsg() {
+      TimeSnippet currentComeAndGoTimeSnippet = getCurrentComeAndGoTimeSnippet();
+      return TextLabel.CAPTURING_INACTIVE + ". " + TextLabel.COME_OR_GO + ": " + currentComeAndGoTimeSnippet.getBeginTimeStampRep();
+   }
+
+   private TimeSnippet getCurrentComeAndGoTimeSnippet() {
+      return comeAndGoes.getCurrentComeAndGo()
+            .map(ComeAndGo::getComeAndGoTimeStamp)
+            .orElseThrow(() -> new IllegalStateException("This should never happen! If we are in state 'ComeOrGo' then there must be at least one"));
    }
 
    /**
@@ -333,7 +402,6 @@ public class BusinessDay {
    private void createNewIncremental() {
       currentBussinessDayIncremental = new BusinessDayIncrement(new Date());
    }
-
 
    private float getTotalDuration(TIME_TYPE type) {
       float sum = 0;

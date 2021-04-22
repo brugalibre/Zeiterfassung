@@ -29,6 +29,8 @@ import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
@@ -48,6 +50,51 @@ class TimeRecorderTest extends BaseTestWithSettings {
       super.cleanUp();
       TimeRecorder.INSTANCE.clear();
       TimeRecorder.INSTANCE.init();
+   }
+
+   @Test
+   public void testCreateAndDeleteComeAndGo() {
+
+      // Given
+      TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
+      TestCaseBuilder tcb = new TestCaseBuilder(TimeRecorder.INSTANCE)
+            .setCallbackHandler(testUiCallbackHandler)
+            .build();
+
+      // When
+      tcb.timeRecorder.handleUserInteraction(true);// come
+      tcb.timeRecorder.handleUserInteraction(true);// go
+      BusinessDayVO bussinessDayVO = tcb.timeRecorder.getBussinessDayVO();
+      int amountOfComeAndGoesBeforeDeletion = bussinessDayVO.getComeAndGoes().getComeAndGoEntries().size();
+      tcb.timeRecorder.clearComeAndGoes();
+      bussinessDayVO = tcb.timeRecorder.getBussinessDayVO();
+      int amountOfComeAndGoesAfterDeletion = bussinessDayVO.getComeAndGoes().getComeAndGoEntries().size();
+
+      // Then
+      assertThat(amountOfComeAndGoesBeforeDeletion, is(1));
+      assertThat(amountOfComeAndGoesAfterDeletion, is(0));
+   }
+
+   @Test
+   public void testCreateAndDeleteComeAndGoAndFlagAsRecorded() {
+
+      // Given
+      TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
+      TestCaseBuilder tcb = new TestCaseBuilder(TimeRecorder.INSTANCE)
+            .setCallbackHandler(testUiCallbackHandler)
+            .build();
+
+      // When
+      tcb.timeRecorder.handleUserInteraction(true);// come
+      tcb.timeRecorder.handleUserInteraction(true);// go
+      tcb.timeRecorder.flagBusinessDayComeAndGoesAsRecorded();
+
+      BusinessDayVO bussinessDayVO = tcb.timeRecorder.getBussinessDayVO();
+
+      // Then
+      assertThat(bussinessDayVO.getComeAndGoes().getComeAndGoEntries().size(), is(1));
+      ComeAndGo comeAndGo = bussinessDayVO.getComeAndGoes().getComeAndGoEntries().get(0);
+      assertThat(comeAndGo.isNotRecorded(), is(false));
    }
 
    @Test
@@ -127,10 +174,44 @@ class TimeRecorderTest extends BaseTestWithSettings {
             .build();
 
       // When
-      TimeRecorder.INSTANCE.handleUserInteraction();
+      TimeRecorder.INSTANCE.handleUserInteraction(false);
 
       // Then
       verify(testUiCallbackHandler, never()).onStart();
+      assertThat(testUiCallbackHandler.receivedMessageType, is(MessageType.ERROR));
+   }
+
+   @Test
+   void testComeWithComeAndGoesFromPrecedentDay_DoNotStart() {
+      // Given, add an existing increment from the 01.02.2020
+      TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
+      BusinessDay businessDay = mock(BusinessDay.class);
+      when(businessDay.hasComeAndGoesFromPrecedentDays()).thenReturn(true);
+      TimeRecorder timeRecorder = new TimeRecorder(mock(BookerAdapter.class), businessDay);
+      timeRecorder.setCallbackHandler(testUiCallbackHandler);
+
+      // When
+      timeRecorder.handleUserInteraction(true);
+
+      // Then
+      verify(testUiCallbackHandler, never()).onCome();
+      assertThat(testUiCallbackHandler.receivedMessageType, is(MessageType.ERROR));
+   }
+
+   @Test
+   void testComeWithBDIncrementsFromPrecedentDay_DoNotStart() {
+      // Given, add an existing increment from the 01.02.2020
+      TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
+      TestCaseBuilder tcb = new TestCaseBuilder(TimeRecorder.INSTANCE)
+            .withBusinessDayIncrement("SYRIUS-534534", "Test", 113, 600 * 1000)
+            .setCallbackHandler(testUiCallbackHandler)
+            .build();
+
+      // When
+      tcb.timeRecorder.handleUserInteraction(true);
+
+      // Then
+      verify(testUiCallbackHandler, never()).onCome();
       assertThat(testUiCallbackHandler.receivedMessageType, is(MessageType.ERROR));
    }
 
@@ -141,9 +222,9 @@ class TimeRecorderTest extends BaseTestWithSettings {
       TimeRecorder.INSTANCE.setCallbackHandler(testUiCallbackHandler);
 
       // When
-      TimeRecorder.INSTANCE.handleUserInteraction();
+      TimeRecorder.INSTANCE.handleUserInteraction(false);
       Thread.sleep(500);
-      TimeRecorder.INSTANCE.handleUserInteraction();
+      TimeRecorder.INSTANCE.handleUserInteraction(false);
 
       // Then
       BusinessDayVO bussinessDayVO = TimeRecorder.INSTANCE.getBussinessDayVO();
@@ -164,7 +245,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
       TimeRecorder.INSTANCE.setCallbackHandler(testUiCallbackHandler);
 
       // When
-      TimeRecorder.INSTANCE.handleUserInteraction();
+      TimeRecorder.INSTANCE.handleUserInteraction(false);
       boolean isRecordingAfterFirstHandle = TimeRecorder.INSTANCE.isRecordindg();
       boolean actualIsBooking = TimeRecorder.INSTANCE.isBooking();
 
@@ -185,11 +266,11 @@ class TimeRecorderTest extends BaseTestWithSettings {
       TimeRecorder.INSTANCE.setCallbackHandler(testUiCallbackHandler);
 
       // When
-      TimeRecorder.INSTANCE.handleUserInteraction();
+      TimeRecorder.INSTANCE.handleUserInteraction(false);
       boolean isRecordingAfterFirstHandle = TimeRecorder.INSTANCE.isRecordindg();
       Thread.sleep(500);
 
-      TimeRecorder.INSTANCE.handleUserInteraction();
+      TimeRecorder.INSTANCE.handleUserInteraction(false);
       boolean isRecordingAfterSecondHandle = TimeRecorder.INSTANCE.isRecordindg();
       BusinessDayIncrementVO currentBussinessDayIncrement = TimeRecorder.INSTANCE.getCurrentBussinessDayIncrement();
       assertThat(currentBussinessDayIncrement.getCurrentTimeSnippet().getBeginTimeStamp(), is(notNullValue()));
@@ -227,12 +308,31 @@ class TimeRecorderTest extends BaseTestWithSettings {
       startBookThread.start();
       Thread.sleep(50);
       boolean actualIsBooking = timeRecorder.isBooking();
-      boolean actualHandle = timeRecorder.handleUserInteraction();
+      boolean actualHandle = timeRecorder.handleUserInteraction(false);
 
       // Then
       verify(bookAdapter).book(any());
       assertThat(actualIsBooking, is(true));
       assertThat(actualHandle, is(false));
+   }
+
+   @Test
+   void testBook_StartWhileComeAndGoIsEnabled() throws InterruptedException {
+
+      // Given
+      TestCaseBuilder tcb = new TestCaseBuilder(TimeRecorder.INSTANCE)
+            .setCallbackHandler(new TestUiCallbackHandler())
+            .build();
+
+      // When
+      // start come and go
+      tcb.timeRecorder.handleUserInteraction(true);
+      boolean isActualHandleUserInteraction = tcb.timeRecorder.handleUserInteraction(false);
+
+      // Then
+      ComeAndGoes comeAndGoes = tcb.timeRecorder.getBussinessDayVO().getComeAndGoes();
+      assertThat(isActualHandleUserInteraction, is(false));
+      assertThat(comeAndGoes.getComeAndGoEntries().size(), is(1));
    }
 
    @Test
@@ -368,7 +468,22 @@ class TimeRecorderTest extends BaseTestWithSettings {
       String expectedInfoStatePrefix = "Zeiterfassung aktiv seit: ";
 
       // When
-      TimeRecorder.INSTANCE.handleUserInteraction();
+      TimeRecorder.INSTANCE.handleUserInteraction(false);
+      String infoStringForStateNotWorking = TimeRecorder.INSTANCE.getInfoStringForState();
+
+      // Then
+      assertThat(infoStringForStateNotWorking.startsWith(expectedInfoStatePrefix), is(true));
+   }
+
+   @Test
+   void testGetInfoStringForStateComeAndGo() {
+
+      // Given
+      TimeRecorder.INSTANCE.setCallbackHandler(mock(TestUiCallbackHandler.class));
+      String expectedInfoStatePrefix = TextLabel.CAPTURING_INACTIVE + ". " + TextLabel.COME_OR_GO;
+
+      // When
+      TimeRecorder.INSTANCE.handleUserInteraction(true);
       String infoStringForStateNotWorking = TimeRecorder.INSTANCE.getInfoStringForState();
 
       // Then
@@ -541,7 +656,18 @@ class TimeRecorderTest extends BaseTestWithSettings {
       private TestCaseBuilder withBusinessDayIncrement(String ticketNr, String description, int kindOfService, int timeSnippedDuration) {
          Ticket ticket = mockTicket(ticketNr);
          businessDayIncrementAdds.add(new BusinessDayIncrementAddBuilder()
-               .withTimeSnippet(createTimeSnippet(timeSnippedDuration))
+               .withTimeSnippet(createTimeSnippet(timeSnippedDuration, false))
+               .withDescription(description)
+               .withTicket(ticket)
+               .withKindOfService(kindOfService)
+               .build());
+         return this;
+      }
+
+      private TestCaseBuilder withBusinessDayIncrementFromToday(String ticketNr, String description, int kindOfService, int timeSnippedDuration) {
+         Ticket ticket = mockTicket(ticketNr);
+         businessDayIncrementAdds.add(new BusinessDayIncrementAddBuilder()
+               .withTimeSnippet(createTimeSnippet(timeSnippedDuration, true))
                .withDescription(description)
                .withTicket(ticket)
                .withKindOfService(kindOfService)
@@ -566,8 +692,13 @@ class TimeRecorderTest extends BaseTestWithSettings {
          }
       }
 
-      private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) {
+      private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd, boolean isToday) {
          GregorianCalendar startDate = new GregorianCalendar(2020, 1, 1);// year, month (starts at zero!), day, hours, min, second
+         if (isToday) {
+            startDate = new GregorianCalendar();
+         } else {
+            startDate = new GregorianCalendar(2020, 1, 1);// year, month (starts at zero!), day, hours, min, second
+         }
          Time beginTimeStamp = new Time(startDate.getTimeInMillis());
          TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
          timeSnippet.setBeginTimeStamp(beginTimeStamp);
@@ -648,6 +779,16 @@ class TimeRecorderTest extends BaseTestWithSettings {
       @Override
       public void displayMessage(Message message) {
          this.receivedMessageType = message.getMessageType();
+      }
+
+      @Override
+      public void onCome() {
+         // empty
+      }
+
+      @Override
+      public void onGo() {
+         // empty
       }
    }
 }

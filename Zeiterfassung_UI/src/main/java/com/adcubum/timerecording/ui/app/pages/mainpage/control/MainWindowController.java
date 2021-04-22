@@ -10,6 +10,7 @@ import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
+import com.adcubum.timerecording.ui.app.pages.comeandgo.control.ComeAndGoOverviewController;
 import com.adcubum.timerecording.ui.app.pages.mainpage.model.MainWindowPageModel;
 import com.adcubum.timerecording.ui.app.pages.overview.control.OverviewController;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishAction;
@@ -38,6 +39,12 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
    private OverviewController overviewPanelController;
    @FXML
    private Region overviewPanel;
+
+   @FXML
+   private ComeAndGoOverviewController comeAndGoOverviewPanelController;
+   @FXML
+   private Region comeAndGoOverviewPanel;
+
    @FXML
    private StopBusinessDayIncrementController stopBusinessDayIncrementPanelController;
    @FXML
@@ -48,11 +55,10 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 
    @Override
    public void initialize(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {
-
       super.initialize(mainWindowPage);
       overviewPanelController.init(this);
-      stopBusinessDayIncrementPanelController.setMainWindowController(this);
-
+      comeAndGoOverviewPanelController.setOnFinishHandler(this::finishOrAbortAndDispose);
+      stopBusinessDayIncrementPanelController.setOnFinishHandler(this::finishOrAbortAndDispose);
       Stage stage = getStage();
       stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
       stage.getIcons().add(PictureLibrary.getClockImageIcon());
@@ -63,8 +69,10 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
     * Refreshes the {@link StopBusinessDayIncrementPage} if the content is currently visible
     */
    public void refreshStopBusinessDayPage() {
-      if (stopBusinessDayIncrementPanel.isVisible()) {
+      if (containsRegionAlready(stopBusinessDayIncrementPanel)) {
          stopBusinessDayIncrementPanelController.refresh();
+      } else if (containsRegionAlready(comeAndGoOverviewPanel)) {
+         comeAndGoOverviewPanelController.refresh();
       }
    }
 
@@ -80,6 +88,13 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
          overviewPanelController.refresh();
       }
       showPane(stage, overviewPanel, overviewPanelController, overviewPanelController);
+   }
+
+   public void showComeAndGoOverview(Stage stage) {
+      if (containsRegionAlready(comeAndGoOverviewPanel)) {
+         comeAndGoOverviewPanelController.refresh();
+      }
+      showPane(stage, comeAndGoOverviewPanel, comeAndGoOverviewPanelController, comeAndGoOverviewPanelController);
    }
 
    private boolean containsRegionAlready(Region region) {
@@ -157,7 +172,7 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 
    @Override
    protected void setBinding(MainWindowPageModel pageVO) {
-      // Nothing to do since this Page only contains two sub pages
+      // Nothing to do since this Page contains only sub pages
    }
 
    public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
@@ -165,5 +180,6 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       overviewPanelController.setTimeRecordingTray(timeRecordingTray);
       Stage stage = getStage();
       overviewPanelController.setMainPanel(stage);
+      comeAndGoOverviewPanelController.init(stage);
    }
 }

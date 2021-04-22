@@ -122,6 +122,43 @@ public class Time {
       }
    }
 
+   /**
+    * Returns <code>true</code> if this {@link Time} has been started
+    * before the given date or <code>false</code> if not
+    * Note that this methods only compares the days of both {@link Time} instances.
+    * 
+    * @param time2Check
+    *        the {@link Time} to check
+    * @return <code>true</code> if this {@link Time} has been started
+    *         before the given date, otherwise returns <code>false</code>
+    */
+   public boolean isBefore(Time time2Check) {
+      long days = time2Check.getDays();
+      return this.getDays() < days;
+   }
+
+   @Override
+   public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      return prime * result + ((duration == null) ? 0 : duration.hashCode());
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj) {
+         return true;
+      }
+      if (obj == null) {
+         return false;
+      }
+      if (getClass() != obj.getClass()) {
+         return false;
+      }
+      Time other = (Time) obj;
+      return duration.getStandardSeconds() == other.duration.getStandardSeconds();
+   }
+
    @Override
    public String toString() {
       return DateParser.parse2String(this);
@@ -138,6 +175,13 @@ public class Time {
     */
    public long getTime() {
       return duration.getMillis();
+   }
+
+   /**
+    * @return the amount of minutes of this Time instance
+    */
+   public long getMinutes() {
+      return duration.getStandardMinutes();
    }
 
    /**

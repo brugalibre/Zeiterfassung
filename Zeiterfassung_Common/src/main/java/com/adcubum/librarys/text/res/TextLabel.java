@@ -18,6 +18,8 @@ public class TextLabel {
    public static final String CLOSE_POPUP_MENU = "Menu schliessen";
 
    public static final String FINISH_BUTTON_TEXT = "Fertig";
+   public static final String FINISH_BUTTON_TOOLTIP_TEXT = "Erfassung abschliessen";
+   public static final String NEXT_BUTTON_TEXT = "Weiter";
    public static final String CANCEL_BUTTON_TEXT = "Abbrechen";
    public static final String CANCEL_BUTTON_TOOLTIP_TEXT = "Bricht die Eingabe ab und setzt Aufzeichnung fort";
    public static final String ABORT_BUTTON_TEXT = "Alles verwerfen";
@@ -95,4 +97,19 @@ public class TextLabel {
    public static final String USERNAME_FIELD_PROMPT = "ADUser";
    public static final String USER_PW_FIELD_PROMPT = "AD-Password";
    public static final String LOGIN_FAILED_LABEL = "Login fehlgeschlagen!";
+
+   // Come or go stuff
+   public static final String COME_OR_GO = "Kommen/Gehen";
+   public static final String SHOW_COME_OR_GO = "Zeige " + COME_OR_GO;
+   public static final String START_CREATING_BD_INC = "Starte Zeiteingabe";
+   public static final String COME_OR_GO_RECORDED_TEXT = "(Eingegeben)";
+   public static final String FINISH_COME_AND_GO_BUTTON_TOOLTIP_TEXT = "Kommen/Gehen Zeiteingabe abschliessen";
+   public static final String CONTINUE_COME_AND_GO_BUTTON_TOOLTIP_TEXT = "Zeiteingabe mit nächstem Kommen/Gehen fortsetzen";
+   public static final String ABORT_COME_AND_GO_BUTTON_TOOLTIP_TEXT = "Zeiteingabe abbrechen";
+   public static final String EXISTS_RECORD_FOR_COME_AND_GO = "Zeiten erfasst";
+   public static final String COME_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE = "Kommen/Gehen nicht möglich!";
+   public static final String COME_NOT_POSSIBLE_PRECEDENT_ELEMENTS =
+         "Es sind noch Kommen/Gehen-Elemente von vergangenen Tagen vorhanden! Diese zuerst verarbeiten bzw. löschen";
+   public static final String COME_NOT_POSSIBLE_PRECEDENT_BDINCREMENTS_TITLE =
+         "Es sind bereits erfasste Zeiten von vergangenen Tagen vorhanden! Diese zuerst abbuchen bzw. löschen";
 }

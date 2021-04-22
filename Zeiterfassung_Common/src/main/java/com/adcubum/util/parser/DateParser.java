@@ -70,12 +70,12 @@ public class DateParser {
       String yearMonthDayInfo = currentDateAsString.substring(0, currentDateAsString.length() - 8);
       // Append the information about hour, minutes and seconds to the given
       // information
-      Date date = df.parse(yearMonthDayInfo + convertInput(input));
+      Date date = df.parse(yearMonthDayInfo + convertInputWithSeconds(input));
       return new Time(date.getTime());
    }
 
    /**
-    * Converts the given input into the format hh:mm:ss regardless if the input is
+    * Converts the given input into the format hh:mm regardless if the input is
     * already in that form or not
     * 
     * @param input
@@ -91,11 +91,24 @@ public class DateParser {
          }
          String hour = neutralizedInput.substring(0, 2);
          String min = neutralizedInput.substring(2, 4);
-         String sec = "00";
-         return new StringBuilder(hour + DOUBLE_POINT + min + DOUBLE_POINT + sec).toString();
+         return new StringBuilder(hour + DOUBLE_POINT + min).toString();
       } catch (StringIndexOutOfBoundsException e) {
          throw new ParseException(input, 0);
       }
+   }
+
+   /**
+    * Converts the given input into the format hh:mm:ss regardless if the input is
+    * already in that form or not
+    * 
+    * @param input
+    *        the input to parse, e.q. 1215 or 12:15 resp. 700 or 7:00 or 0700
+    * @return a converted input, always with ':'
+    * @throws ParseException
+    */
+   public static String convertInputWithSeconds(String input) throws ParseException {
+      String sec = "00";
+      return convertInput(input) + DOUBLE_POINT + sec;
    }
 
    public static Date parse2Date(String readLine, String dateRepPattern) throws ParseException {
