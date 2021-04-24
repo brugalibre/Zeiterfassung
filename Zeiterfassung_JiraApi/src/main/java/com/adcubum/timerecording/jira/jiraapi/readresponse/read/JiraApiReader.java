@@ -116,8 +116,8 @@ public class JiraApiReader implements UserAuthenticatedObservable {
             .forEach(activeSprintIssues::applyFromOther);
    }
 
-   private Predicate<SprintInfo> isRelevantSprint(List<String> sprintNames) {
-      return sprintInfo -> sprintNames.isEmpty() || sprintNames.contains(sprintInfo.sprintName);
+   private static Predicate<SprintInfo> isRelevantSprint(List<String> sprintNames) {
+      return sprintInfo -> sprintNames.contains(sprintInfo.sprintName);
    }
 
    private SprintInfo evalActiveSprint4BoardName(String boardName) {
