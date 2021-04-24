@@ -162,19 +162,21 @@ class JiraApiReaderTest {
    void testReadTicketsFromBoard_WithTickets() {
       // Given
       String boardName = "My not so favorit Jira Board Name";
+      String futurSprintName = "futurSprintName";
       JiraIssue jiraIssue = new JiraIssue();
       jiraIssue.setId("1");
       JiraIssue futureJiraIssue = new JiraIssue();
       futureJiraIssue.setId("2");
       JiraApiReader jiraApiReader = new TestCaseBuilder()
             .withBoardName(boardName)
-            .withFutureSprintId("2")
+            .withFutureSprintId("2", futurSprintName)
             .withReceivedSprintIssues(Collections.singletonList(jiraIssue))
             .withReceivedFutureSprintIssues(Collections.singletonList(futureJiraIssue))
             .build();
 
       // When
-      JiraApiReadTicketsResult actualJiraApiReadTicketsResult = jiraApiReader.readTicketsFromBoardAndSprints(boardName, Collections.emptyList());
+      JiraApiReadTicketsResult actualJiraApiReadTicketsResult =
+            jiraApiReader.readTicketsFromBoardAndSprints(boardName, Collections.singletonList(futurSprintName));
 
       // Then
       assertThat(actualJiraApiReadTicketsResult, is(notNullValue()));
@@ -225,6 +227,7 @@ class JiraApiReaderTest {
       private String boardName;
       private List<JiraIssue> futureIssues;
       private String futurSprintId;
+      private String futurSprintName;
 
       private TestCaseBuilder() {
          this.httpClient = mock(HttpClient.class);
@@ -251,8 +254,9 @@ class JiraApiReaderTest {
          return this;
       }
 
-      public TestCaseBuilder withFutureSprintId(String futurSprintId) {
+      public TestCaseBuilder withFutureSprintId(String futurSprintId, String futurSprintName) {
          this.futurSprintId = futurSprintId;
+         this.futurSprintName = futurSprintName;
          return this;
       }
 
@@ -296,14 +300,14 @@ class JiraApiReaderTest {
          String boardId = issues.isEmpty() ? SprintInfo.UNKNOWN : "boardId25";
          String sprintId = "1";
          mockReadTicket4TicketNr();
-         mockReadTicketsFromBoardName(boardId, sprintId, futurSprintId);
+         mockReadTicketsFromBoardName(boardId, sprintId, futurSprintId, futurSprintName);
          return new JiraApiReader(httpClient);
       }
 
-      private void mockReadTicketsFromBoardName(String boardId, String sprintId, String futurSprintId) {
-         prepareReadResults(boardId, sprintId, issues, jiraGetSprintResponse);
+      private void mockReadTicketsFromBoardName(String boardId, String sprintId, String futurSprintId, String futurSprintName) {
+         prepareReadResults(boardId, sprintId, null, issues, jiraGetSprintResponse);
          if (nonNull(futurSprintId)) {
-            prepareReadResults(boardId, futurSprintId, futureIssues, jiraGetFuturSprintResponse);
+            prepareReadResults(boardId, futurSprintId, futurSprintName, futureIssues, jiraGetFuturSprintResponse);
          }
          mockReadBoards();
          mockReadSprint(boardId);
@@ -336,7 +340,7 @@ class JiraApiReaderTest {
                .thenReturn(jiraGetFuturSprintResponse);
       }
 
-      private void prepareReadResults(String boardId, String sprintId, List<JiraIssue> sprintIssues,
+      private void prepareReadResults(String boardId, String sprintId, String sprintName, List<JiraIssue> sprintIssues,
             JiraGenericValuesResponse jiraGetSprintResponse) {
          // If we except to receive any tickets from the sprint, we have to set the 'values' in the sprint result -> we found a sprint -> go ahead for the tickets
          if (!sprintIssues.isEmpty()) {
@@ -347,6 +351,7 @@ class JiraApiReaderTest {
 
             GenericNameAttrs genericSprintNameAttrs = new GenericNameAttrs();
             genericSprintNameAttrs.setId(sprintId);
+            genericSprintNameAttrs.setName(sprintName);
             jiraGetSprintResponse.setValues(Collections.singletonList(genericSprintNameAttrs));
          }
       }
