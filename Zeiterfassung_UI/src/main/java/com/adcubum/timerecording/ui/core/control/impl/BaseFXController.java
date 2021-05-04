@@ -33,16 +33,9 @@ public abstract class BaseFXController<I extends PageModel, O extends PageModel>
       // Nothing to do by default
    }
 
-   /**
-    * Shows the content of this controller. For the most common case we cast the
-    * 'incoming' datamodl to the 'outgoing' in order to initialize it. If this
-    * behavior is unwanted, override this method
-    */
-   @SuppressWarnings("unchecked")
    @Override
-   public void show() {
-      initDataModel((I) dataModel);
-      super.show();
+   public void show(I dataModelIn) {
+      initDataModel(dataModelIn);
       Optional<Stage> optionalStage = getStage(page);
       optionalStage.ifPresent(showStage());
    }

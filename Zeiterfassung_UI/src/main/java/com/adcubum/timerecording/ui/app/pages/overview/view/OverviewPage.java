@@ -5,13 +5,14 @@ package com.adcubum.timerecording.ui.app.pages.overview.view;
 
 import com.adcubum.timerecording.ui.app.pages.overview.control.OverviewController;
 import com.adcubum.timerecording.ui.app.pages.overview.model.OverviewPageModel;
+import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.view.impl.AbstractFXSubPage;
 
 /**
  * @author Dominic
  *
  */
-public class OverviewPage extends AbstractFXSubPage<OverviewPageModel, OverviewPageModel> {
+public class OverviewPage extends AbstractFXSubPage<PageModel, OverviewPageModel> {
 
    /**
     * @param controller

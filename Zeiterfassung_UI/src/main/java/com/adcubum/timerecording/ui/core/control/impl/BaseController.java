@@ -72,26 +72,13 @@ public abstract class BaseController<I extends PageModel, O extends PageModel>
    // SHOW & REFRESH //
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   @SuppressWarnings("unchecked")
    @Override
    public void refresh() {
       if (page.isDirty()) {
-         show();
+         show((I) dataModel);
       }
    }
-
-   /**
-    * Invokes the {@link Controller#show()} for the Page, which was set recently by
-    * invoking {@link #setCurrentPage(PageID)}
-    */
-   @Override
-   public void show() {
-      showCurrentPage();
-   }
-
-   /**
-   * 
-   */
-   protected void showCurrentPage() {}
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    // GETTER AND SETTER //

@@ -26,9 +26,12 @@ public interface Controller<I extends PageModel, O extends PageModel> {
    public void initialize(Page<I, O> page);
 
    /**
-    * Forces this Controller to update and finally show it's content
+    * This leads this {@link Controller} to show it's content, given the initial datamodel
+    * 
+    * @param dataModelIn
+    *        the incoming {@link PageModel}
     */
-   public void show();
+   public void show(I dataModelIn);
 
    /**
     * Leads this {@link Controller} to hides it's content

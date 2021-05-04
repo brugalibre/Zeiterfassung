@@ -26,6 +26,7 @@ import com.adcubum.timerecording.ui.app.pages.overview.model.table.BusinessDayTa
 import com.adcubum.timerecording.ui.app.pages.overview.view.OverviewPage;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishAction;
 import com.adcubum.timerecording.ui.core.control.impl.BaseFXController;
+import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.model.resolver.PageModelResolver;
 import com.adcubum.timerecording.ui.core.view.Page;
 import com.adcubum.timerecording.ui.core.view.table.TableUtil;
@@ -53,7 +54,7 @@ import javafx.stage.WindowEvent;
  * @author Dominic
  * 
  */
-public class OverviewController extends BaseFXController<OverviewPageModel, OverviewPageModel>
+public class OverviewController extends BaseFXController<PageModel, OverviewPageModel>
       implements EventHandler<WindowEvent> {
 
    private MainWindowController mainWindowController;
@@ -96,7 +97,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
    }
 
    @Override
-   public void initialize(Page<OverviewPageModel, OverviewPageModel> page) {
+   public void initialize(Page<PageModel, OverviewPageModel> page) {
       createBookerService();
       super.initialize(page);
       businessDayTableModel = new BusinessDayTableModelHelper(new StringBusinessDayChangeHelper(finishAction -> refreshUI()),
@@ -132,8 +133,8 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
    }
 
    @Override
-   public void show() {
-      super.show();
+   public void show(PageModel dataModelIn) {
+      super.show(dataModelIn);
       BusinessDayVO businessDayVO = dataModel.getBusinessDayVO();
       businessDayTableModel.init(businessDayVO, tableView);
       changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.hasBusinessDayDescription());
@@ -169,7 +170,6 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
 
    @FXML
    private void onAction(ActionEvent actionEvent) {
-
       if (actionEvent.getSource() == clearButton) {
          mainWindowController.clearBusinessDayContents();
          mainWindowController.dispose();
@@ -192,7 +192,7 @@ public class OverviewController extends BaseFXController<OverviewPageModel, Over
    }
 
    @Override
-   protected PageModelResolver<OverviewPageModel, OverviewPageModel> createPageModelResolver() {
+   protected PageModelResolver<PageModel, OverviewPageModel> createPageModelResolver() {
       return new OverviewPageModelResolver();
    }
 

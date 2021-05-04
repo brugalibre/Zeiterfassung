@@ -38,8 +38,8 @@ public class OverviewPageModel implements PageModel {
    public OverviewPageModel(BusinessDayVO businessDayVO) {
       this.businessDayVO = businessDayVO;
       isChargeButtonDisabled = new SimpleBooleanProperty(isBookButtonDisabled(businessDayVO));
-      isClearButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
-      isExportButtonDisabled = new SimpleBooleanProperty(businessDayVO.hasNotChargedElements());
+      isClearButtonDisabled = new SimpleBooleanProperty(!businessDayVO.hasNotChargedElements());
+      isExportButtonDisabled = new SimpleBooleanProperty(!businessDayVO.hasNotChargedElements());
 
       bookButtonLabel = new SimpleStringProperty(TextLabel.CHARGE_LABEL);
       exportButtonLabel = new SimpleStringProperty(TextLabel.EXPORT_LABEL);
