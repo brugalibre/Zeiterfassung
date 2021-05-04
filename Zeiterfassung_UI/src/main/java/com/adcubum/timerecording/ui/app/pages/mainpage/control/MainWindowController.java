@@ -15,15 +15,19 @@ import com.adcubum.timerecording.ui.app.pages.overview.control.OverviewControlle
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishAction;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
+import com.adcubum.timerecording.ui.core.control.Controller;
 import com.adcubum.timerecording.ui.core.control.impl.BaseFXController;
 import com.adcubum.timerecording.ui.core.dialog.FileImportDialogHelper;
+import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.model.resolver.PageModelResolver;
 import com.adcubum.timerecording.ui.core.view.Page;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * @author Dominic
@@ -69,28 +73,32 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
    }
 
    public void showInputMask(Stage stage) {
-
-      mainPanel.getChildren().clear();
-      mainPanel.getChildren().add(stopBusinessDayIncrementPanel);
-
-      initStage4NewComponent(stage, stopBusinessDayIncrementPanel);
-      stopBusinessDayIncrementPanelController.show();
-
-      stage.toFront();
-      stage.setOnCloseRequest(stopBusinessDayIncrementPanelController);
-      show();
+      if (containsRegionAlready(stopBusinessDayIncrementPanel)) {
+         stopBusinessDayIncrementPanelController.refresh();
+      }
+      showPane(stage, stopBusinessDayIncrementPanel, stopBusinessDayIncrementPanelController, stopBusinessDayIncrementPanelController);
    }
 
    public void showOverviewView(Stage stage) {
+      if (containsRegionAlready(overviewPanel)) {
+         overviewPanelController.refresh();
+      }
+      showPane(stage, overviewPanel, overviewPanelController, overviewPanelController);
+   }
 
+   private boolean containsRegionAlready(Region region) {
+      return mainPanel.getChildren().contains(region) && region.isVisible();
+   }
+
+   private void showPane(Stage stage, Region content4Controller, Controller<PageModel, ?> controller, EventHandler<WindowEvent> eventHandler) {
       mainPanel.getChildren().clear();
-      mainPanel.getChildren().add(overviewPanel);
+      mainPanel.getChildren().add(content4Controller);
 
-      overviewPanelController.show();
-      initStage4NewComponent(stage, overviewPanel);
+      controller.show(dataModel);
+      initStage4NewComponent(stage, content4Controller);
 
-      stage.setOnCloseRequest(overviewPanelController);
-      show();
+      stage.setOnCloseRequest(eventHandler);
+      show(dataModel);
    }
 
    /**

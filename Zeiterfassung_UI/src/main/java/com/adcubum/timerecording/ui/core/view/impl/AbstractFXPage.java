@@ -59,7 +59,7 @@ public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
 
    @Override
    public void show() {
-      getController().show();
+      getController().show(null);
    }
 
    protected Optional<Stage> getStageOptional() {

@@ -23,6 +23,7 @@ import com.adcubum.timerecording.ui.app.pages.stopbusinessday.model.resolver.Sto
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
 import com.adcubum.timerecording.ui.app.styles.Styles;
 import com.adcubum.timerecording.ui.core.control.impl.BaseFXController;
+import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.model.resolver.PageModelResolver;
 
 import javafx.beans.value.ChangeListener;
@@ -43,8 +44,7 @@ import javafx.util.Callback;
  * @author Dominic
  *
  */
-public class StopBusinessDayIncrementController
-      extends BaseFXController<StopBusinessDayIncrementPageModel, StopBusinessDayIncrementPageModel>
+public class StopBusinessDayIncrementController extends BaseFXController<PageModel, StopBusinessDayIncrementPageModel>
       implements EventHandler<WindowEvent> {
 
    @FXML
@@ -122,8 +122,8 @@ public class StopBusinessDayIncrementController
    }
 
    @Override
-   public void show() {
-      super.show();
+   public void show(PageModel dataModelIn) {
+      super.show(dataModelIn);
       disableOrEnable(multipleTicketsNumberField, true);
       disableOrEnable(ticketNumberField, false);
       ticketNumberComboBox.getSelectionModel().clearSelection();
@@ -171,7 +171,7 @@ public class StopBusinessDayIncrementController
    }
 
    @Override
-   protected PageModelResolver<StopBusinessDayIncrementPageModel, StopBusinessDayIncrementPageModel> createPageModelResolver() {
+   protected PageModelResolver<PageModel, StopBusinessDayIncrementPageModel> createPageModelResolver() {
       return new StopBusinessDayIncrementPageModelResolver();
    }
 

@@ -18,6 +18,7 @@ import com.adcubum.timerecording.ui.core.control.impl.BaseFXController;
 import com.adcubum.timerecording.ui.core.model.resolver.PageModelResolver;
 import com.adcubum.timerecording.ui.core.view.Page;
 import com.adcubum.timerecording.ui.security.login.auth.model.LoginPageModel;
+import com.adcubum.timerecording.ui.security.login.auth.model.resolver.LoginPageModelResolver;
 import com.adcubum.timerecording.ui.security.login.service.LoginService;
 import com.adcubum.timerecording.ui.util.ExceptionUtil;
 
@@ -63,10 +64,10 @@ public class LoginController extends BaseFXController<LoginPageModel, LoginPageM
    private LoginCallbackHandler loginCallbackHandler;
 
    @Override
-   public void show() {
+   public void show(LoginPageModel dataModelIn) {
       // Since we set the username in the pagemodel already we travers the focus to the password field. Since show() is blocking, we have to do this first
       userPwdField.requestFocus();
-      super.show();
+      super.show(dataModelIn);
    }
 
    @Override
@@ -164,7 +165,7 @@ public class LoginController extends BaseFXController<LoginPageModel, LoginPageM
 
    @Override
    protected PageModelResolver<LoginPageModel, LoginPageModel> createPageModelResolver() {
-      return oldPageModel -> nonNull(oldPageModel) ? oldPageModel : new LoginPageModel();
+      return new LoginPageModelResolver();
    }
 
    @Override
