@@ -4,6 +4,9 @@
  */
 package com.adcubum.timerecording.ui.app;
 
+import static com.adcubum.timerecording.ui.app.settings.hotkey.HotKeyManager.COME_OR_GO_HOT_KEY;
+import static com.adcubum.timerecording.ui.app.settings.hotkey.HotKeyManager.START_STOP_HOT_KEY;
+
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.TrayIcon;
@@ -92,7 +95,12 @@ public class TimeRecordingTray implements LoginCallbackHandler {
 
       trayIcon.addMouseMotionListener(getMouseMotionListener());
       trayIcon.addMouseListener(getMouseListener(popupMenu));
-      HotKeyManager.INSTANCE.registerHotKey(this::handleUserInteractionAndShowInputIfStopped);
+      registerHotKeys();
+   }
+
+   private void registerHotKeys() {
+      HotKeyManager.INSTANCE.registerHotKey(() -> handleUserInteractionAndShowInputIfStopped(false), START_STOP_HOT_KEY);
+      HotKeyManager.INSTANCE.registerHotKey(() -> handleUserInteractionAndShowInputIfStopped(true), COME_OR_GO_HOT_KEY);
    }
 
    private void initTicketBacklog() {
@@ -286,8 +294,8 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       };
    }
 
-   private void handleUserInteractionAndShowInputIfStopped() {
-      if (TimeRecorder.INSTANCE.handleUserInteraction(false)) {
+   private void handleUserInteractionAndShowInputIfStopped(boolean comeOrGo) {
+      if (TimeRecorder.INSTANCE.handleUserInteraction(comeOrGo)) {
          showInputMask();
       }
    }
@@ -419,7 +427,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
          @Override
          public void mouseClicked(MouseEvent e) {
             if (e.getButton() == MouseEvent.BUTTON1) {
-               handleUserInteractionAndShowInputIfStopped();
+               handleUserInteractionAndShowInputIfStopped(false);
             } else if (e.isPopupTrigger()) {
                handleMouseEvent(popupMenu, e);
             }
