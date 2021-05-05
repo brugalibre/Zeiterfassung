@@ -5,71 +5,77 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="320.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController">
    <children>
-      <HBox spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane hgap="5.0" prefHeight="320.0" prefWidth="290.0" vgap="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="160.0" minWidth="10.0" prefWidth="160.0" />
+            <ColumnConstraints />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
          <children>
-            <VBox prefWidth="100.0" spacing="5.0">
+            <Label fx:id="ticketNumberLabel" prefHeight="30.0" text="ticketNumberLabel" />
+            <HBox prefHeight="30.0" prefWidth="170.0" GridPane.columnIndex="1">
                <children>
-                  <Label fx:id="ticketNumberLabel" prefHeight="30.0" text="ticketNumberLabel" />
-                  <Label fx:id="multipleTicketsNumberLabel" prefHeight="30.0" text="multipleTicketNumberLabel" />
-                  <Label fx:id="descriptionLabel" prefHeight="30.0" text="descriptionLabel" />
-                  <Label fx:id="beginLabel" prefHeight="30.0" text="beginLabel" />
-                  <Label fx:id="endLabel" prefHeight="30.0" text="endLabel" />
-                  <Label fx:id="amountOfHoursLabel" prefHeight="30.0" text="amountOfHoursLabel" />
-                  <Label fx:id="serviceCodesLabel" prefHeight="30.0" text="serviceCodesLabel" />
+                  <AutoCompleteTextField fx:id="ticketNumberField" prefHeight="30.0" prefWidth="130.0" style="-fx-font-weight: normal;" />
+                  <ComboBox fx:id="ticketNumberComboBox" maxWidth="5.0" onAction="#onAction" prefHeight="30.0" prefWidth="5.0" style="-fx-font-weight: normal;" />
                </children>
-               <padding>
-                  <Insets bottom="5.0" />
-               </padding>
-            </VBox>
-            <VBox prefWidth="170.0" spacing="5.0">
+            </HBox>
+            <Label fx:id="multipleTicketsNumberLabel" prefHeight="30.0" text="multipleTicketNumberLabel" GridPane.rowIndex="1" />
+            <TextField fx:id="multipleTicketsNumberField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="descriptionLabel" prefHeight="30.0" text="descriptionLabel" GridPane.rowIndex="2" />
+            <TextField fx:id="descriptionTextField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="beginLabel" prefHeight="30.0" text="beginLabel" GridPane.rowIndex="3" />
+            <TextField id="beginTextField" fx:id="beginTextField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="endLabel" prefHeight="30.0" text="endLabel" GridPane.rowIndex="4" />
+            <TextField id="endTextField" fx:id="endTextField" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="amountOfHoursLabel" prefHeight="30.0" text="amountOfHoursLabel" GridPane.rowIndex="5" />
+            <TextField id="amountOfHoursTextField" fx:id="amountOfHoursTextField" onAction="#onAction" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label fx:id="serviceCodesLabel" prefHeight="30.0" text="serviceCodesLabel" GridPane.rowIndex="6" />
+            <ComboBox fx:id="serviceCodesComboBox" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <GridPane hgap="5.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
                <children>
-                  <HBox prefHeight="30.0" prefWidth="170.0">
-                     <children>
-                        <AutoCompleteTextField fx:id="ticketNumberField" prefHeight="30.0" prefWidth="143.0" style="-fx-font-weight: normal;" />
-                        <ComboBox fx:id="ticketNumberComboBox" maxWidth="5.0" onAction="#onAction" prefHeight="30.0" prefWidth="5.0" style="-fx-font-weight: normal;" />
-                     </children>
-                  </HBox>
-                  <TextField fx:id="multipleTicketsNumberField" prefHeight="30.0" />
-                  <TextField fx:id="descriptionTextField" prefHeight="30.0" />
-                  <TextField id="beginTextField" fx:id="beginTextField" prefHeight="30.0" />
-                  <TextField id="endTextField" fx:id="endTextField" prefHeight="30.0" />
-                  <TextField id="amountOfHoursTextField" fx:id="amountOfHoursTextField" onAction="#onAction" prefHeight="30.0" />
-                  <ComboBox fx:id="serviceCodesComboBox" prefHeight="30.0" />
-                  <GridPane hgap="5.0" prefWidth="160.0" vgap="5.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
-                        <RowConstraints percentHeight="50.0" vgrow="ALWAYS" />
-                     </rowConstraints>
-                     <children>
-                        <Button fx:id="finishButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="90.0" text="finishButton" />
-                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="90.0" text="cancelButton" GridPane.columnIndex="1" />
-                        <Button fx:id="abortButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="247.0" text="abortButton" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-                     </children>
-                  </GridPane>
+                  <Button fx:id="finishButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="80.0" text="finishButton">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="80.0" text="cancelButton" GridPane.columnIndex="1" />
                </children>
-               <padding>
-                  <Insets bottom="5.0" />
-               </padding>
-            </VBox>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </GridPane>
+            <Button fx:id="abortButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="160.0" text="abortButton" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
          </children>
-      </HBox>
+      </GridPane>
    </children>
    <padding>
-      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
 </AnchorPane>
