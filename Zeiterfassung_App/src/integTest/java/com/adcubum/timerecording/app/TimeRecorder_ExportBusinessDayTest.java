@@ -11,9 +11,9 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -27,11 +27,12 @@ import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.util.parser.DateParser;
 
 class TimeRecorder_ExportBusinessDayTest {
 
    @Test
-   void testExpotBusinessDayFromFile_Success() throws IOException {
+   void testExpotBusinessDayFromFile_Success() throws IOException, ParseException {
       // Given
       File expectedExportedFile = new File("src\\integTest\\resources\\io\\expectedExportedBusinessDay.csv");
       String ticketNr = "SYRIUS-1234";
@@ -83,7 +84,8 @@ class TimeRecorder_ExportBusinessDayTest {
          return this;
       }
 
-      private TestCaseBuilder withBusinessDayIncrement(String ticketNr, String description, int kindOfService, int timeSnippedDuration) {
+      private TestCaseBuilder withBusinessDayIncrement(String ticketNr, String description, int kindOfService, int timeSnippedDuration)
+            throws ParseException {
          Ticket ticket = mockTicket(ticketNr);
          businessDayIncrementAdds.add(new BusinessDayIncrementAddBuilder()
                .withTimeSnippet(createTimeSnippet(timeSnippedDuration))
@@ -111,12 +113,12 @@ class TimeRecorder_ExportBusinessDayTest {
          }
       }
 
-      private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) {
-         GregorianCalendar startDate = new GregorianCalendar(2020, 1, 1);// year, month (starts at zero!), day, hours, min, second
-         Time beginTimeStamp = new Time(startDate.getTimeInMillis());
+      private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) throws ParseException {
+         Date startDate = DateParser.parse2Date("01-02-2020 00:00", DateParser.DATE_PATTERN);
+         Time beginTimeStamp = new Time(startDate.getTime());
          TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
          timeSnippet.setBeginTimeStamp(beginTimeStamp);
-         timeSnippet.setEndTimeStamp(new Time(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
+         timeSnippet.setEndTimeStamp(new Time(startDate.getTime() + timeBetweenBeginAndEnd));
          return timeSnippet;
       }
    }
