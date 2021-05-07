@@ -4,6 +4,8 @@ import javax.swing.text.View;
 
 import com.adcubum.timerecording.ui.core.control.Controller;
 import com.adcubum.timerecording.ui.core.model.PageModel;
+import com.adcubum.timerecording.ui.core.view.pagecontent.PageContent;
+import com.adcubum.timerecording.ui.core.view.region.Dimension;
 
 /**
  * A {@link Page} content one ore more {@link View} and displays a main content
@@ -52,4 +54,9 @@ public interface Page<I extends PageModel, O extends PageModel> {
     * @return <code>true</code> if the caller is blocked until this page is hidden or <code>false</code> if not
     */
    public boolean isBlocking();
+
+   /**
+    * @return the {@link Dimension} this {@link Page} requires to be displayed
+    */
+   public Dimension getDimension();
 }

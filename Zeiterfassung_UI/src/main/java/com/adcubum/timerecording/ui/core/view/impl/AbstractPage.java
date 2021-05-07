@@ -5,7 +5,8 @@ import java.awt.Panel;
 import com.adcubum.timerecording.ui.core.control.Controller;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.view.Page;
-import com.adcubum.timerecording.ui.core.view.PageContent;
+import com.adcubum.timerecording.ui.core.view.pagecontent.PageContent;
+import com.adcubum.timerecording.ui.core.view.region.Dimension;
 
 /**
  * An {@link AbstractPage} is a kind of huge {@link Panel} which may content
@@ -60,6 +61,11 @@ public abstract class AbstractPage<I extends PageModel, O extends PageModel> imp
 
    protected void setContent(PageContent pageContent) {
       this.pageContent = pageContent;
+   }
+
+   @Override
+   public Dimension getDimension() {
+      return pageContent.getRegion().getDimension();
    }
 
    @Override

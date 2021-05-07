@@ -7,6 +7,7 @@ import com.adcubum.timerecording.ui.core.control.Controller;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.model.resolver.PageModelResolver;
 import com.adcubum.timerecording.ui.core.view.Page;
+import com.adcubum.timerecording.ui.core.view.region.Dimension;
 
 /**
  * The {@link BaseController} provides the most basic features any
@@ -90,5 +91,10 @@ public abstract class BaseController<I extends PageModel, O extends PageModel>
     */
    protected void setPageModelResolver(PageModelResolver<I, O> pageModelResolver) {
       this.pageModelResolver = pageModelResolver;
+   }
+
+   @Override
+   public Dimension getDimension() {
+      return page.getDimension();
    }
 }
