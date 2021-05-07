@@ -5,6 +5,7 @@ package com.adcubum.timerecording.ui.core.control;
 
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.view.Page;
+import com.adcubum.timerecording.ui.core.view.region.Dimension;
 
 /**
  * The {@link Controller} as part of the MVC keeps controll about the ui
@@ -43,4 +44,9 @@ public interface Controller<I extends PageModel, O extends PageModel> {
     * of it's subpages
     */
    public void refresh();
+
+   /**
+    * @return the dimension of the content this {@link Controller} shows
+    */
+   public Dimension getDimension();
 }

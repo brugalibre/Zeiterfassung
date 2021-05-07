@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="mainPane" prefHeight="330.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.adcubum.timerecording.ui.app.pages.overview.control.OverviewController">
+<StackPane fx:id="rootPane" prefHeight="330.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.adcubum.timerecording.ui.app.pages.overview.control.OverviewController">
    <children>
       <BorderPane prefHeight="330.0" prefWidth="650.0">
          <padding>

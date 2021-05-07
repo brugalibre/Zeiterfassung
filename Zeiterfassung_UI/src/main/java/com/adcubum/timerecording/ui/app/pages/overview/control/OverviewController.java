@@ -46,7 +46,6 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -61,9 +60,6 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
 
    @FXML
    private ProgressIndicator progressIndicator;
-
-   @FXML
-   private Pane mainPane;
 
    @FXML
    private TableView<BusinessDayIncTableRowValue> tableView;
@@ -140,7 +136,7 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
       changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.hasBusinessDayDescription());
       TableUtil.autoResizeTable(tableView);
       stage.setWidth(tableView.getPrefWidth());
-      mainPane.setPrefWidth(tableView.getPrefWidth());
+      rootPane.setPrefWidth(tableView.getPrefWidth());
    }
 
    public void init(MainWindowController mainWindowController) {

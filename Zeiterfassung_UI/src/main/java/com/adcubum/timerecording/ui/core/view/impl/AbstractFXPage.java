@@ -11,12 +11,12 @@ import java.util.Optional;
 import com.adcubum.timerecording.ui.core.control.Controller;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.view.Page;
+import com.adcubum.timerecording.ui.core.view.impl.pagecontent.FXPageContent;
+import com.adcubum.timerecording.ui.core.view.impl.region.FxRegionImpl;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 /**
@@ -108,7 +108,7 @@ public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
     */
    protected void initializeScene(FXMLLoader loader, Optional<Stage> optionalStage) {
       Pane content = loader.getRoot();
-      setContent(new FXPageContent(optionalStage, content));
+      setContent(new FXPageContent(optionalStage, new FxRegionImpl(content)));
       optionalStage.ifPresent(stage -> stage.setScene(new Scene(loader.getRoot())));
    }
 
@@ -180,26 +180,5 @@ public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
    protected String getUIStyleResource() {
       String path = "/" + getClass().getPackage().getName() + "/" + getClass().getSimpleName();
       return path.replace(".", "/") + ".css";
-   }
-
-   /**
-    * Returns the root node of this {@link FXPageContent}
-    * 
-    * @return
-    */
-   private Region getRootNode() {
-      FXPageContent fxContent = getFXContent();
-      if (fxContent.getRootParent() instanceof Region) {
-         return (Region) fxContent.getRootParent();
-      }
-      throw new IllegalStateException("Root-Node '" + fxContent.getRootParent() + "' is not an instance-of Region!");
-   }
-
-   public Parent getRootParent() {
-      return getRootNode();
-   }
-
-   protected FXPageContent getFXContent() {
-      return (FXPageContent) getContent();
    }
 }

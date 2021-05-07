@@ -25,7 +25,6 @@ import com.adcubum.timerecording.ui.core.view.Page;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -34,9 +33,6 @@ import javafx.stage.WindowEvent;
  * 
  */
 public class MainWindowController extends BaseFXController<MainWindowPageModel, MainWindowPageModel> {
-
-   @FXML
-   private StackPane mainPanel;
 
    @FXML
    private OverviewController overviewPanelController;
@@ -87,15 +83,15 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
    }
 
    private boolean containsRegionAlready(Region region) {
-      return mainPanel.getChildren().contains(region) && region.isVisible();
+      return rootPane.getChildren().contains(region) && region.isVisible();
    }
 
    private void showPane(Stage stage, Region content4Controller, Controller<PageModel, ?> controller, EventHandler<WindowEvent> eventHandler) {
-      mainPanel.getChildren().clear();
-      mainPanel.getChildren().add(content4Controller);
+      rootPane.getChildren().clear();
+      rootPane.getChildren().add(content4Controller);
 
       controller.show(dataModel);
-      initStage4NewComponent(stage, content4Controller);
+      initStage4NewComponent(stage, controller.getDimension());
 
       stage.setOnCloseRequest(eventHandler);
       show(dataModel);
@@ -114,17 +110,6 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       if (selectedFile != null) {
          timeRecordingTray.importBusinessDayFromFile(selectedFile);
       }
-   }
-
-   private void initStage4NewComponent(Stage stage, Region region) {
-      mainPanel.setPrefWidth(region.getPrefWidth());
-      mainPanel.setPrefHeight(region.getPrefHeight());
-      stage.setWidth(region.getPrefWidth());
-      stage.setHeight(region.getPrefHeight());
-      stage.setMinWidth(region.getPrefWidth());
-      stage.setMinHeight(region.getPrefHeight());
-      stage.setResizable(false);
-      stage.sizeToScene();
    }
 
    /**
