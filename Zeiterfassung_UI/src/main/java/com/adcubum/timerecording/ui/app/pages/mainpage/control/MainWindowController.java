@@ -58,6 +58,8 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       super.initialize(mainWindowPage);
       overviewPanelController.init(this);
       comeAndGoOverviewPanelController.setOnFinishHandler(this::finishOrAbortAndDispose);
+      comeAndGoOverviewPanelController.addOnResizeHandler(dimension -> initStage4NewComponent(getStage(), dimension));
+      overviewPanelController.addOnResizeHandler(dimension -> initStage4NewComponent(getStage(), dimension));
       stopBusinessDayIncrementPanelController.setOnFinishHandler(this::finishOrAbortAndDispose);
       Stage stage = getStage();
       stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);

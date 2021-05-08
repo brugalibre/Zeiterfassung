@@ -52,13 +52,14 @@ public class TableUtil {
          if (isNotEmpty(column, i)) {
             textNode = new Text(column.getCellData(i).toString());
             double calcwidth = textNode.getLayoutBounds().getWidth();
-            if (BusinessDayTableModelHelper.TICKET_COLUMN_ID.equals(column.getId())) {// nicht sehr schön, aber irgendwie gibt die Spalte viel zu viel platz an, als sie wirklich benötigt..
-               calcwidth = calcwidth / 10;
+            if (BusinessDayTableModelHelper.TICKET_COLUMN_ID.equals(column.getId())) {// nicht sehr schön, aber irgendwie gibt die Spalte wesentlich mehr platz an, als sie tatsächlich benötigt..
+               int magicNumber = 7; // like this, it worked on my machine..
+               calcwidth = calcwidth / magicNumber;
             }
             max = Math.max(max, calcwidth);
          }
       }
-      return max + 15; // A little bit more, give the cell some space to breath..
+      return max + 10; // A little bit more, give the cell some space to breath..
    }
 
    private static boolean isNotEmpty(TableColumn<?, ?> column, int i) {

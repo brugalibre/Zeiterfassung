@@ -3,6 +3,8 @@
  */
 package com.adcubum.timerecording.ui.core.control;
 
+import java.util.function.Consumer;
+
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.view.Page;
 import com.adcubum.timerecording.ui.core.view.region.Dimension;
@@ -49,4 +51,12 @@ public interface Controller<I extends PageModel, O extends PageModel> {
     * @return the dimension of the content this {@link Controller} shows
     */
    public Dimension getDimension();
+
+   /**
+    * Adds the given {@link Consumer} as a handler whenever the {@link Dimension} of this Controller changes
+    * 
+    * @param onResizeHandler
+    *        the handler
+    */
+   void addOnResizeHandler(Consumer<Dimension> onResizeHandler);
 }
