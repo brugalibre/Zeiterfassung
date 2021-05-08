@@ -3,6 +3,12 @@
  */
 package com.adcubum.timerecording.ui.core.control.impl;
 
+import static java.util.Objects.requireNonNull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
 import com.adcubum.timerecording.ui.core.control.Controller;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.model.resolver.PageModelResolver;
@@ -25,9 +31,14 @@ public abstract class BaseController<I extends PageModel, O extends PageModel>
    // Data-model related attributes
    protected O dataModel;
    protected PageModelResolver<I, O> pageModelResolver;
+   protected List<Consumer<Dimension>> onResizeHandlers;
 
    // The (main) page this controller controls
    protected Page<?, ?> page;
+
+   protected BaseController() {
+      this.onResizeHandlers = new ArrayList<>();
+   }
 
    /**
     * Initializes parts of this controllers such as it's
@@ -82,8 +93,13 @@ public abstract class BaseController<I extends PageModel, O extends PageModel>
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   // GETTER AND SETTER //
+   // GETTER AND SETTER AND ADDER//
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   @Override
+   public void addOnResizeHandler(Consumer<Dimension> onResizeHandler) {
+      onResizeHandlers.add(requireNonNull(onResizeHandler));
+   }
 
    /**
     * @param pageModelResolver

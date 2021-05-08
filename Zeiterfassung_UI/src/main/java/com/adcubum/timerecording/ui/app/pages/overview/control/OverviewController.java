@@ -29,6 +29,8 @@ import com.adcubum.timerecording.ui.core.control.impl.BaseFXController;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.model.resolver.PageModelResolver;
 import com.adcubum.timerecording.ui.core.view.Page;
+import com.adcubum.timerecording.ui.core.view.impl.region.DimensionImpl;
+import com.adcubum.timerecording.ui.core.view.region.Dimension;
 import com.adcubum.timerecording.ui.core.view.table.TableUtil;
 import com.adcubum.timerecording.ui.util.ExceptionUtil;
 
@@ -135,8 +137,8 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
       businessDayTableModel.init(businessDayVO, tableView);
       changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.hasBusinessDayDescription());
       TableUtil.autoResizeTable(tableView);
-      stage.setWidth(tableView.getPrefWidth());
-      rootPane.setPrefWidth(tableView.getPrefWidth());
+      Dimension newDimension = new DimensionImpl(tableView.getPrefWidth(), getDimension().getPrefHeight());
+      initStage4NewComponent(stage, newDimension);
    }
 
    public void init(MainWindowController mainWindowController) {

@@ -65,6 +65,8 @@ public abstract class BaseFXController<I extends PageModel, O extends PageModel>
       stage.setMinHeight(dimension.getPrefHeight());
       stage.setResizable(false);
       stage.sizeToScene();
+      onResizeHandlers.stream()
+            .forEach(resizeHandler -> resizeHandler.accept(dimension));
    }
 
    private Consumer<? super Stage> showStage() {
