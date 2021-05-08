@@ -434,15 +434,6 @@ public class TimeRecorder {
    }
 
    /**
-    * @return <code>true</code> if the current {@link BusinessDay} has at least
-    *         on {@link BusinessDayIncrement} with a description otherwise
-    *         <code>false</code>
-    */
-   public boolean hasBusinessDayDescription() {
-      return businessDay.hasDescription();
-   }
-
-   /**
     * @return the {@link ServiceCodeAdapter} of this {@link TimeRecorder}
     */
    public ServiceCodeAdapter getServiceCodeAdapter() {

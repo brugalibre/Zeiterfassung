@@ -418,21 +418,6 @@ class TimeRecorderTest extends BaseTestWithSettings {
    }
 
    @Test
-   void testHasDescription() {
-
-      // Given
-      new TestCaseBuilder(TimeRecorder.INSTANCE)
-            .withBusinessDayIncrement("SYRIUS-1234", "Test", 113, 3600 * 1000)
-            .build();
-
-      // When
-      boolean actualHasBusinessDayDescription = TimeRecorder.INSTANCE.hasBusinessDayDescription();
-
-      // Then
-      assertThat(actualHasBusinessDayDescription, is(true));
-   }
-
-   @Test
    void testGetInfoStringForStateNotWorking() {
 
       // Given
