@@ -10,7 +10,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.app.pages.mainpage.control.MainWindowController;
@@ -135,7 +134,7 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
       super.show(dataModelIn);
       BusinessDayVO businessDayVO = dataModel.getBusinessDayVO();
       businessDayTableModel.init(businessDayVO, tableView);
-      changeDescriptionMenue.setDisable(TimeRecorder.INSTANCE.hasBusinessDayDescription());
+      changeDescriptionMenue.setDisable(dataModel.getHasBusinessDayDescription().getValue());
       TableUtil.autoResizeTable(tableView);
       Dimension newDimension = new DimensionImpl(tableView.getPrefWidth(), getDimension().getPrefHeight());
       initStage4NewComponent(stage, newDimension);

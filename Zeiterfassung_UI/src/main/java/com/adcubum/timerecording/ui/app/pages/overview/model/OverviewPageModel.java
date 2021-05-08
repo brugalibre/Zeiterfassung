@@ -9,7 +9,7 @@ import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 
-import javafx.beans.property.Property;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -21,9 +21,10 @@ import javafx.beans.property.StringProperty;
 public class OverviewPageModel implements PageModel {
 
    private BusinessDayVO businessDayVO;
-   private Property<Boolean> isChargeButtonDisabled;
-   private Property<Boolean> isClearButtonDisabled;
-   private Property<Boolean> isExportButtonDisabled;
+   private BooleanProperty isChargeButtonDisabled;
+   private BooleanProperty isClearButtonDisabled;
+   private BooleanProperty isExportButtonDisabled;
+   private BooleanProperty hasBusinessDayDescriptionProperty;
 
    private StringProperty bookButtonLabel;
    private StringProperty exportButtonLabel;
@@ -40,6 +41,7 @@ public class OverviewPageModel implements PageModel {
       isChargeButtonDisabled = new SimpleBooleanProperty(isBookButtonDisabled(businessDayVO));
       isClearButtonDisabled = new SimpleBooleanProperty(!businessDayVO.hasNotChargedElements());
       isExportButtonDisabled = new SimpleBooleanProperty(!businessDayVO.hasNotChargedElements());
+      hasBusinessDayDescriptionProperty = new SimpleBooleanProperty(businessDayVO.hasIncrementWithDescription());
 
       bookButtonLabel = new SimpleStringProperty(TextLabel.CHARGE_LABEL);
       exportButtonLabel = new SimpleStringProperty(TextLabel.EXPORT_LABEL);
@@ -59,6 +61,7 @@ public class OverviewPageModel implements PageModel {
       inPageModel.getIsChargeButtonDisabled().setValue(isBookButtonDisabled(businessDayVO));
       inPageModel.getIsClearButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
       inPageModel.getIsExportButtonDisabled().setValue(businessDayVO.getBusinessDayIncrements().isEmpty());
+      inPageModel.getHasBusinessDayDescription().setValue(businessDayVO.hasIncrementWithDescription());
 
       inPageModel.getBookButtonLabel().set(TextLabel.CHARGE_LABEL);
       inPageModel.getExportButtonLabel().set(TextLabel.EXPORT_LABEL);
@@ -86,11 +89,11 @@ public class OverviewPageModel implements PageModel {
    /**
     * @return
     */
-   public Property<Boolean> getIsChargeButtonDisabled() {
+   public BooleanProperty getIsChargeButtonDisabled() {
       return isChargeButtonDisabled;
    }
 
-   public Property<Boolean> getIsClearButtonDisabled() {
+   public BooleanProperty getIsClearButtonDisabled() {
       return isClearButtonDisabled;
    }
 
@@ -114,7 +117,11 @@ public class OverviewPageModel implements PageModel {
       return this.totalAmountOfTimeValue;
    }
 
-   public final Property<Boolean> getIsExportButtonDisabled() {
+   public final BooleanProperty getIsExportButtonDisabled() {
       return this.isExportButtonDisabled;
+   }
+
+   public BooleanProperty getHasBusinessDayDescription() {
+      return hasBusinessDayDescriptionProperty;
    }
 }
