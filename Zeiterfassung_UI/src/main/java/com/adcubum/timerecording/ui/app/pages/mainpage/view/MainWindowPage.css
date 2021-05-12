@@ -74,9 +74,8 @@
     -fx-faint-focus-color: #FF202020 ;
 }
 
-.boldLabel2 {
-	-fx-font-weight: bold;
-	-fx-font-size : 12.0;
+#comeAndGoTableView {
+  -fx-table-cell-border-color: transparent;
 }
 
 #flatbee-tiny{

@@ -20,7 +20,4 @@ public class Styles {
 
    /** Name of the css class for a match of words within a a sentence */
    public static final String WORD_MATCH = "wordMatch";
-
-   /** Name of the css class for a text title */
-   public static final String TITLE = "title";
 }

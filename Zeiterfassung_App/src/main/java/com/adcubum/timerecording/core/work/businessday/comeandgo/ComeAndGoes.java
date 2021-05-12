@@ -3,6 +3,7 @@ package com.adcubum.timerecording.core.work.businessday.comeandgo;
 import java.util.List;
 import java.util.Optional;
 
+import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.work.date.Time;
 
 /**
@@ -29,10 +30,20 @@ public interface ComeAndGoes {
    boolean hasComeAndGoesFromPrecedentDays();
 
    /**
-    * @return an {@link Optional} of the the current and therefore unfinished {@link ComeAndGo} if there is any or {@link Optional#empty()}
-    *         if tehre is none
+    * @return an {@link Optional} of the current and therefore unfinished {@link ComeAndGo} if there is any or {@link Optional#empty()}
+    *         if there is none
     */
    Optional<ComeAndGo> getCurrentComeAndGo();
+
+   /**
+    * Return an {@link Optional} of a {@link ComeAndGo} with the given id or a {@link Optional#empty()} if there doesn't exist any
+    * with the given id
+    * 
+    * @param id
+    *        the id of the desired {@link ComeAndGo}
+    * @return the {@link ComeAndGo} for the given Id
+    */
+   Optional<ComeAndGo> getComeAndGo4Id(String id);
 
    /**
     * Removes all {@link ComeAndGoes} and return a new instance
@@ -65,4 +76,14 @@ public interface ComeAndGoes {
     * @return a new instance with a new started or ended come or go
     */
    ComeAndGoes comeOrGo(Time time);
+
+   /**
+    * Updates a given {@link ComeAndGo} for the given changed values
+    * Since we can change either the come or the go we will always find a corresponding {@link ComeAndGo} for the given
+    * {@link ChangedComeAndGoValue}. If not, nothing will be changed
+    * 
+    * @param changedComeAndGoValue
+    *        the {@link ChangedComeAndGoValue} define the changed values
+    */
+   ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue);
 }

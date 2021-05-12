@@ -14,6 +14,7 @@ import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayInc
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement.TimeStampComparator;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
@@ -60,7 +61,7 @@ public class BusinessDay {
     * Creates a new {@link BusinessDay}
     * Constructor only for testing purpose!
     */
-   BusinessDay(Date date, ComeAndGoes comeAndGoes) {
+   public BusinessDay(Date date, ComeAndGoes comeAndGoes) {
       increments = new CopyOnWriteArrayList<>();
       currentBussinessDayIncremental = new BusinessDayIncrement(date);
       this.comeAndGoes = comeAndGoes;
@@ -264,6 +265,18 @@ public class BusinessDay {
    public void changeBusinesDayIncrement(ChangedValue changeValue) {
       Optional<BusinessDayIncrement> businessDayIncOpt = getBusinessIncrement(changeValue.getSequence());
       businessDayIncOpt.ifPresent(businessDayIncrement -> handleBusinessDayChangedInternal(businessDayIncrement, changeValue));
+   }
+
+   /**
+    * Updates a {@link ComeAndGo} for the given changed values
+    * 
+    * @param changedComeAndGoValue
+    *        the {@link ChangedComeAndGoValue} define the changed values
+    * @return a new instance of the {@link ComeAndGoes} of this {@link BusinessDay}
+    */
+   public ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue) {
+      comeAndGoes = comeAndGoes.changeComeAndGo(changedComeAndGoValue);
+      return comeAndGoes;
    }
 
    /**

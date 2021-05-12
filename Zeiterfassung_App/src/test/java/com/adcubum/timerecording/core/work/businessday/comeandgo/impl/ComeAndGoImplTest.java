@@ -44,7 +44,7 @@ class ComeAndGoImplTest extends BaseTestWithSettings {
       // When
       comeAndGo = comeAndGo.comeOrGo(beginTimeStamp);
       comeAndGo = comeAndGo.comeOrGo(endTimeStamp);
-      String actualRepresentation = comeAndGo.getRepresentation();
+      String actualRepresentation = comeAndGo.toString();
 
       // Then
       assertThat(actualRepresentation, is(expectedRepresentation));
@@ -60,7 +60,7 @@ class ComeAndGoImplTest extends BaseTestWithSettings {
 
       // When
       comeAndGo = comeAndGo.comeOrGo(beginTimeStamp);
-      String actualRepresentation = comeAndGo.getRepresentation();
+      String actualRepresentation = comeAndGo.toString();
 
       // Then
       assertThat(actualRepresentation, is(expectedRepresentation));
@@ -70,7 +70,7 @@ class ComeAndGoImplTest extends BaseTestWithSettings {
    void testRepresentationOfAFinishedRecordedComeOrGo() {
       // Given
       ComeAndGo comeAndGo = ComeAndGoImpl.of();
-      String expectedRepresentation = "00:10 / 00:11 " + TextLabel.COME_OR_GO_RECORDED_TEXT;
+      String expectedRepresentation = "00:10 / 00:11 " + TextLabel.EXISTS_RECORD_FOR_COME_AND_GO;
 
       Time beginTimeStamp = getTime(10);
       Time endTimeStamp = getTime(11);
@@ -79,7 +79,7 @@ class ComeAndGoImplTest extends BaseTestWithSettings {
       comeAndGo = comeAndGo.comeOrGo(beginTimeStamp);
       comeAndGo = comeAndGo.comeOrGo(endTimeStamp);
       comeAndGo = comeAndGo.flagAsRecorded();
-      String actualRepresentation = comeAndGo.getRepresentation();
+      String actualRepresentation = comeAndGo.toString();
 
       // Then
       assertThat(actualRepresentation, is(expectedRepresentation));

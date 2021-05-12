@@ -2,6 +2,8 @@ package com.adcubum.timerecording.core.work.businessday.comeandgo.impl;
 
 import static java.util.Objects.isNull;
 
+import java.util.UUID;
+
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
@@ -16,18 +18,21 @@ import com.adcubum.timerecording.work.date.Time;
  */
 public class ComeAndGoImpl implements ComeAndGo {
 
+   private String id;
    private TimeSnippet comeAndGoSnippet;
    private boolean isRecorded;
 
-   private ComeAndGoImpl() {
+   private ComeAndGoImpl(String id) {
       Time time = new Time(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
       this.comeAndGoSnippet = new TimeSnippet(time);
       this.isRecorded = false;
+      this.id = id;
    }
 
    private ComeAndGoImpl(ComeAndGoImpl comeAndGoImpl) {
       this.comeAndGoSnippet = new TimeSnippet(comeAndGoImpl.comeAndGoSnippet);
       this.isRecorded = comeAndGoImpl.isRecorded;
+      this.id = comeAndGoImpl.id;
    }
 
    @Override
@@ -63,8 +68,8 @@ public class ComeAndGoImpl implements ComeAndGo {
    }
 
    @Override
-   public String getRepresentation() {
-      String isRecordedRep = isRecorded ? " " + TextLabel.COME_OR_GO_RECORDED_TEXT : "";
+   public String toString() {
+      String isRecordedRep = isRecorded ? " " + TextLabel.EXISTS_RECORD_FOR_COME_AND_GO : "";
       return comeAndGoSnippet.getBeginTimeStampRep() + " / " + getEndTimeStampRep() + isRecordedRep;
    }
 
@@ -83,12 +88,28 @@ public class ComeAndGoImpl implements ComeAndGo {
       return !isRecorded;
    }
 
+   @Override
+   public String getId() {
+      return id;
+   }
+
    /**
     * Creates a new {@link ComeAndGoDto} with no entries
     * 
+    * @param id
+    *        the id
     * @return a new {@link ComeAndGoDto} with no entries
     */
+   public static ComeAndGoImpl of(String id) {
+      return new ComeAndGoImpl(id);
+   }
+
+   /**
+    * Creates a new {@link ComeAndGoDto} with no entries and a random id
+    * 
+    * @return a new {@link ComeAndGoDto} with no entries and a random id
+    */
    public static ComeAndGoImpl of() {
-      return new ComeAndGoImpl();
+      return new ComeAndGoImpl(UUID.randomUUID().toString());
    }
 }

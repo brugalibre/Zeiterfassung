@@ -32,6 +32,7 @@ Kommen/Gehen: Gehen:
 Kommen/Gehen: Arbeitsstunden erfassen:
 - Rechtsklick auf den roten Kreis in der Info-Leiste und dann auf den Menu-Eintrag 'Zeige Kommen/Gehen' klicken
 - Dadurch wird eine Übersicht aller Kommen/Gehen angezeigt
+- Durch einen Doppelklick auf einen Kommen bzw. Gehen-Eintrag kann dieser editiert werden. Mit 'Enter'/'Tab.' wird die Änderung übernommen. Durch 'Esc' wird sie verworfen
 - Mit dem Button 'Starte Zeiteingabe' wird ein Wizzard gestartet welcher pro Kommen/Gehen eine Eingabe-Maske zeigt
 - Auf dieser Maske werden alle nötigen Informationen des bearbeiteten Tickets eingetragen (Ticket-Nr, Leistungsart usw.)
 - Der Begin kann jeweils nicht verändert werden

@@ -12,13 +12,15 @@ import java.util.function.Consumer;
 import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.ComeAndGoOverviewPageModel;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.resolver.ComeAndGoPageModelResolver;
+import com.adcubum.timerecording.ui.app.pages.comeandgo.model.table.ComeAndGoTableModelHelper;
+import com.adcubum.timerecording.ui.app.pages.comeandgo.model.table.ComeAndGoTableRowValue;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.view.ComeAndGoOverviewPage;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishAction;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController;
-import com.adcubum.timerecording.ui.app.styles.Styles;
 import com.adcubum.timerecording.ui.core.control.impl.BaseFXController;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.model.resolver.PageModelResolver;
+import com.adcubum.timerecording.ui.core.view.Page;
 import com.adcubum.timerecording.ui.core.view.impl.region.DimensionImpl;
 import com.adcubum.timerecording.ui.core.view.region.Dimension;
 
@@ -26,9 +28,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -36,35 +37,37 @@ import javafx.stage.WindowEvent;
  * @author Dominic
  *
  */
-public class ComeAndGoOverviewController extends BaseFXController<PageModel, ComeAndGoOverviewPageModel>
-      implements EventHandler<WindowEvent> {
+public class ComeAndGoOverviewController extends BaseFXController<PageModel, ComeAndGoOverviewPageModel> implements EventHandler<WindowEvent> {
 
    private Consumer<FinishAction> onFinishHandler;
    @FXML
    private Button startAddBDIncrementButton;
    @FXML
    private Button clearAllComeAndGoes;
-   @FXML
-   private Label comeAndGoesLabel;
 
    @FXML
    private Region comeAndGoOverviewPane;
    @FXML
    private Region addBDIncrementContentPane;
    @FXML
-   private VBox comeAndGoesContent;
-
+   private TableView<ComeAndGoTableRowValue> comeAndGoTableView;
    @FXML
    private StopBusinessDayIncrementController addBDIncrementContentPaneController;
    private Stage stage;
    private ComeAndGoShowMode showMode;
+   private ComeAndGoTableModelHelper comeAndGoTableModelHelper;
+
+   @Override
+   public void initialize(Page<PageModel, ComeAndGoOverviewPageModel> page) {
+      comeAndGoTableModelHelper = new ComeAndGoTableModelHelper(comeAndGoTableView);// Creation/init of the helper here, since we need an injected 'comeAndGoTableView' first 
+      super.initialize(page);
+   }
 
    @Override
    public void initialize(URL url, ResourceBundle resourceBundle) {
       initialize(new ComeAndGoOverviewPage(this));
       addBDIncrementContentPaneController.setOnFinishHandler(this::onFinishFromSubpage);
       rootPane.getChildren().remove(addBDIncrementContentPane);
-      comeAndGoesLabel.getStyleClass().add(Styles.TITLE);
       showMode = ComeAndGoShowMode.COME_AND_GO_PAGE;
    }
 
@@ -81,10 +84,10 @@ public class ComeAndGoOverviewController extends BaseFXController<PageModel, Com
    private void addOverviewPaneAndShowComeAndGoes() {
       rootPane.getChildren().clear();
       rootPane.getChildren().add(comeAndGoOverviewPane);
+      comeAndGoTableModelHelper.fitTableSize();
       startAddBDIncrementButton.setDisable(dataModel.isStartAddBDIncrementButtonDisabled());
       clearAllComeAndGoes.setDisable(dataModel.isClearAllComeAndGoesButtonDisabled());
       comeAndGoOverviewPane.requestFocus();
-      showComeAndGoes();
    }
 
    @Override
@@ -95,18 +98,11 @@ public class ComeAndGoOverviewController extends BaseFXController<PageModel, Com
       }
    }
 
-   private void showComeAndGoes() {
-      comeAndGoesContent.getChildren().clear();
-      for (String comeAndGoRepresentation : dataModel.getComeAndGoesRepresentations()) {
-         comeAndGoesContent.getChildren().add(new Label(comeAndGoRepresentation));
-      }
-   }
-
    @Override
    protected void setBinding(ComeAndGoOverviewPageModel pageModel) {
+      comeAndGoTableModelHelper.bindTable2DataModel(dataModel);
       startAddBDIncrementButton.textProperty().bindBidirectional(pageModel.getStartAddBDIncrementButtonProperty());
       clearAllComeAndGoes.textProperty().bindBidirectional(pageModel.getClearAllComeAndGoesButtonProperty());
-      comeAndGoesLabel.textProperty().bindBidirectional(pageModel.getComeAndGoesLabelProperty());
    }
 
    @FXML

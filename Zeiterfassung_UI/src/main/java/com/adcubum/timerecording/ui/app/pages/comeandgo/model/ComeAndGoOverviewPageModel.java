@@ -15,22 +15,29 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.change.impl.ComeAndGoesUpdaterImpl;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
+import com.adcubum.timerecording.ui.app.pages.comeandgo.model.table.ComeAndGoTableRowValue;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.work.date.Time;
 
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.scene.control.TableColumn.CellEditEvent;
 
 /**
  * @author Dominic
  *
  */
-public class ComeAndGoOverviewPageModel implements PageModel {
+public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellEditEvent<ComeAndGoTableRowValue, String>> {
 
    private BusinessDayChangedCallbackHandler businessDayChangedCallbackHandler;
-   private StringProperty comeAndGoesLabelProperty;
    private StringProperty startAddBDIncrementButtonProperty;
    private SimpleStringProperty clearAllComeAndGoesButtonProperty;
    private List<ComeAndGoDataModel> comeAndGoesDataModels;
@@ -38,9 +45,9 @@ public class ComeAndGoOverviewPageModel implements PageModel {
    private Time prevComeAndGoEnd;
    private int currentComeAndGoIndex;
    private boolean isClearAllComeAndGoesButtonDisabled;
+   private SimpleListProperty<ComeAndGoTableRowValue> comeAndGoTableRowValuesProperty;
 
    private ComeAndGoOverviewPageModel(ComeAndGoes comeAndGoes) {
-      this.comeAndGoesLabelProperty = new SimpleStringProperty(TextLabel.COME_OR_GO);
       this.startAddBDIncrementButtonProperty = new SimpleStringProperty(TextLabel.START_CREATING_BD_INC);
       this.clearAllComeAndGoesButtonProperty = new SimpleStringProperty(TextLabel.CLEAR_LABEL);
       this.comeAndGoesDataModels = getComeAndGoesDataModels(comeAndGoes);
@@ -49,6 +56,7 @@ public class ComeAndGoOverviewPageModel implements PageModel {
       this.currentComeAndGoIndex = evalCurrentComeAndGoIndex(comeAndGoesDataModels);
       this.businessDayChangedCallbackHandler = new ComeAndGoBDChangedCallbackHandler();
       this.prevComeAndGoEnd = new Time(0);
+      this.comeAndGoTableRowValuesProperty = new SimpleListProperty<>(map2ComeAndGoTableRowValues(comeAndGoesDataModels));
    }
 
    public static ComeAndGoOverviewPageModel of(ComeAndGoes comeAndGoes) {
@@ -56,7 +64,6 @@ public class ComeAndGoOverviewPageModel implements PageModel {
    }
 
    public static ComeAndGoOverviewPageModel of(ComeAndGoOverviewPageModel inPageModel, ComeAndGoes comeAndGoes) {
-      inPageModel.comeAndGoesLabelProperty.setValue(TextLabel.COME_OR_GO);
       inPageModel.startAddBDIncrementButtonProperty.setValue(TextLabel.START_CREATING_BD_INC);
       inPageModel.clearAllComeAndGoesButtonProperty = new SimpleStringProperty(TextLabel.CLEAR_LABEL);
       inPageModel.comeAndGoesDataModels = getComeAndGoesDataModels(comeAndGoes);
@@ -65,6 +72,7 @@ public class ComeAndGoOverviewPageModel implements PageModel {
       inPageModel.currentComeAndGoIndex = evalCurrentComeAndGoIndex(comeAndGoesDataModels);
       inPageModel.prevComeAndGoEnd = new Time(0);
       inPageModel.businessDayChangedCallbackHandler = inPageModel.businessDayChangedCallbackHandler;
+      inPageModel.comeAndGoTableRowValuesProperty.setValue(map2ComeAndGoTableRowValues(comeAndGoesDataModels));
       return inPageModel;
    }
 
@@ -158,15 +166,8 @@ public class ComeAndGoOverviewPageModel implements PageModel {
       return clearAllComeAndGoesButtonProperty;
    }
 
-   public StringProperty getComeAndGoesLabelProperty() {
-      return comeAndGoesLabelProperty;
-   }
-
-   public List<String> getComeAndGoesRepresentations() {
-      return comeAndGoesDataModels
-            .stream()
-            .map(ComeAndGoDataModel::getRepresentation)
-            .collect(Collectors.toList());
+   public List<ComeAndGoDataModel> getComeAndGoesDataModels() {
+      return comeAndGoesDataModels;
    }
 
    public int getAmountOfComeAndGoes() {
@@ -222,11 +223,33 @@ public class ComeAndGoOverviewPageModel implements PageModel {
       return isNull(comeAndGoes) ? Collections.emptyList()
             : comeAndGoes.getComeAndGoEntries()
                   .stream()
-                  .map(ComeAndGoDataModel::of)
+                  .map(ComeAndGoOverviewPageModel::createComeAndGoDataModel)
                   .collect(Collectors.toList());
+   }
+
+   private static ComeAndGoDataModel createComeAndGoDataModel(ComeAndGo comeAndGo) {
+      return ComeAndGoDataModel.of(comeAndGo, new ComeAndGoesUpdaterImpl());
    }
 
    private static ComeAndGoDataModel getLastComeAndGo(List<ComeAndGoDataModel> comeAndGoesDataModels) {
       return comeAndGoesDataModels.get(comeAndGoesDataModels.size() - 1);
    }
+
+   @Override
+   public void handle(CellEditEvent<ComeAndGoTableRowValue, String> event) {
+      ComeAndGoTableRowValue businessDayIncTableCellValue = event.getRowValue();
+      businessDayIncTableCellValue.handle(event);
+   }
+
+   public ListProperty<ComeAndGoTableRowValue> getComeAndGoTableRowValuesProperty() {
+      return comeAndGoTableRowValuesProperty;
+   }
+
+   private static ObservableList<ComeAndGoTableRowValue> map2ComeAndGoTableRowValues(List<ComeAndGoDataModel> comeAndGoDataModels) {
+      return FXCollections.observableList(comeAndGoDataModels
+            .stream()
+            .map(ComeAndGoTableRowValue::of)
+            .collect(Collectors.toList()));
+   }
+
 }
