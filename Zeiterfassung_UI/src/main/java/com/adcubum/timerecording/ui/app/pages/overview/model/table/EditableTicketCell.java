@@ -24,7 +24,7 @@ import javafx.util.StringConverter;
 public class EditableTicketCell extends EditableCell<BusinessDayIncTableRowValue, Ticket> {
 
    private EditableTicketCell(StringConverter<Ticket> converter, TextField textField) {
-      super(converter, textField);
+      super(converter, textField, text -> true);
       enableReadOnlyMode();
       setContentDisplay(ContentDisplay.LEFT);// Defines on which side the warning-icon is displayed
    }

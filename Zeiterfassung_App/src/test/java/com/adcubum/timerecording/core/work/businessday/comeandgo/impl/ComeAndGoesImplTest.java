@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.change.impl.ChangedComeAndGoValueImpl;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
@@ -43,6 +45,19 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
       assertThat(comeAndGoesEntries.size(), is(1));
       ComeAndGo comeAndGo = comeAndGoesEntries.get(0);
       assertThat(comeAndGo.isNotDone(), is(true));
+   }
+
+   @Test
+   void testComeOrGoes_ChangeComeAndGoesWithoutAnyEntries() {
+      // Given
+      ComeAndGoes comeAndGoes = ComeAndGoesImpl.of();
+      ChangedComeAndGoValue value = ChangedComeAndGoValueImpl.of("1", new Time(), new Time());
+
+      // When
+      ComeAndGoes changeComeAndGo = comeAndGoes.changeComeAndGo(value);
+
+      // Then
+      assertThat(changeComeAndGo, is(comeAndGoes));
    }
 
    @Test

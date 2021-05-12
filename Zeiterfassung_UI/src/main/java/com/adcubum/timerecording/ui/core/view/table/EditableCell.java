@@ -2,6 +2,9 @@ package com.adcubum.timerecording.ui.core.view.table;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.Predicate;
+
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TableCell;
@@ -25,13 +28,15 @@ public class EditableCell<S, T> extends TableCell<S, T> {
 
    // Text field for editing
    protected TextField textField;
+   private Predicate<String> isEditablePredicate;
 
    // Converter for converting the text in the text field to the user type, and vice-versa:
    private final StringConverter<T> converter;
 
-   protected EditableCell(StringConverter<T> converter, TextField textField) {
+   protected EditableCell(StringConverter<T> converter, TextField textField, Predicate<String> isEditablePredicate) {
       this.textField = requireNonNull(textField);
       this.converter = requireNonNull(converter);
+      this.isEditablePredicate = requireNonNull(isEditablePredicate);
 
       itemProperty().addListener(getItemChangedListener(converter));
       setGraphic(textField);
@@ -46,7 +51,25 @@ public class EditableCell<S, T> extends TableCell<S, T> {
    }
 
    protected ChangeListener<T> getItemChangedListener(StringConverter<T> converter) {
-      return (obsValue, oldItem, newItem) -> setText(converter.toString(newItem));
+      return (obsValue, oldItem, newItem) -> {
+         setText(converter.toString(newItem));
+         setCellEditable();
+      };
+   }
+
+   /**
+    * Creates a new {@link EditableCell} with the given StringConverter and a default TextField
+    * The given {@link BooleanSupplier} is used to controll weather or not this {@link EditableCell} is editable or not
+    * This may be important if certain cells are not editable although the entire column is. I didn't know how to do this better..
+    * 
+    * @param converter
+    *        the used StringConverter
+    * @param isEditablePredicate
+    *        the {@link Predicate} to determine if this {@link EditableCell} should be able to start a commit
+    * @return a new {@link EditableCell} with a default TextField
+    */
+   public static <S> EditableCell<S, String> createStringEditCell(StringConverter<String> converter, Predicate<String> isEditablePredicate) {
+      return new EditableCell<>(converter, new TextField(), isEditablePredicate);
    }
 
    /**
@@ -55,7 +78,7 @@ public class EditableCell<S, T> extends TableCell<S, T> {
     * @return a new {@link EditableCell} with a default TextField
     */
    public static <S> EditableCell<S, String> createStringEditCell() {
-      return new EditableCell<>(new DefaultStringConverter(), new TextField());
+      return new EditableCell<>(new DefaultStringConverter(), new TextField(), text -> true);
    }
 
    protected void enableReadOnlyMode() {
@@ -64,6 +87,12 @@ public class EditableCell<S, T> extends TableCell<S, T> {
 
    @Override
    public void startEdit() {
+      if (isEditable()) {
+         startEditIfEditable();
+      }
+   }
+
+   private void startEditIfEditable() {
       super.startEdit();
       textField.setText(converter.toString(getItem()));
       setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
@@ -81,5 +110,11 @@ public class EditableCell<S, T> extends TableCell<S, T> {
    public void commitEdit(T item) {
       super.commitEdit(item);
       enableReadOnlyMode();
+   }
+
+   private void setCellEditable() {
+      String currentText = converter.toString(getItem());
+      boolean isCellEditable = isEditablePredicate.test(currentText);
+      setEditable(isCellEditable);
    }
 }

@@ -27,6 +27,8 @@ import com.adcubum.util.utils.StringUtil;
  *
  */
 public class TimeSnippet {
+   /** String literal for representing a <code>null</code> value for either begin or end TimeStamp */
+   public static final String NULL_TIME_REP = "-";
    private Date date; // the date of the day, when this TimeSnippet took place
    private Time beginTimeStamp;
    private Time endTimeStamp;

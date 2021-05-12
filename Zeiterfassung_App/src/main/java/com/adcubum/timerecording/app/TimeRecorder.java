@@ -20,6 +20,8 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
@@ -233,6 +235,17 @@ public class TimeRecorder {
     */
    public void changeBusinesDayIncrement(ChangedValue changeValue) {
       businessDay.changeBusinesDayIncrement(changeValue);
+   }
+
+   /**
+    * Updates a {@link ComeAndGo} for the given changed values
+    * 
+    * @param changedComeAndGoValue
+    *        the {@link ChangedComeAndGoValue} define the changed values
+    * @return the changed {@link ComeAndGoes}
+    */
+   public ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue) {
+      return businessDay.changeComeAndGo(changedComeAndGoValue);
    }
 
    /**

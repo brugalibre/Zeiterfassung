@@ -29,9 +29,9 @@ public interface ComeAndGo {
    boolean isNotRecorded();
 
    /**
-    * @return a {@link String} representation of this {@link ComeAndGo}
+    * @return the id of this {@link ComeAndGo}
     */
-   String getRepresentation();
+   String getId();
 
    /**
     * Flags this {@link ComeAndGo} as recorded and returns a new, recorded instance

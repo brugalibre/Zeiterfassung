@@ -11,8 +11,10 @@ import java.util.stream.Collectors;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.settings.round.TimeRounder;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.util.utils.StringUtil;
 
 /**
  * The class {@link ComeAndGoesImpl} keeps track of each time a user comes and goes during the business day.
@@ -42,6 +44,38 @@ public class ComeAndGoesImpl implements ComeAndGoes {
       return comeOrGo(newTime);
    }
 
+   @Override
+   public ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue) {
+      return evalComeAndGo2Change(changedComeAndGoValue)
+            .map(comeAndGo2Change -> changeComeAndGoAndReturnNewComeAndGoes(changedComeAndGoValue, comeAndGo2Change))
+            .orElse(this);
+   }
+
+   private ComeAndGoes changeComeAndGoAndReturnNewComeAndGoes(ChangedComeAndGoValue changedComeAndGoValue, ComeAndGo comeAndGo2Change) {
+      LinkedList<ComeAndGo> comeAndGoEntriesCopy = new LinkedList<>(comeAndGoEntries);
+      ComeAndGo changedComeAndGo = ComeAndGoImpl.of(comeAndGo2Change.getId())
+            .comeOrGo(changedComeAndGoValue.getNewComeValue())
+            .comeOrGo(changedComeAndGoValue.getNewGoValue());
+      comeAndGoEntriesCopy.remove(comeAndGo2Change);
+      comeAndGoEntriesCopy.add(changedComeAndGo);
+      return new ComeAndGoesImpl(comeAndGoEntriesCopy);
+   }
+
+   private Optional<ComeAndGo> evalComeAndGo2Change(ChangedComeAndGoValue changedComeAndGoValue) {
+      Optional<ComeAndGo> comeAndGo2Change = Optional.empty();
+      for (ComeAndGo comeAndGo : comeAndGoEntries) {
+         if (isChangedComeAndGo(comeAndGo, changedComeAndGoValue)) {
+            comeAndGo2Change = Optional.of(comeAndGo);
+            break;
+         }
+      }
+      return comeAndGo2Change;
+   }
+
+   private static boolean isChangedComeAndGo(ComeAndGo comeAndGo, ChangedComeAndGoValue changedComeAndGoValue) {
+      return StringUtil.isEqual(comeAndGo.getId(), changedComeAndGoValue.getId());
+   }
+
    /**
     * Either triggers a manually come or a go for this {@link ComeAndGoDto}
     */
@@ -67,7 +101,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
 
    private static ComeAndGo handleNoCurrentComeOrGo(Time time, LinkedList<ComeAndGo> comeAndGoEntriesCopy) {
       if (comeAndGoEntriesCopy.isEmpty()) {
-         return buildNewComeAndGo(time);
+         return buildNewComeAndGo(time, "0");
       }
       return handleDoneComeAndGo(time, comeAndGoEntriesCopy);
    }
@@ -98,19 +132,26 @@ public class ComeAndGoesImpl implements ComeAndGoes {
          comeAndGoEntriesCopy.remove(currentDoneComeAndGo);// remove it, since we have to add the resumed ComeAndGo later
          currentDoneComeAndGo = currentDoneComeAndGo.resume();
       } else {
-         currentDoneComeAndGo = buildNewComeAndGo(time);
+         currentDoneComeAndGo = buildNewComeAndGo(time, String.valueOf(comeAndGoEntriesCopy.size()));
       }
       return currentDoneComeAndGo;
    }
 
-   private static ComeAndGo buildNewComeAndGo(Time time) {
-      return ComeAndGoImpl.of()
+   private static ComeAndGo buildNewComeAndGo(Time time, String id) {
+      return ComeAndGoImpl.of(id)
             .comeOrGo(time);
    }
 
    @Override
    public Optional<ComeAndGo> getCurrentComeAndGo() {
       return getCurrentComeAndGo(comeAndGoEntries);
+   }
+
+   @Override
+   public Optional<ComeAndGo> getComeAndGo4Id(String id) {
+      return comeAndGoEntries.stream()
+            .filter(comeAndGo -> StringUtil.isEqual(id, comeAndGo.getId()))
+            .findFirst();
    }
 
    private static Optional<ComeAndGo> getCurrentComeAndGo(LinkedList<ComeAndGo> comeAndGoeEntriesCopy) {

@@ -100,6 +100,8 @@ public class TextLabel {
 
    // Come or go stuff
    public static final String COME_OR_GO = "Kommen/Gehen";
+   public static final String COME_OR_GO_COME = "Kommen";
+   public static final String COME_OR_GO_GO = "Gehen";
    public static final String SHOW_COME_OR_GO = "Zeige " + COME_OR_GO;
    public static final String START_CREATING_BD_INC = "Starte Zeiteingabe";
    public static final String COME_OR_GO_RECORDED_TEXT = "(Eingegeben)";
