@@ -84,8 +84,6 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
    private BusinessDayTableModelHelper businessDayTableModel;
    private TimeRecordingTray timeRecordingTray;
 
-   private MenuItem changeDescriptionMenue;
-
    private Stage stage;
 
    @Override
@@ -134,7 +132,7 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
       super.show(dataModelIn);
       BusinessDayVO businessDayVO = dataModel.getBusinessDayVO();
       businessDayTableModel.init(businessDayVO, tableView);
-      changeDescriptionMenue.setDisable(dataModel.getHasBusinessDayDescription().getValue());
+      descAddHelper.setDisable(dataModel.getHasBusinessDayDescription().getValue());
       TableUtil.autoResizeTable(tableView);
       Dimension newDimension = new DimensionImpl(tableView.getPrefWidth(), getDimension().getPrefHeight());
       initStage4NewComponent(stage, newDimension);
@@ -209,16 +207,13 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
    }
 
    private void initContextMenu() {
-
+      contextMenu = new ContextMenu();
       RowDeleteHelper rowDeleteHelper = new RowDeleteHelper(action -> refreshUI());
-      descAddHelper = new DescriptionAddHelper(this::onDescriptionChangeFinish);
+      descAddHelper = new DescriptionAddHelper(this::onDescriptionChangeFinish, contextMenu, tableView);
       MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
       deleteMenue.setOnAction(event -> rowDeleteHelper.deleteRow(event, tableView));
-      changeDescriptionMenue = new MenuItem(TextLabel.CHANGE_DESCRIPTION);
-      changeDescriptionMenue.setOnAction(onDescriptionChange());
-      contextMenu = new ContextMenu();
       contextMenu.getItems().add(deleteMenue);
-      contextMenu.getItems().add(changeDescriptionMenue);
+      contextMenu.getItems().add(descAddHelper.getChangeDescriptionMenuItem());
    }
 
    private void initTable() {
@@ -227,20 +222,13 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
       tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
    }
 
-   private EventHandler<ActionEvent> onDescriptionChange() {
-      return event -> {
-         changeDescriptionMenue.setDisable(true);
-         descAddHelper.showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView);
-      };
-   }
-
    private void onDescriptionChangeFinish(FinishAction finishAction) {
       switch (finishAction) {
          case FINISH:
             refreshUI();
             break;
          case ABORT:
-            changeDescriptionMenue.setDisable(false);
+            descAddHelper.setDisable(false);
             break;
          default:
             throw new IllegalStateException("Unsupported finish action '" + finishAction + "'!");
