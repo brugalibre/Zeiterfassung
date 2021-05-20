@@ -9,7 +9,7 @@ import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
-import com.adcubum.timerecording.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
+import com.adcubum.timerecording.ui.app.pages.overview.control.callback.BDChangedUiCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishAction;
 
@@ -30,10 +30,10 @@ import javafx.scene.control.TablePosition;
  */
 public abstract class AbstractBusinessDayChangeHelper<T> implements EventHandler<CellEditEvent<BusinessDayIncTableRowValue, T>> {
 
-   private BDChangeCallbackHandler uiRefresher;
+   private BDChangedUiCallbackHandler uiRefresher;
    private BusinessDayChangedCallbackHandler handler;
 
-   protected AbstractBusinessDayChangeHelper(BDChangeCallbackHandler uiRefresher) {
+   protected AbstractBusinessDayChangeHelper(BDChangedUiCallbackHandler uiRefresher) {
       this.uiRefresher = uiRefresher;
       this.handler = new BusinessDayChangedCallbackHandlerImpl();
    }

@@ -7,9 +7,10 @@ import static com.adcubum.timerecording.core.work.businessday.ValueTypes.DESCRIP
 
 import java.util.Optional;
 
+import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
-import com.adcubum.timerecording.ui.app.pages.overview.control.callback.BDChangeCallbackHandler;
+import com.adcubum.timerecording.ui.app.pages.overview.control.callback.BDChangedUiCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.adcubum.timerecording.ui.app.pages.overview.view.OverviewPage;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishAction;
@@ -35,12 +36,14 @@ import javafx.stage.StageStyle;
  */
 public class DescriptionAddHelper {
 
-   private BDChangeCallbackHandler callbackHandler;
+   private BDChangedUiCallbackHandler callbackHandler;
+   private BusinessDayChangedCallbackHandler handler;
    private Stage stage;
 
-   public DescriptionAddHelper(BDChangeCallbackHandler uiRefresher) {
+   public DescriptionAddHelper(BDChangedUiCallbackHandler uiRefresher) {
       this.callbackHandler = uiRefresher;
-      stage = new Stage(StageStyle.UNDECORATED);
+      this.handler = new BusinessDayChangedCallbackHandlerImpl();
+      this.stage = new Stage(StageStyle.UNDECORATED);
    }
 
    /**
@@ -96,7 +99,6 @@ public class DescriptionAddHelper {
          stage.close();
          closeStageAndRefreshUI(stage, FinishAction.ABORT);
       } else if (keyEvent.getCode() == KeyCode.ENTER) {
-         BusinessDayChangedCallbackHandlerImpl handler = new BusinessDayChangedCallbackHandlerImpl();
          handler.handleBusinessDayChanged(ChangedValue.of(indexOfChangedEntry, textField.getText(), DESCRIPTION));
          closeStageAndRefreshUI(stage, FinishAction.FINISH);
       }
