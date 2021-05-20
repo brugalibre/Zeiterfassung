@@ -7,6 +7,7 @@ import static com.adcubum.timerecording.core.work.businessday.ValueTypes.DESCRIP
 
 import java.util.Optional;
 
+import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
@@ -18,6 +19,8 @@ import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishActi
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -38,12 +41,27 @@ public class DescriptionAddHelper {
 
    private BDChangedUiCallbackHandler callbackHandler;
    private BusinessDayChangedCallbackHandler handler;
+   private MenuItem addDescriptionMenuItem;
    private Stage stage;
 
-   public DescriptionAddHelper(BDChangedUiCallbackHandler uiRefresher) {
+   public DescriptionAddHelper(BDChangedUiCallbackHandler uiRefresher, ContextMenu contextMenu,
+         TableView<BusinessDayIncTableRowValue> tableView) {
       this.callbackHandler = uiRefresher;
       this.handler = new BusinessDayChangedCallbackHandlerImpl();
       this.stage = new Stage(StageStyle.UNDECORATED);
+      createDescriptionChangeMenueItem(contextMenu, tableView);
+   }
+
+   private void createDescriptionChangeMenueItem(ContextMenu contextMenu, TableView<BusinessDayIncTableRowValue> tableView) {
+      this.addDescriptionMenuItem = new MenuItem(TextLabel.CHANGE_DESCRIPTION);
+      this.addDescriptionMenuItem.setOnAction(onDescriptionChange(contextMenu, tableView));
+   }
+
+   private EventHandler<ActionEvent> onDescriptionChange(ContextMenu contextMenu, TableView<BusinessDayIncTableRowValue> tableView) {
+      return event -> {
+         setDisable(true);
+         showInputField(event, contextMenu.getX(), contextMenu.getY() + 20, tableView);
+      };
    }
 
    /**
@@ -56,17 +74,10 @@ public class DescriptionAddHelper {
       }
    }
 
-   /**
+   /*
     * Shows an input field in order to enter the new description
-    * 
-    * @param event
-    *        the {@link ActionEvent}whose triggered this helper
-    * @param x
-    * @param y
-    * @param tableView
-    *        the table view
     */
-   public void showInputField(ActionEvent event, double x, double y, TableView<BusinessDayIncTableRowValue> tableView) {
+   private void showInputField(ActionEvent event, double x, double y, TableView<BusinessDayIncTableRowValue> tableView) {
       Optional<BusinessDayIncTableRowValue> optionalBusinessDayIncTableRowValue =
             Optional.ofNullable(tableView.getSelectionModel().getSelectedItem());
       optionalBusinessDayIncTableRowValue.ifPresent(businessDayIncTableRowValue -> showInputField(businessDayIncTableRowValue, x, y));
@@ -108,5 +119,22 @@ public class DescriptionAddHelper {
    private void closeStageAndRefreshUI(Stage stage, FinishAction finishAction) {
       stage.close();
       callbackHandler.onFinish(finishAction);
+   }
+
+   /**
+    * Disables or enables the menu-item to add a description
+    * 
+    * @param isDisabled
+    *        <code>true</code> if the menu-item is going to be disabled or <code>false</code> if not
+    */
+   public void setDisable(boolean isDisabled) {
+      addDescriptionMenuItem.setDisable(isDisabled);
+   }
+
+   /**
+    * @return the menu-time to start a TextField for entering a new description
+    */
+   public MenuItem getChangeDescriptionMenuItem() {
+      return addDescriptionMenuItem;
    }
 }
