@@ -5,6 +5,8 @@ package com.adcubum.timerecording.ui.app.pages.overview.control.rowdeleter;
 
 import java.util.Optional;
 
+import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.adcubum.timerecording.ui.app.pages.overview.control.callback.BDChangedUiCallbackHandler;
@@ -13,6 +15,7 @@ import com.adcubum.timerecording.ui.app.pages.overview.view.OverviewPage;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishAction;
 
 import javafx.event.ActionEvent;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 
 /**
@@ -26,10 +29,17 @@ public class RowDeleteHelper {
 
    private BDChangedUiCallbackHandler uiRefresher;
    private BusinessDayChangedCallbackHandler handler;
+   private MenuItem deleteMenuItem;
 
-   public RowDeleteHelper(BDChangedUiCallbackHandler uiRefresher) {
+   public RowDeleteHelper(BDChangedUiCallbackHandler uiRefresher, TableView<BusinessDayIncTableRowValue> tableView) {
       this.handler = new BusinessDayChangedCallbackHandlerImpl();
       this.uiRefresher = uiRefresher;
+      buildDeleteMenuItem(tableView);
+   }
+
+   private void buildDeleteMenuItem(TableView<BusinessDayIncTableRowValue> tableView) {
+      this.deleteMenuItem = new MenuItem(TextLabel.DELETE_ROW);
+      deleteMenuItem.setOnAction(event -> deleteRow(event, tableView));
    }
 
    /**
@@ -40,7 +50,7 @@ public class RowDeleteHelper {
     * @param tableView
     *        the table-view
     */
-   public void deleteRow(ActionEvent event, TableView<BusinessDayIncTableRowValue> tableView) {
+   private void deleteRow(ActionEvent event, TableView<BusinessDayIncTableRowValue> tableView) {
       Optional<BusinessDayIncTableRowValue> optionalBusinessDayIncTableRowValue =
             Optional.ofNullable(tableView.getSelectionModel().getSelectedItem());
       optionalBusinessDayIncTableRowValue.ifPresent(businessDayIncTableRowValue -> {
@@ -52,5 +62,12 @@ public class RowDeleteHelper {
    private void afterDelete(ActionEvent event) {
       event.consume();
       uiRefresher.onFinish(FinishAction.FINISH);
+   }
+
+   /**
+    * @return the menu item in order to delete a {@link BusinessDayIncrement}
+    */
+   public MenuItem getDeleteMenuItem() {
+      return deleteMenuItem;
    }
 }

@@ -9,7 +9,6 @@ import static java.util.Objects.requireNonNull;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.app.pages.mainpage.control.MainWindowController;
@@ -41,7 +40,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
@@ -208,11 +206,9 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
 
    private void initContextMenu() {
       contextMenu = new ContextMenu();
-      RowDeleteHelper rowDeleteHelper = new RowDeleteHelper(action -> refreshUI());
+      RowDeleteHelper rowDeleteHelper = new RowDeleteHelper(action -> refreshUI(), tableView);
       descAddHelper = new DescriptionAddHelper(this::onDescriptionChangeFinish, contextMenu, tableView);
-      MenuItem deleteMenue = new MenuItem(TextLabel.DELETE_ROW);
-      deleteMenue.setOnAction(event -> rowDeleteHelper.deleteRow(event, tableView));
-      contextMenu.getItems().add(deleteMenue);
+      contextMenu.getItems().add(rowDeleteHelper.getDeleteMenuItem());
       contextMenu.getItems().add(descAddHelper.getChangeDescriptionMenuItem());
    }
 
