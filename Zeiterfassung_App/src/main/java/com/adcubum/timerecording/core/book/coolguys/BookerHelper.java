@@ -29,11 +29,13 @@ public class BookerHelper implements BookerAdapter, UserAuthenticatedObservable 
    private ChargeType chargeType;
    private Supplier<char[]> userPwdSupplier;
    private String username;
+   private Object lock;
 
    public BookerHelper() {
       this.chargeType = new ChargeType();
       this.username = "";
       this.userPwdSupplier = () -> new char[] {};
+      this.lock = new Object[] {};
       AuthenticationService.INSTANCE.registerUserAuthenticatedObservable(this);
    }
 
@@ -72,7 +74,7 @@ public class BookerHelper implements BookerAdapter, UserAuthenticatedObservable 
     */
    private void bookInternal(List<String> content) {
       try {
-         Booker booker = new Booker(username, userPwdSupplier);
+         Booker booker = new Booker("", username, userPwdSupplier);
          booker.bookList(content);
       } catch (Exception e) {
          e.printStackTrace();
@@ -85,7 +87,7 @@ public class BookerHelper implements BookerAdapter, UserAuthenticatedObservable 
     * later used by the Turbo-Bucher
     */
    private List<String> createBookContent(BusinessDay businessDay) {
-      synchronized (businessDay) {
+      synchronized (lock) {
          BusinessDayVO businessDayVO = BusinessDayVO.of(businessDay);
          return BusinessDayExporter.INSTANCE.collectContent4TurboBucher(businessDayVO);
       }
