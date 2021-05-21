@@ -10,8 +10,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.adcubum.timerecording.ui.app.TimeRecordingTray;
-import com.adcubum.timerecording.ui.app.pages.mainpage.control.MainWindowController;
+import com.adcubum.timerecording.ui.app.pages.mainpage.control.callback.MainWindowCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.book.service.BookerService;
 import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.StringBusinessDayChangeHelper;
 import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.TicketBusinessDayChangeHelper;
@@ -55,8 +54,6 @@ import javafx.stage.WindowEvent;
 public class OverviewController extends BaseFXController<PageModel, OverviewPageModel>
       implements EventHandler<WindowEvent> {
 
-   private MainWindowController mainWindowController;
-
    @FXML
    private ProgressIndicator progressIndicator;
 
@@ -80,8 +77,8 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
    private BookerService bookerService;
    private DescriptionAddHelper descAddHelper;
    private BusinessDayTableModelHelper businessDayTableModel;
-   private TimeRecordingTray timeRecordingTray;
 
+   private MainWindowCallbackHandler windowCallbackHandler;
    private Stage stage;
 
    @Override
@@ -136,10 +133,6 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
       initStage4NewComponent(stage, newDimension);
    }
 
-   public void init(MainWindowController mainWindowController) {
-      this.mainWindowController = mainWindowController;
-   }
-
    private void handleMouseEvent(MouseEvent event) {
       if (hasRightClickOnTable(event) && !tableView.getSelectionModel().isEmpty()) {
          BusinessDayIncTableRowValue businessDayIncTableRowValue = tableView.getSelectionModel().getSelectedItem();
@@ -164,12 +157,11 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
    @FXML
    private void onAction(ActionEvent actionEvent) {
       if (actionEvent.getSource() == clearButton) {
-         mainWindowController.clearBusinessDayContents();
-         mainWindowController.dispose();
+         windowCallbackHandler.clearBusinessDayContentsAndDispose();
       } else if (actionEvent.getSource() == bookButton) {
          bookerService.book();
       } else if (actionEvent.getSource() == exportButton) {
-         timeRecordingTray.export();
+         windowCallbackHandler.export();
       }
    }
 
@@ -233,15 +225,11 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
 
    private void refreshUI() {
       refresh();
-      timeRecordingTray.updateUIStates();
+      windowCallbackHandler.updateUIStates();
    }
 
-   public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
-      this.timeRecordingTray = requireNonNull(timeRecordingTray);
+   public void init(MainWindowCallbackHandler windowCallbackHandler, Stage stage) {
+      this.windowCallbackHandler = requireNonNull(windowCallbackHandler);
+      this.stage = stage;
    }
-
-   public void setMainPanel(Stage stage) {
-      this.stage = requireNonNull(stage);
-   }
-
 }

@@ -11,6 +11,7 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.control.ComeAndGoOverviewController;
+import com.adcubum.timerecording.ui.app.pages.mainpage.control.callback.MainWindowCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.mainpage.model.MainWindowPageModel;
 import com.adcubum.timerecording.ui.app.pages.overview.control.OverviewController;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishAction;
@@ -56,7 +57,6 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
    @Override
    public void initialize(Page<MainWindowPageModel, MainWindowPageModel> mainWindowPage) {
       super.initialize(mainWindowPage);
-      overviewPanelController.init(this);
       comeAndGoOverviewPanelController.setOnFinishHandler(this::finishOrAbortAndDispose);
       comeAndGoOverviewPanelController.addOnResizeHandler(dimension -> initStage4NewComponent(getStage(), dimension));
       overviewPanelController.addOnResizeHandler(dimension -> initStage4NewComponent(getStage(), dimension));
@@ -151,15 +151,8 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       }
    }
 
-   public void dispose() {
+   private void dispose() {
       page.hide();
-   }
-
-   /**
-    * Clears all entrys in the BusinessDay and updates the system-tray
-    */
-   public void clearBusinessDayContents() {
-      timeRecordingTray.clearBusinessDayContents();
    }
 
    @Override
@@ -178,10 +171,36 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
    }
 
    public void setTimeRecordingTray(TimeRecordingTray timeRecordingTray) {
-      this.timeRecordingTray = timeRecordingTray;
-      overviewPanelController.setTimeRecordingTray(timeRecordingTray);
       Stage stage = getStage();
-      overviewPanelController.setMainPanel(stage);
+      this.timeRecordingTray = timeRecordingTray;
+      overviewPanelController.init(new MainWindowCallbackHandlerImpl(this, timeRecordingTray), stage);
       comeAndGoOverviewPanelController.init(stage);
+   }
+
+   public static class MainWindowCallbackHandlerImpl implements MainWindowCallbackHandler {
+
+      private MainWindowController mainWindowController;
+      private TimeRecordingTray timeRecordingTray;
+
+      public MainWindowCallbackHandlerImpl(MainWindowController mainWindowController, TimeRecordingTray timeRecordingTray) {
+         this.mainWindowController = mainWindowController;
+         this.timeRecordingTray = timeRecordingTray;
+      }
+
+      @Override
+      public void updateUIStates() {
+         timeRecordingTray.updateUIStates();
+      }
+
+      @Override
+      public void export() {
+         timeRecordingTray.export();
+      }
+
+      @Override
+      public void clearBusinessDayContentsAndDispose() {
+         timeRecordingTray.clearBusinessDayContents();
+         mainWindowController.dispose();
+      }
    }
 }
