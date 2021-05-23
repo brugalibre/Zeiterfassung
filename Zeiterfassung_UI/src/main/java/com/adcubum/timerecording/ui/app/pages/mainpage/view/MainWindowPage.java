@@ -6,7 +6,6 @@ package com.adcubum.timerecording.ui.app.pages.mainpage.view;
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.app.pages.mainpage.control.MainWindowController;
 import com.adcubum.timerecording.ui.app.pages.mainpage.model.MainWindowPageModel;
-import com.adcubum.timerecording.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
 import com.adcubum.timerecording.ui.core.view.impl.AbstractFXPage;
 
 import javafx.stage.Stage;
@@ -39,12 +38,10 @@ public class MainWindowPage extends AbstractFXPage<MainWindowPageModel, MainWind
    }
 
    /**
-    * Refreshes the {@link StopBusinessDayIncrementPage} if the content is currently visible
+    * Refreshes the page which is currently displayed. If no page is visible, nothing is done
     */
-   public void refreshStopBusinessDayPage() {
-      if (getStage().isShowing()) {
-         getMainWindowPageController().refreshStopBusinessDayPage();
-      }
+   public void refresh() {
+      getMainWindowPageController().refresh();
    }
 
    private MainWindowController getMainWindowPageController() {

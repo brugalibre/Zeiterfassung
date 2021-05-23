@@ -18,6 +18,7 @@ import com.adcubum.timerecording.ui.core.view.region.Dimension;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 /**
@@ -67,6 +68,19 @@ public abstract class BaseFXController<I extends PageModel, O extends PageModel>
       stage.sizeToScene();
       onResizeHandlers.stream()
             .forEach(resizeHandler -> resizeHandler.accept(dimension));
+   }
+
+   /**
+    * Returns <code>true</code> if the given {@link Region} is contained in the root {@link Pane} of this {@link BaseFXController}
+    * and if this very {@link Region} is visible
+    * 
+    * @param region
+    *        the {@link Region} to check
+    * @return <code>true</code> if the given {@link Region} is contained in the root {@link Pane} and if this very {@link Region} is
+    *         visible. Otherwise it returns <code>false</code>
+    */
+   protected boolean containsRegionAlready(Region region) {
+      return rootPane.getChildren().contains(region) && region.isVisible();
    }
 
    private Consumer<? super Stage> showStage() {

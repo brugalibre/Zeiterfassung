@@ -109,8 +109,8 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    }
 
    private void handleTicketBacklogUpdated(UpdateStatus status) {
-      Platform.runLater(() -> {
-         mainWindowPage.refreshStopBusinessDayPage();
+      runInFxThread(() -> {
+         mainWindowPage.refresh();
          refreshTicketBacklogMenuItem.setEnabled(AuthenticationService.INSTANCE.isUserAuthenticated());
          displayMessage(status);
       });
@@ -170,12 +170,12 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    }
 
    private void showImportDialog() {
-      Platform.runLater(() -> mainWindowPage.showImportDialog());
+      runInFxThread(mainWindowPage::showImportDialog);
    }
 
    private void doUserAuthentication() {
       doUserAuthenticationMenuItem.setEnabled(false);
-      Platform.runLater(() -> UiAuthenticationService.doUserAuthentication(this));
+      runInFxThread(() -> UiAuthenticationService.doUserAuthentication(this));
    }
 
    @Override
@@ -188,15 +188,15 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    }
 
    private void showOverviewView() {
-      Platform.runLater(() -> mainWindowPage.showOverviewView());
+      runInFxThread(mainWindowPage::showOverviewView);
    }
 
    private void showComeAndGoOverview() {
-      Platform.runLater(() -> mainWindowPage.showComeAndGoOverview());
+      runInFxThread(mainWindowPage::showComeAndGoOverview);
    }
 
    private void showInputMask() {
-      Platform.runLater(() -> mainWindowPage.showInputMask());
+      runInFxThread(mainWindowPage::showInputMask);
    }
 
    private void startWorking() {
@@ -211,6 +211,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
 
    private void handleGo() {
       trayIcon.setImage(PictureLibrary.getNotWorkingImage());
+      runInFxThread(mainWindowPage::refresh);
       updateUIStates();
    }
 
@@ -389,6 +390,10 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    private void addTrayIconToSystemTray() {
       trayIcon = new TrayIconDelegateImpl();
       trayIcon.show();
+   }
+
+   private static void runInFxThread(Runnable runnable) {
+      Platform.runLater(runnable);
    }
 
    private MouseMotionListener getMouseMotionListener() {
