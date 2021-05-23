@@ -11,9 +11,11 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.control.ComeAndGoOverviewController;
+import com.adcubum.timerecording.ui.app.pages.comeandgo.view.ComeAndGoOverviewPage;
 import com.adcubum.timerecording.ui.app.pages.mainpage.control.callback.MainWindowCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.mainpage.model.MainWindowPageModel;
 import com.adcubum.timerecording.ui.app.pages.overview.control.OverviewController;
+import com.adcubum.timerecording.ui.app.pages.overview.view.OverviewPage;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.FinishAction;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.control.StopBusinessDayIncrementController;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
@@ -67,17 +69,6 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       fileImportHelper = new FileImportDialogHelper();
    }
 
-   /**
-    * Refreshes the {@link StopBusinessDayIncrementPage} if the content is currently visible
-    */
-   public void refreshStopBusinessDayPage() {
-      if (containsRegionAlready(stopBusinessDayIncrementPanel)) {
-         stopBusinessDayIncrementPanelController.refresh();
-      } else if (containsRegionAlready(comeAndGoOverviewPanel)) {
-         comeAndGoOverviewPanelController.refresh();
-      }
-   }
-
    public void showInputMask(Stage stage) {
       if (containsRegionAlready(stopBusinessDayIncrementPanel)) {
          stopBusinessDayIncrementPanelController.refresh();
@@ -97,10 +88,6 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
          comeAndGoOverviewPanelController.refresh();
       }
       showPane(stage, comeAndGoOverviewPanel, comeAndGoOverviewPanelController, comeAndGoOverviewPanelController);
-   }
-
-   private boolean containsRegionAlready(Region region) {
-      return rootPane.getChildren().contains(region) && region.isVisible();
    }
 
    private void showPane(Stage stage, Region content4Controller, Controller<PageModel, ?> controller, EventHandler<WindowEvent> eventHandler) {
@@ -153,11 +140,22 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
 
    private void dispose() {
       page.hide();
+      rootPane.getChildren().clear();
    }
 
+   /**
+    * Refreshes either the {@link StopBusinessDayIncrementPage}, the {@link ComeAndGoOverviewPage} or the {@link OverviewPage}
+    * if either one is visible right now.
+    */
    @Override
    public void refresh() {
-      timeRecordingTray.updateUIStates();
+      if (containsRegionAlready(stopBusinessDayIncrementPanel)) {
+         stopBusinessDayIncrementPanelController.refresh();
+      } else if (containsRegionAlready(comeAndGoOverviewPanel)) {
+         comeAndGoOverviewPanelController.refresh();
+      } else if (containsRegionAlready(overviewPanel)) {
+         overviewPanelController.refresh();
+      }
    }
 
    @Override
