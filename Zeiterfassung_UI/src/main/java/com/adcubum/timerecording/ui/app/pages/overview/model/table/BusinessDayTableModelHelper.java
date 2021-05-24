@@ -1,5 +1,6 @@
 package com.adcubum.timerecording.ui.app.pages.overview.model.table;
 
+import static java.util.Objects.nonNull;
 import static javafx.collections.FXCollections.observableList;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Objects;
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
@@ -27,6 +29,8 @@ import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
 public class BusinessDayTableModelHelper {
@@ -36,6 +40,7 @@ public class BusinessDayTableModelHelper {
    private List<TableColumn<BusinessDayIncTableRowValue, ?>> columnNames;
    private EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener;
    private EventHandler<CellEditEvent<BusinessDayIncTableRowValue, Ticket>> ticketChangeListener;
+   private TableView<BusinessDayIncTableRowValue> tableView;
 
    public BusinessDayTableModelHelper(EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener,
          EventHandler<CellEditEvent<BusinessDayIncTableRowValue, Ticket>> ticketChangeListener) {
@@ -45,8 +50,52 @@ public class BusinessDayTableModelHelper {
       this.ticketChangeListener = ticketChangeListener;
    }
 
+   /**
+    * Selects the row of the current selected item and also the focus
+    * This will mark the entire row as selected, instead of only the clicked cell
+    * 
+    */
+   public void selectAndSetFocusToRowOfSelectedCell() {
+      BusinessDayIncTableRowValue businessDayIncTableRowValue = tableView.getSelectionModel().getSelectedItem();
+      if (nonNull(businessDayIncTableRowValue)) {
+         tableView.getSelectionModel().clearSelection();
+         tableView.getSelectionModel().select(businessDayIncTableRowValue.getNumberAsInt());
+      }
+   }
+
+   /**
+    * Verifies if the given MouseEvent is a right click on the TableView and also if the TableView
+    * has any data displayed
+    * 
+    * @param event
+    *        the MouseEvent
+    * @return <code>true</code> if TableView was right clicked and if it contains any data. Otherwise it returns <code>false</code>
+    */
+   public boolean hasRightClickOnTable(MouseEvent event) {
+      return isRightMousePressed(event)
+            && event.getSource() == tableView
+            && !tableView.getSelectionModel().isEmpty();
+   }
+
+   private static boolean isRightMousePressed(MouseEvent event) {
+      return event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseButton.SECONDARY;
+   }
+
+   ////////////////////////////////////////////
+   // Init and build the data model          //
+   ////////////////////////////////////////////
+
+   /**
+    * Initialises the underlying model of the TableView of this {@link BusinessDayTableModelHelper}
+    * 
+    * @param bussinessDay
+    *        the {@link BusinessDay} which provides the data
+    * @param tableView
+    *        the TableView which displays the data
+    */
    public void init(BusinessDayVO bussinessDay, TableView<BusinessDayIncTableRowValue> tableView) {
       Objects.requireNonNull(bussinessDay);
+      this.tableView = tableView;
       this.colmnValues = getBusinessDayCells(bussinessDay);
       this.columnNames = getTableHeaders(bussinessDay);
       tableView.setEditable(true);
