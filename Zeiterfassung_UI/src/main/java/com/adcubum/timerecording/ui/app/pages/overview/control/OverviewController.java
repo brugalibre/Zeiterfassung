@@ -42,7 +42,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -134,24 +133,13 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
    }
 
    private void handleMouseEvent(MouseEvent event) {
-      if (hasRightClickOnTable(event) && !tableView.getSelectionModel().isEmpty()) {
-         BusinessDayIncTableRowValue businessDayIncTableRowValue = tableView.getSelectionModel().getSelectedItem();
-         setFocusToRow(tableView, businessDayIncTableRowValue.getNumberAsInt());
+      if (businessDayTableModel.hasRightClickOnTable(event)) {
+         businessDayTableModel.selectAndSetFocusToRowOfSelectedCell();
          contextMenu.show(tableView, event.getScreenX(), event.getScreenY());
          event.consume();
       } else {
          contextMenu.hide();
       }
-   }
-
-   private void setFocusToRow(TableView<?> tableView, int selectedRow) {
-      tableView.getSelectionModel().clearSelection();
-      tableView.getSelectionModel().select(selectedRow);
-   }
-
-   private boolean hasRightClickOnTable(MouseEvent event) {
-      return event.getEventType() == MouseEvent.MOUSE_PRESSED && event.getButton() == MouseButton.SECONDARY
-            && event.getSource() instanceof TableView<?>;
    }
 
    @FXML
