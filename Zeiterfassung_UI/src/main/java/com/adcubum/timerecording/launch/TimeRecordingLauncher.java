@@ -29,13 +29,11 @@ import javafx.stage.Stage;
 public class TimeRecordingLauncher extends Application {
 
    public static void main(String[] args) {
-      setSystemProperties();
       launch();
    }
 
    @Override
    public void start(Stage primaryStage) {
-      setSystemProperties();
       initApplication();
 
       TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
@@ -54,11 +52,6 @@ public class TimeRecordingLauncher extends Application {
       Platform.setImplicitExit(false);
       createPropertieFileIfNotExists(TURBO_BUCHER_PROPERTIES);
       createPropertieFileIfNotExists(ZEITERFASSUNG_PROPERTIES);
-   }
-
-   private static void setSystemProperties() {
-      System.setProperty("prism.order", "sw");
-      System.setProperty("prism.verbose", "true");
    }
 
    private void createPropertieFileIfNotExists(String propertiesFileName) {
