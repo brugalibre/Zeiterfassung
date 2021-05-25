@@ -3,6 +3,7 @@
  */
 package com.adcubum.timerecording.core.work.businessday;
 
+import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 import java.text.ParseException;
@@ -57,7 +58,7 @@ public class TimeSnippet {
    }
 
    /**
-    * Trys to parse the given end time stamp (as String) and summs this value up to
+    * Tries to parse the given end time stamp (as String) and sums this value up to
     * the given begin Time Stamp
     * 
     * @param amountOfTime2Add
@@ -73,13 +74,13 @@ public class TimeSnippet {
    }
 
    /**
-    * Trys to parse a new {@link Date} from the given timestamp value and sets this
+    * Tries to parse a new {@link Date} from the given timestamp value and sets this
     * value as new begin-time stamp
     * 
     * @param newTimeStampValue
     *        the new begin-time-stamp as String
     * @param negativeDurationNOK
-    *        <code>true</code> if a resulting negative duration is not okey and thus the begin time stampt is not changed
+    *        <code>true</code> if a resulting negative duration is not okay and thus the begin time stamp is not changed
     */
    public void updateAndSetBeginTimeStamp(String newTimeStampValue, boolean negativeDurationNOK) {
       String convertedTimeStampValue = convertInput(newTimeStampValue);
@@ -93,13 +94,13 @@ public class TimeSnippet {
    }
 
    /**
-    * Trys to parse a new {@link Date} from the given timestamp value and sets this
+    * Tries to parse a new {@link Date} from the given timestamp value and sets this
     * value as new end-time stamp
     * 
     * @param newTimeStampValue
     *        the new begin-time-stamp as String
     * @param negativeDurationNOK
-    *        <code>true</code> if a resulting negative duration is not okey and thus the end time stampt is not changed
+    *        <code>true</code> if a resulting negative duration is not okay and thus the end time stampt is not changed
     */
    public void updateAndSetEndTimeStamp(String newTimeStampValue, boolean negativeDurationNOK) {
       String convertedTimeStampValue = convertInput(newTimeStampValue);
@@ -134,7 +135,7 @@ public class TimeSnippet {
 
    /**
     * Return the amount of minutes between the start, and end-point. If there is no
-    * ent-point yet, a new end-point at the most current now is created
+    * end-point yet, a new end-point at the most current now is created
     * 
     * @return the amount of minutes between the start, and end-point
     */
@@ -231,5 +232,19 @@ public class TimeSnippet {
       timeSnippet.setBeginTimeStamp(DateParser.getTime(beginValue, date));
       timeSnippet.setEndTimeStamp(DateParser.getTime(endValue, date));
       return timeSnippet;
+   }
+
+   /**
+    * Creates a copy of the given {@link TimeSnippet}. The other {@link TimeSnippet} may be null
+    * 
+    * @param otherTimeSnippet
+    *        the {@link TimeSnippet} to create a copy of
+    * @return a copy of the given {@link TimeSnippet} or <code>null</code> if the given {@link TimeSnippet} is null
+    */
+   public static TimeSnippet createTimeSnippet(TimeSnippet otherTimeSnippet) {
+      if (nonNull(otherTimeSnippet)) {
+         return new TimeSnippet(otherTimeSnippet);
+      }
+      return null;
    }
 }
