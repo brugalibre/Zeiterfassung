@@ -112,7 +112,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       serviceCodesFieldProperty = new SimpleListProperty<>(getAllServiceCodeDescriptions());
       serviceCodesSelectedModelProperty = new SimpleObjectProperty<>();
       ticketProperty = new SimpleObjectProperty<>();
-      this.timeSnippet = pageModelConstructorInfo.getTimeSnippet();
+      this.timeSnippet = TimeSnippet.createTimeSnippet(pageModelConstructorInfo.getTimeSnippet());
       if (nonNull(this.timeSnippet)) {
          timeSnippet.setCallbackHandler(this);
       }
@@ -129,7 +129,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    }
 
    /**
-    * Trys to parse a new {@link Date} from the given timestamp value and sets this
+    * Tries to parse a new {@link Date} from the given timestamp value and sets this
     * value as new begin-time stamp
     */
    public void updateAndSetBeginTimeStamp() {
@@ -138,7 +138,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    }
 
    /**
-    * Trys to parse a new {@link Date} from the given timestamp value and sets this
+    * Tries to parse a new {@link Date} from the given timestamp value and sets this
     * value as new end-time stamp
     */
    public void updateAndSetEndTimeStamp() {
@@ -229,7 +229,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       inPageModel.getTicketComboboxItemsProperty().setValue(getTicketComboboxItems());
       inPageModel.getTicketsProperty().setValue(getTickets());
 
-      inPageModel.setTimeSnippet(pageModelConstructorInfo.getTimeSnippet());
+      TimeSnippet timeSnippet = TimeSnippet.createTimeSnippet(pageModelConstructorInfo.getTimeSnippet());
+      inPageModel.setTimeSnippet(timeSnippet);
       boolean isTimeSnippetNonNull = nonNull(inPageModel.getTimeSnippet());
       if (isTimeSnippetNonNull) {
          inPageModel.getTimeSnippet().setCallbackHandler(inPageModel);
