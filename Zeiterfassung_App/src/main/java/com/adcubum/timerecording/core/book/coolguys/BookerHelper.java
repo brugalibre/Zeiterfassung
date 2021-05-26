@@ -74,7 +74,7 @@ public class BookerHelper implements BookerAdapter, UserAuthenticatedObservable 
     */
    private void bookInternal(List<String> content) {
       try {
-         Booker booker = new Booker("", username, userPwdSupplier);
+         Booker booker = new Booker(username, String.valueOf(userPwdSupplier.get()));
          booker.bookList(content);
       } catch (Exception e) {
          e.printStackTrace();
