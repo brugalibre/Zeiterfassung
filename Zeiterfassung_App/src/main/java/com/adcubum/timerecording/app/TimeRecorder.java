@@ -52,7 +52,7 @@ public class TimeRecorder {
    /**
     * The version of the application
     */
-   public static final String VERSION = "1.8.0";
+   public static final String VERSION = "1.8.1";
 
    private BusinessDay businessDay;
    private UiCallbackHandler callbackHandler;
