@@ -3,6 +3,8 @@
  */
 package com.adcubum.timerecording.work.date;
 
+import java.util.Date;
+
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -21,6 +23,15 @@ import com.adcubum.util.parser.DateParser;
 public class Time {
 
    private Duration duration;
+
+   /**
+    * Create a new {@link Time} object according to the given {@link Time} object
+    * 
+    * @param time
+    */
+   public Time(Date date) {
+      this(date.getTime());
+   }
 
    /**
     * Create a new {@link Time} object according to the given {@link Time} object

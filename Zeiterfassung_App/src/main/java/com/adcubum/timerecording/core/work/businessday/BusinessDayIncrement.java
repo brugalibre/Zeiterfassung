@@ -5,6 +5,7 @@ package com.adcubum.timerecording.core.work.businessday;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -40,9 +41,14 @@ public class BusinessDayIncrement {
    private int chargeType;
    private boolean isCharged;
 
-
+   /**
+    * Creates a new {@link BusinessDayIncrement} for the given {@link Date}
+    * 
+    * @param date
+    *        the {@link Date}
+    */
    public BusinessDayIncrement(Date date) {
-      this.date = date;
+      this.date = requireNonNull(date);
    }
 
    /**
