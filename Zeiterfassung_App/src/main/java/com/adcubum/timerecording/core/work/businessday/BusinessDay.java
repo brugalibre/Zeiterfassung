@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
@@ -235,8 +238,7 @@ public class BusinessDay {
     *        {@link BusinessDayIncrement}
     */
    public void addBusinessIncrement(BusinessDayIncrementAdd update) {
-      BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(update);
-      increments.add(newBusinessDayInc);
+      addBusinessIncrementInternal(() -> BusinessDayIncrement.of(update));
    }
 
    /**
@@ -248,9 +250,37 @@ public class BusinessDay {
     *        which defines the new
     *        {@link BusinessDayIncrement}
     */
-   public void addBusinessIncrements(BusinessDayIncrementImport businessDayIncrementImport) {
-      BusinessDayIncrement newBusinessDayInc = BusinessDayIncrement.of(businessDayIncrementImport);
-      increments.add(newBusinessDayInc);
+   public void addBusinessIncrement(BusinessDayIncrementImport businessDayIncrementImport) {
+      addBusinessIncrementInternal(() -> BusinessDayIncrement.of(businessDayIncrementImport));
+   }
+
+   public void addBusinessIncrementInternal(Supplier<BusinessDayIncrement> bdIncSupplier) {
+      BusinessDayIncrement businessDayIncrement = bdIncSupplier.get();
+      validateIfCanAdd(businessDayIncrement);
+      increments.add(businessDayIncrement);
+   }
+
+   private void validateIfCanAdd(BusinessDayIncrement businessDayIncrement) {
+      Time newBDIncTime = new Time(businessDayIncrement.getDate());
+      increments.stream()
+            .filter(newBusinessDayIncIsBeforeOrAfter(newBDIncTime))
+            .findAny()
+            .ifPresent(throwException());
+   }
+
+   private static Predicate<BusinessDayIncrement> newBusinessDayIncIsBeforeOrAfter(Time newBDIncTime) {
+      return bDayInc -> {
+         Time bdIncDate = new Time(bDayInc.getDate());
+         return newBDIncTime.isBefore(bdIncDate)
+               || bDayInc.isBefore(newBDIncTime);
+      };
+   }
+
+   private static Consumer<BusinessDayIncrement> throwException() {
+      return bdIncrement -> {
+         throw new IllegalStateException(
+               "Can not add a BusinessDayIncrement which takes place before or after the day of this BusinessDay!");
+      };
    }
 
    /**

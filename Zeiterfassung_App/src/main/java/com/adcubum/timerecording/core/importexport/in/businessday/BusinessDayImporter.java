@@ -80,7 +80,7 @@ public class BusinessDayImporter {
    private BusinessDay createAndReturnBusinessDay(Date date, List<BusinessDayIncrementImport> businessDayIncImports) {
       BusinessDay businessDay = new BusinessDay(date);
       for (BusinessDayIncrementImport businessDayIncrementImport : businessDayIncImports) {
-         businessDay.addBusinessIncrements(businessDayIncrementImport);
+         businessDay.addBusinessIncrement(businessDayIncrementImport);
       }
       return businessDay;
    }

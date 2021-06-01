@@ -24,6 +24,7 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Busi
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
+import com.adcubum.timerecording.work.businessday.TimeSnippetBuilder;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.util.parser.DateParser;
 
@@ -114,8 +115,7 @@ class BusinessDayTest extends BaseTestWithSettings {
       // Given
       long firstTimeStampStart = System.currentTimeMillis();
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + 3600 * 1000);
-      Ticket currentTicket = getTicket4Nr();
-      when(currentTicket.isDummyTicket()).thenReturn(true);
+      Ticket currentTicket = mockTicket(true);
       BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, currentTicket);
 
       BusinessDay businessDay = new BusinessDay();
@@ -136,8 +136,7 @@ class BusinessDayTest extends BaseTestWithSettings {
       // Given
       long firstTimeStampStart = System.currentTimeMillis();
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + 3600 * 1000);
-      Ticket currentTicket = getTicket4Nr();
-      when(currentTicket.isDummyTicket()).thenReturn(false);
+      Ticket currentTicket = mockTicket(false);
       BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, currentTicket);
 
       BusinessDay businessDay = new BusinessDay();
@@ -216,6 +215,34 @@ class BusinessDayTest extends BaseTestWithSettings {
       // Then
       BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
       assertThat(businessDayIncrement.getDescription(), is(newDescription));
+   }
+
+   @Test
+   public void testAddNewDBInc() {
+
+      // Given
+      int firstTimeBetweenStartAndStop = 3600 * 1000;
+      TimeSnippet firstSnippet = TimeSnippetBuilder.of()
+            .withYear(2021)
+            .withMonth(1)
+            .withDay(1)
+            .withStartHourAndDuration(2, firstTimeBetweenStartAndStop)
+            .build();
+      TimeSnippet secondSnippet = TimeSnippetBuilder.of()
+            .withYear(2021)
+            .withMonth(2)
+            .withDay(1)
+            .withStartHourAndDuration(2, firstTimeBetweenStartAndStop)
+            .build();
+
+      BusinessDay businessDay = new BusinessDay();
+      businessDay.addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+
+      // When
+      Executable ex = () -> businessDay.addBusinessIncrement(createUpdate(secondSnippet, 113, getTicket4Nr()));
+
+      // Then
+      assertThrows(IllegalStateException.class, ex);
    }
 
    @Test
@@ -437,9 +464,7 @@ class BusinessDayTest extends BaseTestWithSettings {
    }
 
    private Ticket getTicket4Nr() {
-      Ticket ticket = mock(Ticket.class);
-      when(ticket.getNr()).thenReturn("SYRIUS-1324");
-      return ticket;
+      return Ticket.dummy("SYRIUS-1324");
    }
 
    @Test
@@ -485,6 +510,13 @@ class BusinessDayTest extends BaseTestWithSettings {
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(endTimeStamp);
       return timeSnippet;
+   }
+
+   private Ticket mockTicket(boolean isDummy) {
+      Ticket currentTicket = mock(Ticket.class);
+      when(currentTicket.isDummyTicket()).thenReturn(isDummy);
+      when(currentTicket.getNr()).thenReturn("1234");
+      return currentTicket;
    }
 
    private static class TestTimeSnippedChangedCallbackHandler implements TimeSnippedChangedCallbackHandler {

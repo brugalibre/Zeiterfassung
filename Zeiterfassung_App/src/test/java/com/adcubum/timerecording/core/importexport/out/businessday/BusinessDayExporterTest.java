@@ -36,7 +36,7 @@ class BusinessDayExporterTest {
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
       BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, chargeType, getTicket4Nr(ticketNr), description);
 
-      BusinessDay businessDay = new BusinessDay();
+      BusinessDay businessDay = new BusinessDay(startDate.getTime());
       businessDay.addBusinessIncrement(firstInc);
 
       // When

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
@@ -30,6 +31,12 @@ import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.util.parser.DateParser;
 
 class TimeRecorder_ExportBusinessDayTest {
+
+   @BeforeEach
+   public void tearDown() {
+      // make sure there is no garbage..
+      TimeRecorder.INSTANCE.clear();
+   }
 
    @Test
    void testExpotBusinessDayFromFile_Success() throws IOException, ParseException {
