@@ -10,6 +10,13 @@ Konfiguration & Set-up:
 - Anhand aller konfigurierten bzw. definierten Ticket-Nr wird versucht diese Tickets via Jira-api zu ermitteln um beim Stoppen einer Aufzeichnung davon auswählen zu können
 - Starten der Anwendung direkt via .jar (Mac) bzw. exe-File (Windows)
 
+
+Konfigurieren von Erinnerungen:
+- Wenn z.B. morgens um 07:15 eine Erinnerung zum Starten der Aufzeichnung gewünscht ist, genügt ein Eintrag 'beginWork=07:15' im zeiterfassung.properties
+- Für eine Erinnerungs zum Abbuchen der aufgezeichneten Stunden am Abends um 17:15, ist ein Eintrag 'endWork=17:15' im zeiterfassung.properties nötig
+- Die Erinnerungen erscheinen nicht, wenn die Aufzeichnung bereits gestartet ist bzw. wenn es Abends gar keine aufgezeichneten Stunden gibt
+- Ebenfalls erscheint der Reminder nicht, wenn die App nach der eingetragenen Zeit gestartet wird
+
 Login:
 - Rechtsklick auf den roten/grünen/blauen Kreis in der Info-Leiste und dann das Menu 'Login' auswählen. Anschliessend erfolgt die Verifzierung durch die Eingabe von Benutzername & Passwort
 - Die Authentifizierung geschieht via Jira. Ist das Login mehrfach fehlgeschlagen und funktioniert trotz korrekter Eingabe nicht, musst du das Login auf Jira zurück setzen:

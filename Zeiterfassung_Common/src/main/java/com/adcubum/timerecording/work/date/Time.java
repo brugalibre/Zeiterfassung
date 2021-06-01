@@ -3,6 +3,8 @@
  */
 package com.adcubum.timerecording.work.date;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Date;
 
 import org.joda.time.Duration;
@@ -16,6 +18,7 @@ import com.adcubum.util.parser.DateParser;
 /**
  * The {@link Time} class represents the time, e.g. 18:55:45 It is used to add
  * additionally features such as add a amount of time to an existing
+ * 
  * {@link Time} object
  * 
  * @author Dominic
@@ -23,9 +26,10 @@ import com.adcubum.util.parser.DateParser;
 public class Time {
 
    private Duration duration;
+   private RoundMode roundMode;
 
    /**
-    * Create a new {@link Time} object according to the given {@link Time} object
+    * Create a new {@link Time} object according to the given {@link Time} object and the default {@link RoundMode#ONE_MIN}
     * 
     * @param time
     */
@@ -34,35 +38,48 @@ public class Time {
    }
 
    /**
-    * Create a new {@link Time} object according to the given {@link Time} object
+    * Create a new {@link Time} object according to the given {@link Time} object 
     * 
     * @param time
     */
    public Time(Time time) {
-      this(time.getTime());
+      this(time.getTime(), time.roundMode);
    }
 
    /**
-    * Creates a new Time started right now
+    * Creates a new Time started right now a
     */
    public Time() {
       this(System.currentTimeMillis());
    }
 
    /**
-    * @param time
+    * Creates a new {@link Time} with the amount of milliseconds and the default {@link RoundMode#ONE_MIN}
+    * @param time the actual time
     */
    public Time(long time) {
       this(time, RoundMode.ONE_MIN);
    }
 
    /**
-    * @param time
-    * @param roundMode
+    * Creates a new {@link Time} with the amount of milliseconds and the given {@link RoundMode}
+    * @param time the actual time
+    * @param roundMode the {@link RoundMode}
     */
    public Time(long time, RoundMode roundMode) {
       duration = new Duration(time);
+      this.roundMode = requireNonNull(roundMode);
       round(roundMode);
+   }
+
+   /**
+    * Adds the given amount of seconds to this {@link Time} and returns a new instance
+    * 
+    * @param seconds2Add
+    * @return a new {@link Time} instance which has added the given amount of seconds
+    */
+   public Time addSeconds(long seconds2Add) {
+      return new Time(this.duration.getMillis() + seconds2Add * 1000, this.roundMode);
    }
 
    private void round(RoundMode roundMode) {

@@ -22,6 +22,7 @@ import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
  */
 public enum RoundMode {
 
+   SEC(TIME_TYPE.SEC, 1),
    ONE_MIN(TIME_TYPE.MIN, 1),
    FIVE_MIN(TIME_TYPE.MIN, 5),
    TEN_MIN(TIME_TYPE.MIN, 10),
