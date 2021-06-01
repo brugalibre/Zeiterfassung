@@ -114,4 +114,10 @@ public class TextLabel {
          "Es sind noch Kommen/Gehen-Elemente von vergangenen Tagen vorhanden! Diese zuerst verarbeiten bzw. löschen";
    public static final String COME_NOT_POSSIBLE_PRECEDENT_BDINCREMENTS_TITLE =
          "Es sind bereits erfasste Zeiten von vergangenen Tagen vorhanden! Diese zuerst abbuchen bzw. löschen";
+
+   // Scheduler Sachen
+   public static final String REMINDER_TO_START_RECORDING_MSG = "Vergiss nicht, die Zeiterfassung zu starten ;)";
+   public static final String REMINDER_TO_START_RECORDING_TITLE = "Huhuuuu!";
+   public static final String REMINDER_TO_BOOK_MSG = "Vergiss nicht, die erfassten Zeiten abzubuchen :D";
+   public static final String REMINDER_TO_BOOK_TITLE = "Ciao du sau!";
 }

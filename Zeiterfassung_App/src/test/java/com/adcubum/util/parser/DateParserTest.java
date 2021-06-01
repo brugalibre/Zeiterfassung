@@ -2,12 +2,64 @@ package com.adcubum.util.parser;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import com.adcubum.timerecording.work.date.Time;
 
 class DateParserTest {
+
+   @Test
+   void testConvertAndParse2TimeUsingMinutes() throws ParseException {
+      // Given
+      String input1 = "700";
+      String expectedToStringValue = "07:00";
+
+      // When
+      Time actualConvertedInput = DateParser.convertAndParse2Time(input1, TimeUnit.MINUTES);
+
+      // Then
+      assertThat(actualConvertedInput.toString(), is(expectedToStringValue));
+   }
+
+   @Test
+   void testConvertAndParse2TimeUsingSeconds() throws ParseException {
+      // Given
+      String input1 = "070015";
+
+      // When
+      Time actualConvertedInput = DateParser.convertAndParse2Time(input1, TimeUnit.SECONDS);
+      Date actualDate = new Date(actualConvertedInput.getTime());
+
+      // Then
+      Calendar c = Calendar.getInstance();
+      c.setTime(actualDate);
+      int actualHour = c.get(Calendar.HOUR);
+      int actualMin = c.get(Calendar.MINUTE);
+      int actualSec = c.get(Calendar.SECOND);
+      assertThat(actualHour, is(7));
+      assertThat(actualMin, is(0));
+      assertThat(actualSec, is(15));
+   }
+
+   @Test
+   void testConvertAndParse2TimeUnparsable() throws ParseException {
+      // Given
+      String input = "unparsable";
+
+      // When
+      Executable ex = () -> DateParser.convertAndParse2Time(input, TimeUnit.MINUTES);
+
+      // Then
+      assertThrows(IllegalStateException.class, ex);
+   }
 
    @Test
    void testConvertInputWithNoLeadingZero() throws ParseException {

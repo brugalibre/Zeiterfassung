@@ -3,6 +3,9 @@ package com.adcubum.timerecording.work.date;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class TimeUtil {
 
    private TimeUtil() {
@@ -27,6 +30,20 @@ public class TimeUtil {
          }
       }
       return maxTime;
+   }
+
+   /**
+    * Returns the day of the week for the given {@link Time}
+    * 
+    * @param nextDate
+    *        the {@link Time} to check
+    * @return the day of the week for the given {@link Time}
+    * @see Calendar.DAY_OF_WEEK
+    */
+   public static int getCalenderOfTheWeek(Time nextDate) {
+      Calendar c = Calendar.getInstance();
+      c.setTime(new Date(nextDate.getTime()));
+      return c.get(Calendar.DAY_OF_WEEK);
    }
 
    private static boolean currentTimeInstanceIsGreater(Time maxTime, Time time) {

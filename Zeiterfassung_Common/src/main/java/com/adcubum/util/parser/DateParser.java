@@ -7,7 +7,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
+import com.adcubum.timerecording.settings.round.RoundMode;
 import com.adcubum.timerecording.work.date.Time;
 
 /**
@@ -17,7 +19,8 @@ import com.adcubum.timerecording.work.date.Time;
 public class DateParser {
 
    private static final String HOUR_MIN_PATTERN = "HH:mm";
-   private static final String DATE_WITH_SEC_PATTERN = "dd-MM-yyyy HH:mm:ss";
+   public static final String HOUR_MIN_SEC_PATTERN = "HH:mm:ss";
+   private static final String DATE_WITH_SEC_PATTERN = "dd-MM-yyyy "+ HOUR_MIN_SEC_PATTERN;
    public static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
 
    private DateParser() {
@@ -33,8 +36,18 @@ public class DateParser {
     * @return the String representation for the given {@link Time} instance
     */
    public static String parse2String(Time time) {
+      return parse2String(time, HOUR_MIN_PATTERN);
+   }
+
+   /**
+    * Returns the String representation for the given {@link Time} instance
+    * 
+    * @param duration
+    * @return the String representation for the given {@link Time} instance
+    */
+   public static String parse2String(Time time, String pattern) {
       SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-      df.applyPattern(HOUR_MIN_PATTERN);
+      df.applyPattern(pattern);
       Date date = new Date(time.getTime());
       return df.format(date);
    }
@@ -71,7 +84,7 @@ public class DateParser {
       // Append the information about hour, minutes and seconds to the given
       // information
       Date date = df.parse(yearMonthDayInfo + convertInputWithSeconds(input));
-      return new Time(date.getTime());
+      return new Time(date.getTime(), RoundMode.SEC);
    }
 
    /**
@@ -83,7 +96,7 @@ public class DateParser {
     * @return a converted input, always with ':'
     * @throws ParseException
     */
-   public static String convertInput(String input) throws ParseException {
+   public static String convertInputWithSeconds(String input) throws ParseException {
       try {
          String neutralizedInput = input.replace(DOUBLE_POINT, "");
          if (neutralizedInput.length() == 3) {
@@ -91,10 +104,18 @@ public class DateParser {
          }
          String hour = neutralizedInput.substring(0, 2);
          String min = neutralizedInput.substring(2, 4);
-         return new StringBuilder(hour + DOUBLE_POINT + min).toString();
+         String sec = "00";
+         if (containsSeconds(neutralizedInput)) {
+            sec = neutralizedInput.substring(4, 6);
+         }
+         return new StringBuilder(hour + DOUBLE_POINT + min + DOUBLE_POINT + sec).toString();
       } catch (StringIndexOutOfBoundsException e) {
          throw new ParseException(input, 0);
       }
+   }
+
+   private static boolean containsSeconds(String neutralizedInput) {
+      return neutralizedInput.length() >= 6;
    }
 
    /**
@@ -106,14 +127,44 @@ public class DateParser {
     * @return a converted input, always with ':'
     * @throws ParseException
     */
-   public static String convertInputWithSeconds(String input) throws ParseException {
-      String sec = "00";
-      return convertInput(input) + DOUBLE_POINT + sec;
+   public static String convertInput(String input) throws ParseException {
+      String convertedInputWithSeconds = convertInputWithSeconds(input);
+      return convertedInputWithSeconds.substring(0, convertedInputWithSeconds.lastIndexOf(":"));
    }
 
    public static Date parse2Date(String readLine, String dateRepPattern) throws ParseException {
       SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance();
       df.applyPattern(dateRepPattern);
       return df.parse(readLine);
+   }
+
+   /**
+    * Converts the given String input and parses the resulting value to a {@link Time}
+    * With the given {@link TimeUnit} it's possible to define the accuracy. 
+    *  E.g.: The input '800': This will be converted to '08:00' whereas this value 
+    *  is parsed into a Time. Use {@link TimeUnit#SECONDS} if you want to include seconds in the resulting Time instance
+    * 
+    * 
+    * @param timeAsString
+    *        the time as a String
+    * @param timeUnit the {@link TimeUnit} which defines the accuracy of the returned time
+    * @return a {@link Time} instance for the given time value as a String
+    */
+   public static Time convertAndParse2Time(String timeAsString, TimeUnit timeUnit) {
+      return convertString2Time(timeAsString,timeUnit);
+   }
+
+   private static Time convertString2Time(String timeAsString, TimeUnit timeUnit) {
+      try {
+         String convertedTimeStampValue;
+         if (timeUnit == TimeUnit.SECONDS) {
+            convertedTimeStampValue = DateParser.convertInputWithSeconds(timeAsString);
+         } else {
+            convertedTimeStampValue = DateParser.convertInput(timeAsString);
+         }
+         return DateParser.getTime(convertedTimeStampValue, new Date());
+      } catch (ParseException e) {
+         throw new IllegalStateException(e);
+      }
    }
 }
