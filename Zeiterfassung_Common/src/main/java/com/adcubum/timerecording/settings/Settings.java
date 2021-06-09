@@ -20,8 +20,8 @@ public class Settings {
     * Returns the value associated with the given key
     * 
     * @param settingValueKey
-    *        the key to a propertie
-    * @return the value asociated with the given key
+    *        the key to a properties
+    * @return the value associated with the given key
     */
    public String getSettingsValue(String settingValueKey) {
       return getSettingsValue(settingValueKey, ZEITERFASSUNG_PROPERTIES);
@@ -57,7 +57,6 @@ public class Settings {
          throw new IllegalStateException(e);
       }
    }
-
 
    private String evalSettingValueForKey(InputStream resourceStream, String settingValueKey) throws IOException {
       Properties prop = new Properties();
