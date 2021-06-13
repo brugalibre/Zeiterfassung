@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.settings.round.RoundMode;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 
 class BusinessDayIncrementTest {
 
@@ -30,10 +31,10 @@ class BusinessDayIncrementTest {
    }
 
    private static void addTimeSnippet2BDIncrement(BusinessDayIncrement businessDayIncrement, long startTimeStamp, int timeBetweenStartAndStop) {
-      Time startTime = new Time(startTimeStamp, RoundMode.ONE_MIN);
+      Time startTime = TimeFactory.createNew(startTimeStamp, RoundMode.ONE_MIN);
       businessDayIncrement.startCurrentTimeSnippet(startTime);
       long endTimeStamp = startTimeStamp + timeBetweenStartAndStop;// 1h
-      Time endTime = new Time(endTimeStamp, RoundMode.ONE_MIN);
+      Time endTime = TimeFactory.createNew(endTimeStamp, RoundMode.ONE_MIN);
       businessDayIncrement.stopCurrentTimeSnippet(endTime);
    }
 }

@@ -9,6 +9,7 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.settings.round.TimeRounder;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 
 /**
  * The class {@link ComeAndGoDto} keeps track of when a user comes and goes during the business day
@@ -23,7 +24,7 @@ public class ComeAndGoImpl implements ComeAndGo {
    private boolean isRecorded;
 
    private ComeAndGoImpl(String id) {
-      Time time = new Time(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
+      Time time = TimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
       this.comeAndGoSnippet = new TimeSnippet(time);
       this.isRecorded = false;
       this.id = id;

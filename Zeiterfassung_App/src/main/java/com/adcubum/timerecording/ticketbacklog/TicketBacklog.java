@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
+import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketReader;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
@@ -23,9 +24,10 @@ public class TicketBacklog {
    private JiraApiReader jiraApiReader;
    private TicketBacklogHelper backlogHelper;
    private Set<Ticket> tickets;
+   private FileImporter fileImporter;
 
    TicketBacklog() {
-      this(JiraApiReader.INSTANCE);
+      this(JiraApiReader.INSTANCE, FileImporterFactory.createNew());
    }
 
    /**
@@ -34,14 +36,15 @@ public class TicketBacklog {
     * @param jiraApiReader
     *        the {@link JiraApiReader}
     */
-   TicketBacklog(JiraApiReader jiraApiReader) {
+   TicketBacklog(JiraApiReader jiraApiReader, FileImporter fileImporter) {
       this.backlogHelper = new TicketBacklogHelper();
       this.jiraApiReader = jiraApiReader;
       this.tickets = new HashSet<>();
+      this.fileImporter = fileImporter;
    }
 
    private void readDefaultTickets() {
-      List<Ticket> defaultTickets = new DefaultTicketReader(jiraApiReader, FileImporter.INTANCE).readDefaultTickets();
+      List<Ticket> defaultTickets = new DefaultTicketReader(jiraApiReader, fileImporter).readDefaultTickets();
       LOG.info("Read " + defaultTickets.size() + " default tickets from outside the sprint");
       this.tickets.addAll(defaultTickets);
    }

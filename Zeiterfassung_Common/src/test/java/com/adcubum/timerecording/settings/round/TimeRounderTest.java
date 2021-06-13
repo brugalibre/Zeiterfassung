@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 
-class TimeRounderTest extends BaseTestWithSettings{
+class TimeRounderTest extends BaseTestWithSettings {
 
    @Test
    void testSetRoundMode() {
@@ -18,7 +18,7 @@ class TimeRounderTest extends BaseTestWithSettings{
       // Given
       Settings settings = spy(Settings.INSTANCE);
       settings.saveValueToProperties(PROPERTY_KEY, String.valueOf(RoundMode.FIFTEEN_MIN.getAmount()), ZEITERFASSUNG_PROPERTIES);
-      TimeRounder timeRounder = new TimeRounder(settings);
+      TimeRounder timeRounder = new TimeRounderImpl(settings);
 
       // When
       timeRounder.setRoundMode(RoundMode.FIFTEEN_MIN);

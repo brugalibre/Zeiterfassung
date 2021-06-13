@@ -203,7 +203,6 @@ public class BusinessDayImporter {
             return currentElementIndex + 2;
          case BEGIN:
             // Plus two since we incremented the index two times while adding a
-            // new time stamp.
             currentElementIndex = currentElementIndex + 2;
             return currentElementIndex;
          default:

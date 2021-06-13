@@ -1,8 +1,8 @@
 package com.adcubum.scheduler.startrecordingdobooking;
 
 
-import static com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminder.BEGIN_WORK_KEY;
-import static com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminder.END_WORK_KEY;
+import static com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderImpl.BEGIN_WORK_KEY;
+import static com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderImpl.END_WORK_KEY;
 import static java.util.Objects.nonNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -22,6 +22,7 @@ import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.settings.round.RoundMode;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.util.parser.DateParser;
 
 class StartRecordingAndDoBookingReminderIntegrationTest extends BaseTestWithSettings {
@@ -99,15 +100,15 @@ class StartRecordingAndDoBookingReminderIntegrationTest extends BaseTestWithSett
       BooleanSupplier needsEndReminder = () -> true;
 
       // When
-      StartRecordingAndDoBookingReminder startRecordingAndDoBookingReminder =
-            new StartRecordingAndDoBookingReminder(needsEndReminder, needsEndReminder);
+      StartRecordingAndDoBookingReminderImpl startRecordingAndDoBookingReminder =
+            new StartRecordingAndDoBookingReminderImpl(needsEndReminder, needsEndReminder);
 
       // Then. For the sake of the test coverage
       assertThat(startRecordingAndDoBookingReminder, is(not(nullValue())));
    }
 
    private static class TestCaseBuilder {
-      private StartRecordingAndDoBookingReminder startRecordingAndDoBookingReminder;
+      private StartRecordingAndDoBookingReminderImpl startRecordingAndDoBookingReminder;
       private TestUiCallbackHandler callbackHandler;
       private String beginTimeValueAsString;
       private String endTimeValueAsString;
@@ -129,13 +130,13 @@ class StartRecordingAndDoBookingReminderIntegrationTest extends BaseTestWithSett
       }
 
       private TestCaseBuilder withBeginRemindTime(int remindTime) {
-         Time nowPlusAdditionallyTime = new Time(System.currentTimeMillis(), RoundMode.SEC).addSeconds(remindTime);
+         Time nowPlusAdditionallyTime = TimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC).addSeconds(remindTime);
          this.beginTimeValueAsString = DateParser.parse2String(nowPlusAdditionallyTime, DateParser.HOUR_MIN_SEC_PATTERN);
          return this;
       }
 
       private TestCaseBuilder withEndRemindTime(int remindTime) {
-         Time nowPlusAdditionallyTime = new Time(System.currentTimeMillis(), RoundMode.SEC).addSeconds(remindTime);
+         Time nowPlusAdditionallyTime = TimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC).addSeconds(remindTime);
          this.endTimeValueAsString = DateParser.parse2String(nowPlusAdditionallyTime, DateParser.HOUR_MIN_SEC_PATTERN);
          return this;
       }
@@ -152,7 +153,7 @@ class StartRecordingAndDoBookingReminderIntegrationTest extends BaseTestWithSett
          if (nonNull(endTimeValueAsString)) {
             saveProperty2Settings(END_WORK_KEY, endTimeValueAsString);
          }
-         this.startRecordingAndDoBookingReminder = new StartRecordingAndDoBookingReminder(Settings.INSTANCE, needsStartReminder, needsEndReminder, 1);
+         this.startRecordingAndDoBookingReminder = new StartRecordingAndDoBookingReminderImpl(Settings.INSTANCE, needsStartReminder, needsEndReminder, 1);
          return this;
       }
    }

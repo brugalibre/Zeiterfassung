@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	  	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<bean id="reminder" class="com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderImpl" scope="prototype" lazy-init="true"/>
+	<bean id="message" class="com.adcubum.timerecording.message.MessageImpl" scope="prototype" lazy-init="true"/>
+	<bean id="time" class="com.adcubum.timerecording.work.date.TimeImpl" scope="prototype" lazy-init="true"/>
+	<bean id="fileimporter" class="com.adcubum.timerecording.importexport.in.file.FileImporterImpl" lazy-init="true"/>
+	<bean id="fileexporter" class="com.adcubum.timerecording.importexport.out.file.FileExporterImpl" lazy-init="true"/>
+	<bean id="timerounder" class="com.adcubum.timerecording.settings.round.TimeRounderImpl" lazy-init="true"/>
+	<bean id="settings" class="com.adcubum.timerecording.settings.SettingsImpl" lazy-init="true"/>
+
+</beans>

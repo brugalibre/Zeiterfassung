@@ -14,6 +14,7 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.settings.round.TimeRounder;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.util.utils.StringUtil;
 
 /**
@@ -40,7 +41,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
     */
    @Override
    public ComeAndGoes comeOrGo() {
-      Time newTime = new Time(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
+      Time newTime = TimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
       return comeOrGo(newTime);
    }
 
@@ -190,7 +191,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
 
    @Override
    public boolean hasComeAndGoesFromPrecedentDays() {
-      Time now = new Time();
+      Time now =TimeFactory.createNew();
       return comeAndGoEntries.stream()
             .map(ComeAndGo::getComeAndGoTimeStamp)
             .map(TimeSnippet::getBeginTimeStamp)

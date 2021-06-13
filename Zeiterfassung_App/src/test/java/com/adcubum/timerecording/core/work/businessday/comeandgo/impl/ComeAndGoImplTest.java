@@ -13,6 +13,7 @@ import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 
 class ComeAndGoImplTest extends BaseTestWithSettings {
 
@@ -23,9 +24,9 @@ class ComeAndGoImplTest extends BaseTestWithSettings {
       // When
       Executable exe = () -> {
          ComeAndGo comeAndGo = ComeAndGoImpl.of();
-         comeAndGo = comeAndGo.comeOrGo(new Time());
-         comeAndGo = comeAndGo.comeOrGo(new Time());// this comeAndGo is done by now
-         comeAndGo.comeOrGo(new Time());
+         comeAndGo = comeAndGo.comeOrGo(TimeFactory.createNew());
+         comeAndGo = comeAndGo.comeOrGo(TimeFactory.createNew());// this comeAndGo is done by now
+         comeAndGo.comeOrGo(TimeFactory.createNew());
       };
 
       // Then
@@ -99,6 +100,6 @@ class ComeAndGoImplTest extends BaseTestWithSettings {
    private static Time getTime(int amountOfMinutes) {
       GregorianCalendar startDate = new GregorianCalendar(2020, 1, 1);// year, month (starts at zero!), day, hours, min, second
       int oneMinute = 1 * 60000;
-      return new Time(startDate.getTimeInMillis() + amountOfMinutes * oneMinute);
+      return TimeFactory.createNew(startDate.getTimeInMillis() + amountOfMinutes * oneMinute);
    }
 }

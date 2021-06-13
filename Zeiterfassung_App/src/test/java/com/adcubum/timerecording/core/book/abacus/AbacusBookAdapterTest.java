@@ -36,6 +36,7 @@ import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.security.login.auth.TestAuthenticationService;
 import com.adcubum.timerecording.security.login.auth.usercredentials.UserCredentialsAuthenticator;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 
 class AbacusBookAdapterTest {
 
@@ -214,10 +215,10 @@ class AbacusBookAdapterTest {
    }
 
    private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) {
-      Time beginTimeStamp = new Time(System.currentTimeMillis() + timeBetweenBeginAndEnd);
+      Time beginTimeStamp = TimeFactory.createNew(System.currentTimeMillis() + timeBetweenBeginAndEnd);
       TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
-      timeSnippet.setEndTimeStamp(new Time(System.currentTimeMillis() + timeBetweenBeginAndEnd + 10));
+      timeSnippet.setEndTimeStamp(TimeFactory.createNew(System.currentTimeMillis() + timeBetweenBeginAndEnd + 10));
       return timeSnippet;
    }
 

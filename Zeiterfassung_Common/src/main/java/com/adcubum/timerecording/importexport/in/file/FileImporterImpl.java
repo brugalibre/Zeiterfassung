@@ -22,11 +22,6 @@ import com.adcubum.timerecording.importexport.in.file.exception.FileImportExcept
  */
 public class FileImporterImpl implements FileImporter {
 
-   /**
-    * The file extension of files to import
-    */
-   public static final String FILE_EXTENSION = "csv";
-
    FileImporterImpl() {
       // package private Constructor
    }
@@ -39,6 +34,7 @@ public class FileImporterImpl implements FileImporter {
     *        the file to import
     * @return a {@link List} which contains each line of the .csv file as a String
     */
+   @Override
    public List<String> importFile(File file) {
 
       try (FileReader fileReader = new FileReader(file)) {

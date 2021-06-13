@@ -26,6 +26,7 @@ import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.businessday.TimeSnippetBuilder;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.util.parser.DateParser;
 
 class BusinessDayTest extends BaseTestWithSettings {
@@ -443,8 +444,8 @@ class BusinessDayTest extends BaseTestWithSettings {
 
       // Given
       boolean expectedHasComeAndGoesFromPrecedentDays = false;
-      Time come = new Time();
-      Time go = new Time();
+      Time come =TimeFactory.createNew();
+      Time go =TimeFactory.createNew();
       ComeAndGoes comeAndGoes = ComeAndGoesImpl.of()
             .comeOrGo(come)
             .comeOrGo(go);
@@ -460,7 +461,7 @@ class BusinessDayTest extends BaseTestWithSettings {
 
    private Time createTime(String dateAsString, String comeHourAndMinAsString) throws ParseException {
       Date parsedDate = DateParser.parse2Date(dateAsString + " " + comeHourAndMinAsString, DateParser.DATE_PATTERN);
-      return new Time(parsedDate.getTime());
+      return TimeFactory.createNew(parsedDate.getTime());
    }
 
    private Ticket getTicket4Nr() {
@@ -496,16 +497,16 @@ class BusinessDayTest extends BaseTestWithSettings {
 
    private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd, int hour) {
       GregorianCalendar startDate = new GregorianCalendar(2020, 1, 1, hour, 0, 0);// year, month, day, hours, min, second
-      Time beginTimeStamp = new Time(startDate.getTimeInMillis());
+      Time beginTimeStamp = TimeFactory.createNew(startDate.getTimeInMillis());
       TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
-      timeSnippet.setEndTimeStamp(new Time(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
+      timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
       return timeSnippet;
    }
 
    private TimeSnippet createTimeSnippet(long startTime, long stopTime) {
-      Time beginTimeStamp = new Time(startTime);
-      Time endTimeStamp = new Time(stopTime);
+      Time beginTimeStamp = TimeFactory.createNew(startTime);
+      Time endTimeStamp = TimeFactory.createNew(stopTime);
       TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(endTimeStamp);

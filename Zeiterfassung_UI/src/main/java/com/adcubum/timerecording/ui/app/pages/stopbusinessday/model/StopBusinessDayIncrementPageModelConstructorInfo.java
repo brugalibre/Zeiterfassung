@@ -16,6 +16,7 @@ import com.adcubum.timerecording.ui.app.pages.comeandgo.model.ComeAndGoOverviewP
 import com.adcubum.timerecording.ui.app.pages.comeandgo.view.ComeAndGoOverviewPage;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.timerecording.work.date.TimeUtil;
 
 /**
@@ -28,7 +29,7 @@ import com.adcubum.timerecording.work.date.TimeUtil;
  */
 public class StopBusinessDayIncrementPageModelConstructorInfo {
 
-   private static final Time ZERO_MAX_TIME = new Time(0);
+   private static final Time ZERO_MAX_TIME = TimeFactory.createNew(0);
    private TimeSnippet currentTimeSnippet;
    private String totalDurationRep;
    private String description;
@@ -139,8 +140,8 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
    }
 
    private static TimeSnippet getTimeSnippet(ComeAndGoOverviewPageModel comeAndGoOverviewPageModel) {
-      Time begin = new Time();
-      Time end = new Time();
+      Time begin =TimeFactory.createNew();
+      Time end =TimeFactory.createNew();
       TimeSnippet comeAndGoTimeSnippet = comeAndGoOverviewPageModel.getComeAndGoTimeSnippet();
       if (nonNull(comeAndGoTimeSnippet)) {
          if (nonNull(comeAndGoTimeSnippet.getBeginTimeStamp())) {

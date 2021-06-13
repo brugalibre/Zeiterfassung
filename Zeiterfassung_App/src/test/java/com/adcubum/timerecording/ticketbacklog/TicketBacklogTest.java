@@ -14,12 +14,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketConst;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
@@ -216,7 +221,25 @@ class TicketBacklogTest extends BaseTestWithSettings {
          if (nonNull(boardName)) {
             saveProperty2Settings("boardName", boardName);
          }
-         return new TicketBacklog(jiraApiReader);
+         return new TicketBacklog(jiraApiReader, createDefaultFileReader());
+      }
+
+      private FileImporter createDefaultFileReader() {
+         return file -> {
+            List<String> importedLines = new ArrayList<>();
+            try (FileReader fileReader = new FileReader(file)) {
+               BufferedReader bufferedReader = new BufferedReader(fileReader);
+               String readLine = bufferedReader.readLine();
+               while (Objects.nonNull(readLine)) {
+                  importedLines.add(readLine);
+                  readLine = bufferedReader.readLine();
+               }
+               return importedLines;
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+            return importedLines;
+         };
       }
 
       private TestCaseBuilder buildTestCaseBuilder() {

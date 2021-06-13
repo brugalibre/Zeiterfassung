@@ -24,10 +24,12 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
+import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.util.parser.DateParser;
 
 class TimeRecorder_ExportBusinessDayTest {
@@ -65,8 +67,9 @@ class TimeRecorder_ExportBusinessDayTest {
    private File assertFileContent(File expectedExportedFile, FileExportResult fileExportResult) {
       File exportedFile = new File(fileExportResult.getPath());
       assertThat(exportedFile.exists(), is(true));
-      List<String> actualFileContent = FileImporter.INTANCE.importFile(exportedFile);
-      List<String> expectedContent = FileImporter.INTANCE.importFile(expectedExportedFile);
+      FileImporter fileImporter = FileImporterFactory.createNew();
+      List<String> actualFileContent = fileImporter.importFile(exportedFile);
+      List<String> expectedContent = fileImporter.importFile(expectedExportedFile);
       assertContent(expectedContent, actualFileContent);
       return exportedFile;
    }
@@ -122,10 +125,10 @@ class TimeRecorder_ExportBusinessDayTest {
 
       private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) throws ParseException {
          Date startDate = DateParser.parse2Date("01-02-2020 00:00", DateParser.DATE_PATTERN);
-         Time beginTimeStamp = new Time(startDate.getTime());
+         Time beginTimeStamp = TimeFactory.createNew(startDate.getTime());
          TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
          timeSnippet.setBeginTimeStamp(beginTimeStamp);
-         timeSnippet.setEndTimeStamp(new Time(startDate.getTime() + timeBetweenBeginAndEnd));
+         timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTime() + timeBetweenBeginAndEnd));
          return timeSnippet;
       }
    }

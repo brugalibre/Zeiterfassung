@@ -3,7 +3,7 @@ package com.adcubum.timerecording.ui.core.dialog;
 import java.io.File;
 
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.importexport.in.file.FileImporterImpl;
+import com.adcubum.timerecording.importexport.in.file.FileImporter;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -33,7 +33,7 @@ public class FileImportDialogHelper {
    public File showImportDialogAndReturnFile(Stage stage) {
       fileChooser.setTitle(TextLabel.SHOW_IMPORT_DIALOG_TITLE);
       FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
-            "Aufzeichnungen (*." + FileImporterImpl.FILE_EXTENSION + ")", "*." + FileImporterImpl.FILE_EXTENSION);
+            "Aufzeichnungen (*." + FileImporter.FILE_EXTENSION + ")", "*." + FileImporter.FILE_EXTENSION);
       fileChooser.getExtensionFilters().add(extFilter);
       return fileChooser.showOpenDialog(stage);
    }

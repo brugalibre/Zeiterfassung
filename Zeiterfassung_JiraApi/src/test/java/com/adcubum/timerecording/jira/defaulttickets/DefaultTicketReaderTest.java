@@ -11,7 +11,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import com.adcubum.timerecording.importexport.in.file.FileImporterImpl;
+import com.adcubum.timerecording.importexport.in.file.FileImporter;
+import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 
@@ -23,8 +24,8 @@ class DefaultTicketReaderTest {
       // Given
       int expectedAmountOfTickets = 2 + DefaultTicketConst.getDefaultScrumtTicketNrs().size();
       JiraApiReader jiraApiReader = mockJiraApiReader(mock(Ticket.class));
-      DefaultTicketReader defaultTicketReader =
-            new DefaultTicketReader(jiraApiReader, "src\\test\\resources\\testTickets.txt", FileImporterImpl.INTANCE::importFile);
+      FileImporter fileImporter = FileImporterFactory.createNew();
+      DefaultTicketReader defaultTicketReader = new DefaultTicketReader(jiraApiReader, "src\\test\\resources\\testTickets.txt", fileImporter);
 
       // When
       List<Ticket> actualTickets = defaultTicketReader.readDefaultTickets();
@@ -39,8 +40,9 @@ class DefaultTicketReaderTest {
       // Given
       int expectedAmountOfTickets = DefaultTicketConst.getDefaultScrumtTicketNrs().size();
       JiraApiReader jiraApiReader = mockJiraApiReader(mock(Ticket.class));
+      FileImporter fileImporter = FileImporterFactory.createNew();
       DefaultTicketReader defaultTicketReader =
-            new DefaultTicketReader(jiraApiReader, "blubbediblu/testTickets.txt", FileImporterImpl.INTANCE::importFile);
+            new DefaultTicketReader(jiraApiReader, "blubbediblu/testTickets.txt", fileImporter);
 
       // When
       List<Ticket> actualTickets = defaultTicketReader.readDefaultTickets();
@@ -55,8 +57,9 @@ class DefaultTicketReaderTest {
       // Given
       int expectedAmountOfTickets = 0;
       JiraApiReader jiraApiReader = mockJiraApiReader(null);
+      FileImporter fileImporter = FileImporterFactory.createNew();
       DefaultTicketReader defaultTicketReader =
-            new DefaultTicketReader(jiraApiReader, "blubbediblu/testTickets.txt", FileImporterImpl.INTANCE::importFile);
+            new DefaultTicketReader(jiraApiReader, "blubbediblu/testTickets.txt", fileImporter);
 
       // When
       List<Ticket> actualTickets = defaultTicketReader.readDefaultTickets();

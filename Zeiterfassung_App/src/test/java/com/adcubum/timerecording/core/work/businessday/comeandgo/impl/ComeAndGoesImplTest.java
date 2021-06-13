@@ -17,7 +17,7 @@ import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.businessday.BusinessDayBuilder;
 import com.adcubum.timerecording.work.businessday.TimeSnippetBuilder;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 
 class ComeAndGoesImplTest extends BaseTestWithSettings {
 
@@ -51,7 +51,7 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
    void testComeOrGoes_ChangeComeAndGoesWithoutAnyEntries() {
       // Given
       ComeAndGoes comeAndGoes = ComeAndGoesImpl.of();
-      ChangedComeAndGoValue value = ChangedComeAndGoValueImpl.of("1", new Time(), new Time());
+      ChangedComeAndGoValue value = ChangedComeAndGoValueImpl.of("1",TimeFactory.createNew(),TimeFactory.createNew());
 
       // When
       ComeAndGoes changeComeAndGo = comeAndGoes.changeComeAndGo(value);
@@ -66,11 +66,11 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
       long begin = System.currentTimeMillis() - 10_000;
       long end = System.currentTimeMillis() - 10_000;
       ComeAndGoes comeAndGoes = ComeAndGoesImpl.of()
-            .comeOrGo(new Time(begin))
-            .comeOrGo(new Time(end));// this comeAndGo is done by now
+            .comeOrGo(TimeFactory.createNew(begin))
+            .comeOrGo(TimeFactory.createNew(end));// this comeAndGo is done by now
 
       // When
-      ComeAndGoes changedComeAndGo = comeAndGoes.comeOrGo(new Time(end));// start a new one, with the same begin than the previous' end
+      ComeAndGoes changedComeAndGo = comeAndGoes.comeOrGo(TimeFactory.createNew(end));// start a new one, with the same begin than the previous' end
       List<ComeAndGo> comeAndGoesEntries = changedComeAndGo.getComeAndGoEntries();
 
       // Then
@@ -136,9 +136,9 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
       long begin2 = end1 + 300_000;
 
       // When
-      ComeAndGoes changedComeAndGos = comeAndGos.comeOrGo(new Time(begin1))
-            .comeOrGo(new Time(end1))
-            .comeOrGo(new Time(begin2));
+      ComeAndGoes changedComeAndGos = comeAndGos.comeOrGo(TimeFactory.createNew(begin1))
+            .comeOrGo(TimeFactory.createNew(end1))
+            .comeOrGo(TimeFactory.createNew(begin2));
       List<ComeAndGo> actualComeAndGoes = changedComeAndGos.getComeAndGoEntries();
 
       // Then

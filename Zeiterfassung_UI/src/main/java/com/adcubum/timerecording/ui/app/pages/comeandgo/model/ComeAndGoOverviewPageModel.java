@@ -21,6 +21,7 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Busi
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.table.ComeAndGoTableRowValue;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -55,7 +56,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
       this.isClearAllComeAndGoesButtonDisabled = evalIsClearAllComeAndGoesButtonDisabled(comeAndGoesDataModels);
       this.currentComeAndGoIndex = evalCurrentComeAndGoIndex(comeAndGoesDataModels);
       this.businessDayChangedCallbackHandler = new ComeAndGoBDChangedCallbackHandler();
-      this.prevComeAndGoEnd = new Time(0);
+      this.prevComeAndGoEnd = TimeFactory.createNew(0);
       this.comeAndGoTableRowValuesProperty = new SimpleListProperty<>(map2ComeAndGoTableRowValues(comeAndGoesDataModels));
    }
 
@@ -70,8 +71,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
       List<ComeAndGoDataModel> comeAndGoesDataModels = inPageModel.comeAndGoesDataModels;
       inPageModel.isStartAddBDIncrementButtonDisabled = evalIsStartAddBDIncrementButtonDisabled(comeAndGoesDataModels);
       inPageModel.currentComeAndGoIndex = evalCurrentComeAndGoIndex(comeAndGoesDataModels);
-      inPageModel.prevComeAndGoEnd = new Time(0);
-      inPageModel.businessDayChangedCallbackHandler = inPageModel.businessDayChangedCallbackHandler;
+      inPageModel.prevComeAndGoEnd = TimeFactory.createNew(0);
       inPageModel.comeAndGoTableRowValuesProperty.setValue(map2ComeAndGoTableRowValues(comeAndGoesDataModels));
       return inPageModel;
    }
