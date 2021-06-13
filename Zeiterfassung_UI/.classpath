@@ -15,6 +15,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_App"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Auth"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_JiraApi"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Common_Api"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>

@@ -12,6 +12,7 @@ import java.util.Date;
 import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.DateParser;
@@ -70,7 +71,7 @@ public class TimeSnippet {
       float additionallyTime = NumberFormat.parseFloat(amountOfTime2Add) - getDuration();
 
       long additionallyDuration = (long) (Time.getTimeRefactorValue(TimeType.DEFAULT) * additionallyTime);
-      setEndTimeStamp(new Time(getEndTimeStamp().getTime() + additionallyDuration));
+      setEndTimeStamp(TimeFactory.createNew(getEndTimeStamp().getTime() + additionallyDuration));
    }
 
    /**
@@ -89,7 +90,7 @@ public class TimeSnippet {
          if (getEndTimeStamp().getTime() - time.getTime() < 0 && negativeDurationNOK) {
             return;
          }
-         setBeginTimeStamp(new Time(time));
+         setBeginTimeStamp(TimeFactory.createNew(time));
       }
    }
 
@@ -109,7 +110,7 @@ public class TimeSnippet {
          if (time.getTime() - getBeginTimeStamp().getTime() < 0 && negativeDurationNOK) {
             return;
          }
-         setEndTimeStamp(new Time(time));
+         setEndTimeStamp(TimeFactory.createNew(time));
       }
    }
 
@@ -141,8 +142,8 @@ public class TimeSnippet {
     */
    public float getDuration(TIME_TYPE type) {
       long now = System.currentTimeMillis();
-      Time endTimeSnippet = (endTimeStamp != null ? endTimeStamp : new Time(now));
-      Time tmpBeginTimeStamp = (beginTimeStamp != null ? beginTimeStamp : new Time(now));
+      Time endTimeSnippet = (endTimeStamp != null ? endTimeStamp : TimeFactory.createNew(now));
+      Time tmpBeginTimeStamp = (beginTimeStamp != null ? beginTimeStamp : TimeFactory.createNew(now));
       long time = endTimeSnippet.getTime() - tmpBeginTimeStamp.getTime();
       int factor = (int) Time.getTimeRefactorValue(type);
 
@@ -206,7 +207,7 @@ public class TimeSnippet {
       long newDuration4Increment = (long) (totalDuration / divisor);
 
       TimeSnippet currentTimeSnippet = new TimeSnippet(date);
-      Time currentEndTimeStamp = new Time(newDuration4Increment + beginTimeStamp.getTime());
+      Time currentEndTimeStamp = TimeFactory.createNew(newDuration4Increment + beginTimeStamp.getTime());
       currentTimeSnippet.setBeginTimeStamp(beginTimeStamp);
       currentTimeSnippet.setEndTimeStamp(currentEndTimeStamp);
       return currentTimeSnippet;

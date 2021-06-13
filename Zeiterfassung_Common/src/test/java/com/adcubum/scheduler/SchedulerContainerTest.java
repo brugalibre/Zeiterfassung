@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.settings.round.RoundMode;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.util.parser.DateParser;
 
 class SchedulerContainerTest {
@@ -25,9 +26,9 @@ class SchedulerContainerTest {
    @Test
    void testAddMockedBeginAndEndSchedulerListener() throws InterruptedException {
       // Given
-      SchedulerContainer schedulerListener = spy(new SchedulerContainer());
-      Scheduler beginScheduler = mock(Scheduler.class);
-      Scheduler endScheduler = mock(Scheduler.class);
+      SchedulerContainerImpl schedulerListener = spy(new SchedulerContainerImpl());
+      SchedulerImpl beginScheduler = mock(SchedulerImpl.class);
+      SchedulerImpl endScheduler = mock(SchedulerImpl.class);
       Runnable runnable = mock(Runnable.class);
 
       String begin = "10:00";
@@ -51,8 +52,8 @@ class SchedulerContainerTest {
 
       // Given
       AtomicBoolean wasInvoked = new AtomicBoolean();
-      SchedulerContainer schedulerListener = new SchedulerContainer(TimeUnit.SECONDS, 1);
-      Time now = new Time(System.currentTimeMillis(), RoundMode.SEC);
+      SchedulerContainerImpl schedulerListener = new SchedulerContainerImpl(TimeUnit.SECONDS, 1);
+      Time now = TimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC);
       String timeValueAsString = DateParser.parse2String(now.addSeconds(2), DateParser.HOUR_MIN_SEC_PATTERN);
       schedulerListener.addScheduler(() -> wasInvoked.set(true), timeValueAsString);
 
@@ -70,8 +71,8 @@ class SchedulerContainerTest {
 
       // Given
       AtomicBoolean wasInvoked = new AtomicBoolean();
-      SchedulerContainer schedulerListener = new SchedulerContainer(TimeUnit.SECONDS, 1);
-      Time beforNow = new Time(System.currentTimeMillis() - 1000);// -> accuracy 'MINUTES' in order to create a negativ wait duration
+      SchedulerContainerImpl schedulerListener = new SchedulerContainerImpl(TimeUnit.SECONDS, 1);
+      Time beforNow = TimeFactory.createNew(System.currentTimeMillis() - 1000);// -> accuracy 'MINUTES' in order to create a negativ wait duration
       String timeValueAsString = DateParser.parse2String(beforNow, DateParser.HOUR_MIN_SEC_PATTERN);
       schedulerListener.addScheduler(() -> wasInvoked.set(true), timeValueAsString);
 
@@ -88,8 +89,8 @@ class SchedulerContainerTest {
 
       // Given
       AtomicBoolean wasInvoked = spy(new AtomicBoolean());
-      SchedulerContainer schedulerListener = new SchedulerContainer(TimeUnit.SECONDS, 1);
-      Time now = new Time(System.currentTimeMillis(), RoundMode.SEC);
+      SchedulerContainerImpl schedulerListener = new SchedulerContainerImpl(TimeUnit.SECONDS, 1);
+      Time now = TimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC);
       String timeValueAsString = DateParser.parse2String(now.addSeconds(1), DateParser.HOUR_MIN_SEC_PATTERN);
       schedulerListener.addScheduler(() -> wasInvoked.set(true), timeValueAsString);
 

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.function.BooleanSupplier;
 
 import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminder;
+import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderFactory;
 import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.launch.exception.ApplicationLaunchException;
@@ -50,12 +51,16 @@ public class TimeRecordingLauncher extends Application {
 
    private static void registerReminderListener(UiCallbackHandler callbackHandler) {
       StartRecordingAndDoBookingReminder startEndReminderHelper =
-            new StartRecordingAndDoBookingReminder(needsStartReminder(), TimeRecorder.INSTANCE::hasContent);
+            StartRecordingAndDoBookingReminderFactory.createNew(needsStartReminder(), needsEndReminder());
       startEndReminderHelper.initializeAndStartReminderContainer(callbackHandler);
    }
 
    private static BooleanSupplier needsStartReminder() {
       return () -> !TimeRecorder.INSTANCE.isRecordindg() && !TimeRecorder.INSTANCE.hasContent();
+   }
+
+   private static BooleanSupplier needsEndReminder() {
+      return TimeRecorder.INSTANCE::hasContent;
    }
 
    private void initApplication() {

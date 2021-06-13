@@ -27,10 +27,10 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Chan
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
-import com.adcubum.timerecording.importexport.in.file.FileImporterImpl;
+import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 import com.adcubum.timerecording.importexport.out.file.FileExporter;
-import com.adcubum.timerecording.message.Message;
+import com.adcubum.timerecording.message.MessageFactory;
 import com.adcubum.timerecording.message.MessageType;
 import com.adcubum.util.utils.FileSystemUtil;
 
@@ -127,7 +127,7 @@ public class TimeRecorder {
 
    private void tryStartIfPossible() {
       if (businessDay.hasElementsFromPrecedentDays()) {
-         callbackHandler.displayMessage(Message.of(MessageType.ERROR,
+         callbackHandler.displayMessage(MessageFactory.createNew(MessageType.ERROR,
                TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS, TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE));
       } else {
          start();
@@ -136,10 +136,10 @@ public class TimeRecorder {
 
    private void tryComeIfPossible() {
       if (businessDay.hasComeAndGoesFromPrecedentDays()) {
-         callbackHandler.displayMessage(Message.of(MessageType.ERROR,
+         callbackHandler.displayMessage(MessageFactory.createNew(MessageType.ERROR,
                TextLabel.COME_NOT_POSSIBLE_PRECEDENT_ELEMENTS, TextLabel.COME_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE));
       } else if (businessDay.hasElementsFromPrecedentDays()) {
-         callbackHandler.displayMessage(Message.of(MessageType.ERROR,
+         callbackHandler.displayMessage(MessageFactory.createNew(MessageType.ERROR,
                TextLabel.COME_NOT_POSSIBLE_PRECEDENT_ELEMENTS, TextLabel.COME_NOT_POSSIBLE_PRECEDENT_BDINCREMENTS_TITLE));
       } else {
          come();
@@ -274,7 +274,7 @@ public class TimeRecorder {
          try {
             BookerResult bookResult = bookAdapter.book(businessDay);
             if (bookResult.hasBooked()) {
-               callbackHandler.displayMessage(Message.of(map2MessageType(bookResult), null, bookResult.getMessage()));
+               callbackHandler.displayMessage(MessageFactory.createNew(map2MessageType(bookResult), null, bookResult.getMessage()));
                hasBooked = true;
             }
          } finally {
@@ -309,9 +309,9 @@ public class TimeRecorder {
    private FileExportResult export(String path2Export) {
       FileExportResult fileExportResult = exportSilently(path2Export);
       if (fileExportResult.isSuccess()) {
-         callbackHandler.displayMessage(Message.of(MessageType.INFORMATION, null, TextLabel.SUCESSFULLY_EXPORTED));
+         callbackHandler.displayMessage(MessageFactory.createNew(MessageType.INFORMATION, null, TextLabel.SUCESSFULLY_EXPORTED));
       } else {
-         callbackHandler.displayMessage(Message.of(MessageType.ERROR, fileExportResult.getErrorMsg(), TextLabel.EXPORT_FAILED_TITLE));
+         callbackHandler.displayMessage(MessageFactory.createNew(MessageType.ERROR, fileExportResult.getErrorMsg(), TextLabel.EXPORT_FAILED_TITLE));
       }
       return fileExportResult;
    }
@@ -358,7 +358,8 @@ public class TimeRecorder {
    }
 
    private void importBusinessDayInternal(File file) {
-      List<String> fileContent = FileImporter.INTANCE.importFile(file);
+      FileImporter fileImporter = FileImporterFactory.createNew();
+      List<String> fileContent = fileImporter.importFile(file);
       this.businessDay = BusinessDayImporter.INTANCE.importBusinessDay(fileContent);
    }
 

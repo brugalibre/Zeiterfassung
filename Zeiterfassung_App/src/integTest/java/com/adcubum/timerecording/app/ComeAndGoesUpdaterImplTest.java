@@ -19,6 +19,7 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.change.impl.Cha
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.impl.ComeAndGoesUpdaterImpl;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.util.parser.DateParser;
 
 class ComeAndGoesUpdaterImplTest {
@@ -78,7 +79,7 @@ class ComeAndGoesUpdaterImplTest {
    }
 
    private Time buildTime(String comeTimeAsString) throws ParseException {
-      return new Time(DateParser.getTime(comeTimeAsString, new Time()).getTime());
+      return TimeFactory.createNew(DateParser.getTime(comeTimeAsString, TimeFactory.createNew()).getTime());
    }
 
    private static class TestCaseBuilder {

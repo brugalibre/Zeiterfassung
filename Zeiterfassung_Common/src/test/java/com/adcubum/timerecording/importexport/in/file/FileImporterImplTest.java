@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.importexport.out.file.FileExportResult;
-import com.adcubum.timerecording.importexport.out.file.FileExporter;
+import com.adcubum.timerecording.importexport.out.file.FileExporterImpl;
 
 class FileImporterImplTest {
 
@@ -20,7 +20,7 @@ class FileImporterImplTest {
       String path = "ZZZ:\\ölkj";
 
       // When
-      FileExportResult fileExportResult = FileExporter.INTANCE.exportWithResult(Collections.emptyList(), path);
+      FileExportResult fileExportResult = FileExporterImpl.INTANCE.exportWithResult(Collections.emptyList(), path);
 
       // Then
       assertThat(fileExportResult.isSuccess(), is(false));

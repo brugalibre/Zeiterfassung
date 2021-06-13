@@ -42,6 +42,7 @@ import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageType;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 
 class TimeRecorderTest extends BaseTestWithSettings {
 
@@ -674,10 +675,10 @@ class TimeRecorderTest extends BaseTestWithSettings {
          } else {
             startDate = new GregorianCalendar(2020, 1, 1);// year, month (starts at zero!), day, hours, min, second
          }
-         Time beginTimeStamp = new Time(startDate.getTimeInMillis());
+         Time beginTimeStamp = TimeFactory.createNew(startDate.getTimeInMillis());
          TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
          timeSnippet.setBeginTimeStamp(beginTimeStamp);
-         timeSnippet.setEndTimeStamp(new Time(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
+         timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
          return timeSnippet;
       }
    }

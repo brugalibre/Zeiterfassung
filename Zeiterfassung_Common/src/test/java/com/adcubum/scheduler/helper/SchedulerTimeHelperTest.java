@@ -9,6 +9,7 @@ import java.util.GregorianCalendar;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.timerecording.work.date.TimeUtil;
 
 class SchedulerTimeHelperTest {
@@ -18,7 +19,7 @@ class SchedulerTimeHelperTest {
 
       // Given
       GregorianCalendar startDate = new GregorianCalendar(2020, 11, 4, 1, 0, 0);
-      Time startTime = new Time(startDate.getTimeInMillis());
+      Time startTime = TimeFactory.createNew(startDate.getTimeInMillis());
       Time nextDay = SchedulerTimeHelper.getNextDayOfWeek(startTime);
 
       int dayOfWeekOfStartTime = TimeUtil.getCalenderOfTheWeek(startTime);

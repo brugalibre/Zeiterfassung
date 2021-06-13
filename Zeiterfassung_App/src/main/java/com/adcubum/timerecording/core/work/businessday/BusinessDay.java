@@ -24,6 +24,7 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Chan
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.settings.round.TimeRounder;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.NumberFormat;
@@ -113,7 +114,7 @@ public class BusinessDay {
     * and forward that to the
     */
    public void startNewIncremental() {
-      Time time = new Time(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
+      Time time = TimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
       createNewIncremental();
       currentBussinessDayIncremental.startCurrentTimeSnippet(time);
    }
@@ -124,7 +125,7 @@ public class BusinessDay {
     * that, a new incremental is created
     */
    public void stopCurrentIncremental() {
-      Time endTimeStamp = new Time(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
+      Time endTimeStamp = TimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
       currentBussinessDayIncremental.stopCurrentTimeSnippet(endTimeStamp);
    }
 
@@ -261,7 +262,7 @@ public class BusinessDay {
    }
 
    private void validateIfCanAdd(BusinessDayIncrement businessDayIncrement) {
-      Time newBDIncTime = new Time(businessDayIncrement.getDate());
+      Time newBDIncTime = TimeFactory.createNew(businessDayIncrement.getDate());
       increments.stream()
             .filter(newBusinessDayIncIsBeforeOrAfter(newBDIncTime))
             .findAny()
@@ -270,7 +271,7 @@ public class BusinessDay {
 
    private static Predicate<BusinessDayIncrement> newBusinessDayIncIsBeforeOrAfter(Time newBDIncTime) {
       return bDayInc -> {
-         Time bdIncDate = new Time(bDayInc.getDate());
+         Time bdIncDate = TimeFactory.createNew(bDayInc.getDate());
          return newBDIncTime.isBefore(bdIncDate)
                || bDayInc.isBefore(newBDIncTime);
       };
@@ -318,7 +319,7 @@ public class BusinessDay {
     *         <code>false</code> if not
     */
    public boolean hasElementsFromPrecedentDays() {
-      Time now = new Time();
+      Time now =TimeFactory.createNew();
       return increments.stream()
             .anyMatch(bDayInc -> bDayInc.isBefore(now));
    }

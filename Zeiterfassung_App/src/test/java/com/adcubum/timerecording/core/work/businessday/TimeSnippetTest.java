@@ -7,14 +7,14 @@ import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 
 class TimeSnippetTest {
 
    @Test
    void testGetDurationRepEmptyTimeSnippted() {
       // Given
-      TimeSnippet timeSnippet = new TimeSnippet(new Time());
+      TimeSnippet timeSnippet = new TimeSnippet(TimeFactory.createNew());
       String expectedDurationRep = "0";
 
       // When
@@ -28,7 +28,7 @@ class TimeSnippetTest {
    void testGetDurationRepTimeSnipptetWithoutEnd() {
       // Given
       TimeSnippet timeSnippet = new TimeSnippet(new Date());
-      timeSnippet.setBeginTimeStamp(new Time());
+      timeSnippet.setBeginTimeStamp(TimeFactory.createNew());
       String expectedDurationRep = "0";
 
       // When

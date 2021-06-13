@@ -20,6 +20,7 @@ import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklog;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.NumberFormat;
@@ -247,6 +248,6 @@ public class BusinessDayIncrement {
     *         before the given date. Otherwise return <code>false</code>
     */
    public boolean isBefore(Time time2Check) {
-      return new Time(date.getTime()).isBefore(time2Check);
+      return TimeFactory.createNew(date.getTime()).isBefore(time2Check);
    }
 }
