@@ -24,9 +24,10 @@ import com.adcubum.j2a.zeiterfassung.AbacusBookingConnector;
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.book.result.BookResultType;
 import com.adcubum.timerecording.core.book.result.BookerResult;
-import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.jira.data.Ticket;
@@ -61,7 +62,6 @@ class AbacusBookAdapterTest {
 
       // Then
       verify(tcb.abacusBookingConnector).fetchEmployeeNumber(eq(username));
-      assertThat(tcb.abacusBookAdapter.isInitialized(), is(false));
    }
 
    @Test
@@ -82,7 +82,6 @@ class AbacusBookAdapterTest {
 
       // Then
       verify(tcb.abacusBookingConnector).fetchEmployeeNumber(eq(username));
-      assertThat(tcb.abacusBookAdapter.isInitialized(), is(true));
    }
 
    @Test
@@ -216,14 +215,14 @@ class AbacusBookAdapterTest {
 
    private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) {
       Time beginTimeStamp = TimeFactory.createNew(System.currentTimeMillis() + timeBetweenBeginAndEnd);
-      TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(new Date(beginTimeStamp.getTime()));
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(TimeFactory.createNew(System.currentTimeMillis() + timeBetweenBeginAndEnd + 10));
       return timeSnippet;
    }
 
    private static class TestCaseBuilder {
-      private BusinessDay businessDay;
+      private BusinessDayImpl businessDay;
       private AbacusBookerAdapter abacusBookAdapter;
       private AbacusBookingConnector abacusBookingConnector;
       private List<BusinessDayIncrementAdd> businessDayIncrementAdds;
@@ -236,7 +235,7 @@ class AbacusBookAdapterTest {
 
       private TestCaseBuilder() {
          this.businessDayIncrementAdds = new ArrayList<>();
-         this.businessDay = spy(new BusinessDay(new Date()));
+         this.businessDay = spy(new BusinessDayImpl(new Date()));
          createTestAuthenticationService();
       }
 

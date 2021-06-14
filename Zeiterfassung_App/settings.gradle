@@ -1,1 +1,3 @@
-rootProject.name = 'Zeiterfassung_App'
+include ':Zeiterfassung_Core_Api', ':Zeiterfassung_Common_Api'
+project(':Zeiterfassung_Core_Api').projectDir = file('../Zeiterfassung_Core_Api')
+project(':Zeiterfassung_Common_Api').projectDir = file('../Zeiterfassung_Common_Api')

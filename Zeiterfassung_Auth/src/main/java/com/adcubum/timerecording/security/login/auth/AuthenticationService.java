@@ -20,7 +20,7 @@ public class AuthenticationService {
    private String username;
 
    private AuthenticationService() {
-      this(UserCredentialAuthenticatorFactory.INSTANCE.getUserCredentialsAuthenticator());
+      this(null);
    }
 
    /**
@@ -33,6 +33,13 @@ public class AuthenticationService {
       this.username = "";
       this.userCredentialsAuthenticator = userCredentialsAuthenticator;
       this.userAuthenticatedObservables = new HashSet<>();
+   }
+
+   /**
+    * Initializes this {@link AuthenticationService}
+    */
+   public void init() {
+      this.userCredentialsAuthenticator = UserCredentialAuthenticatorFactory.getUserCredentialsAuthenticator();
    }
 
    /**
@@ -81,9 +88,5 @@ public class AuthenticationService {
     */
    public boolean isUserAuthenticated() {
       return isAuthenticated;
-   }
-
-   public void setUserCredentialsAuthenticator(UserCredentialsAuthenticator userCredentialsAuthenticator) {
-      this.userCredentialsAuthenticator = userCredentialsAuthenticator;
    }
 }

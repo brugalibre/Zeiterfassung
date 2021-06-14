@@ -11,11 +11,12 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVOImpl;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeFactory;
@@ -37,11 +38,11 @@ class BusinessDayExporterTest {
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
       BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, chargeType, getTicket4Nr(ticketNr), description);
 
-      BusinessDay businessDay = new BusinessDay(startDate.getTime());
+      BusinessDayImpl businessDay = new BusinessDayImpl(startDate.getTime());
       businessDay.addBusinessIncrement(firstInc);
 
       // When
-      List<String> content4TurboBucher = BusinessDayExporter.INSTANCE.collectContent4TurboBucher(BusinessDayVO.of(businessDay));
+      List<String> content4TurboBucher = BusinessDayExporter.INSTANCE.collectContent4TurboBucher(BusinessDayVOImpl.of(businessDay));
 
       // Then
       assertThat(content4TurboBucher.size(), is(1));
@@ -66,7 +67,7 @@ class BusinessDayExporterTest {
    private TimeSnippet createTimeSnippet(long startTime, long stopTime) {
       Time beginTimeStamp = TimeFactory.createNew(startTime);
       Time endTimeStamp = TimeFactory.createNew(stopTime);
-      TimeSnippet timeSnippet = new TimeSnippet(new Date(startTime));
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(new Date(startTime));
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(endTimeStamp);
       return timeSnippet;

@@ -32,7 +32,8 @@
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Auth"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_JiraApi"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/abacus-and-turbobucher"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Common_Api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Core_Api"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/abacus-connector-and-turbo-bucher"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>

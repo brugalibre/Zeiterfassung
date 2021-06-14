@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
@@ -126,7 +127,7 @@ class TimeRecorder_ExportBusinessDayTest {
       private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) throws ParseException {
          Date startDate = DateParser.parse2Date("01-02-2020 00:00", DateParser.DATE_PATTERN);
          Time beginTimeStamp = TimeFactory.createNew(startDate.getTime());
-         TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
+         TimeSnippet timeSnippet = TimeSnippetFactory.createNew(new Date(beginTimeStamp.getTime()));
          timeSnippet.setBeginTimeStamp(beginTimeStamp);
          timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTime() + timeBetweenBeginAndEnd));
          return timeSnippet;

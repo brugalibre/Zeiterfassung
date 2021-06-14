@@ -18,6 +18,7 @@ import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
@@ -112,7 +113,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       serviceCodesFieldProperty = new SimpleListProperty<>(getAllServiceCodeDescriptions());
       serviceCodesSelectedModelProperty = new SimpleObjectProperty<>();
       ticketProperty = new SimpleObjectProperty<>();
-      this.timeSnippet = TimeSnippet.createTimeSnippet(pageModelConstructorInfo.getTimeSnippet());
+      this.timeSnippet = TimeSnippetFactory.createNew(pageModelConstructorInfo.getTimeSnippet());
       if (nonNull(this.timeSnippet)) {
          timeSnippet.setCallbackHandler(this);
       }
@@ -229,7 +230,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       inPageModel.getTicketComboboxItemsProperty().setValue(getTicketComboboxItems());
       inPageModel.getTicketsProperty().setValue(getTickets());
 
-      TimeSnippet timeSnippet = TimeSnippet.createTimeSnippet(pageModelConstructorInfo.getTimeSnippet());
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(pageModelConstructorInfo.getTimeSnippet());
       inPageModel.setTimeSnippet(timeSnippet);
       boolean isTimeSnippetNonNull = nonNull(inPageModel.getTimeSnippet());
       if (isTimeSnippetNonNull) {

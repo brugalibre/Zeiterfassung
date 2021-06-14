@@ -7,6 +7,7 @@ import static java.util.Objects.nonNull;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
@@ -140,8 +141,8 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
    }
 
    private static TimeSnippet getTimeSnippet(ComeAndGoOverviewPageModel comeAndGoOverviewPageModel) {
-      Time begin =TimeFactory.createNew();
-      Time end =TimeFactory.createNew();
+      Time begin = TimeFactory.createNew();
+      Time end = TimeFactory.createNew();
       TimeSnippet comeAndGoTimeSnippet = comeAndGoOverviewPageModel.getComeAndGoTimeSnippet();
       if (nonNull(comeAndGoTimeSnippet)) {
          if (nonNull(comeAndGoTimeSnippet.getBeginTimeStamp())) {
@@ -151,7 +152,7 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
             end = comeAndGoTimeSnippet.getEndTimeStamp();
          }
       }
-      TimeSnippet timeSnippet = new TimeSnippet(begin);
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(begin);
       timeSnippet.setBeginTimeStamp(begin);
       timeSnippet.setEndTimeStamp(end);
       return timeSnippet;

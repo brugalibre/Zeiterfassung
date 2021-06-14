@@ -14,7 +14,7 @@ class TimeSnippetTest {
    @Test
    void testGetDurationRepEmptyTimeSnippted() {
       // Given
-      TimeSnippet timeSnippet = new TimeSnippet(TimeFactory.createNew());
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(TimeFactory.createNew());
       String expectedDurationRep = "0";
 
       // When
@@ -27,7 +27,7 @@ class TimeSnippetTest {
    @Test
    void testGetDurationRepTimeSnipptetWithoutEnd() {
       // Given
-      TimeSnippet timeSnippet = new TimeSnippet(new Date());
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(new Date());
       timeSnippet.setBeginTimeStamp(TimeFactory.createNew());
       String expectedDurationRep = "0";
 

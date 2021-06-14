@@ -41,6 +41,7 @@ public class TimeRecordingLauncher extends Application {
 
       TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
       UiCallbackHandler callbackHandler = timeRecordingTray.getCallbackHandler();
+      UiAuthenticationService.prepare();
       TimeRecorder.INSTANCE.setCallbackHandler(callbackHandler);
       GlobalExceptionHandler.registerHandler(callbackHandler);
 

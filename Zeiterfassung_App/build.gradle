@@ -49,6 +49,8 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager
 	implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.4.0'
+	
+	implementation project(':Zeiterfassung_Core_Api')
 }
 
 sourceSets {

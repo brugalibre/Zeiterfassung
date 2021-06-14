@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
@@ -18,7 +18,7 @@ class BusinessDayIntegrationTest extends BaseTestWithSettings {
    @Test
    void testGetCapturingSinceMsgWithFinishedIncrement() throws InterruptedException {
       // Given
-      BusinessDay businessDay = new BusinessDay();
+      BusinessDayImpl businessDay = new BusinessDayImpl();
       businessDay.startNewIncremental();
       TimeUnit.MINUTES.sleep(1);// hihihi sonar doesn't get it, that this will also call Thread.sleep
       businessDay.stopCurrentIncremental();

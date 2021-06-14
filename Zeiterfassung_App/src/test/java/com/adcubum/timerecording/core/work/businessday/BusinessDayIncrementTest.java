@@ -18,7 +18,7 @@ class BusinessDayIncrementTest {
 
       // Given
       float expectedDurationOfLastIncrement = 1;
-      BusinessDayIncrement businessDayIncrement = new BusinessDayIncrement(new Date());
+      BusinessDayIncrement businessDayIncrement = new BusinessDayIncrementImpl(new Date());
       long startTimeStamp = System.currentTimeMillis();
       int timeBetweenStartAndStop = 3600 * 1000;
       addTimeSnippet2BDIncrement(businessDayIncrement, startTimeStamp, timeBetweenStartAndStop);
