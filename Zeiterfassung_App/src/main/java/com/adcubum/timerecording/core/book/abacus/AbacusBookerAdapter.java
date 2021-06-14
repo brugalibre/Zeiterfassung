@@ -37,7 +37,6 @@ public class AbacusBookerAdapter implements BookerAdapter, UserAuthenticatedObse
    private AbacusBookingConnector abacusBookingConnector;
    private AbacusServiceCodeAdapter serviceCodeAdapter;
    private long employeeNumber;
-   private boolean isInitialized;
 
    public AbacusBookerAdapter() {
       AuthenticationService.INSTANCE.registerUserAuthenticatedObservable(this);
@@ -76,17 +75,12 @@ public class AbacusBookerAdapter implements BookerAdapter, UserAuthenticatedObse
    private void init(String username) {
       serviceCodeAdapter.init();
       fetchEmployeeNumber(username);
-      this.isInitialized = employeeNumber > 0;
    }
 
    @Override
    public void userAuthenticated(AuthenticationContext authenticationContext) {
       abacusBookingConnector = createAbacusBookingConnector(authenticationContext);
       init(authenticationContext.getUsername());
-   }
-
-   public boolean isInitialized() {
-      return isInitialized;
    }
 
    @Override

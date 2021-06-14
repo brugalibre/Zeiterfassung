@@ -3,16 +3,16 @@ package com.adcubum.timerecording.work.businessday;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 
 public class BusinessDayBuilder {
 
    private List<BusinessDayIncrementAdd> businessDayIncrementAdds;
-   private BusinessDay businessDay;
+   private BusinessDayImpl businessDay;
 
    private BusinessDayBuilder() {
-      this.businessDay = new BusinessDay();
+      this.businessDay = new BusinessDayImpl();
       this.businessDayIncrementAdds = new ArrayList<>();
    }
 
@@ -25,7 +25,7 @@ public class BusinessDayBuilder {
       return new BusinessDayBuilder();
    }
 
-   public BusinessDay build() {
+   public BusinessDayImpl build() {
       for (BusinessDayIncrementAdd businessDayIncrementAdd : businessDayIncrementAdds) {
          businessDay.addBusinessIncrement(businessDayIncrementAdd);
       }

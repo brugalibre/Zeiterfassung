@@ -31,7 +31,7 @@ import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResu
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
-import com.adcubum.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler.UpdateStatus;
+import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
 
 class TicketBacklogTest extends BaseTestWithSettings {
 
@@ -221,7 +221,7 @@ class TicketBacklogTest extends BaseTestWithSettings {
          if (nonNull(boardName)) {
             saveProperty2Settings("boardName", boardName);
          }
-         return new TicketBacklog(jiraApiReader, createDefaultFileReader());
+         return new TicketBacklogImpl(jiraApiReader, createDefaultFileReader());
       }
 
       private FileImporter createDefaultFileReader() {

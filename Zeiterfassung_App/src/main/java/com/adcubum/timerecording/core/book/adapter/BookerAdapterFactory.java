@@ -1,14 +1,16 @@
 package com.adcubum.timerecording.core.book.adapter;
 
 
-import com.adcubum.timerecording.core.book.abacus.AbacusBookerAdapter;
-import com.adcubum.timerecording.core.book.coolguys.BookerHelper;
+import com.adcubum.timerecording.core.factory.AbstractFactory;
 
-public class BookerAdapterFactory {
+public class BookerAdapterFactory extends AbstractFactory {
+   private static final String BEAN_NAME = "bookeradapter";
+   private static final BookerAdapterFactory INSTANCE = new BookerAdapterFactory();
+
    private static BookerAdapter bookerAdapter;
 
    private BookerAdapterFactory() {
-      // private 
+      super("modul-configration.xml");
    }
 
    /**
@@ -16,8 +18,7 @@ public class BookerAdapterFactory {
     */
    public static synchronized BookerAdapter getAdapter() {
       if (bookerAdapter == null) {
-         AbacusBookerAdapter abacusBookerAdapter = new AbacusBookerAdapter();
-         bookerAdapter = abacusBookerAdapter.isInitialized() ? abacusBookerAdapter : new BookerHelper(); // BookerHelper is the fallback in case abacus is not reachable..
+         bookerAdapter = INSTANCE.createNewWithAgruments(BEAN_NAME);
       }
       return bookerAdapter;
    }

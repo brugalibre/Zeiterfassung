@@ -1,5 +1,6 @@
 package com.adcubum.timerecording.app;
 
+import static java.util.Objects.requireNonNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -11,12 +12,12 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
-import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
+import com.adcubum.timerecording.core.work.businessday.TestChangedComeAndGoValueImpl;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
-import com.adcubum.timerecording.core.work.businessday.comeandgo.change.impl.ChangedComeAndGoValueImpl;
-import com.adcubum.timerecording.core.work.businessday.comeandgo.change.impl.ComeAndGoesUpdaterImpl;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ComeAndGoesUpdater;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeFactory;
@@ -84,7 +85,7 @@ class ComeAndGoesUpdaterImplTest {
 
    private static class TestCaseBuilder {
 
-      private ComeAndGoesUpdaterImpl comeAndGoesUpdaterImpl;
+      private ComeAndGoesUpdater comeAndGoesUpdaterImpl;
       private ChangedComeAndGoValue changedComeAndGoValue;
       private ComeAndGoes comeAndGoes;
       private Time newComeTime;
@@ -117,11 +118,25 @@ class ComeAndGoesUpdaterImplTest {
       }
 
       private TestCaseBuilder build() {
-         BusinessDay businesDay = new BusinessDay(new Date(), comeAndGoes);
-         TimeRecorder timeRecorder = new TimeRecorder(mock(BookerAdapter.class), businesDay);
-         this.comeAndGoesUpdaterImpl = new ComeAndGoesUpdaterImpl(timeRecorder);
-         changedComeAndGoValue = ChangedComeAndGoValueImpl.of(id, newComeTime, newGoTime);
+         BusinessDayImpl businesDay = new BusinessDayImpl(new Date(), comeAndGoes);
+         TimeRecorder timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businesDay);
+         this.comeAndGoesUpdaterImpl = new TestComeAndGoesUpdaterImpl(timeRecorder);
+         changedComeAndGoValue = new TestChangedComeAndGoValueImpl(id, newComeTime, newGoTime);
          return this;
+      }
+   }
+
+   public static class TestComeAndGoesUpdaterImpl implements ComeAndGoesUpdater {
+
+      private TimeRecorder timeRecorder;
+
+      private TestComeAndGoesUpdaterImpl(TimeRecorder timeRecorder) {
+         this.timeRecorder = requireNonNull(timeRecorder);
+      }
+
+      @Override
+      public ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue) {
+         return timeRecorder.changeComeAndGo(changedComeAndGoValue);
       }
    }
 }

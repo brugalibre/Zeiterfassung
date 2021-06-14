@@ -43,7 +43,7 @@ import com.adcubum.timerecording.security.login.callback.LoginEndState;
 import com.adcubum.timerecording.settings.round.RoundMode;
 import com.adcubum.timerecording.settings.round.TimeRounder;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
-import com.adcubum.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler.UpdateStatus;
+import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
 import com.adcubum.timerecording.ui.app.pages.mainpage.view.MainWindowPage;
 import com.adcubum.timerecording.ui.app.settings.hotkey.HotKeyManager;
 import com.adcubum.timerecording.ui.app.tray.TrayIconDelegate;

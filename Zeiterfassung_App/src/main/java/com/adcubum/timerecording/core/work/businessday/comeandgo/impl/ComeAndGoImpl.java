@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.settings.round.TimeRounder;
 import com.adcubum.timerecording.work.date.Time;
@@ -25,13 +26,13 @@ public class ComeAndGoImpl implements ComeAndGo {
 
    private ComeAndGoImpl(String id) {
       Time time = TimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
-      this.comeAndGoSnippet = new TimeSnippet(time);
+      this.comeAndGoSnippet = TimeSnippetFactory.createNew(time);
       this.isRecorded = false;
       this.id = id;
    }
 
    private ComeAndGoImpl(ComeAndGoImpl comeAndGoImpl) {
-      this.comeAndGoSnippet = new TimeSnippet(comeAndGoImpl.comeAndGoSnippet);
+      this.comeAndGoSnippet = TimeSnippetFactory.createNew(comeAndGoImpl.comeAndGoSnippet);
       this.isRecorded = comeAndGoImpl.isRecorded;
       this.id = comeAndGoImpl.id;
    }

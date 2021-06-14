@@ -76,6 +76,7 @@ class TicketTest extends BaseTestWithSettings {
 
       // Given
       String username = "hampi";
+      AuthenticationService.INSTANCE.init();
       AuthenticationService.INSTANCE.doUserAuthentication(username, "123".toCharArray());
       Ticket sprintTicketAssigned = new TicketBuilder("SYRIUS-ZZZZZ")
             .isSprintTicket(true)

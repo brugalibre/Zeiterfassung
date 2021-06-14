@@ -1,5 +1,6 @@
 package com.adcubum.timerecording.ui.security.login.auth;
 
+import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.security.login.callback.LoginCallbackHandler;
 import com.adcubum.timerecording.ui.security.login.auth.view.LoginPage;
 
@@ -28,5 +29,12 @@ public class UiAuthenticationService {
    public static void doUserAuthentication(LoginCallbackHandler loginCallbackHandler) {
       LoginPage loginPage = new LoginPage(loginCallbackHandler, new Stage(), true);
       loginPage.show();
+   }
+
+   /**
+    * Prepares this {@link UiAuthenticationService}
+    */
+   public static void prepare() {
+      AuthenticationService.INSTANCE.init();
    }
 }

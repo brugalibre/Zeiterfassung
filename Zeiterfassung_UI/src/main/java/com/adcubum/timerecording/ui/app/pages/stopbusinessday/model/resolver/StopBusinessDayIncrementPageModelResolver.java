@@ -9,6 +9,7 @@ import java.util.Date;
 
 import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.ComeAndGoOverviewPageModel;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.model.StopBusinessDayIncrementPageModel;
@@ -75,6 +76,6 @@ public class StopBusinessDayIncrementPageModelResolver extends AbstractPageModel
          return inPageModel.getTimeSnippet();
       }
       return nonNull(currentBussinessDayIncremental.getCurrentTimeSnippet()) ? currentBussinessDayIncremental.getCurrentTimeSnippet()
-            : new TimeSnippet(new Date());
+            : TimeSnippetFactory.createNew(new Date());
    }
 }

@@ -28,7 +28,9 @@ import com.adcubum.timerecording.core.book.result.BookResultType;
 import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
@@ -103,8 +105,8 @@ class TimeRecorderTest extends BaseTestWithSettings {
    void testRefreshDummyTickets() {
 
       // Given
-      BusinessDay businessDay = mock(BusinessDay.class);
-      TimeRecorder timeRecorder = new TimeRecorder(mock(BookerAdapter.class), businessDay);
+      BusinessDayImpl businessDay = mock(BusinessDayImpl.class);
+      TimeRecorder timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businessDay);
 
       // When
       timeRecorder.onSuccessfullyLogin();
@@ -187,9 +189,9 @@ class TimeRecorderTest extends BaseTestWithSettings {
    void testComeWithComeAndGoesFromPrecedentDay_DoNotStart() {
       // Given, add an existing increment from the 01.02.2020
       TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
-      BusinessDay businessDay = mock(BusinessDay.class);
+      BusinessDayImpl businessDay = mock(BusinessDayImpl.class);
       when(businessDay.hasComeAndGoesFromPrecedentDays()).thenReturn(true);
-      TimeRecorder timeRecorder = new TimeRecorder(mock(BookerAdapter.class), businessDay);
+      TimeRecorder timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businessDay);
       timeRecorder.setCallbackHandler(testUiCallbackHandler);
 
       // When
@@ -298,7 +300,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
 
       // Given
       BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.FAILURE, 500);
-      TimeRecorder timeRecorder = new TimeRecorder(bookAdapter);
+      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter);
       TestUiCallbackHandler uiCallbackHandler = new TestUiCallbackHandler();
       timeRecorder.setCallbackHandler(uiCallbackHandler);
       new TestCaseBuilder(timeRecorder)
@@ -482,7 +484,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
 
       // Given
       BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.FAILURE, 500);
-      TimeRecorder timeRecorder = new TimeRecorder(bookAdapter);
+      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter);
       timeRecorder.setCallbackHandler(mock(UiCallbackHandler.class));
       new TestCaseBuilder(timeRecorder)
             .withBusinessDayIncrement("SYRIUS-99999", "fest", 113, 3600 * 1000)
@@ -503,7 +505,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
 
       // Given
       BookerAdapter bookAdapter = mock(BookerAdapter.class);
-      TimeRecorder timeRecorder = new TimeRecorder(bookAdapter);
+      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter);
       timeRecorder.setCallbackHandler(mock(TestUiCallbackHandler.class));
 
       // When
@@ -520,7 +522,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
 
       // Given
       BookerAdapter bookAdapter = mockBookAdapter(false, BookResultType.FAILURE);
-      TimeRecorder timeRecorder = new TimeRecorder(bookAdapter);
+      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter);
       TestUiCallbackHandler uiCallbackHandler = mock(TestUiCallbackHandler.class);
       timeRecorder.setCallbackHandler(uiCallbackHandler);
       new TestCaseBuilder(timeRecorder)
@@ -542,7 +544,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
 
       // Given
       BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.SUCCESS);
-      TimeRecorder timeRecorder = new TimeRecorder(bookAdapter);
+      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter);
       TestUiCallbackHandler uiCallbackHandler = new TestUiCallbackHandler();
       timeRecorder.setCallbackHandler(uiCallbackHandler);
       new TestCaseBuilder(timeRecorder)
@@ -562,7 +564,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
 
       // Given
       BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.PARTIAL_SUCCESS_WITH_ERROR);
-      TimeRecorder timeRecorder = new TimeRecorder(bookAdapter);
+      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter);
       TestUiCallbackHandler uiCallbackHandler = new TestUiCallbackHandler();
       timeRecorder.setCallbackHandler(uiCallbackHandler);
       new TestCaseBuilder(timeRecorder)
@@ -582,7 +584,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
 
       // Given
       BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.PARTIAL_SUCCESS_WITH_NON_BOOKABLE);
-      TimeRecorder timeRecorder = new TimeRecorder(bookAdapter);
+      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter);
       TestUiCallbackHandler uiCallbackHandler = new TestUiCallbackHandler();
       timeRecorder.setCallbackHandler(uiCallbackHandler);
       new TestCaseBuilder(timeRecorder)
@@ -602,7 +604,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
 
       // Given
       BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.FAILURE);
-      TimeRecorder timeRecorder = new TimeRecorder(bookAdapter);
+      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter);
       TestUiCallbackHandler uiCallbackHandler = new TestUiCallbackHandler();
       timeRecorder.setCallbackHandler(uiCallbackHandler);
       new TestCaseBuilder(timeRecorder)
@@ -676,7 +678,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
             startDate = new GregorianCalendar(2020, 1, 1);// year, month (starts at zero!), day, hours, min, second
          }
          Time beginTimeStamp = TimeFactory.createNew(startDate.getTimeInMillis());
-         TimeSnippet timeSnippet = new TimeSnippet(new Date(beginTimeStamp.getTime()));
+         TimeSnippet timeSnippet = TimeSnippetFactory.createNew(new Date(beginTimeStamp.getTime()));
          timeSnippet.setBeginTimeStamp(beginTimeStamp);
          timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
          return timeSnippet;

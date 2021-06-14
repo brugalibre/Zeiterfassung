@@ -21,7 +21,9 @@ import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeR
 import com.adcubum.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
 import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.importexport.out.file.FileExporter;
 import com.adcubum.util.parser.DateParser;
@@ -78,7 +80,7 @@ public class BusinessDayImporter {
    }
 
    private BusinessDay createAndReturnBusinessDay(Date date, List<BusinessDayIncrementImport> businessDayIncImports) {
-      BusinessDay businessDay = new BusinessDay(date);
+      BusinessDay businessDay = new BusinessDayImpl(date);
       for (BusinessDayIncrementImport businessDayIncrementImport : businessDayIncImports) {
          businessDay.addBusinessIncrement(businessDayIncrementImport);
       }
@@ -171,10 +173,10 @@ public class BusinessDayImporter {
       String beginValue = getElementFromLineAtIndex(importLine, currentElementIndex++);
       String endValue = getElementFromLineAtIndex(importLine, currentElementIndex);
 
-      // Parse both, begin and end and create a new TimeSnippet
-      TimeSnippet timeSnippet = TimeSnippet.createTimeSnippet(date, beginValue, endValue);
+      // Parse both, begin and end and create a TimeSnippetFactory.createNew(
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(date, beginValue, endValue);
 
-      // add the new TimeSnippet
+      // add the TimeSnippetFactory.createNew(
       businessDayIncrementImport.getTimeSnippets().add(timeSnippet);
    }
 

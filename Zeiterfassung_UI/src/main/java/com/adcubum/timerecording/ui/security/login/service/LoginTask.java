@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 
 import com.adcubum.timerecording.security.login.auth.AuthenticationResult;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
-import com.adcubum.timerecording.security.login.auth.usercredentials.JiraUserCredentialsAuthenticatorImpl;
 
 import javafx.concurrent.Task;
 
@@ -30,7 +29,6 @@ public class LoginTask extends Task<AuthenticationResult> {
 
    @Override
    protected AuthenticationResult call() throws Exception {
-      AuthenticationService.INSTANCE.setUserCredentialsAuthenticator(new JiraUserCredentialsAuthenticatorImpl());
       return AuthenticationService.INSTANCE.doUserAuthentication(usernameSupplier.get(), userPwdSupplier.get());
    }
 }
