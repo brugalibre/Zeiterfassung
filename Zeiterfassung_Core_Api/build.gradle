@@ -4,6 +4,7 @@ plugins {
     id 'eclipse'
     id 'java'
 }
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -13,11 +14,6 @@ repositories {
 }
 
 dependencies {
-}
-
-sourceSets {
-    integTest{
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
-    }
+	implementation project(':Zeiterfassung_JiraApi')
+	implementation project(':Zeiterfassung_Common_Api')
 }

@@ -1,2 +1,0 @@
-include ':Zeiterfassung_Common_Api'
-project(':Zeiterfassung_Common_Api').projectDir = file('../Zeiterfassung_Common_Api')

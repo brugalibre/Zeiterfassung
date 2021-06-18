@@ -3,6 +3,11 @@ plugins {
     id 'java-library'
     id 'eclipse'
     id 'java'
+    id 'application'
+}
+
+application {
+    mainClass = 'com.adcubum.timerecording.launch.TimeRecordingLauncher'
 }
 
 sourceCompatibility = 1.8
@@ -29,5 +34,8 @@ dependencies {
 	implementation group: 'com.github.tulskiy', name: 'jkeymaster', version: '1.1'
 
     runtimeOnly project(':Zeiterfassung_App')
-    runtimeOnly project(':Zeiterfassung_Common')
+    implementation project(':Zeiterfassung_Core_Api')
+    implementation project(':Zeiterfassung_Common_Api')
+    implementation project(':Zeiterfassung_JiraApi')
+    implementation project(':Zeiterfassung_Auth')
 }
