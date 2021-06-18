@@ -51,6 +51,11 @@ dependencies {
 	implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.4.0'
 	
 	implementation project(':Zeiterfassung_Core_Api')
+	implementation project(':Zeiterfassung_Common_Api')
+	implementation project(':Zeiterfassung_JiraApi')
+	implementation project(':Zeiterfassung_Auth')
+    implementation files('libs/tool-jira2abacus-1.1.14-SNAPSHOT-jar-with-dependencies.jar')
+    implementation files('libs/turbo-bucher-6.4.jar')
 }
 
 sourceSets {

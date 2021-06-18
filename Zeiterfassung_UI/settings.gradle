@@ -1,4 +1,0 @@
-rootProject.name = 'Zeiterfassung_Ui'
-include ':Zeiterfassung_App', ':Zeiterfassung_Common'
-project(':Zeiterfassung_Common').projectDir = file('../Zeiterfassung_Common')
-project(':Zeiterfassung_App').projectDir = file('../Zeiterfassung_App')

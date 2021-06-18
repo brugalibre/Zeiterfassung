@@ -168,17 +168,20 @@ public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
     * 
     * @return the location for the FXML-file this AbstractFXPage needs
     */
-   protected String getUIResource() {
-      return getClass().getSimpleName() + ".fxml";
-   }
+	protected String getUIResource() {
+		return getResourcePath("fxml");
+	}
 
    /**
     * Returns the location for the CSS-file this AbstractFXPage needs
     * 
     * @return the location for the CSS-file this AbstractFXPage needs
     */
-   protected String getUIStyleResource() {
-      String path = "/" + getClass().getPackage().getName() + "/" + getClass().getSimpleName();
-      return path.replace(".", "/") + ".css";
-   }
+	protected String getUIStyleResource() {
+		return getResourcePath("css");
+	}
+
+	private String getResourcePath(String resPraefix) {
+		return "/" + resPraefix + "/" + getClass().getName().replace(".", "/") + "." + resPraefix;
+	}
 }

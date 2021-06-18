@@ -51,8 +51,7 @@ public class PictureLibrary {
     * @return a string which represents the path to the pictures
     */
    private static String getPath() {
-      String path = "/" + PictureLibrary.class.getPackage().getName() + "/res";
-      return path.replace(".", "/");
+	  return "/images";
    }
 
    public static Image getWorkingImage() {

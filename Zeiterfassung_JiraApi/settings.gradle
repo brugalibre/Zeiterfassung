@@ -1,2 +1,0 @@
-include ':Zeiterfassung_Common'
-project(':Zeiterfassung_Common').projectDir = file('../Zeiterfassung_Common')
