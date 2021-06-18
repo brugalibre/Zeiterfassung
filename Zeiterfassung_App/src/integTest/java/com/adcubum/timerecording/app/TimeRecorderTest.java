@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -53,7 +54,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
    }
 
    @Test
-   public void testCreateAndDeleteComeAndGo() {
+   void testCreateAndDeleteComeAndGo() {
 
       // Given
       TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
@@ -76,7 +77,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
    }
 
    @Test
-   public void testCreateAndDeleteComeAndGoAndFlagAsRecorded() {
+   void testCreateAndDeleteComeAndGoAndFlagAsRecorded() {
 
       // Given
       TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
@@ -223,7 +224,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
 
       // When
       TimeRecorder.INSTANCE.handleUserInteraction(false);
-      Thread.sleep(500);
+      TimeUnit.MILLISECONDS.sleep(500);
       TimeRecorder.INSTANCE.handleUserInteraction(false);
 
       // Then
@@ -268,7 +269,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
       // When
       TimeRecorder.INSTANCE.handleUserInteraction(false);
       boolean isRecordingAfterFirstHandle = TimeRecorder.INSTANCE.isRecordindg();
-      Thread.sleep(500);
+      TimeUnit.MILLISECONDS.sleep(500);
 
       TimeRecorder.INSTANCE.handleUserInteraction(false);
       boolean isRecordingAfterSecondHandle = TimeRecorder.INSTANCE.isRecordindg();
@@ -306,7 +307,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
       // When
       Thread startBookThread = new Thread(() -> timeRecorder.book());
       startBookThread.start();
-      Thread.sleep(50);
+      TimeUnit.MILLISECONDS.sleep(50);
       boolean actualIsBooking = timeRecorder.isBooking();
       boolean actualHandle = timeRecorder.handleUserInteraction(false);
 
@@ -361,7 +362,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
    }
 
    @Test
-   public void testChangeDBIncChargeType() {
+   void testChangeDBIncChargeType() {
 
       // Given
       int kindOfService = 113;
@@ -381,7 +382,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
    }
 
    @Test
-   public void testChangeDBIncChargeType_Invalid() {
+   void testChangeDBIncChargeType_Invalid() {
 
       // Given
       // Given
@@ -489,7 +490,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
       // When
       Thread startBookThread = new Thread(() -> timeRecorder.book());
       startBookThread.start();
-      Thread.sleep(50);
+      TimeUnit.MILLISECONDS.sleep(50);
       String infoStringForStateBooking = timeRecorder.getInfoStringForState();
 
       // Then
@@ -649,17 +650,6 @@ class TimeRecorderTest extends BaseTestWithSettings {
          return this;
       }
 
-      private TestCaseBuilder withBusinessDayIncrementFromToday(String ticketNr, String description, int kindOfService, int timeSnippedDuration) {
-         Ticket ticket = mockTicket(ticketNr);
-         businessDayIncrementAdds.add(new BusinessDayIncrementAddBuilder()
-               .withTimeSnippet(createTimeSnippet(timeSnippedDuration, true))
-               .withDescription(description)
-               .withTicket(ticket)
-               .withKindOfService(kindOfService)
-               .build());
-         return this;
-      }
-
       private Ticket mockTicket(String ticketNr) {
          Ticket ticket = mock(Ticket.class);
          when(ticket.getNr()).thenReturn(ticketNr);
@@ -712,7 +702,7 @@ class TimeRecorderTest extends BaseTestWithSettings {
       @Override
       public BookerResult book(BusinessDay businessDay) {
          try {
-            Thread.sleep(delayDuringBooking);
+            TimeUnit.MILLISECONDS.sleep(delayDuringBooking);
          } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException(e);
