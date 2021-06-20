@@ -1,17 +1,11 @@
 package com.adcubum.timerecording.ui.app.settings.hotkey;
 
-import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 import static java.util.Objects.nonNull;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 import javax.swing.KeyStroke;
 
+import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.ui.app.settings.hotkey.callback.UiCallbackHandler;
-import com.adcubum.timerecording.ui.app.settings.hotkey.exception.HotKeyRegisterException;
 import com.tulskiy.keymaster.common.Provider;
 
 /**
@@ -56,18 +50,6 @@ public class HotKeyManager {
    }
 
    private String evalHotKey(String hotKeyKey) {
-      String hotKey = null;
-      try (InputStream resourceStream = new FileInputStream(ZEITERFASSUNG_PROPERTIES)) {
-         hotKey = evalHotKeyFromProperties(resourceStream, hotKeyKey);
-      } catch (IOException e) {
-         throw new HotKeyRegisterException(e);
-      }
-      return hotKey;
-   }
-
-   private String evalHotKeyFromProperties(InputStream resourceStream, String hotKey) throws IOException {
-      Properties prop = new Properties();
-      prop.load(resourceStream);
-      return (String) prop.get(hotKey);
+      return Settings.INSTANCE.getSettingsValue(hotKeyKey);
    }
 }
