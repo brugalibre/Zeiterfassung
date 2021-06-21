@@ -3,6 +3,10 @@
  */
 package com.adcubum.timerecording.core.work.businessday.vo;
 
+import java.util.function.Function;
+
+import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
+import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.jira.constants.TicketConst;
@@ -26,15 +30,21 @@ public class BusinessDayIncrementVOImpl implements BusinessDayIncrementVO {
    private Ticket ticket;
    private int chargeType;
    private boolean isBooked;
+   private Function<Integer, String> serviceCodeDescProvider;
 
    private BusinessDayIncrementVOImpl(BusinessDayIncrement businessDayIncremental) {
-
       this.currentTimeSnippet = businessDayIncremental.getCurrentTimeSnippet();
       this.description = businessDayIncremental.getDescription();
       this.ticket = businessDayIncremental.getTicket();
       this.chargeType = businessDayIncremental.getChargeType();
       this.totalDuration = businessDayIncremental.getTotalDuration();
       this.isBooked = businessDayIncremental.isCharged();
+      this.serviceCodeDescProvider = getSserviceCodeDescProvider();
+   }
+
+   private static Function<Integer, String> getSserviceCodeDescProvider() {
+      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
+      return currentSetChargeType -> serviceCodeAdapter.getServiceCodeDescription4ServiceCode(currentSetChargeType);
    }
 
    @Override
@@ -75,6 +85,11 @@ public class BusinessDayIncrementVOImpl implements BusinessDayIncrementVO {
    @Override
    public final TimeSnippet getCurrentTimeSnippet() {
       return this.currentTimeSnippet;
+   }
+
+   @Override
+   public String getServiceCodeDescription4ServiceCode() {
+      return serviceCodeDescProvider.apply(chargeType);
    }
 
    /**

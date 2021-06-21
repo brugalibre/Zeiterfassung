@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.adcubum.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
-import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporter;
+import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporterImpl;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
@@ -35,7 +35,7 @@ import com.adcubum.util.utils.StringUtil;
  * structure as the file which the {@link FileExporter} exports
  * 
  * @author Dominic
- * @see BusinessDayExporter
+ * @see BusinessDayExporterImpl
  *
  */
 public class BusinessDayImporter {
@@ -182,7 +182,7 @@ public class BusinessDayImporter {
 
    private void parseAndSetChargeType(String importLine, BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex)
          throws InvalidChargeTypeRepresentationException {
-      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       String chargeType = getElementFromLineAtIndex(importLine, currentElementIndex);
       int leistungsartForRep = serviceCodeAdapter.getServiceCode4Description(chargeType);
       businessDayIncrementImport.setKindOfService(leistungsartForRep);
@@ -234,7 +234,7 @@ public class BusinessDayImporter {
    private Date parseDate(String readLine) {
       if (isNotEmptyOrNull(readLine)) {
          try {
-            return DateParser.parse2Date(readLine, BusinessDayExporter.DATE_REP_PATTERN);
+            return DateParser.parse2Date(readLine, BusinessDayExporterImpl.DATE_REP_PATTERN);
          } catch (ParseException e) {
             throw buildBusinessDayImportException(e.getLocalizedMessage() + "\n" +
                   "The first line should look like 'Dienstag, 25 Jul 2019 06:45:00'");

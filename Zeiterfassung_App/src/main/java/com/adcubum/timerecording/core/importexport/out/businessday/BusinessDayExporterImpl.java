@@ -8,55 +8,38 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.app.TimeRecorder;
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.coolguys.turbo.Booker;
+import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVOImpl;
 
-/**
- * The {@link BusinessDayExporter} exports a {@link BusinessDay} into a
- * {@link List} of {@link String}.
- * 
- * @author Dominic
- *
- */
-public class BusinessDayExporter {
+public class BusinessDayExporterImpl implements BusinessDayExporter {
 
-   public static final String DATE_REP_PATTERN = "EEEEE, d MMM yyyy HH:mm:ss";
-   public static final BusinessDayExporter INSTANCE = new BusinessDayExporter();
    private static final String LINE_SEPARATOR = "line.separator";
 
-   private BusinessDayExporter() {
+   private BusinessDayExporterImpl() {
       // private constructor
    }
 
    private static final Object CONTENT_SEPPARATOR = "; ";
    private static final Object CONTENT_SEPPARATOR_TURBO_BUCHER = ";";
 
-   /**
-    * Selects line by line the content to export for the given
-    * {@link BusinessDayVO}
-    * 
-    * @param bussinessDay
-    *        the {@link BusinessDayVO} which has to be exported
-    * @return a list of {@link String} to export
-    */
-   public List<String> exportBusinessDay(BusinessDayVO bussinessDay) {
+   @Override
+   public List<String> exportBusinessDay(BusinessDay bussinessDay) {
       StringBuilder builder = new StringBuilder();
       List<String> content = new ArrayList<>();
+      BusinessDayVO bussinessDayVO = BusinessDayVOImpl.of(bussinessDay);
 
       // First line to mark the date, when the time was recorded
-      builder.append(bussinessDay.getDateRep(DATE_REP_PATTERN));
+      builder.append(bussinessDayVO.getDateRep(DATE_REP_PATTERN));
       builder.append(System.getProperty(LINE_SEPARATOR));
       builder.append(System.getProperty(LINE_SEPARATOR));
 
       appendTitleHeaderCells(builder);
 
       // = For each 'Ticket' or Increment of an entire Day
-      for (BusinessDayIncrementVO inc : bussinessDay.getBusinessDayIncrements()) {
+      for (BusinessDayIncrementVO inc : bussinessDayVO.getBusinessDayIncrements()) {
          builder.append(TextLabel.TICKET + ": ");
          builder.append(inc.getTicketNumber());
          builder.append(CONTENT_SEPPARATOR);
@@ -71,8 +54,7 @@ public class BusinessDayExporter {
          builder.append(CONTENT_SEPPARATOR);
          builder.append(snippet.getEndTimeStampRep());
          builder.append(CONTENT_SEPPARATOR);
-         ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
-         builder.append(serviceCodeAdapter.getServiceCodeDescription4ServiceCode(inc.getChargeType()));
+         builder.append(inc.getServiceCodeDescription4ServiceCode());
          builder.append(CONTENT_SEPPARATOR);
          builder.append(inc.isBooked() ? TextLabel.YES : TextLabel.NO);
 
@@ -81,7 +63,7 @@ public class BusinessDayExporter {
          builder.delete(0, builder.capacity());
       }
       builder.append(System.getProperty(LINE_SEPARATOR));
-      builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + bussinessDay.getTotalDurationRep());
+      builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + bussinessDayVO.getTotalDurationRep());
       content.add(builder.toString());
       return content;
    }
@@ -110,19 +92,13 @@ public class BusinessDayExporter {
       builder.append(CONTENT_SEPPARATOR);
    }
 
-   /**
-    * Collects all the necessary data in the proper format so the turbo-bucher can
-    * charge-off the jira tickets
-    * 
-    * @param bussinessDay
-    * @return the content which is required by the {@link Booker} in order to book
-    */
-   public List<String> collectContent4TurboBucher(BusinessDayVO bussinessDay) {
+   @Override
+   public List<String> collectContent4Booking(BusinessDay bussinessDay) {
 
       StringBuilder builder = new StringBuilder();
       List<String> content = new ArrayList<>();
-
-      List<BusinessDayIncrementVO> notChargedIncrements = getNotChargedIncrements(bussinessDay);
+      BusinessDayVO bussinessDayVO = BusinessDayVOImpl.of(bussinessDay);
+      List<BusinessDayIncrementVO> notChargedIncrements = getNotChargedIncrements(bussinessDayVO);
       for (BusinessDayIncrementVO inc : notChargedIncrements) {
          builder.append(inc.getTicketNumber());
          builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
@@ -131,7 +107,7 @@ public class BusinessDayExporter {
          builder.append(inc.getTotalDurationRep());
          builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 
-         builder.append(bussinessDay.getDateRep());
+         builder.append(bussinessDayVO.getDateRep());
          if (inc.hasDescription()) {
             builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
             builder.append(inc.getDescription());

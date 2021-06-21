@@ -29,4 +29,10 @@ public interface BusinessDayIncrementVO {
 
    TimeSnippet getCurrentTimeSnippet();
 
+   /**
+    * @return the description for it's service-code
+    * @see BusinessDayIncrementVO#getChargeType()
+    */
+   String getServiceCodeDescription4ServiceCode();
+
 }

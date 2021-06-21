@@ -16,16 +16,14 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVOImpl;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeFactory;
 
-class BusinessDayExporterTest {
+class BusinessDayExporterImplTest {
 
    @Test
-
-   void testCollectContent4TurboBucher() {
+   void testCollectContent4Booking() {
 
       // Given
       GregorianCalendar startDate = new GregorianCalendar(2021, 2, 2);// year, month (starts at zero!), day, hours, min, second
@@ -42,7 +40,7 @@ class BusinessDayExporterTest {
       businessDay.addBusinessIncrement(firstInc);
 
       // When
-      List<String> content4TurboBucher = BusinessDayExporter.INSTANCE.collectContent4TurboBucher(BusinessDayVOImpl.of(businessDay));
+      List<String> content4TurboBucher = BusinessDayExporterImpl.INSTANCE.collectContent4Booking(businessDay);
 
       // Then
       assertThat(content4TurboBucher.size(), is(1));

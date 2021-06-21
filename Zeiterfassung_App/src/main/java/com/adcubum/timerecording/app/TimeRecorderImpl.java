@@ -9,7 +9,6 @@ import java.util.List;
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayImporter;
@@ -251,7 +250,7 @@ public class TimeRecorderImpl implements TimeRecorder {
 
    @Override
    public FileExportResult exportSilently(String path2Export) {
-      List<String> content = BusinessDayExporter.INSTANCE.exportBusinessDay(BusinessDayVOImpl.of(businessDay));
+      List<String> content = BusinessDayExporter.INSTANCE.exportBusinessDay(businessDay);
       return FileExporter.INTANCE.exportWithResult(content, path2Export);
    }
 
@@ -322,11 +321,6 @@ public class TimeRecorderImpl implements TimeRecorder {
    @Override
    public BusinessDayIncrementVO getCurrentBussinessDayIncrement() {
       return BusinessDayIncrementVOImpl.of(businessDay.getCurrentBussinessDayIncremental());
-   }
-
-   @Override
-   public ServiceCodeAdapter getServiceCodeAdapter() {
-      return bookAdapter.getServiceCodeAdapter();
    }
 
    /**

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
@@ -159,7 +159,7 @@ public class BusinessDayTableModelHelper {
    }
 
    private static List<String> readAllServiceCodes() {
-      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       return serviceCodeAdapter.getAllServiceCodes();
    }
 
@@ -231,7 +231,7 @@ public class BusinessDayTableModelHelper {
          String cellValue = bussinessDayIncremental.hasDescription() ? bussinessDayIncremental.getDescription() : "";
          businessDayIncTableCellValue.setDescription(cellValue);
       }
-      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       // create Cells for all TimeSnippet's
       businessDayIncTableCellValue.setTimeSnippets(getTimeSnippets(bussinessDayIncremental));
       businessDayIncTableCellValue
