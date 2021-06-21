@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
@@ -257,7 +257,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    private static ObservableList<String> getAllServiceCodeDescriptions() {
       // Initial we'll show all and as soon as the ticket-nr is knonw we filter
-      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       return FXCollections.observableList(serviceCodeAdapter.getAllServiceCodes());
    }
 
@@ -276,7 +276,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    public void handleTicketChanged() {
       Ticket newTicket = ticketProperty.getValue();
-      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       List<String> fetchServiceCodesForProject = serviceCodeAdapter.fetchServiceCodesForProjectNr(newTicket.getTicketAttrs().getProjectNr());
       serviceCodesFieldProperty.setValue(FXCollections.observableList(fetchServiceCodesForProject));
       if (isNull(serviceCodesSelectedModelProperty.getValue().getSelectedItem())) {

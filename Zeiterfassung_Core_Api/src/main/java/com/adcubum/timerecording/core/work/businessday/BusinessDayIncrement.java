@@ -2,7 +2,6 @@ package com.adcubum.timerecording.core.work.businessday;
 
 import java.util.Date;
 
-import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
@@ -108,7 +107,7 @@ public interface BusinessDayIncrement {
     * @param chargeTypeRep
     *        the new representation of a charge type
     */
-   void setChargeType(String chargeTypeRep) throws InvalidChargeTypeRepresentationException;
+   void setChargeType(String chargeTypeRep);
 
    void setChargeType(int chargeType);
 

@@ -11,9 +11,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
-import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayIncrementImport;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.jira.data.Ticket;
@@ -138,8 +137,8 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     *        the new representation of a charge type
     */
    @Override
-   public void setChargeType(String chargeTypeRep) throws InvalidChargeTypeRepresentationException {
-      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+   public void setChargeType(String chargeTypeRep) {
+      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       this.chargeType = serviceCodeAdapter.getServiceCode4Description(chargeTypeRep);
    }
 

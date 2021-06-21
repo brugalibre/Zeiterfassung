@@ -13,8 +13,6 @@ import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVOImpl;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
@@ -89,8 +87,7 @@ public class BookerHelper implements BookerAdapter, UserAuthenticatedObservable 
     */
    private List<String> createBookContent(BusinessDay businessDay) {
       synchronized (lock) {
-         BusinessDayVO businessDayVO = BusinessDayVOImpl.of(businessDay);
-         return BusinessDayExporter.INSTANCE.collectContent4TurboBucher(businessDayVO);
+         return BusinessDayExporter.INSTANCE.collectContent4Booking(businessDay);
       }
    }
 }

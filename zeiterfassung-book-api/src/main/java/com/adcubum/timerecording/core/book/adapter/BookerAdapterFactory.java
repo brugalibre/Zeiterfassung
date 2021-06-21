@@ -22,4 +22,11 @@ public class BookerAdapterFactory extends AbstractFactory {
       }
       return bookerAdapter;
    }
+
+   /**
+    * @return the {@link ServiceCodeAdapter} retrieved by the {@link BookerAdapter}
+    */
+   public static ServiceCodeAdapter getServiceCodeAdapter() {
+      return getAdapter().getServiceCodeAdapter();
+   }
 }

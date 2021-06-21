@@ -1,0 +1,60 @@
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'java'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    // Use jcenter for resolving dependencies.
+    jcenter()
+}
+
+dependencies {
+	// https://mvnrepository.com/artifact/log4j/log4j
+	implementation group: 'log4j', name: 'log4j', version: '1.2.17'
+	
+	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+		
+	// Dependencies für abbuchen via Chrome-Driver 
+	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+
+	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-api
+	implementation group: 'org.seleniumhq.selenium', name: 'selenium-api', version: '3.141.59'
+	
+	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-support
+	implementation group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '3.141.59'
+	
+	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-remote-driver
+	implementation group: 'org.seleniumhq.selenium', name: 'selenium-remote-driver', version: '3.141.59'
+
+	// https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager
+	implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.4.0'
+	
+	// https://mvnrepository.com/artifact/org.mockito/mockito-core
+	testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.22.0'
+   
+  	// https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all
+	testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+
+    // Use JUnit test framework.
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:'
+    
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.1'
+
+    implementation project(':zeiterfassung-book-api')
+	implementation project(':Zeiterfassung_Core_Api')
+	implementation project(':Zeiterfassung_Common_Api')
+	implementation project(':Zeiterfassung_JiraApi')
+    implementation project(':Zeiterfassung_Auth')
+    
+    testImplementation project(':Zeiterfassung_App')
+    
+    implementation files('libs/turbo-bucher-6.4.jar')
+    implementation files('libs/tool-jira2abacus-1.1.14-SNAPSHOT-jar-with-dependencies.jar')
+}

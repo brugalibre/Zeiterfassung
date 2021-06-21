@@ -2,7 +2,6 @@ package com.adcubum.timerecording.app;
 
 import java.io.File;
 
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
@@ -14,6 +13,7 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Busi
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 
 public interface TimeRecorder {
@@ -21,7 +21,7 @@ public interface TimeRecorder {
    /**
     * The version of the application
     */
-   public static final String VERSION = "1.8.2";
+   public static final String VERSION = "1.8.3";
 
    /**
     * Initializes this {@link TimeRecorder}
@@ -143,7 +143,7 @@ public interface TimeRecorder {
    void onSuccessfullyLogin();
 
    /**
-    * First the {@link FileImporterImpl} imports the given {@link File} and fills
+    * First the {@link FileImporter} imports the given {@link File} and fills
     * it's content into a list. Later the {@link BusinessDayImporter} uses this
     * lists in order to import a a new {@link BusinessDay}
     * 
@@ -197,11 +197,6 @@ public interface TimeRecorder {
     * @return a {@link BusinessDayIncrementVO} for the current {@link BusinessDayIncrement} of the {@link BusinessDay}
     */
    BusinessDayIncrementVO getCurrentBussinessDayIncrement();
-
-   /**
-    * @return the {@link ServiceCodeAdapter} of this {@link TimeRecorder}
-    */
-   ServiceCodeAdapter getServiceCodeAdapter();
 
    /**
     * @return a {@link BusinessDayVO} for the current {@link BusinessDay}

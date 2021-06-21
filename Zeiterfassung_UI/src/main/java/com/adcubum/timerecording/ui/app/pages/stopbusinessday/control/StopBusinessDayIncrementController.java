@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
-import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.ui.app.inputfield.AutoCompleteTextField;
@@ -196,7 +196,7 @@ public class StopBusinessDayIncrementController extends BaseFXController<PageMod
 
    private int getSelectedLeistungsart() {
       String selectedItem = serviceCodesComboBox.getSelectionModel().getSelectedItem();
-      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       return serviceCodeAdapter.getServiceCode4Description(selectedItem);
    }
 

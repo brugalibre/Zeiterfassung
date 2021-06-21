@@ -10,6 +10,7 @@ import java.io.File;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
@@ -33,7 +34,7 @@ class TimeRecorder_ImportBusinessDayTest {
       boolean actualImported = TimeRecorder.INSTANCE.importBusinessDayFromFile(testImportFile);
 
       // Then
-      ServiceCodeAdapter serviceCodeAdapter = TimeRecorder.INSTANCE.getServiceCodeAdapter();
+      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       assertThat(actualImported, is(true));
       BusinessDayVO bussinessDayVO = TimeRecorder.INSTANCE.getBussinessDayVO();
       assertThat(bussinessDayVO.getBusinessDayIncrements().size(), is(2));
