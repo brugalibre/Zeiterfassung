@@ -2,7 +2,7 @@ package com.adcubum.timerecording.ui.app.pages.combobox;
 
 import static java.util.Objects.nonNull;
 
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 
 public class TicketComboboxItem {

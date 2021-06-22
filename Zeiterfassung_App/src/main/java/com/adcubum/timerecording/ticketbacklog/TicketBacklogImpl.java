@@ -10,12 +10,13 @@ import org.apache.log4j.Logger;
 
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
-import com.adcubum.timerecording.jira.data.Ticket;
-import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketReader;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
 import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
+import com.adcubum.timerecording.ticketbacklog.defaulttickets.DefaultTicketReader;
 import com.adcubum.timerecording.workerfactory.ThreadFactory;
 
 public class TicketBacklogImpl implements TicketBacklog {
@@ -69,7 +70,7 @@ public class TicketBacklogImpl implements TicketBacklog {
             .filter(existingTicket -> existingTicket.getNr().equals(ticketNr))
             .findFirst()
             .orElseGet(() -> jiraApiReader.readTicket4Nr(ticketNr)
-                  .orElseGet(() -> Ticket.dummy(ticketNr)));
+                  .orElseGet(() -> TicketFactory.INSTANCE.dummy(ticketNr)));
    }
 
    @Override

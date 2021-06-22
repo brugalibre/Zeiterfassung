@@ -1,4 +1,4 @@
-package com.adcubum.timerecording.jira.defaulttickets;
+package com.adcubum.timerecording.ticketbacklog.defaulttickets;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,7 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketConst;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 
 class DefaultTicketReaderTest {
@@ -69,7 +70,7 @@ class DefaultTicketReaderTest {
    }
 
    private JiraApiReader mockJiraApiReader(Ticket ticket) {
-      JiraApiReader jiraApiReader = mock(JiraApiReader.class);
+	   JiraApiReader jiraApiReader = mock(JiraApiReader.class);
       when(jiraApiReader.readTicket4Nr(any())).thenReturn(Optional.ofNullable(ticket));
       return jiraApiReader;
    }

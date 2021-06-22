@@ -3,17 +3,15 @@ package com.adcubum.timerecording.jira.data.ticket;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssue;
 
 /**
- * The {@link TicketAttrs} contains the attributes of a {@link Ticket}. It's actually more a wrapper for the {@link JiraIssue} and all it's
+ * {@link TicketAttrsImpl} implements the {@link TicketAttrs}. It's actually more a wrapper for the {@link JiraIssue} and all it's
  * cryptic custom jira attribute names
- * 
  * @author Dominic
  *
  */
-public class TicketAttrs {
+public class TicketAttrsImpl implements TicketAttrs{
    private String assignee;
    private String sprintId;
    private String sprintName;
@@ -35,12 +33,12 @@ public class TicketAttrs {
    private String syriusRelease;
    private String implementationPackage;
 
-   private TicketAttrs() {
+   private TicketAttrsImpl() {
       // private 
    }
 
-   public static TicketAttrs of(JiraIssue issue) {
-      TicketAttrs ticketAttrs = new TicketAttrs();
+   public static TicketAttrsImpl of(JiraIssue issue) {
+      TicketAttrsImpl ticketAttrs = new TicketAttrsImpl();
       ticketAttrs.assignee = issue.getAssignee();
       ticketAttrs.nr = issue.getKey();
       ticketAttrs.id = issue.getId();
@@ -70,30 +68,37 @@ public class TicketAttrs {
       return null;
    }
 
+   @Override
    public String getNr() {
       return nr;
    }
 
+   @Override
    public String getExternalNr() {
       return externalNr;
    }
-
+   
+   @Override
    public String getEpicNr() {
       return epicNr;
    }
 
+   @Override
    public IssueType getIssueType() {
       return issueType;
    }
 
+   @Override
    public String getTitle() {
       return title;
    }
 
+   @Override
    public String getImplementationPackage() {
       return implementationPackage;
    }
 
+   @Override
    public long getProjectNr() {
       if (isNull(projectNr) || projectNr.isEmpty()) {
          return -1;
@@ -101,6 +106,7 @@ public class TicketAttrs {
       return Long.valueOf(projectNr);
    }
 
+   @Override
    public int getProjectCostUnit() {
       if (isNull(projectCostUnit) || projectCostUnit.isEmpty()) {
          return -1;
@@ -108,53 +114,62 @@ public class TicketAttrs {
       return Integer.valueOf(projectCostUnit);
    }
 
+   @Override
    public String getProjectDesc() {
       return projectDesc;
    }
 
+   @Override
    public String getThema() {
       return thema;
    }
 
+   @Override
    public String getSubthema() {
       return subthema;
    }
 
+   @Override
    public String getId() {
       return id;
    }
 
+   @Override
    public String getBusinessTeamPlaning() {
       return businessTeamPlaning;
    }
 
+   @Override
    public String getPlaningId() {
       return planingId;
    }
 
+   @Override
    public String getSyriusExtension() {
       return syriusExtension;
    }
 
+   @Override
    public String getSyriusRelease() {
       return syriusRelease;
    }
 
+   @Override
    public String getAssignee() {
       return assignee;
    }
 
+   @Override
    public String getSprintId() {
       return sprintId;
    }
 
+   @Override
    public String getSprintName() {
       return sprintName;
    }
 
-   /**
-    * @return <code>true</code> if there are all relevant value present or <code>false</code> if not
-    */
+   @Override
    public boolean isBookable() {
       return nonNull(projectNr) && !projectNr.isEmpty();
    }
@@ -175,7 +190,7 @@ public class TicketAttrs {
          return false;
       if (getClass() != obj.getClass())
          return false;
-      TicketAttrs other = (TicketAttrs) obj;
+      TicketAttrsImpl other = (TicketAttrsImpl) obj;
       if (id == null) {
          if (other.id != null)
             return false;

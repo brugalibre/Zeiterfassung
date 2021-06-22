@@ -3,7 +3,7 @@ package com.adcubum.timerecording.jira.jiraapi.mapresponse;
 import java.util.Collections;
 import java.util.List;
 
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 
 /**
  * The final result from reading from the jira api.

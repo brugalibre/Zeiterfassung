@@ -3,7 +3,7 @@ package com.adcubum.timerecording.ui.app.pages.overview.model.table;
 import static java.util.Objects.nonNull;
 
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.timerecording.ui.core.view.table.EditableCell;

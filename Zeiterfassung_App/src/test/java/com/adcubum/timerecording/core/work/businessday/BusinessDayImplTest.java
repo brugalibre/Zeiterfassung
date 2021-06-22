@@ -21,8 +21,8 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoe
 import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
-import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.businessday.TimeSnippetBuilder;
 import com.adcubum.timerecording.work.date.Time;
@@ -94,7 +94,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
    public void testChangeDBIncTicket() {
 
       // Given
-      Ticket newTicket = Ticket.dummy("ABES-1324");
+      Ticket newTicket = mockTicket(true, "ABES-1324");
       TimeSnippet firstSnippet = createTimeSnippet(3600 * 1000, 10);
 
       BusinessDayImpl businessDay = new BusinessDayImpl();
@@ -465,7 +465,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
    }
 
    private Ticket getTicket4Nr() {
-      return Ticket.dummy("SYRIUS-1324");
+      return mockTicket(true, "SYRIUS-1324");
    }
 
    @Test
@@ -514,10 +514,14 @@ class BusinessDayImplTest extends BaseTestWithSettings {
    }
 
    private Ticket mockTicket(boolean isDummy) {
-      Ticket currentTicket = mock(Ticket.class);
-      when(currentTicket.isDummyTicket()).thenReturn(isDummy);
-      when(currentTicket.getNr()).thenReturn("1234");
-      return currentTicket;
+      return mockTicket(isDummy, "1234");
+   }
+
+   private Ticket mockTicket(boolean isDummy, String ticketNr) {
+	   Ticket currentTicket = mock(Ticket.class);
+	   when(currentTicket.isDummyTicket()).thenReturn(isDummy);
+	   when(currentTicket.getNr()).thenReturn("1234");
+	   return currentTicket;
    }
 
    private static class TestTimeSnippedChangedCallbackHandler implements TimeSnippedChangedCallbackHandler {

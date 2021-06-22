@@ -18,5 +18,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Auth"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/zeiterfassung-book-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Core_Api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/zeiterfassung-jira-api"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>

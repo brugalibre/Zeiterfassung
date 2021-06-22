@@ -2,7 +2,7 @@ package com.adcubum.timerecording.core.work.businessday.vo;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 
 public interface BusinessDayIncrementVO {
 

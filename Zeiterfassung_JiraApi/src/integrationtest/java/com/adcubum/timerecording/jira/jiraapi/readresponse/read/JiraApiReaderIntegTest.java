@@ -15,7 +15,7 @@ import java.util.Collections;
 
 import org.junit.jupiter.api.Test;
 
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.JiraResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.ResponseReader;

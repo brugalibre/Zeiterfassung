@@ -5,6 +5,7 @@ import static java.util.Objects.nonNull;
 
 import java.util.Comparator;
 
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 
 public class TicketComparator implements Comparator<Ticket> {

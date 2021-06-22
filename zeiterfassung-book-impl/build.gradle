@@ -46,11 +46,11 @@ dependencies {
     
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.1'
-
+	
+    implementation project(':zeiterfassung-jira-api')
     implementation project(':zeiterfassung-book-api')
 	implementation project(':Zeiterfassung_Core_Api')
 	implementation project(':Zeiterfassung_Common_Api')
-	implementation project(':Zeiterfassung_JiraApi')
     implementation project(':Zeiterfassung_Auth')
     
     testImplementation project(':Zeiterfassung_App')

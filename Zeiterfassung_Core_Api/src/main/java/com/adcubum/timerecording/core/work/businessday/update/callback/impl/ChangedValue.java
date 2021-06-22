@@ -5,7 +5,7 @@ import static java.util.Objects.requireNonNull;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 
 /**
  * The {@link ChangedValue} contains information about a value of a
