@@ -39,7 +39,7 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Busi
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageType;
 import com.adcubum.timerecording.test.BaseTestWithSettings;

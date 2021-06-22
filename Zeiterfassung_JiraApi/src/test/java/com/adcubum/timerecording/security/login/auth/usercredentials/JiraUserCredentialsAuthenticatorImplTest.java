@@ -10,7 +10,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketImpl;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 
@@ -22,7 +23,7 @@ class JiraUserCredentialsAuthenticatorImplTest extends BaseTestWithSettings {
    void testDoUserAuthentication_FetchWithDefaultTicket_TicketPresentButDummy() {
       // Given
       String ticketNr2TestConnection = "Ticket-4321";
-      JiraApiReader jiraApiReader = mockJiraApiReader(ticketNr2TestConnection, Optional.of(Ticket.dummy(ticketNr2TestConnection)));
+      JiraApiReader jiraApiReader = mockJiraApiReader(ticketNr2TestConnection, Optional.of(TicketImpl.dummy(ticketNr2TestConnection)));
       JiraUserCredentialsAuthenticatorImpl jiraUserCredentialsAuthenticatorImpl =
             new JiraUserCredentialsAuthenticatorImpl(jiraApiReader, ticketNr2TestConnection);
 

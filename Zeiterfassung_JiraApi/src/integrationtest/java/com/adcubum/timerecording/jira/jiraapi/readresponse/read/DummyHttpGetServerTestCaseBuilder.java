@@ -12,7 +12,7 @@ public class DummyHttpGetServerTestCaseBuilder {
 
    ClientAndServer clientServer;
    HttpClient httpWrapper;
-   JiraApiReader jiraApiReader;
+   JiraApiReaderImpl jiraApiReader;
    String host;
 
    DummyHttpGetServerTestCaseBuilder(int port) {
@@ -25,7 +25,7 @@ public class DummyHttpGetServerTestCaseBuilder {
    }
 
    public DummyHttpGetServerTestCaseBuilder withJiraApiReader() {
-      this.jiraApiReader = new JiraApiReader(httpWrapper);
+      this.jiraApiReader = new JiraApiReaderImpl(httpWrapper);
       return this;
    }
 

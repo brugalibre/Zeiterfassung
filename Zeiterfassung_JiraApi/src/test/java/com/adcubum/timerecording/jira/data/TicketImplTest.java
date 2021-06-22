@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.adcubum.timerecording.jira.data.ticket.TicketImpl;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssue;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueAssignee;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueFields;
@@ -17,7 +18,7 @@ import com.adcubum.timerecording.jira.jiraapi.readresponse.data.jiraissuefields.
 import com.adcubum.timerecording.jira.test.BaseTestWithSettings;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 
-class TicketTest extends BaseTestWithSettings {
+class TicketImplTest extends BaseTestWithSettings {
 
    @Test
    void testTicketRepresentation() {
@@ -25,7 +26,7 @@ class TicketTest extends BaseTestWithSettings {
       // Given
       String ticketNr = "dumpi";
       String expectedTicketRep = ticketNr;
-      Ticket ticket = Ticket.dummy(ticketNr);
+      TicketImpl ticket = TicketImpl.dummy(ticketNr);
 
       // When
       String actualTicketRep = ticket.getTicketRep();
@@ -41,7 +42,7 @@ class TicketTest extends BaseTestWithSettings {
       String ticketNr = "hampidampi";
       String description = "test";
       String expectedTicketRep = ticketNr + " (" + description + ")";
-      Ticket ticket = new TicketBuilder(ticketNr)
+      TicketImpl ticket = new TicketBuilder(ticketNr)
             .withDescription(description)
             .build();
 
@@ -60,7 +61,7 @@ class TicketTest extends BaseTestWithSettings {
       String description = "test";
       String expectedTicketRep = ticketNr + " (" + description + ")";
       String expectedToString = "Ticket-Nr = " + expectedTicketRep + ", projekt-nr = -1 ()";
-      Ticket ticket = new TicketBuilder(ticketNr)
+      TicketImpl ticket = new TicketBuilder(ticketNr)
             .withDescription(description)
             .build();
 
@@ -78,24 +79,24 @@ class TicketTest extends BaseTestWithSettings {
       String username = "hampi";
       AuthenticationService.INSTANCE.init();
       AuthenticationService.INSTANCE.doUserAuthentication(username, "123".toCharArray());
-      Ticket sprintTicketAssigned = new TicketBuilder("SYRIUS-ZZZZZ")
+      TicketImpl sprintTicketAssigned = new TicketBuilder("SYRIUS-ZZZZZ")
             .isSprintTicket(true)
             .withAssignee(username)
             .build();
-      Ticket sprintTicketNotAssigned = new TicketBuilder("SYRIUS-XZZZZ")
+      TicketImpl sprintTicketNotAssigned = new TicketBuilder("SYRIUS-XZZZZ")
             .isSprintTicket(true)
             .build();
-      Ticket ticketAssigned1 = new TicketBuilder("SYRIUS-XYZ")
+      TicketImpl ticketAssigned1 = new TicketBuilder("SYRIUS-XYZ")
             .withAssignee(username)
             .build();
-      Ticket ticketNotAssigned2 = new TicketBuilder("AAAAA")
+      TicketImpl ticketNotAssigned2 = new TicketBuilder("AAAAA")
             .build();
-      Ticket ticketNotAssigned1 = new TicketBuilder("SYRIUS-ACBD")
+      TicketImpl ticketNotAssigned1 = new TicketBuilder("SYRIUS-ACBD")
             .build();
-      Ticket ticketAssigned2 = new TicketBuilder("ZZZZ")
+      TicketImpl ticketAssigned2 = new TicketBuilder("ZZZZ")
             .withAssignee(username)
             .build();
-      List<Ticket> tickets =
+      List<TicketImpl> tickets =
             Arrays.asList(ticketNotAssigned2, sprintTicketAssigned, ticketAssigned2, sprintTicketNotAssigned, ticketAssigned1, ticketNotAssigned1);
 
       // When
@@ -117,21 +118,21 @@ class TicketTest extends BaseTestWithSettings {
       // Given
       String sprintId1 = "1";
       String sprintId2 = "2";
-      Ticket ticketWithSprintId1 = new TicketBuilder("SYRIUS-234")
+      TicketImpl ticketWithSprintId1 = new TicketBuilder("SYRIUS-234")
             .withSprintId(sprintId1)
             .build();
-      Ticket ticketWithSprintId2 = new TicketBuilder("SYRIUS-123")
+      TicketImpl ticketWithSprintId2 = new TicketBuilder("SYRIUS-123")
             .withSprintId(sprintId1)
             .build();
-      Ticket ticketWithoutSprintId1 = new TicketBuilder("ZZZZ")
+      TicketImpl ticketWithoutSprintId1 = new TicketBuilder("ZZZZ")
             .build();
-      Ticket anotherTicket2WithSprintId2 = new TicketBuilder("SYRIUS-ZZ")
+      TicketImpl anotherTicket2WithSprintId2 = new TicketBuilder("SYRIUS-ZZ")
             .withSprintId(sprintId2)
             .build();
-      Ticket anotherTicketWithSprintId2 = new TicketBuilder("SYRIUS-YYY")
+      TicketImpl anotherTicketWithSprintId2 = new TicketBuilder("SYRIUS-YYY")
             .withSprintId(sprintId2)
             .build();
-      List<Ticket> tickets =
+      List<TicketImpl> tickets =
             Arrays.asList(ticketWithSprintId1, anotherTicket2WithSprintId2, ticketWithoutSprintId1, anotherTicketWithSprintId2, ticketWithSprintId2);
 
       // When
@@ -150,17 +151,17 @@ class TicketTest extends BaseTestWithSettings {
 
       // Given
       String username = "hampi";
-      Ticket ticketAssigned = new TicketBuilder("SYRIUS-ZZZZ")
+      TicketImpl ticketAssigned = new TicketBuilder("SYRIUS-ZZZZ")
             .withAssignee(username)
             .build();
-      Ticket sprintTicketAssigned = new TicketBuilder("SYRIUS-ZZZZ")
+      TicketImpl sprintTicketAssigned = new TicketBuilder("SYRIUS-ZZZZ")
             .isSprintTicket(true)
             .withAssignee(username)
             .build();
-      Ticket sprintTicketNotAssigned = new TicketBuilder("SYRIUS-XZZZZ")
+      TicketImpl sprintTicketNotAssigned = new TicketBuilder("SYRIUS-XZZZZ")
             .isSprintTicket(true)
             .build();
-      List<Ticket> tickets =
+      List<TicketImpl> tickets =
             Arrays.asList(sprintTicketAssigned, ticketAssigned, sprintTicketNotAssigned);
 
       // When
@@ -179,7 +180,7 @@ class TicketTest extends BaseTestWithSettings {
       String ticketNr = "sdf";
 
       // When
-      Ticket ticket = new TicketBuilder(ticketNr)
+      TicketImpl ticket = new TicketBuilder(ticketNr)
             .isDummyTicket(true)
             .build();
 
@@ -194,7 +195,7 @@ class TicketTest extends BaseTestWithSettings {
       String ticketNr = "ABES";
 
       // When
-      Ticket ticket = new TicketBuilder(ticketNr)
+      TicketImpl ticket = new TicketBuilder(ticketNr)
             .build();
 
       // Then
@@ -245,8 +246,8 @@ class TicketTest extends BaseTestWithSettings {
          return this;
       }
 
-      private Ticket build() {
-         return Ticket.of(JiraIssue.of(jiraIssueResponse), isSprintTicket, isDummyTicket);
+      private TicketImpl build() {
+         return TicketImpl.of(JiraIssue.of(jiraIssueResponse), isSprintTicket, isDummyTicket);
       }
    }
 }

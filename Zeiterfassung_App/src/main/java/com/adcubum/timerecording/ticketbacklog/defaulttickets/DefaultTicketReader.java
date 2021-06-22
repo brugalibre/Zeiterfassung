@@ -1,4 +1,4 @@
-package com.adcubum.timerecording.jira.defaulttickets;
+package com.adcubum.timerecording.ticketbacklog.defaulttickets;
 
 import static java.util.Objects.requireNonNull;
 
@@ -12,7 +12,8 @@ import java.util.Set;
 import java.util.function.Function;
 
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketConst;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 
 /**

@@ -5,7 +5,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketImpl;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssue;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssuesResponse;
@@ -37,7 +38,7 @@ public class JiraResponseMapper {
          return Optional.empty();
       }
       JiraIssue jiraIssue = JiraIssue.of(jiraIssueResponse);
-      return Optional.of(Ticket.of(jiraIssue, false, false));
+      return Optional.of(TicketImpl.of(jiraIssue, false, false));
    }
 
    /**
@@ -51,7 +52,7 @@ public class JiraResponseMapper {
       return jiraIssuesResponse.getIssues()
             .stream()
             .filter(JiraIssue::isNotSubtask)
-            .map(Ticket::of)
+            .map(TicketImpl::of)
             .distinct()
             .collect(Collectors.collectingAndThen(Collectors.toList(),
                   map2JiraApiReadTicketsResult(jiraIssuesResponse)));

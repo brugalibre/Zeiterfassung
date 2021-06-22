@@ -2,6 +2,8 @@ package com.adcubum.timerecording.core.work.businessday.comeandgo.impl;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 
@@ -13,7 +15,7 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.businessday.BusinessDayBuilder;
 import com.adcubum.timerecording.work.businessday.TimeSnippetBuilder;
@@ -32,7 +34,7 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
                         .withStartAndStopTime(begin1, end1)
                         .build())
                   .withDescription("Default Description")
-                  .withTicket(Ticket.dummy("6848"))
+                  .withTicket(mockTicket(true, "6848"))
                   .build())
             .build();
       businessDay.comeOrGo();
@@ -148,5 +150,12 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
       ComeAndGo secondComeAndGo = actualComeAndGoes.get(1);
       assertThat(firstComeAndGo.isNotDone(), is(false));
       assertThat(secondComeAndGo.isNotDone(), is(true));
+   } 
+   
+   private Ticket mockTicket(boolean isDummy, String ticketNr) {
+	   Ticket currentTicket = mock(Ticket.class);
+	   when(currentTicket.isDummyTicket()).thenReturn(isDummy);
+	   when(currentTicket.getNr()).thenReturn("1234");
+	   return currentTicket;
    }
 }

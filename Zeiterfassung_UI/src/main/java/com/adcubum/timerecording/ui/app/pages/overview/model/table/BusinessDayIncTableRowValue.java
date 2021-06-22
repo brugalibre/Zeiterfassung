@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

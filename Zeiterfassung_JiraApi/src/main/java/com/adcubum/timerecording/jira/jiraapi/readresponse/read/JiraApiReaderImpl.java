@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraResponseMapper;
@@ -32,33 +32,24 @@ import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responseread
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssuesResponseReader;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
-import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
 
-/**
- * Tries to evaluate the id of the scrum board as well as the id of the current sprint. If successful by doing so,
- * the final url to receive all issues for the current sprint is created and the reveived issues mapped into a
- * {@link JiraApiReadTicketsResult}.
- * 
- * Note that jira does not provide more than 50 results at once.
- * So thats why you probably need to fetch a second or third time in order to get all the results
- * 
- * @author Dominic
- *
- */
-public class JiraApiReader implements UserAuthenticatedObservable {
 
-   public static final JiraApiReader INSTANCE = new JiraApiReader();
-   private static final Logger LOG = Logger.getLogger(JiraApiReader.class);
+public class JiraApiReaderImpl implements JiraApiReader {
+
+   private static final Logger LOG = Logger.getLogger(JiraApiReaderImpl.class);
    private HttpClient httpClient;
 
-   private JiraApiReader() {
+   /**
+    * Package private constructor used by spring
+    */
+   JiraApiReaderImpl() {
       this(new HttpClient());
    }
 
    /**
     * Constructor for testing purpose only!
     */
-   JiraApiReader(HttpClient httpClient) {
+   JiraApiReaderImpl(HttpClient httpClient) {
       this.httpClient = httpClient;
       AuthenticationService.INSTANCE.registerUserAuthenticatedObservable(this);
    }
@@ -68,14 +59,7 @@ public class JiraApiReader implements UserAuthenticatedObservable {
       httpClient.setCredentials(authenticationContext.getUsername(), String.valueOf(authenticationContext.getUserPw()));
    }
 
-   /**
-    * Reads a single {@link Ticket} for the given Ticket-Nr
-    * 
-    * @param ticketNr
-    *        the given Ticket nr
-    * 
-    * @return a {@link Optional} of a {@link Ticket}
-    */
+   @Override
    public Optional<Ticket> readTicket4Nr(String ticketNr) {
       LOG.info("Try to read ticket for ticket-nr '" + ticketNr + "'");
       String url = JiraApiConstants.GET_ISSUE_URL + ticketNr;
@@ -84,17 +68,7 @@ public class JiraApiReader implements UserAuthenticatedObservable {
       return JiraResponseMapper.INSTANCE.map2Ticket(jiraIssueResponse);
    }
 
-   /**
-    * Tries to read all issues for the given boards current and active sprint using a get request and returns a
-    * {@link JiraApiReadTicketsResult}
-    * 
-    * @param boardName
-    *        the board
-    * @param sprintNames
-    *        a list with sprint names
-    * @return a {@link JiraApiReadTicketsResult} which contains any {@link Ticket}s if the request was successfully or none if not (see also
-    *         {@link JiraApiReadTicketsResult#isSuccess()}
-    */
+   @Override
    public JiraApiReadTicketsResult readTicketsFromBoardAndSprints(String boardName, List<String> sprintNames) {
       LOG.info("Try to read the tickets from the current sprint from board '" + boardName + "'");
       SprintInfo sprintInfo = evalActiveSprint4BoardName(boardName);

@@ -27,8 +27,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import com.adcubum.timerecording.jira.data.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.IssueType;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 import com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
@@ -41,13 +41,13 @@ import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueGeneric
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueThemaInfos;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssuesResponse;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader.SprintInfo;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReaderImpl.SprintInfo;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraGenericValuesResponseReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssueResponseReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssuesResponseReader;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 
-class JiraApiReaderTest {
+class JiraApiReaderImplTest {
 
    @Test
    void testUserAuthenticated() {
@@ -56,7 +56,7 @@ class JiraApiReaderTest {
       String username = "";
       AuthenticationContext atuhenticationContext = new AuthenticationContext(username, () -> pwd.toCharArray());
       HttpClient httpClient = mock(HttpClient.class);
-      JiraApiReader jiraApiReader = new JiraApiReader(httpClient);
+      JiraApiReaderImpl jiraApiReader = new JiraApiReaderImpl(httpClient);
 
       // When
       jiraApiReader.userAuthenticated(atuhenticationContext);
@@ -73,7 +73,7 @@ class JiraApiReaderTest {
       String expectedProjectDesc = "Scrum Aufwände";
       long expectedProjectNumber = 536003;
 
-      JiraApiReader jiraApiReader = new TestCaseBuilder()
+      JiraApiReaderImpl jiraApiReader = new TestCaseBuilder()
             .withTicketNr(ticketNr)
             .withJiraIssueResponse(true, issueType)
             .withCustomField_10060(expectedProjectNumber + " " + expectedProjectDesc + "")
@@ -107,7 +107,7 @@ class JiraApiReaderTest {
       int expectedProjectCostUnit = 41003;
       String issueType = "Feature";
 
-      JiraApiReader jiraApiReader = new TestCaseBuilder()
+      JiraApiReaderImpl jiraApiReader = new TestCaseBuilder()
             .withTicketNr(ticketNr)
             .withJiraIssueResponse(true, issueType)
             .withCustomfield_11310(expectedThema + " (" + expectedProjectCostUnit + ")")
@@ -128,7 +128,7 @@ class JiraApiReaderTest {
    void testReadTicket4Id_FailedReadTicket() {
       // Given
       String ticketNr = "SYRIUS-1324";
-      JiraApiReader jiraApiReader = new TestCaseBuilder()
+      JiraApiReaderImpl jiraApiReader = new TestCaseBuilder()
             .withTicketNr(ticketNr)
             .withJiraIssueResponse(false, null)
             .build();
@@ -145,7 +145,7 @@ class JiraApiReaderTest {
       // Given
       String boardName = "My Favorit Jira Board Name";
 
-      JiraApiReader jiraApiReader = new TestCaseBuilder()
+      JiraApiReaderImpl jiraApiReader = new TestCaseBuilder()
             .withJiraIssueResponse(false, null)
             .build();
 
@@ -167,7 +167,7 @@ class JiraApiReaderTest {
       jiraIssue.setId("1");
       JiraIssue futureJiraIssue = new JiraIssue();
       futureJiraIssue.setId("2");
-      JiraApiReader jiraApiReader = new TestCaseBuilder()
+      JiraApiReaderImpl jiraApiReader = new TestCaseBuilder()
             .withBoardName(boardName)
             .withFutureSprintId("2", futurSprintName)
             .withReceivedSprintIssues(Collections.singletonList(jiraIssue))
@@ -190,7 +190,7 @@ class JiraApiReaderTest {
       String boardName = "My other Favorit Jira Board Name";
       int amountOfReceivedTickets = JIRA_MAX_RESULTS_RETURNED + 1;
       List<JiraIssue> receivedIssues = createReceivedTickets(amountOfReceivedTickets);
-      JiraApiReader jiraApiReader = new TestCaseBuilder()
+      JiraApiReaderImpl jiraApiReader = new TestCaseBuilder()
             .withBoardName(boardName)
             .withReceivedSprintIssues(receivedIssues)
             .build();
@@ -296,12 +296,12 @@ class JiraApiReaderTest {
          return this;
       }
 
-      private JiraApiReader build() {
+      private JiraApiReaderImpl build() {
          String boardId = issues.isEmpty() ? SprintInfo.UNKNOWN : "boardId25";
          String sprintId = "1";
          mockReadTicket4TicketNr();
          mockReadTicketsFromBoardName(boardId, sprintId, futurSprintId, futurSprintName);
-         return new JiraApiReader(httpClient);
+         return new JiraApiReaderImpl(httpClient);
       }
 
       private void mockReadTicketsFromBoardName(String boardId, String sprintId, String futurSprintId, String futurSprintName) {

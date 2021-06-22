@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'java'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+	implementation project(':Zeiterfassung_Auth')
+	implementation project(':Zeiterfassung_Common_Api')
+}

@@ -2,7 +2,7 @@ package com.adcubum.timerecording.core.work.businessday;
 
 import java.util.Date;
 
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 

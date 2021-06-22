@@ -15,7 +15,7 @@ import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayIncrementImport;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklog;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.timerecording.work.date.Time;

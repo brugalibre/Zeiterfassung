@@ -1,6 +1,6 @@
 package com.adcubum.timerecording.security.login.auth.usercredentials;
 
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.settings.Settings;

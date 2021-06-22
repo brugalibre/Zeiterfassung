@@ -19,7 +19,7 @@ import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
-import com.adcubum.timerecording.jira.data.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
