@@ -3,19 +3,16 @@
  */
 package com.adcubum.timerecording.launch;
 
-import static com.adcubum.timerecording.settings.common.Const.TURBO_BUCHER_PROPERTIES;
-import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 
 import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminder;
 import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderFactory;
 import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
-import com.adcubum.timerecording.launch.exception.ApplicationLaunchException;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
+import com.adcubum.timerecording.settings.round.TimeRounder;
+import com.adcubum.timerecording.settings.round.observable.RoundModeChangedListener;
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.security.login.auth.UiAuthenticationService;
 import com.adcubum.util.exception.GlobalExceptionHandler;
@@ -41,7 +38,6 @@ public class TimeRecordingLauncher extends Application {
 
       TimeRecordingTray timeRecordingTray = new TimeRecordingTray();
       UiCallbackHandler callbackHandler = timeRecordingTray.getCallbackHandler();
-      UiAuthenticationService.prepare();
       TimeRecorder.INSTANCE.setCallbackHandler(callbackHandler);
       GlobalExceptionHandler.registerHandler(callbackHandler);
 
@@ -51,8 +47,9 @@ public class TimeRecordingLauncher extends Application {
    }
 
    private static void registerReminderListener(UiCallbackHandler callbackHandler) {
+      Function<String, String> settingsValueProvider = key -> TimeRecorder.INSTANCE.getSettingsValue(key);
       StartRecordingAndDoBookingReminder startEndReminderHelper =
-            StartRecordingAndDoBookingReminderFactory.createNew(needsStartReminder(), needsEndReminder());
+            StartRecordingAndDoBookingReminderFactory.createNew(settingsValueProvider, needsStartReminder(), needsEndReminder());
       startEndReminderHelper.initializeAndStartReminderContainer(callbackHandler);
    }
 
@@ -68,21 +65,17 @@ public class TimeRecordingLauncher extends Application {
       Runtime.getRuntime().addShutdownHook(createShutdownHook());
       PictureLibrary.loadPictures();
       Platform.setImplicitExit(false);
-      createPropertieFileIfNotExists(TURBO_BUCHER_PROPERTIES);
-      createPropertieFileIfNotExists(ZEITERFASSUNG_PROPERTIES);
+
+      UiAuthenticationService.prepare();
+      TimeRecorder.INSTANCE.init();
+      initTimeRounder();
    }
 
-   private void createPropertieFileIfNotExists(String propertiesFileName) {
-      File file = new File(propertiesFileName);
-      if (!file.exists()) {
-         try {
-            if (!file.createNewFile()) {
-               throw new ApplicationLaunchException("Unable to create the '" + propertiesFileName + "' file!");
-            }
-         } catch (IOException e) {
-            throw new ApplicationLaunchException(e);
-         }
-      }
+   private static void initTimeRounder() {
+      RoundModeChangedListener saveChangedTimeRoundValue =
+            (oldVal, newVal) -> TimeRecorder.INSTANCE.saveSettingValue(String.valueOf(newVal.getAmount()), "");
+      TimeRounder.INSTANCE.init(TimeRecorder.INSTANCE::getSettingsValue);
+      TimeRounder.INSTANCE.addRoundModeChangedListener(saveChangedTimeRoundValue);
    }
 
    /*

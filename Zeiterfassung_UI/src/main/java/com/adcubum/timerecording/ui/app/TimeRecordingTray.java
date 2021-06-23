@@ -99,8 +99,34 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    }
 
    private void registerHotKeys() {
-      HotKeyManager.INSTANCE.registerHotKey(() -> handleUserInteractionAndShowInputIfStopped(false), START_STOP_HOT_KEY);
-      HotKeyManager.INSTANCE.registerHotKey(() -> handleUserInteractionAndShowInputIfStopped(true), COME_OR_GO_HOT_KEY);
+      com.adcubum.timerecording.ui.app.settings.hotkey.callback.UiCallbackHandler a =
+            new com.adcubum.timerecording.ui.app.settings.hotkey.callback.UiCallbackHandler() {
+
+               @Override
+               public void onHotKeyPressed() {
+                  handleUserInteractionAndShowInputIfStopped(false);
+               }
+
+               @Override
+               public String getSettingsValue(String key) {
+                  return TimeRecorder.INSTANCE.getSettingsValue(key);
+               }
+            };
+      com.adcubum.timerecording.ui.app.settings.hotkey.callback.UiCallbackHandler comeOrGoCallbackHandler =
+            new com.adcubum.timerecording.ui.app.settings.hotkey.callback.UiCallbackHandler() {
+
+               @Override
+               public void onHotKeyPressed() {
+                  handleUserInteractionAndShowInputIfStopped(true);
+               }
+
+               @Override
+               public String getSettingsValue(String key) {
+                  return TimeRecorder.INSTANCE.getSettingsValue(key);
+               }
+            };
+      HotKeyManager.INSTANCE.registerHotKey(a, START_STOP_HOT_KEY);
+      HotKeyManager.INSTANCE.registerHotKey(comeOrGoCallbackHandler, COME_OR_GO_HOT_KEY);
    }
 
    private void initTicketBacklog() {

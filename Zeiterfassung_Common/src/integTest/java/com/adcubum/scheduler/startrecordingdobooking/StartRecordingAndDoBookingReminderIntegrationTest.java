@@ -3,7 +3,6 @@ package com.adcubum.scheduler.startrecordingdobooking;
 
 import static com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderImpl.BEGIN_WORK_KEY;
 import static com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderImpl.END_WORK_KEY;
-import static java.util.Objects.nonNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -12,20 +11,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.message.Message;
-import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.settings.round.RoundMode;
-import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.util.parser.DateParser;
 
-class StartRecordingAndDoBookingReminderIntegrationTest extends BaseTestWithSettings {
+class StartRecordingAndDoBookingReminderIntegrationTest {
 
    @Test
    void testInitializeReminderListener_WithBeginReminder() {
@@ -101,7 +99,7 @@ class StartRecordingAndDoBookingReminderIntegrationTest extends BaseTestWithSett
 
       // When
       StartRecordingAndDoBookingReminderImpl startRecordingAndDoBookingReminder =
-            new StartRecordingAndDoBookingReminderImpl(needsEndReminder, needsEndReminder);
+            new StartRecordingAndDoBookingReminderImpl(key -> key, needsEndReminder, needsEndReminder);
 
       // Then. For the sake of the test coverage
       assertThat(startRecordingAndDoBookingReminder, is(not(nullValue())));
@@ -116,7 +114,8 @@ class StartRecordingAndDoBookingReminderIntegrationTest extends BaseTestWithSett
       private BooleanSupplier needsEndReminder = () -> true;
 
       private TestCaseBuilder() {
-         // private
+         this.beginTimeValueAsString = null;
+         this.endTimeValueAsString = null;
       }
 
       private TestCaseBuilder withNeedsBeginReminder(BooleanSupplier needsStartReminder) {
@@ -147,13 +146,16 @@ class StartRecordingAndDoBookingReminderIntegrationTest extends BaseTestWithSett
       }
 
       private TestCaseBuilder build() {
-         if (nonNull(beginTimeValueAsString)) {
-            saveProperty2Settings(BEGIN_WORK_KEY, beginTimeValueAsString);
-         }
-         if (nonNull(endTimeValueAsString)) {
-            saveProperty2Settings(END_WORK_KEY, endTimeValueAsString);
-         }
-         this.startRecordingAndDoBookingReminder = new StartRecordingAndDoBookingReminderImpl(Settings.INSTANCE, needsStartReminder, needsEndReminder, 1);
+         Function<String, String> settingsValueProvider = key -> {
+            if (BEGIN_WORK_KEY.equals(key)) {
+               return beginTimeValueAsString;
+            } else if (END_WORK_KEY.equals(key)) {
+               return endTimeValueAsString;
+            }
+            throw new IllegalStateException("Unknown key '" + key + "'");
+         };
+         this.startRecordingAndDoBookingReminder =
+               new StartRecordingAndDoBookingReminderImpl(settingsValueProvider, needsStartReminder, needsEndReminder, 1);
          return this;
       }
    }

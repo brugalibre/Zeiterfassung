@@ -1,6 +1,7 @@
 rootProject.name = 'zeiterfassung-root'
 include ':Zeiterfassung_App', ':Zeiterfassung_Core_Api', ':Zeiterfassung_Common', 'Zeiterfassung_Common_Api',
-':Zeiterfassung_Auth', ':zeiterfassung-jira-impl', ':zeiterfassung-jira-api', ':zeiterfassung-book-api', ':zeiterfassung-book-impl', ':Zeiterfassung_Ui'
+':Zeiterfassung_Auth', ':zeiterfassung-jira-impl', ':zeiterfassung-jira-api', ':zeiterfassung-book-api', ':zeiterfassung-book-impl', ':Zeiterfassung_Ui',
+':zeiterfassung-persistence-impl', ':zeiterfassung-persistence-api'
 
 project(':Zeiterfassung_App').projectDir = file('../Zeiterfassung_App')
 project(':Zeiterfassung_Core_Api').projectDir = file('../Zeiterfassung_Core_Api')
@@ -12,3 +13,5 @@ project(':zeiterfassung-jira-api').projectDir = file('../zeiterfassung-jira-api'
 project(':Zeiterfassung_Ui').projectDir = file('../Zeiterfassung_Ui')
 project(':zeiterfassung-book-api').projectDir = file('../zeiterfassung-book-api')
 project(':zeiterfassung-book-impl').projectDir = file('../zeiterfassung-book-impl')
+project(':zeiterfassung-persistence-api').projectDir = file('../zeiterfassung-persistence-api')
+project(':zeiterfassung-persistence-impl').projectDir = file('../zeiterfassung-persistence-impl')

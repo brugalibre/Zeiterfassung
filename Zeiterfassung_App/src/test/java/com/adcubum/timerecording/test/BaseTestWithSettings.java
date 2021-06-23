@@ -1,7 +1,6 @@
 package com.adcubum.timerecording.test;
 
 import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
@@ -10,10 +9,10 @@ import java.nio.file.Files;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import com.adcubum.timerecording.settings.Settings;
+import com.adcubum.timerecording.settings.key.ValueKey;
+import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 
 public class BaseTestWithSettings {
 
@@ -32,23 +31,10 @@ public class BaseTestWithSettings {
       Files.delete(file.toPath());
    }
 
-   @Test
-   public void testUnknownPropertieFile() {
-
-      // Given
-      String propertieName = "file";
-      String propertyName = "key";
-      String propertyValue = "value";
-
-      // When
-      Executable exec = () -> Settings.INSTANCE.saveValueToProperties(propertyName, propertyValue, propertieName);
-      // Then
-      assertThrows(IllegalStateException.class, exec);
-   }
-
    protected static void saveProperty2Settings(String propertyName, String propertyValue) {
       try {
-         Settings.INSTANCE.saveValueToProperties(propertyName, propertyValue, ZEITERFASSUNG_PROPERTIES);
+         ValueKey<String> key = ValueKeyFactory.createNew(propertyName, String.class);
+         Settings.INSTANCE.saveValueToProperties(key, propertyValue);
       } catch (IllegalStateException e) {
          fail(e);
       }

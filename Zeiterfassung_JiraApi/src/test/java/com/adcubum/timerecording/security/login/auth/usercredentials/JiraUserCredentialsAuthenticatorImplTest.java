@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketImpl;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
-import com.adcubum.timerecording.test.BaseTestWithSettings;
+import com.adcubum.timerecording.jira.test.BaseTestWithSettings;
 
 class JiraUserCredentialsAuthenticatorImplTest extends BaseTestWithSettings {
 

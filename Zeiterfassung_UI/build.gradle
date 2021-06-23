@@ -35,6 +35,7 @@ dependencies {
 
     runtimeOnly project(':Zeiterfassung_App')
     runtimeOnly project(':zeiterfassung-book-impl')
+    runtimeOnly project(':zeiterfassung-persistence-impl')
     runtimeOnly project(':zeiterfassung-jira-impl')
     runtimeOnly project(':Zeiterfassung_Common')
     

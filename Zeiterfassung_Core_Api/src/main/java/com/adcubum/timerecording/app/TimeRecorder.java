@@ -165,6 +165,25 @@ public interface TimeRecorder {
    String getInfoStringForState();
 
    /**
+    * Returns a value stored in the Settings for this {@link TimeRecorder} application
+    * 
+    * @param key
+    *        the key
+    * @return a value stored in the Settings for this {@link TimeRecorder} application
+    */
+   public String getSettingsValue(String key);
+
+   /**
+    * Saves the given value for this application
+    * 
+    * @param value
+    *        the value
+    * @param key
+    *        the key associated with
+    */
+   void saveSettingValue(String value, String key);
+
+   /**
     * Return <code>true</code> if there is any content, <code>false</code> if not
     * 
     * @return <code>true</code> if there is any content, <code>false</code> if not

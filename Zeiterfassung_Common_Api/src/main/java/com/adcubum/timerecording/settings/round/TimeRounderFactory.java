@@ -1,7 +1,6 @@
 package com.adcubum.timerecording.settings.round;
 
 import com.adcubum.timerecording.core.factory.AbstractFactory;
-import com.adcubum.timerecording.settings.Settings;
 
 /**
  * The {@link TimeRounderFactory} used in order to create a {@link TimeRounder}
@@ -24,7 +23,7 @@ public class TimeRounderFactory extends AbstractFactory {
     *        the {@link Settings} this {@link TimeRounder} uses
     * @return a new created or a already instantiated {@link TimeRounder} instance
     */
-   public static TimeRounder createNew(Settings settings) {
-      return INSTANCE.createNewWithAgruments(BEAN_NAME, settings);
+   public static TimeRounder createNew() {
+      return INSTANCE.createNewWithAgruments(BEAN_NAME);
    }
 }

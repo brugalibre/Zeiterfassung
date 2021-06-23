@@ -3,10 +3,14 @@
  */
 package com.adcubum.timerecording.settings.round;
 
-import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
-import com.adcubum.timerecording.settings.Settings;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.UnaryOperator;
+
+import com.adcubum.timerecording.settings.round.observable.RoundModeChangedListener;
 
 /**
  * The {@link TimeRounderImpl} is responsible for loading and storing of the current {@link RoundMode}
@@ -16,27 +20,30 @@ import com.adcubum.timerecording.settings.Settings;
  */
 public class TimeRounderImpl implements TimeRounder {
 
-   private Settings settings;
+   private static final String TIME_ROUNDER_KEY = RoundMode.PROPERTY_KEY;
+   private UnaryOperator<String> settingsValueProvider;
+   private List<RoundModeChangedListener> changedListeners;
    private RoundMode roundMode;
 
    /**
-    * Constructor only for testing purpose
+    * Package private default Constructor used by the {@link TimeRounderFactory}
+    * Initializes the {@link RoundMode} of this {@link TimeRounder} to {@link RoundMode#ONE_MIN}
     * 
-    * @param settings
-    *        the Settings
     */
-   TimeRounderImpl(Settings settings) {
-      this.settings = settings;
-      init();
+   TimeRounderImpl() {
+      this.roundMode = RoundMode.ONE_MIN;
    }
 
-   private void init() {
+   @Override
+   public void init(UnaryOperator<String> settingsValueProvider) {
+      this.settingsValueProvider = requireNonNull(settingsValueProvider);
+      this.changedListeners = new ArrayList<>();
       RoundMode newRoundMode = evalRoundMode();
       setRoundMode(newRoundMode);
    }
 
    private RoundMode evalRoundMode() {
-      String roundModeAsString = settings.getSettingsValue(RoundMode.PROPERTY_KEY);
+      String roundModeAsString = settingsValueProvider.apply(TIME_ROUNDER_KEY);
       return RoundMode.getRoundMode(roundModeAsString);
    }
 
@@ -45,16 +52,17 @@ public class TimeRounderImpl implements TimeRounder {
       RoundMode oldRoundMode = this.roundMode;
       this.roundMode = newRoundMode;
       if (oldRoundMode != newRoundMode && nonNull(oldRoundMode)) {
-         saveValueToProperties(newRoundMode);
+         changedListeners.forEach(changedListener -> changedListener.onRoundModeChanged(oldRoundMode, newRoundMode));
       }
-   }
-
-   private void saveValueToProperties(RoundMode roundMode) {
-      settings.saveValueToProperties(RoundMode.PROPERTY_KEY, String.valueOf(roundMode.getAmount()), ZEITERFASSUNG_PROPERTIES);
    }
 
    @Override
    public final RoundMode getRoundMode() {
       return this.roundMode;
+   }
+
+   @Override
+   public void addRoundModeChangedListener(RoundModeChangedListener roundModeChangedListener) {
+      changedListeners.add(requireNonNull(roundModeChangedListener));
    }
 }
