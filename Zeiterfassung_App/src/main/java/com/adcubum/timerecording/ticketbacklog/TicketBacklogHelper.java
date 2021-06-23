@@ -9,10 +9,12 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import com.adcubum.timerecording.settings.Settings;
+import com.adcubum.timerecording.settings.key.ValueKey;
+import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 
 public class TicketBacklogHelper {
-   private static final String BOARD_NAME_VALUE_KEY = "boardName";
-   private static final String SPRINT_NAMES_VALUE_KEY = "sprintNames";
+   private static final ValueKey<String> BOARD_NAME_VALUE_KEY = ValueKeyFactory.createNew("boardName", String.class);
+   private static final ValueKey<String> SPRINT_NAMES_VALUE_KEY = ValueKeyFactory.createNew("sprintNames", String.class);
    private static final String SPRINT_NAMES_DELIMITER = ";";
 
    /**

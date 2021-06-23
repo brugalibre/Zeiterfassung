@@ -1,15 +1,24 @@
 package com.adcubum.timerecording.core.factory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public abstract class AbstractFactory {
 
+   private static Map<String, ApplicationContext> CONTEXT_MAP = new HashMap<>();
    private ApplicationContext context;
 
    protected AbstractFactory(String springXmlConfigFile) {
-      this.context = new ClassPathXmlApplicationContext(springXmlConfigFile);
+      if (CONTEXT_MAP.containsKey(springXmlConfigFile)) {
+         this.context = CONTEXT_MAP.get(springXmlConfigFile);
+      } else {
+         this.context = new ClassPathXmlApplicationContext(springXmlConfigFile);
+         CONTEXT_MAP.put(springXmlConfigFile, context);
+      }
    }
 
    @SuppressWarnings("unchecked")

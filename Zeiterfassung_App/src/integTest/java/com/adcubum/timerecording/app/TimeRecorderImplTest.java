@@ -4,7 +4,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -42,11 +44,15 @@ import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageType;
+import com.adcubum.timerecording.settings.Settings;
+import com.adcubum.timerecording.settings.SettingsFactory;
+import com.adcubum.timerecording.settings.key.ValueKey;
+import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeFactory;
 
-class TimeRecorderTest extends BaseTestWithSettings {
+class TimeRecorderImplTest extends BaseTestWithSettings {
 
    @AfterEach
    @Override
@@ -54,6 +60,27 @@ class TimeRecorderTest extends BaseTestWithSettings {
       super.cleanUp();
       TimeRecorder.INSTANCE.clear();
       TimeRecorder.INSTANCE.init();
+   }
+
+   @Test
+   void testGetSettingsValue() {
+      // Given
+      String key = "key";
+      Settings settings = mock(Settings.class);
+      Settings settings2 = SettingsFactory.createNew();
+      TimeRecorder timeRecorderImpl = new TimeRecorderImpl(mock(BookerAdapter.class), settings);
+      ValueKey<String> valueKey = ValueKeyFactory.createNew(key, String.class);
+
+      // When
+      timeRecorderImpl.getSettingsValue(key);
+
+      // Then
+      verify(settings).getSettingsValue(eq(valueKey));
+   }
+
+   @Test
+   void testSaveSettingValue() {
+      fail("Not yet implemented");
    }
 
    @Test

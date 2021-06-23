@@ -39,6 +39,7 @@ dependencies {
 	implementation project(':zeiterfassung-jira-api')
 	implementation project(':Zeiterfassung_Auth')
 	implementation project(':zeiterfassung-book-api')
+	implementation project(':zeiterfassung-persistence-api')
 }
 
 sourceSets {

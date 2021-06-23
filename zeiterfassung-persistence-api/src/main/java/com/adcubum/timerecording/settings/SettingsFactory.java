@@ -13,7 +13,7 @@ public class SettingsFactory extends AbstractFactory {
    private static final SettingsFactory INSTANCE = new SettingsFactory();
 
    private SettingsFactory() {
-      super("spring.xml");
+      super("persistence-module-configuration.xml");
    }
 
    /**

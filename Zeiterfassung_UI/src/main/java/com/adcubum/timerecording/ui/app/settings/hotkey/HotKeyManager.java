@@ -4,7 +4,6 @@ import static java.util.Objects.nonNull;
 
 import javax.swing.KeyStroke;
 
-import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.ui.app.settings.hotkey.callback.UiCallbackHandler;
 import com.tulskiy.keymaster.common.Provider;
 
@@ -37,19 +36,19 @@ public class HotKeyManager {
     *        the key for which the specific key or key-combination is stored
     */
    public void registerHotKey(UiCallbackHandler callbackHandler, String hotKeyKey) {
-      KeyStroke keyStroke = evalKeyStroke(hotKeyKey);
+      KeyStroke keyStroke = evalKeyStroke(callbackHandler, hotKeyKey);
       if (nonNull(keyStroke)) {
          Provider provider = Provider.getCurrentProvider(false);
          provider.register(keyStroke, hotKey -> callbackHandler.onHotKeyPressed());
       }
    }
 
-   private KeyStroke evalKeyStroke(String hotKeyKey) {
-      String hotKeyAsString = evalHotKey(hotKeyKey);
+   private KeyStroke evalKeyStroke(UiCallbackHandler callbackHandler, String hotKeyKey) {
+      String hotKeyAsString = evalHotKey(callbackHandler, hotKeyKey);
       return nonNull(hotKeyAsString) ? KeyStroke.getKeyStroke(hotKeyAsString) : null;
    }
 
-   private String evalHotKey(String hotKeyKey) {
-      return Settings.INSTANCE.getSettingsValue(hotKeyKey);
+   private String evalHotKey(UiCallbackHandler callbackHandler, String hotKeyKey) {
+      return callbackHandler.getSettingsValue(hotKeyKey);
    }
 }

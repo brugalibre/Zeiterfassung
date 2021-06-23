@@ -4,6 +4,8 @@ import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.settings.Settings;
+import com.adcubum.timerecording.settings.key.ValueKey;
+import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 import com.adcubum.util.utils.StringUtil;
 
 public class JiraUserCredentialsAuthenticatorImpl implements UserCredentialsAuthenticator {
@@ -30,7 +32,8 @@ public class JiraUserCredentialsAuthenticatorImpl implements UserCredentialsAuth
    }
 
    private static String getTicketNr2TestConnection() {
-      String ticketNr2TestConnectionFromSettings = Settings.INSTANCE.getSettingsValue("TicketNr2TestConnection");
+      ValueKey<String> key = ValueKeyFactory.createNew("TicketNr2TestConnection", String.class);
+      String ticketNr2TestConnectionFromSettings = Settings.INSTANCE.getSettingsValue(key);
       return StringUtil.isEmptyOrNull(ticketNr2TestConnectionFromSettings) ? "INTA-147" : ticketNr2TestConnectionFromSettings;
    }
 }

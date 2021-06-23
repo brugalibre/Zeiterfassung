@@ -1,9 +1,8 @@
 package com.adcubum.scheduler.startrecordingdobooking;
 
-import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
-
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.scheduler.Scheduler;
@@ -14,7 +13,6 @@ import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageFactory;
 import com.adcubum.timerecording.message.MessageType;
-import com.adcubum.timerecording.settings.Settings;
 
 /**
  * A helper in order to create and initialize a {@link SchedulerContainerImpl} in order to remind
@@ -30,36 +28,32 @@ public class StartRecordingAndDoBookingReminderImpl implements StartRecordingAnd
    static final String END_WORK_KEY = "endWork";
    private BooleanSupplier needsStartReminder;
    private BooleanSupplier needsEndReminder;
-   private Settings settings;
+   private Function<String, String> settingsValueProvider;
    private TimeUnit timeUnits;
    private long reminderSleepInterval;
-
-   /**
-    * Default constructor required by Spring
-    */
-   StartRecordingAndDoBookingReminderImpl() {
-      this(Settings.INSTANCE, () -> false, () -> false, 30);
-   }
 
    /**
     * Creates a new {@link StartRecordingAndDoBookingReminderImpl} with two {@link BooleanSupplier} which determines
     * if a reminder is effectively necessary at the time the {@link Scheduler} is done
     * 
+    * @param settingsValueProvider
+    *        a interface in order to retrieve a stored value for a given key
     * @param needsStartReminder
     *        defines if a reminder to start is still necessary
     * @param needsEndReminder
     *        defines if a reminder to end is still necessary
     */
-   public StartRecordingAndDoBookingReminderImpl(BooleanSupplier needsStartReminder, BooleanSupplier needsEndReminder) {
-      this(Settings.INSTANCE, needsStartReminder, needsEndReminder, 30);
+   public StartRecordingAndDoBookingReminderImpl(Function<String, String> settingsValueProvider, BooleanSupplier needsStartReminder,
+         BooleanSupplier needsEndReminder) {
+      this(settingsValueProvider, needsStartReminder, needsEndReminder, 30);
    }
 
    /**
     * Creates a new {@link StartRecordingAndDoBookingReminderImpl} with two {@link BooleanSupplier} which determines
     * if a reminder is effectively necessary at the time the {@link Scheduler} is done
     * 
-    * @param settings
-    *        the {@link Settings} instance
+    * @param settingsValueProvider
+    *        a interface in order to retrieve a stored value for a given key
     * @param needsStartReminder
     *        defines if a reminder to start is still necessary
     * @param needsEndReminder
@@ -67,11 +61,11 @@ public class StartRecordingAndDoBookingReminderImpl implements StartRecordingAnd
     * @param reminderSleepInterval
     *        the sleeping interval of the created {@link SchedulerImpl}s
     */
-   StartRecordingAndDoBookingReminderImpl(Settings settings, BooleanSupplier needsStartReminder, BooleanSupplier needsEndReminder,
-         long reminderSleepInterval) {
+   StartRecordingAndDoBookingReminderImpl(Function<String, String> settingsValueProvider, BooleanSupplier needsStartReminder,
+         BooleanSupplier needsEndReminder, long reminderSleepInterval) {
       this.needsStartReminder = needsStartReminder;
       this.needsEndReminder = needsEndReminder;
-      this.settings = settings;
+      this.settingsValueProvider = settingsValueProvider;
       this.timeUnits = TimeUnit.SECONDS;
       this.reminderSleepInterval = reminderSleepInterval;
    }
@@ -85,8 +79,8 @@ public class StartRecordingAndDoBookingReminderImpl implements StartRecordingAnd
     */
    @Override
    public void initializeAndStartReminderContainer(UiCallbackHandler uiCallbackHandler) {
-      String beginTimeAsString = settings.getSettingsValue(BEGIN_WORK_KEY, ZEITERFASSUNG_PROPERTIES);
-      String endTimeAsString = settings.getSettingsValue(END_WORK_KEY, ZEITERFASSUNG_PROPERTIES);
+      String beginTimeAsString = settingsValueProvider.apply(BEGIN_WORK_KEY);
+      String endTimeAsString = settingsValueProvider.apply(END_WORK_KEY);
       SchedulerContainer startBookingAndDoBookingReminder = new SchedulerContainerImpl(timeUnits, reminderSleepInterval);
       Runnable displayReminder2StartMsg =
             () -> displayMessage(uiCallbackHandler, TextLabel.REMINDER_TO_START_RECORDING_MSG, TextLabel.REMINDER_TO_START_RECORDING_TITLE, true);

@@ -32,6 +32,9 @@ import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 import com.adcubum.timerecording.importexport.out.file.FileExporter;
 import com.adcubum.timerecording.message.MessageFactory;
 import com.adcubum.timerecording.message.MessageType;
+import com.adcubum.timerecording.settings.Settings;
+import com.adcubum.timerecording.settings.key.ValueKey;
+import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 import com.adcubum.util.utils.FileSystemUtil;
 
 /**
@@ -45,6 +48,7 @@ import com.adcubum.util.utils.FileSystemUtil;
 public class TimeRecorderImpl implements TimeRecorder {
 
    private BusinessDay businessDay;
+   private Settings settings;
    private UiCallbackHandler callbackHandler;
    private WorkStates currentState;
    private BookerAdapter bookAdapter;
@@ -55,19 +59,24 @@ public class TimeRecorderImpl implements TimeRecorder {
    TimeRecorderImpl(BookerAdapter bookAdapter, BusinessDay businessDay) {
       this.bookAdapter = bookAdapter;
       this.businessDay = businessDay;
+      this.settings = Settings.INSTANCE;
       currentState = WorkStates.NOT_WORKING;
    }
 
    TimeRecorderImpl(BookerAdapter bookAdapter) {
-      this.bookAdapter = bookAdapter;
-      init();
+      this(bookAdapter, Settings.INSTANCE);
    }
 
    /**
     * Default constructor used by Spring
     */
    protected TimeRecorderImpl() {
-      bookAdapter = BookerAdapterFactory.getAdapter();
+      this(BookerAdapterFactory.getAdapter(), Settings.INSTANCE);
+   }
+
+   TimeRecorderImpl(BookerAdapter bookAdapter, Settings settings) {
+      this.bookAdapter = bookAdapter;
+      this.settings = settings;
       init();
    }
 
@@ -75,6 +84,7 @@ public class TimeRecorderImpl implements TimeRecorder {
    public void init() {
       currentState = WorkStates.NOT_WORKING;
       businessDay = new BusinessDayImpl();
+      settings.init();
    }
 
    @Override
@@ -296,6 +306,18 @@ public class TimeRecorderImpl implements TimeRecorder {
          default:
             throw new IllegalStateException("Unknowing working state '" + currentState + "'!");
       }
+   }
+
+   @Override
+   public String getSettingsValue(String key) {
+      ValueKey<String> valueKey = ValueKeyFactory.createNew(key, String.class);
+      return settings.getSettingsValue(valueKey);
+   }
+
+   @Override
+   public void saveSettingValue(String value, String key) {
+      ValueKey<String> valueKey = ValueKeyFactory.createNew(key, String.class);
+      settings.saveValueToProperties(valueKey, value);
    }
 
    @Override
