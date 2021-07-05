@@ -8,7 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraGenericValuesResponse;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReaderIntegTest.HttpClientInterceptor;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReaderImplIntegTest.HttpClientInterceptor;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraGenericValuesResponseReader;
 
 class HttpClientIntegTest {

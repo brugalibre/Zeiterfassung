@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
-import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.ui.app.pages.overview.control.callback.BDChangedUiCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
@@ -47,7 +47,7 @@ public class DescriptionAddHelper {
    public DescriptionAddHelper(BDChangedUiCallbackHandler uiRefresher, ContextMenu contextMenu,
          TableView<BusinessDayIncTableRowValue> tableView) {
       this.callbackHandler = uiRefresher;
-      this.handler = new BusinessDayChangedCallbackHandlerImpl();
+      this.handler = BusinessDayChangedCallbackHandlerFactory.createNew();
       this.stage = new Stage(StageStyle.UNDECORATED);
       createDescriptionChangeMenueItem(contextMenu, tableView);
    }

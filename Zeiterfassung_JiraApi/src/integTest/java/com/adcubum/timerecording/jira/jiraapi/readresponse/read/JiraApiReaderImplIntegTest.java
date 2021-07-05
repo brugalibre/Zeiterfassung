@@ -20,7 +20,7 @@ import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResu
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.JiraResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.ResponseReader;
 
-class JiraApiReaderIntegTest {
+class JiraApiReaderImplIntegTest {
 
    private static final String REST_AGILE_API_PATH = ADC_JIRA_BOARD_BASE_URL.replace(ADC_JIRA_HOST, "");
    private static final String LOCALHOST = "127.0.0.1";
