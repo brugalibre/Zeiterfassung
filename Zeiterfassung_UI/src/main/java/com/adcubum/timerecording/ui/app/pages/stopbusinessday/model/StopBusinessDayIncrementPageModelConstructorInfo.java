@@ -10,7 +10,7 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
-import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.adcubum.timerecording.jira.constants.TicketConst;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.ComeAndGoOverviewPageModel;
@@ -57,7 +57,7 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
    public static StopBusinessDayIncrementPageModelConstructorInfo of(BusinessDayIncrementVO businessDayIncrementVO, TimeSnippet currentTimeSnippet) {
       return new StopBusinessDayIncrementPageModelConstructorInfo(currentTimeSnippet, ZERO_MAX_TIME, businessDayIncrementVO.getTicketNumber(),
             businessDayIncrementVO.getDescription(), businessDayIncrementVO.getTotalDurationRep(), true, true, true,
-            new BusinessDayChangedCallbackHandlerImpl(), TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT, TextLabel.FINISH_BUTTON_TOOLTIP_TEXT);
+            BusinessDayChangedCallbackHandlerFactory.createNew(), TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT, TextLabel.FINISH_BUTTON_TOOLTIP_TEXT);
    }
 
    /**

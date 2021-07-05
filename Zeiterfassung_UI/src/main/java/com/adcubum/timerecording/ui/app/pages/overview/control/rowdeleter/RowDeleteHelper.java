@@ -8,7 +8,7 @@ import java.util.Optional;
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
-import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
 import com.adcubum.timerecording.ui.app.pages.overview.control.callback.BDChangedUiCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
 import com.adcubum.timerecording.ui.app.pages.overview.view.OverviewPage;
@@ -32,7 +32,7 @@ public class RowDeleteHelper {
    private MenuItem deleteMenuItem;
 
    public RowDeleteHelper(BDChangedUiCallbackHandler uiRefresher, TableView<BusinessDayIncTableRowValue> tableView) {
-      this.handler = new BusinessDayChangedCallbackHandlerImpl();
+      this.handler = BusinessDayChangedCallbackHandlerFactory.createNew();
       this.uiRefresher = uiRefresher;
       buildDeleteMenuItem(tableView);
    }

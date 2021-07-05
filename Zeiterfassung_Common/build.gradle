@@ -5,6 +5,9 @@ plugins {
     id 'java'
 }
 
+apply from: '..//Zeiterfassung-zeiterfassung/test.gradle'
+apply from: '..//Zeiterfassung-zeiterfassung/integtest.gradle'
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -17,20 +20,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework/spring-context
 	implementation group: 'org.springframework', name: 'spring-context', version: '5.3.8'
 
-	// https://mvnrepository.com/artifact/org.mockito/mockito-core
-	testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.8.0'
-   
-  	// https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all
-	testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
-
 	// https://mvnrepository.com/artifact/org.awaitility/awaitility
 	testImplementation group: 'org.awaitility', name: 'awaitility', version: '3.0.0'
-
-    // Use JUnit test framework.
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:'
-    
-    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.1'
 
 	// https://mvnrepository.com/artifact/joda-time/joda-time
 	implementation group: 'joda-time', name: 'joda-time', version: '2.10.10'
@@ -39,11 +30,4 @@ dependencies {
 	implementation group: 'log4j', name: 'log4j', version: '1.2.17'
 	
 	implementation project(':Zeiterfassung_Common_Api')
-}
-
-sourceSets {
-    integTest{
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
-    }
 }

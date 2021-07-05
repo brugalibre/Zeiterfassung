@@ -5,6 +5,13 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessD
 
 public class BusinessDayChangedCallbackHandlerImpl implements BusinessDayChangedCallbackHandler {
 
+   /**
+    * Called by the {@link BusinessDayChangedCallbackHandlerFactory}
+    */
+   private BusinessDayChangedCallbackHandlerImpl() {
+      // private
+   }
+
    @Override
    public void handleBusinessDayIncrementAdd(BusinessDayIncrementAdd businessDayIncrementAdd) {
       TimeRecorder.INSTANCE.addBusinessIncrement(businessDayIncrementAdd);

@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
-import com.adcubum.timerecording.core.work.businessday.TestChangedComeAndGoValueImpl;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ComeAndGoesUpdater;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
+import com.adcubum.timerecording.integtest.TestChangedComeAndGoValueImpl;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.util.parser.DateParser;
