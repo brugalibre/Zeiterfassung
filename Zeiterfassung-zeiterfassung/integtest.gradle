@@ -1,0 +1,30 @@
+
+apply from: '..//Zeiterfassung-zeiterfassung/test.gradle'
+
+def integTest = sourceSets.create("integTest")
+
+def integTestTask = tasks.register("integTest", Test) {
+    description = 'Runs the integration tests.'
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+  
+    testClassesDirs = integTest.output.classesDirs
+    classpath = configurations[integTest.runtimeClasspathConfigurationName] + integTest.output
+    
+    shouldRunAfter(tasks.named('test'))
+}
+
+configurations[integTest.implementationConfigurationName].extendsFrom(configurations.testImplementation)
+configurations[integTest.runtimeOnlyConfigurationName].extendsFrom(configurations.testRuntimeOnly)
+
+configurations {
+    intTestImplementation.extendsFrom implementation
+    intTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+dependencies {
+    integTestImplementation project
+}
+
+tasks.named('check') {
+    dependsOn(integTestTask)
+}

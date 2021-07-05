@@ -12,6 +12,7 @@
 	<bean id="bookeradapter" class="com.adcubum.timerecording.core.book.coolguys.BookerHelper" lazy-init="true"/>
 	<bean id="ticketbacklog" class="com.adcubum.timerecording.ticketbacklog.TicketBacklogImpl" lazy-init="true"/>
 	<bean id="timerecorder" class="com.adcubum.timerecording.app.TimeRecorderImpl" lazy-init="true"/>
+	<bean id="bdaychangedcallbackhandler" class="com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl" scope="prototype" lazy-init="true"/>
 	<bean id="usercredentials" class="com.adcubum.timerecording.security.login.auth.usercredentials.JiraUserCredentialsAuthenticatorImpl" lazy-init="true"/>
 
 </beans>

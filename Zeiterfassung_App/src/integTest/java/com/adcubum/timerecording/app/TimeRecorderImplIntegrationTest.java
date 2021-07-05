@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -41,18 +40,15 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Busi
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.adcubum.timerecording.integtest.BaseTestWithSettings;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageType;
 import com.adcubum.timerecording.settings.Settings;
-import com.adcubum.timerecording.settings.SettingsFactory;
-import com.adcubum.timerecording.settings.key.ValueKey;
-import com.adcubum.timerecording.settings.key.ValueKeyFactory;
-import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeFactory;
 
-class TimeRecorderImplTest extends BaseTestWithSettings {
+class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
    @AfterEach
    @Override
@@ -67,20 +63,28 @@ class TimeRecorderImplTest extends BaseTestWithSettings {
       // Given
       String key = "key";
       Settings settings = mock(Settings.class);
-      Settings settings2 = SettingsFactory.createNew();
       TimeRecorder timeRecorderImpl = new TimeRecorderImpl(mock(BookerAdapter.class), settings);
-      ValueKey<String> valueKey = ValueKeyFactory.createNew(key, String.class);
 
       // When
       timeRecorderImpl.getSettingsValue(key);
 
       // Then
-      verify(settings).getSettingsValue(eq(valueKey));
+      verify(settings).getSettingsValue(any());
    }
 
    @Test
    void testSaveSettingValue() {
-      fail("Not yet implemented");
+      // Given
+      String key = "key";
+      Settings settings = mock(Settings.class);
+      TimeRecorder timeRecorderImpl = new TimeRecorderImpl(mock(BookerAdapter.class), settings);
+      String value = "value";
+
+      // When
+      timeRecorderImpl.saveSettingValue(value, key);
+
+      // Then
+      verify(settings).saveValueToProperties(any(), eq(value));
    }
 
    @Test

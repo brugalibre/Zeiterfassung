@@ -12,7 +12,7 @@ import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
-import com.adcubum.timerecording.test.BaseTestWithSettings;
+import com.adcubum.timerecording.integtest.BaseTestWithSettings;
 
 class BusinessDayIntegrationTest extends BaseTestWithSettings {
    @Test

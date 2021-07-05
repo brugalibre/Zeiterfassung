@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
-import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 
@@ -15,7 +15,7 @@ public class ComeAndGoBDChangedCallbackHandler implements BusinessDayChangedCall
    private LinkedList<BusinessDayIncrementAdd> businessDayIncrementAdds;
 
    public ComeAndGoBDChangedCallbackHandler() {
-      this.defaultBusinessDayChangedCallbackHandler = new BusinessDayChangedCallbackHandlerImpl();
+      this.defaultBusinessDayChangedCallbackHandler = BusinessDayChangedCallbackHandlerFactory.createNew();
       this.businessDayIncrementAdds = new LinkedList<>();
    }
 

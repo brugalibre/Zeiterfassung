@@ -3,7 +3,7 @@
 	<classpathentry kind="src" output="bin/main" path="src/main/java">
 		<attributes>
 			<attribute name="gradle_scope" value="main"/>
-			<attribute name="gradle_used_by_scope" value="main,test,integTest"/>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" output="bin/test" path="src/test/java">
@@ -21,6 +21,13 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" output="bin/integTest" path="src/integTest/java">
+		<attributes>
+			<attribute name="gradle_scope" value="integTest"/>
+			<attribute name="gradle_used_by_scope" value="integTest"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/integTest" path="src/integTest/resources">
 		<attributes>
 			<attribute name="gradle_scope" value="integTest"/>
 			<attribute name="gradle_used_by_scope" value="integTest"/>

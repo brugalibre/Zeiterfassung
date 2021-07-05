@@ -7,7 +7,7 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
-import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
+import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.ui.app.pages.overview.control.callback.BDChangedUiCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.model.table.BusinessDayIncTableRowValue;
@@ -35,7 +35,7 @@ public abstract class AbstractBusinessDayChangeHelper<T> implements EventHandler
 
    protected AbstractBusinessDayChangeHelper(BDChangedUiCallbackHandler uiRefresher) {
       this.uiRefresher = uiRefresher;
-      this.handler = new BusinessDayChangedCallbackHandlerImpl();
+      this.handler = BusinessDayChangedCallbackHandlerFactory.createNew();
    }
 
    @Override

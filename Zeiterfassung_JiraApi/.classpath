@@ -3,7 +3,7 @@
 	<classpathentry kind="src" output="bin/main" path="src/main/java">
 		<attributes>
 			<attribute name="gradle_scope" value="main"/>
-			<attribute name="gradle_used_by_scope" value="main,test,integrationtest"/>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" output="bin/test" path="src/test/java">
@@ -20,18 +20,24 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Auth"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Common_Api"/>
-	<classpathentry kind="src" output="bin/integrationtest" path="src/integrationtest/java">
+	<classpathentry kind="src" output="bin/integTest" path="src/integTest/java">
 		<attributes>
-			<attribute name="gradle_scope" value="integrationtest"/>
-			<attribute name="gradle_used_by_scope" value="integrationtest"/>
+			<attribute name="gradle_scope" value="integTest"/>
+			<attribute name="gradle_used_by_scope" value="integTest"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/integTest" path="src/integTest/resources">
+		<attributes>
+			<attribute name="gradle_scope" value="integTest"/>
+			<attribute name="gradle_used_by_scope" value="integTest"/>
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Auth"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Common_Api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/zeiterfassung-jira-api"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/zeiterfassung-persistence-api"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>
