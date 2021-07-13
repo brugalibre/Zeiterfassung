@@ -1,13 +1,16 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'java-library'
     id 'eclipse'
     id 'java'
     id 'application'
 }
 
+def timerecorderMainClass = 'com.adcubum.timerecording.launch.TimeRecordingLauncher' 
+
 application {
-    mainClass = 'com.adcubum.timerecording.launch.TimeRecordingLauncher'
+    mainClass = timerecorderMainClass
 }
 
 sourceCompatibility = 1.8
@@ -45,3 +48,8 @@ dependencies {
     implementation project(':zeiterfassung-jira-api')
     implementation project(':zeiterfassung-auth-impl')
 }
+
+shadowJar {
+	archiveBaseName = 'zeiterfassung'
+	mainClassName = timerecorderMainClass
+ }
