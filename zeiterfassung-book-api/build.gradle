@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     
-    implementation project(':Zeiterfassung_Core_Api')
-    implementation project(':Zeiterfassung_Common_Api')
+    implementation project(':zeiterfassung-core-api')
+    implementation project(':zeiterfassung-common-api')
     testImplementation project(':zeiterfassung-book-impl')
 }

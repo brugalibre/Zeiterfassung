@@ -1,16 +1,16 @@
 rootProject.name = 'zeiterfassung-root'
-include ':Zeiterfassung_App', ':Zeiterfassung_Core_Api', ':Zeiterfassung_Common', 'Zeiterfassung_Common_Api',
-':Zeiterfassung_Auth', ':zeiterfassung-jira-impl', ':zeiterfassung-jira-api', ':zeiterfassung-book-api', ':zeiterfassung-book-impl', ':Zeiterfassung_Ui',
+include ':zeiterfassung-core-impl', ':zeiterfassung-core-api', ':zeiterfassung-common-impl', 'zeiterfassung-common-api',
+':zeiterfassung-auth-impl', ':zeiterfassung-jira-impl', ':zeiterfassung-jira-api', ':zeiterfassung-book-api', ':zeiterfassung-book-impl', ':zeiterfassung-ui',
 ':zeiterfassung-persistence-impl', ':zeiterfassung-persistence-api'
 
-project(':Zeiterfassung_App').projectDir = file('../Zeiterfassung_App')
-project(':Zeiterfassung_Core_Api').projectDir = file('../Zeiterfassung_Core_Api')
-project(':Zeiterfassung_Common').projectDir = file('../Zeiterfassung_Common')
-project(':Zeiterfassung_Common_Api').projectDir = file('../Zeiterfassung_Common_Api')
-project(':Zeiterfassung_Auth').projectDir = file('../Zeiterfassung_Auth')
+project(':zeiterfassung-core-impl').projectDir = file('../Zeiterfassung_App')
+project(':zeiterfassung-core-api').projectDir = file('../Zeiterfassung_Core_Api')
+project(':zeiterfassung-common-impl').projectDir = file('../Zeiterfassung_Common')
+project(':zeiterfassung-common-api').projectDir = file('../Zeiterfassung_Common_Api')
+project(':zeiterfassung-auth-impl').projectDir = file('../Zeiterfassung_Auth')
 project(':zeiterfassung-jira-impl').projectDir = file('../Zeiterfassung_JiraApi')
 project(':zeiterfassung-jira-api').projectDir = file('../zeiterfassung-jira-api')
-project(':Zeiterfassung_Ui').projectDir = file('../Zeiterfassung_Ui')
+project(':zeiterfassung-ui').projectDir = file('../Zeiterfassung_Ui')
 project(':zeiterfassung-book-api').projectDir = file('../zeiterfassung-book-api')
 project(':zeiterfassung-book-impl').projectDir = file('../zeiterfassung-book-impl')
 project(':zeiterfassung-persistence-api').projectDir = file('../zeiterfassung-persistence-api')

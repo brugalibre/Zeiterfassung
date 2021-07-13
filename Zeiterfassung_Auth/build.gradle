@@ -22,6 +22,6 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.azure/azure-identity
 	api group: 'com.azure', name: 'azure-security-keyvault-secrets', version: '4.3.0-beta.4'
 	
-	implementation project(':Zeiterfassung_Common_Api')
+	implementation project(':zeiterfassung-common-api')
 	implementation project(':zeiterfassung-persistence-api')
 }
