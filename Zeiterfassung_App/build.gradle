@@ -26,15 +26,15 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 	
-	implementation project(':Zeiterfassung_Core_Api')
-	implementation project(':Zeiterfassung_Common_Api')
+	implementation project(':zeiterfassung-core-api')
+	implementation project(':zeiterfassung-common-api')
 	implementation project(':zeiterfassung-jira-api')
-	implementation project(':Zeiterfassung_Auth')
+	implementation project(':zeiterfassung-auth-impl')
 	implementation project(':zeiterfassung-book-api')
 	implementation project(':zeiterfassung-persistence-api')
 	
 	testImplementation project(':zeiterfassung-persistence-impl')
 	testImplementation project(':zeiterfassung-book-impl')
 	testImplementation project(':zeiterfassung-jira-impl')
-	testImplementation project(':Zeiterfassung_Common')
+	testImplementation project(':zeiterfassung-common-impl')
 }

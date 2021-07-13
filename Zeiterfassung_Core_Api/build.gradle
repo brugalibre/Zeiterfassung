@@ -15,5 +15,5 @@ repositories {
 
 dependencies {
 	implementation project(':zeiterfassung-jira-api')
-	implementation project(':Zeiterfassung_Common_Api')
+	implementation project(':zeiterfassung-common-api')
 }

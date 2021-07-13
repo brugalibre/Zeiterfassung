@@ -33,15 +33,15 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.github.tulskiy/jkeymaster
 	implementation group: 'com.github.tulskiy', name: 'jkeymaster', version: '1.3'
 
-    runtimeOnly project(':Zeiterfassung_App')
+    runtimeOnly project(':zeiterfassung-core-impl')
     runtimeOnly project(':zeiterfassung-book-impl')
     runtimeOnly project(':zeiterfassung-persistence-impl')
     runtimeOnly project(':zeiterfassung-jira-impl')
-    runtimeOnly project(':Zeiterfassung_Common')
+    runtimeOnly project(':zeiterfassung-common-impl')
     
-    implementation project(':Zeiterfassung_Core_Api')
+    implementation project(':zeiterfassung-core-api')
     implementation project(':zeiterfassung-book-api')
-    implementation project(':Zeiterfassung_Common_Api')
+    implementation project(':zeiterfassung-common-api')
     implementation project(':zeiterfassung-jira-api')
-    implementation project(':Zeiterfassung_Auth')
+    implementation project(':zeiterfassung-auth-impl')
 }

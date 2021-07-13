@@ -14,5 +14,5 @@ repositories {
 }
 
 dependencies {
-	implementation project(':Zeiterfassung_Common_Api')
+	implementation project(':zeiterfassung-common-api')
 }
