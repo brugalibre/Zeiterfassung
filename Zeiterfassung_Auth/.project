@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Zeiterfassung_Auth</name>
-	<comment>Project Zeiterfassung_Auth created by Buildship.</comment>
+	<name>zeiterfassung-auth-impl</name>
+	<comment>Project zeiterfassung-auth-impl created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>

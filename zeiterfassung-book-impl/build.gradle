@@ -39,12 +39,12 @@ dependencies {
 	
     implementation project(':zeiterfassung-jira-api')
     implementation project(':zeiterfassung-book-api')
-	implementation project(':Zeiterfassung_Core_Api')
-	implementation project(':Zeiterfassung_Common_Api')
-    implementation project(':Zeiterfassung_Auth')
+	implementation project(':zeiterfassung-core-api')
+	implementation project(':zeiterfassung-common-api')
+    implementation project(':zeiterfassung-auth-impl')
     
-    testImplementation project(':Zeiterfassung_App')
-    testImplementation project(':Zeiterfassung_Common')
+    testImplementation project(':zeiterfassung-core-impl')
+    testImplementation project(':zeiterfassung-common-impl')
     
     implementation files('libs/turbo-bucher-6.4.jar')
     implementation files('libs/tool-jira2abacus-1.1.14-SNAPSHOT-jar-with-dependencies.jar')

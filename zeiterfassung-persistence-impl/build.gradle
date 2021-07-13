@@ -18,5 +18,5 @@ repositories {
 dependencies {
     implementation project(':zeiterfassung-persistence-api')
     
-    testImplementation project(':Zeiterfassung_Common_Api')
+    testImplementation project(':zeiterfassung-common-api')
 }

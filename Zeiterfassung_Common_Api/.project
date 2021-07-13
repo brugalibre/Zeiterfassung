@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Zeiterfassung_Common_Api</name>
-	<comment>Project Zeiterfassung_Common_Api created by Buildship.</comment>
+	<name>zeiterfassung-common-api</name>
+	<comment>Project zeiterfassung-common-api created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>

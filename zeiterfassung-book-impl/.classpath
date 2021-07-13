@@ -15,9 +15,9 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Auth"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/zeiterfassung-auth-impl"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/zeiterfassung-book-api"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Zeiterfassung_Core_Api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/zeiterfassung-core-api"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/zeiterfassung-jira-api"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>

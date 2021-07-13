@@ -12,6 +12,6 @@ repositories {
 }
 
 dependencies {
-	implementation project(':Zeiterfassung_Auth')
-	implementation project(':Zeiterfassung_Common_Api')
+	implementation project(':zeiterfassung-auth-impl')
+	implementation project(':zeiterfassung-common-api')
 }
