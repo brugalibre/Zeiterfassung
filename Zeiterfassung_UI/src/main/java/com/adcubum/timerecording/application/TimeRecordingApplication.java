@@ -1,10 +1,13 @@
 /**
  * 
  */
-package com.adcubum.timerecording.launch;
+package com.adcubum.timerecording.application;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
+
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminder;
 import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderFactory;
@@ -26,10 +29,23 @@ import javafx.stage.Stage;
  * @author Dominic
  * @version {@value TimeRecorder#VERSION}
  */
-public class TimeRecordingLauncher extends Application {
+public class TimeRecordingApplication extends Application {
 
-   public static void main(String[] args) {
-      launch();
+   private ConfigurableApplicationContext applicationContext;
+
+   @Override
+   public void init() {
+      String[] args = getParameters().getRaw().toArray(new String[0]);
+      this.applicationContext = new SpringApplicationBuilder()
+            .sources(TimeRecordingApplicationHelper.getSourceClass(args))
+            .headless(false)
+            .run(args);
+   }
+
+   @Override
+   public void stop() {
+      this.applicationContext.close();
+      Platform.exit();
    }
 
    @Override

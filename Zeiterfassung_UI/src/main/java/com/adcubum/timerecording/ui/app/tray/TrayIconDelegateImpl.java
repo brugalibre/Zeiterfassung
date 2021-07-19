@@ -18,7 +18,7 @@ import javax.swing.JPopupMenu;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.app.TimeRecorder;
-import com.adcubum.timerecording.launch.exception.ApplicationLaunchException;
+import com.adcubum.timerecording.application.ApplicationLaunchException;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.ui.core.dialog.DialogManager;
 

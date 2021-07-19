@@ -1,4 +1,4 @@
-package com.adcubum.timerecording.launch.exception;
+package com.adcubum.timerecording.application;
 
 public class ApplicationLaunchException extends RuntimeException {
 

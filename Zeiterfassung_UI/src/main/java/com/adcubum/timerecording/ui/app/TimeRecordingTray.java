@@ -29,11 +29,11 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.application.ApplicationLaunchException;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.adcubum.timerecording.launch.exception.ApplicationLaunchException;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageType;
