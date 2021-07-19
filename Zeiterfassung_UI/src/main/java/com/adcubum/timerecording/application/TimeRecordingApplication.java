@@ -1,10 +1,13 @@
 /**
  * 
  */
-package com.adcubum.timerecording.launch;
+package com.adcubum.timerecording.application;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
+
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminder;
 import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderFactory;
@@ -26,10 +29,34 @@ import javafx.stage.Stage;
  * @author Dominic
  * @version {@value TimeRecorder#VERSION}
  */
-public class TimeRecordingLauncher extends Application {
+public class TimeRecordingApplication extends Application {
 
-   public static void main(String[] args) {
-      launch();
+   private ConfigurableApplicationContext applicationContext;
+
+   @Override
+   public void init() {
+      String[] args = getParameters().getRaw().toArray(new String[0]);
+      this.applicationContext = new SpringApplicationBuilder()
+            .sources(getSourceClass(args))
+            .run(args);
+   }
+
+   private Class<?> getSourceClass(String[] args) {
+      try {
+         if (args.length > 0) {
+            return Class.forName(args[args.length - 1]);
+         }
+         throw new ApplicationLaunchException(
+               "No source class provided! Make sure that the last programm argument is the originally spring-boot-class");
+      } catch (ClassNotFoundException e) {
+         throw new ApplicationLaunchException(e);
+      }
+   }
+
+   @Override
+   public void stop() {
+      this.applicationContext.close();
+      Platform.exit();
    }
 
    @Override
