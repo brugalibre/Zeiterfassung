@@ -200,6 +200,13 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
       return ((ComeAndGoBDChangedCallbackHandler) businessDayChangedCallbackHandler).getCurrentTimeSnippet();
    }
 
+   /**
+    * @return the ticket nr which was entered for the previous {@link ComeAndGo}
+    */
+   public String getTicketNrFromPrevAddedBDInc() {
+      return ((ComeAndGoBDChangedCallbackHandler) businessDayChangedCallbackHandler).getTicketNrFromPrevAddedBDInc();
+   }
+
    public BusinessDayChangedCallbackHandler getBusinessDayChangedCallbackHandler() {
       return businessDayChangedCallbackHandler;
    }

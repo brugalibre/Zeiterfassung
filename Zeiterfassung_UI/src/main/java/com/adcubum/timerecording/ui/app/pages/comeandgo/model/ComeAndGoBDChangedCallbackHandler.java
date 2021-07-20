@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
@@ -43,6 +44,17 @@ public class ComeAndGoBDChangedCallbackHandler implements BusinessDayChangedCall
    public TimeSnippet getCurrentTimeSnippet() {
       if (!businessDayIncrementAdds.isEmpty()) {
          return businessDayIncrementAdds.getLast().getTimeSnippet();
+      }
+      return null;
+   }
+
+   /**
+    * @return the ticket nr which was entered for the previous {@link ComeAndGo}
+    */
+   public String getTicketNrFromPrevAddedBDInc() {
+      if (!businessDayIncrementAdds.isEmpty()) {
+         BusinessDayIncrementAdd lastBusinessDayIncrementAdd = businessDayIncrementAdds.getLast();
+         return lastBusinessDayIncrementAdd.getTicket().getNr();
       }
       return null;
    }
