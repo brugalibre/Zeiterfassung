@@ -38,6 +38,7 @@ import javafx.scene.control.TableColumn.CellEditEvent;
  */
 public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellEditEvent<ComeAndGoTableRowValue, String>> {
 
+   private static final String MNEMONIC_PREFIX = "_";
    private BusinessDayChangedCallbackHandler businessDayChangedCallbackHandler;
    private StringProperty startAddBDIncrementButtonProperty;
    private SimpleStringProperty clearAllComeAndGoesButtonProperty;
@@ -65,7 +66,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
    }
 
    public static ComeAndGoOverviewPageModel of(ComeAndGoOverviewPageModel inPageModel, ComeAndGoes comeAndGoes) {
-      inPageModel.startAddBDIncrementButtonProperty.setValue(TextLabel.START_CREATING_BD_INC);
+      inPageModel.startAddBDIncrementButtonProperty.setValue(MNEMONIC_PREFIX + TextLabel.START_CREATING_BD_INC);
       inPageModel.clearAllComeAndGoesButtonProperty = new SimpleStringProperty(TextLabel.CLEAR_LABEL);
       inPageModel.comeAndGoesDataModels = getComeAndGoesDataModels(comeAndGoes);
       List<ComeAndGoDataModel> comeAndGoesDataModels = inPageModel.comeAndGoesDataModels;
