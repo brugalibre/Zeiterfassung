@@ -97,8 +97,7 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
     */
    public static StopBusinessDayIncrementPageModelConstructorInfo of(ComeAndGoOverviewPageModel comeAndGoOverviewPageModel) {
       TimeSnippet timeSnippet = getTimeSnippet(comeAndGoOverviewPageModel);
-      boolean isLastIncrementAmongOthers =
-            comeAndGoOverviewPageModel.getAmountOfComeAndGoes() == comeAndGoOverviewPageModel.getCurrentComeAndGoIndex();
+      boolean isLastIncrementAmongOthers = comeAndGoOverviewPageModel.isLastIncrementAmongOthers();
       String finishContinueComeAndGoButtonTooltipText =
             isLastIncrementAmongOthers ? TextLabel.FINISH_COME_AND_GO_BUTTON_TOOLTIP_TEXT : TextLabel.CONTINUE_COME_AND_GO_BUTTON_TOOLTIP_TEXT;
       return new StopBusinessDayIncrementPageModelConstructorInfo(timeSnippet, timeSnippet.getEndTimeStamp(),

@@ -170,16 +170,18 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
       return comeAndGoesDataModels;
    }
 
-   public int getAmountOfComeAndGoes() {
-      return comeAndGoesDataModels.size();
-   }
-
-   public int getCurrentComeAndGoIndex() {
-      return currentComeAndGoIndex;
-   }
-
    public Time getPrevComeAndGoEnd() {
       return prevComeAndGoEnd;
+   }
+
+   /**
+    * Verifies if the current {@link ComeAndGo} is the last one
+    * 
+    * @return <code>true</code> if the current {@link ComeAndGo} is the last one or <code>false</code> if there is at least one more element
+    *         to proceed
+    */
+   public boolean isLastIncrementAmongOthers() {
+      return comeAndGoesDataModels.size() == currentComeAndGoIndex;
    }
 
    /**
@@ -251,5 +253,4 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
             .map(ComeAndGoTableRowValue::of)
             .collect(Collectors.toList()));
    }
-
 }
