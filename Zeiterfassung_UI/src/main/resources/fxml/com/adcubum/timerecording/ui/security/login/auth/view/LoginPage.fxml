@@ -23,7 +23,7 @@
                   <Insets bottom="10.0" left="20.0" right="20.0" />
                </VBox.margin>
             </PasswordField>
-            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" prefWidth="160.0" text="Login">
+            <Button fx:id="loginButton" mnemonicParsing="false" defaultButton="true" onAction="#login" prefWidth="160.0" text="Login">
                <VBox.margin>
                   <Insets bottom="10" left="20.0" right="20.0" />
                </VBox.margin>
