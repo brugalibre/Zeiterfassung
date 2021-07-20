@@ -100,12 +100,21 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
       boolean isLastIncrementAmongOthers = comeAndGoOverviewPageModel.isLastIncrementAmongOthers();
       String finishContinueComeAndGoButtonTooltipText =
             isLastIncrementAmongOthers ? TextLabel.FINISH_COME_AND_GO_BUTTON_TOOLTIP_TEXT : TextLabel.CONTINUE_COME_AND_GO_BUTTON_TOOLTIP_TEXT;
+      String ticketNamePlaceholder = getTicketNrPlaceHolder(comeAndGoOverviewPageModel);
       return new StopBusinessDayIncrementPageModelConstructorInfo(timeSnippet, timeSnippet.getEndTimeStamp(),
-            TicketConst.DEFAULT_TICKET_NAME, "", timeSnippet.getDurationRep(), isLastIncrementAmongOthers, false, false,
+            ticketNamePlaceholder, "", timeSnippet.getDurationRep(), isLastIncrementAmongOthers, false, false,
             comeAndGoOverviewPageModel.getBusinessDayChangedCallbackHandler(), TextLabel.ABORT_COME_AND_GO_BUTTON_TOOLTIP_TEXT,
             finishContinueComeAndGoButtonTooltipText);
    }
 
+   /*
+    * The first time we start the wizard, we show the default placeholder 
+    * For the 2nd and nth time, we show the ticket-nr, the user has entered the last time
+    */
+   private static String getTicketNrPlaceHolder(ComeAndGoOverviewPageModel comeAndGoOverviewPageModel) {
+      return nonNull(comeAndGoOverviewPageModel.getTicketNrFromPrevAddedBDInc()) ? comeAndGoOverviewPageModel.getTicketNrFromPrevAddedBDInc()
+            : TicketConst.DEFAULT_TICKET_NAME;
+   }
 
    private StopBusinessDayIncrementPageModelConstructorInfo(TimeSnippet currentTimeSnippet, Time maxEndTime, String ticketNumber, String description,
          String totalDurationRep, boolean isLastIncrementAmongOthers, boolean isAbortEnabled, boolean isBeginTextFieldEnabled,
