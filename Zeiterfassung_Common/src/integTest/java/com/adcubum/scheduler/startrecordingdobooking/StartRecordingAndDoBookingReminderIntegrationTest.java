@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
@@ -146,7 +146,7 @@ class StartRecordingAndDoBookingReminderIntegrationTest {
       }
 
       private TestCaseBuilder build() {
-         Function<String, String> settingsValueProvider = key -> {
+         UnaryOperator<String> settingsValueProvider = key -> {
             if (BEGIN_WORK_KEY.equals(key)) {
                return beginTimeValueAsString;
             } else if (END_WORK_KEY.equals(key)) {

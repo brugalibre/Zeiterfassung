@@ -4,7 +4,7 @@
 package com.adcubum.timerecording.launch;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminder;
 import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderFactory;
@@ -47,14 +47,14 @@ public class TimeRecordingLauncher extends Application {
    }
 
    private static void registerReminderListener(UiCallbackHandler callbackHandler) {
-      Function<String, String> settingsValueProvider = key -> TimeRecorder.INSTANCE.getSettingsValue(key);
+      UnaryOperator<String> settingsValueProvider = TimeRecorder.INSTANCE::getSettingsValue;
       StartRecordingAndDoBookingReminder startEndReminderHelper =
             StartRecordingAndDoBookingReminderFactory.createNew(settingsValueProvider, needsStartReminder(), needsEndReminder());
       startEndReminderHelper.initializeAndStartReminderContainer(callbackHandler);
    }
 
    private static BooleanSupplier needsStartReminder() {
-      return () -> !TimeRecorder.INSTANCE.isRecordindg() && !TimeRecorder.INSTANCE.hasContent();
+      return TimeRecorder.INSTANCE::needsStartRecordingReminder;
    }
 
    private static BooleanSupplier needsEndReminder() {

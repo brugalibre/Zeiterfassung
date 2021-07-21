@@ -213,6 +213,16 @@ public interface TimeRecorder {
    boolean isBooking();
 
    /**
+    * @return <code>true</code> if this {@link TimeRecorder} needs a reminder to start recording or <code>false</code> if not
+    */
+   boolean needsStartRecordingReminder();
+
+   /**
+    * @return <code>true</code> if this {@link TimeRecorder} needs a reminder to book the recorded content or <code>false</code> if not
+    */
+   boolean needsStartBookingReminder();
+
+   /**
     * @return a {@link BusinessDayIncrementVO} for the current {@link BusinessDayIncrement} of the {@link BusinessDay}
     */
    BusinessDayIncrementVO getCurrentBussinessDayIncrement();
@@ -223,4 +233,5 @@ public interface TimeRecorder {
    BusinessDayVO getBussinessDayVO();
 
    void setCallbackHandler(UiCallbackHandler callbackHandler);
+
 }

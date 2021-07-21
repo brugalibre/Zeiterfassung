@@ -325,6 +325,11 @@ public class TimeRecorderImpl implements TimeRecorder {
       return businessDay.getTotalDuration() > 0f;
    }
 
+   private boolean hasComeOrGoContent() {
+      ComeAndGoes comeAndGoes = businessDay.getComeAndGoes();
+      return !comeAndGoes.getComeAndGoEntries().isEmpty();
+   }
+
    @Override
    public boolean hasNotChargedElements() {
       return businessDay.hasNotChargedElements();
@@ -333,6 +338,10 @@ public class TimeRecorderImpl implements TimeRecorder {
    @Override
    public boolean isRecordindg() {
       return currentState == WorkStates.WORKING;
+   }
+
+   private boolean isComeOrGoActive() {
+      return currentState == WorkStates.COME_AND_GO;
    }
 
    @Override
@@ -353,6 +362,18 @@ public class TimeRecorderImpl implements TimeRecorder {
       synchronized (businessDay) {
          return BusinessDayVOImpl.of(businessDay);
       }
+   }
+
+   @Override
+   public boolean needsStartRecordingReminder() {
+      return !isRecordindg()
+            && !isComeOrGoActive()
+            && !hasContent();
+   }
+
+   @Override
+   public boolean needsStartBookingReminder() {
+      return hasContent() || hasComeOrGoContent();
    }
 
    @Override
