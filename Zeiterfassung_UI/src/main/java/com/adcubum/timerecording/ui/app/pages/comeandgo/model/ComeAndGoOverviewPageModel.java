@@ -15,8 +15,8 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
-import com.adcubum.timerecording.core.work.businessday.comeandgo.change.impl.ComeAndGoesUpdaterImpl;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
+import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.table.ComeAndGoTableRowValue;
 import com.adcubum.timerecording.ui.core.model.PageModel;
@@ -228,7 +228,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
    }
 
    private static ComeAndGoDataModel createComeAndGoDataModel(ComeAndGo comeAndGo) {
-      return ComeAndGoDataModel.of(comeAndGo, new ComeAndGoesUpdaterImpl());
+      return ComeAndGoDataModel.of(comeAndGo, BusinessDayChangedCallbackHandlerFactory.createNew());
    }
 
    private static ComeAndGoDataModel getLastComeAndGo(List<ComeAndGoDataModel> comeAndGoesDataModels) {

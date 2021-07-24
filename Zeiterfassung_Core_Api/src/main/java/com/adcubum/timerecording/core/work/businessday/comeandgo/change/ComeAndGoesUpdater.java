@@ -19,4 +19,9 @@ public interface ComeAndGoesUpdater {
     * @return changed {@link ComeAndGoes}
     */
    ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue);
+
+   /**
+    * removes all recorded {@link ComeAndGo}es
+    */
+   void clearComeAndGoes();
 }

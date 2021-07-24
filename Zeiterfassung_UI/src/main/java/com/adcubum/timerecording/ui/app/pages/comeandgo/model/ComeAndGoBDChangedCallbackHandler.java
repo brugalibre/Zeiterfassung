@@ -4,6 +4,8 @@ import java.util.LinkedList;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
@@ -61,5 +63,20 @@ public class ComeAndGoBDChangedCallbackHandler implements BusinessDayChangedCall
    @Override
    public void flagBusinessDayComeAndGoesAsRecorded() {
       defaultBusinessDayChangedCallbackHandler.flagBusinessDayComeAndGoesAsRecorded();
+   }
+
+   @Override
+   public ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue) {
+      return defaultBusinessDayChangedCallbackHandler.changeComeAndGo(changedComeAndGoValue);
+   }
+
+   @Override
+   public void clear() {
+      defaultBusinessDayChangedCallbackHandler.clear();
+   }
+
+   @Override
+   public void clearComeAndGoes() {
+      defaultBusinessDayChangedCallbackHandler.clearComeAndGoes();
    }
 }
