@@ -2,9 +2,10 @@ package com.adcubum.timerecording.security.login.auth.usercredentials.impl;
 
 import static java.util.Objects.nonNull;
 
-import com.adcubum.timerecording.security.login.auth.constant.AuthenticationConst;
+import com.adcubum.timerecording.security.login.auth.configuration.Configuration;
+import com.adcubum.timerecording.security.login.auth.configuration.constant.AuthenticationConst;
+import com.adcubum.timerecording.security.login.auth.configuration.impl.ConfigurationImpl;
 import com.adcubum.timerecording.security.login.auth.usercredentials.UserCredentialsAuthenticator;
-import com.adcubum.timerecording.settings.Settings;
 import com.azure.core.credential.TokenCredential;
 import com.azure.identity.InteractiveBrowserCredentialBuilder;
 import com.azure.security.keyvault.secrets.SecretClient;
@@ -13,10 +14,16 @@ import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
 
 public class UserCredentialsAuthenticatorImpl implements UserCredentialsAuthenticator {
 
+   private Configuration configuration;
+
+   private UserCredentialsAuthenticatorImpl() {
+      this.configuration = new ConfigurationImpl();
+   }
+
    @Override
    public boolean doUserAuthentication(String username, char[] userPwd) {
-      String vaultUrl = Settings.INSTANCE.getSettingsValue(AuthenticationConst.AUTHENTICATION_VAULT_URL_KEY);
-      String authorityHost = Settings.INSTANCE.getSettingsValue(AuthenticationConst.AUTHORITY_HOST_KEY);
+      String vaultUrl = configuration.getValue(AuthenticationConst.AUTHENTICATION_VAULT_URL_KEY);
+      String authorityHost = configuration.getValue(AuthenticationConst.AUTHORITY_HOST_KEY);
       KeyVaultSecret keyVaultSecret = null;
       try {
          TokenCredential credential = buildTokenCredential(authorityHost);

@@ -23,5 +23,4 @@ dependencies {
 	api group: 'com.azure', name: 'azure-security-keyvault-secrets', version: '4.3.0-beta.4'
 	
 	implementation project(':zeiterfassung-common-api')
-	implementation project(':zeiterfassung-persistence-api')
 }
