@@ -19,7 +19,6 @@ import com.adcubum.timerecording.settings.round.observable.RoundModeChangedListe
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.security.login.auth.UiAuthenticationService;
 import com.adcubum.util.exception.GlobalExceptionHandler;
-import com.adcubum.util.utils.FileSystemUtil;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -29,6 +28,7 @@ import javafx.stage.Stage;
  * @author Dominic
  * @version {@value TimeRecorder#VERSION}
  */
+
 public class TimeRecordingApplication extends Application {
 
    private ConfigurableApplicationContext applicationContext;
@@ -78,7 +78,6 @@ public class TimeRecordingApplication extends Application {
    }
 
    private void initApplication() {
-      Runtime.getRuntime().addShutdownHook(createShutdownHook());
       PictureLibrary.loadPictures();
       Platform.setImplicitExit(false);
 
@@ -92,18 +91,5 @@ public class TimeRecordingApplication extends Application {
             (oldVal, newVal) -> TimeRecorder.INSTANCE.saveSettingValue(String.valueOf(newVal.getAmount()), "");
       TimeRounder.INSTANCE.init(TimeRecorder.INSTANCE::getSettingsValue);
       TimeRounder.INSTANCE.addRoundModeChangedListener(saveChangedTimeRoundValue);
-   }
-
-   /*
-    * create a shutdown hook whose export the current and maybe not yet exported
-    * BusinessDay in case the application is shutdown by accident
-    */
-   private static Thread createShutdownHook() {
-      String homeDir = FileSystemUtil.getHomeDir();
-      return new Thread(() -> {
-         if (TimeRecorder.INSTANCE.hasContent()) {
-            TimeRecorder.INSTANCE.exportSilently(homeDir);
-         }
-      });
    }
 }

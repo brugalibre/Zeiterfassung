@@ -14,7 +14,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -217,7 +216,7 @@ class AbacusBookAdapterTest {
 
    private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) {
       Time beginTimeStamp = TimeFactory.createNew(System.currentTimeMillis() + timeBetweenBeginAndEnd);
-      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(new Date(beginTimeStamp.getTime()));
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(TimeFactory.createNew(System.currentTimeMillis() + timeBetweenBeginAndEnd + 10));
       return timeSnippet;
@@ -237,7 +236,7 @@ class AbacusBookAdapterTest {
 
       private TestCaseBuilder() {
          this.businessDayIncrementAdds = new ArrayList<>();
-         this.businessDay = spy(new BusinessDayImpl(new Date()));
+         this.businessDay = spy(new BusinessDayImpl());
          createTestAuthenticationService();
       }
 

@@ -44,7 +44,7 @@ public class BusinessDayIncrementVOImpl implements BusinessDayIncrementVO {
 
    private static Function<Integer, String> getSserviceCodeDescProvider() {
       ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
-      return currentSetChargeType -> serviceCodeAdapter.getServiceCodeDescription4ServiceCode(currentSetChargeType);
+      return serviceCodeAdapter::getServiceCodeDescription4ServiceCode;
    }
 
    @Override

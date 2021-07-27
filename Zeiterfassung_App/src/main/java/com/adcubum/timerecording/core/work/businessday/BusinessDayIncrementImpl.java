@@ -5,11 +5,11 @@ package com.adcubum.timerecording.core.work.businessday;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
 
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
@@ -35,20 +35,31 @@ import com.adcubum.util.parser.NumberFormat;
 public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    private TimeSnippet currentTimeSnippet;
 
-   private Date date;
+   private UUID id;
    private String description;
    private Ticket ticket;
    private int chargeType;
    private boolean isCharged;
 
    /**
-    * Creates a new {@link BusinessDayIncrement} for the given {@link Date}
-    * 
-    * @param date
-    *        the {@link Date}
+    * Constructor used by the factory
     */
-   public BusinessDayIncrementImpl(Date date) {
-      this.date = requireNonNull(date);
+   @SuppressWarnings("unused")
+   private BusinessDayIncrementImpl(TimeSnippet currentTimeSnippet, UUID id, String description, Ticket ticket, int chargeType, boolean isCharged) {
+      this.currentTimeSnippet = currentTimeSnippet;
+      this.id = id;
+      this.description = description;
+      this.ticket = ticket;
+      this.chargeType = chargeType;
+      this.isCharged = isCharged;
+   }
+
+   /**
+    * Creates a new and empty {@link BusinessDayIncrement}
+    * 
+    */
+   public BusinessDayIncrementImpl() {
+      // nothing to do
    }
 
    /**
@@ -56,7 +67,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     */
    @Override
    public void startCurrentTimeSnippet(Time beginTimeStamp) {
-      createNewTimeSnippet();
+      currentTimeSnippet = TimeSnippetFactory.createNew();
       currentTimeSnippet.setBeginTimeStamp(beginTimeStamp);
    }
 
@@ -73,13 +84,9 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
       currentTimeSnippet.setEndTimeStamp(null);
    }
 
-   private void createNewTimeSnippet() {
-      currentTimeSnippet = TimeSnippetFactory.createNew(date);
-   }
-
    @Override
    public Date getDate() {
-      return date;
+      return isNull(currentTimeSnippet) ? new Date() : currentTimeSnippet.getDate();
    }
 
    @Override
@@ -201,7 +208,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     */
    public static BusinessDayIncrement of(BusinessDayIncrementAdd update) {
 
-      BusinessDayIncrement businessDayIncremental = new BusinessDayIncrementImpl(update.getTimeSnippet().getDate());
+      BusinessDayIncrement businessDayIncremental = new BusinessDayIncrementImpl();
       businessDayIncremental.setDescription(update.getDescription());
       businessDayIncremental.setTicket(update.getTicket());
       businessDayIncremental.setChargeType(update.getKindOfService());
@@ -220,11 +227,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    public static BusinessDayIncrement of(BusinessDayIncrementImport businessDayIncrementImport) {
 
       List<TimeSnippet> timeSnippets2Add = businessDayIncrementImport.getTimeSnippets();
-      Date date = new Date();
-      if (!timeSnippets2Add.isEmpty()) {
-         date = timeSnippets2Add.get(0).getDate();
-      }
-      BusinessDayIncrement businessDayIncremental = new BusinessDayIncrementImpl(date);
+      BusinessDayIncrement businessDayIncremental = new BusinessDayIncrementImpl();
       businessDayIncremental.setDescription(businessDayIncrementImport.getDescription());
       TicketBacklog ticketBacklog = TicketBacklogSPI.getTicketBacklog();
       businessDayIncremental.setTicket(ticketBacklog.getTicket4Nr(businessDayIncrementImport.getTicketNo()));
@@ -239,6 +242,20 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
 
    @Override
    public boolean isBefore(Time time2Check) {
+      Date date = getDate();
       return TimeFactory.createNew(date.getTime()).isBefore(time2Check);
+   }
+
+   @Override
+   public UUID getId() {
+      return id;
+   }
+
+   public static BusinessDayIncrement of(BusinessDayIncrement otherBussinessDayIncremental) {
+      BusinessDayIncrementImpl businessDayIncrementImpl = new BusinessDayIncrementImpl();
+      if (nonNull(otherBussinessDayIncremental)) {
+         businessDayIncrementImpl.id = otherBussinessDayIncremental.getId();
+      }
+      return businessDayIncrementImpl;
    }
 }

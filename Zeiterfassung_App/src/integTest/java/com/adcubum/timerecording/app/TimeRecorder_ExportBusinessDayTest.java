@@ -37,8 +37,13 @@ class TimeRecorder_ExportBusinessDayTest {
 
    @BeforeEach
    public void tearDown() {
-      // make sure there is no garbage..
-      TimeRecorder.INSTANCE.clear();
+      try {
+         // make sure there is no garbage..
+         TimeRecorder.INSTANCE.clear();
+      } catch (Exception e) {
+         e.printStackTrace();
+         // silently ignore -.-
+      }
    }
 
    @Test
@@ -127,7 +132,7 @@ class TimeRecorder_ExportBusinessDayTest {
       private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) throws ParseException {
          Date startDate = DateParser.parse2Date("01-02-2020 00:00", DateParser.DATE_PATTERN);
          Time beginTimeStamp = TimeFactory.createNew(startDate.getTime());
-         TimeSnippet timeSnippet = TimeSnippetFactory.createNew(new Date(beginTimeStamp.getTime()));
+         TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
          timeSnippet.setBeginTimeStamp(beginTimeStamp);
          timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTime() + timeBetweenBeginAndEnd));
          return timeSnippet;

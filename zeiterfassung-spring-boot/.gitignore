@@ -1,3 +1,7 @@
 /bin/
 /turbo-bucher.properties
 /zeiterfassung.properties
+/data.mv.db
+/data.trace.db
+/.gradle/
+/build/

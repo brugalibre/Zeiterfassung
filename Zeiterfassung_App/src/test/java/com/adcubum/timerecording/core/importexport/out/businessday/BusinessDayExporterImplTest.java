@@ -5,7 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -36,7 +35,7 @@ class BusinessDayExporterImplTest {
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
       BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, chargeType, getTicket4Nr(ticketNr), description);
 
-      BusinessDayImpl businessDay = new BusinessDayImpl(startDate.getTime());
+      BusinessDayImpl businessDay = new BusinessDayImpl();
       businessDay.addBusinessIncrement(firstInc);
 
       // When
@@ -65,7 +64,7 @@ class BusinessDayExporterImplTest {
    private TimeSnippet createTimeSnippet(long startTime, long stopTime) {
       Time beginTimeStamp = TimeFactory.createNew(startTime);
       Time endTimeStamp = TimeFactory.createNew(stopTime);
-      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(new Date(startTime));
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(endTimeStamp);
       return timeSnippet;

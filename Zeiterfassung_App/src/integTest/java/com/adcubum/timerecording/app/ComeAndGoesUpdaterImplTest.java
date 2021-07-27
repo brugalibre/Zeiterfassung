@@ -1,11 +1,11 @@
 package com.adcubum.timerecording.app;
 
+import static com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryMockUtil.mockBusinessDayRepository;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -17,6 +17,7 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ComeAndGoesUpdater;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
+import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.adcubum.timerecording.integtest.TestChangedComeAndGoValueImpl;
 import com.adcubum.timerecording.work.date.Time;
@@ -118,8 +119,10 @@ class ComeAndGoesUpdaterImplTest {
       }
 
       private TestCaseBuilder build() {
-         BusinessDayImpl businesDay = new BusinessDayImpl(new Date(), comeAndGoes);
-         TimeRecorder timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businesDay);
+         BusinessDayImpl businessDay = new BusinessDayImpl(comeAndGoes);
+         BusinessDayRepository businessDayRepository = mockBusinessDayRepository(businessDay);
+         TimeRecorder timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businessDayRepository);
+         timeRecorder.init();
          this.comeAndGoesUpdaterImpl = new BusinessDayChangedCallbackHandlerImpl(timeRecorder);
          changedComeAndGoValue = new TestChangedComeAndGoValueImpl(id, newComeTime, newGoTime);
          return this;

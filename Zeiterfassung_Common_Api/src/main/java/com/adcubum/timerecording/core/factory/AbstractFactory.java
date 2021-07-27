@@ -38,4 +38,8 @@ public abstract class AbstractFactory {
          throw new ObjectCreateException(e);
       }
    }
+
+   public void setContext(ApplicationContext applicationContext) {
+      this.context = applicationContext;
+   }
 }

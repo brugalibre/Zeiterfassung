@@ -21,8 +21,8 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoe
 import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
-import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.businessday.TimeSnippetBuilder;
 import com.adcubum.timerecording.work.date.Time;
@@ -429,7 +429,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       ComeAndGoes comeAndGoes = ComeAndGoesImpl.of()
             .comeOrGo(come)
             .comeOrGo(go);
-      BusinessDayImpl businessDay = new BusinessDayImpl(new Date(), comeAndGoes);
+      BusinessDayImpl businessDay = new BusinessDayImpl(comeAndGoes);
 
 
       // When
@@ -449,7 +449,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       ComeAndGoes comeAndGoes = ComeAndGoesImpl.of()
             .comeOrGo(come)
             .comeOrGo(go);
-      BusinessDayImpl businessDay = new BusinessDayImpl(new Date(), comeAndGoes);
+      BusinessDayImpl businessDay = new BusinessDayImpl(comeAndGoes);
 
 
       // When
@@ -498,7 +498,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
    private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd, int hour) {
       GregorianCalendar startDate = new GregorianCalendar(2020, 1, 1, hour, 0, 0);// year, month, day, hours, min, second
       Time beginTimeStamp = TimeFactory.createNew(startDate.getTimeInMillis());
-      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(new Date(beginTimeStamp.getTime()));
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
       return timeSnippet;
@@ -507,7 +507,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
    private TimeSnippet createTimeSnippet(long startTime, long stopTime) {
       Time beginTimeStamp = TimeFactory.createNew(startTime);
       Time endTimeStamp = TimeFactory.createNew(stopTime);
-      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(new Date(beginTimeStamp.getTime()));
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(endTimeStamp);
       return timeSnippet;
@@ -518,10 +518,10 @@ class BusinessDayImplTest extends BaseTestWithSettings {
    }
 
    private Ticket mockTicket(boolean isDummy, String ticketNr) {
-	   Ticket currentTicket = mock(Ticket.class);
-	   when(currentTicket.isDummyTicket()).thenReturn(isDummy);
-	   when(currentTicket.getNr()).thenReturn("1234");
-	   return currentTicket;
+      Ticket currentTicket = mock(Ticket.class);
+      when(currentTicket.isDummyTicket()).thenReturn(isDummy);
+      when(currentTicket.getNr()).thenReturn("1234");
+      return currentTicket;
    }
 
    private static class TestTimeSnippedChangedCallbackHandler implements TimeSnippedChangedCallbackHandler {

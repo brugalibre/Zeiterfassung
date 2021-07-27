@@ -76,11 +76,11 @@ public class BusinessDayImporter {
    private BusinessDay importBusinessDayInternal(List<String> importedLines) throws ParseException, InvalidChargeTypeRepresentationException {
       Date date = parseDate(importedLines.remove(0));
       List<BusinessDayIncrementImport> businessDayIncImports = createBusinessDayIncImports(importedLines, date);
-      return createAndReturnBusinessDay(date, businessDayIncImports);
+      return createAndReturnBusinessDay(businessDayIncImports);
    }
 
-   private BusinessDay createAndReturnBusinessDay(Date date, List<BusinessDayIncrementImport> businessDayIncImports) {
-      BusinessDay businessDay = new BusinessDayImpl(date);
+   private BusinessDay createAndReturnBusinessDay(List<BusinessDayIncrementImport> businessDayIncImports) {
+      BusinessDay businessDay = new BusinessDayImpl();
       for (BusinessDayIncrementImport businessDayIncrementImport : businessDayIncImports) {
          businessDay.addBusinessIncrement(businessDayIncrementImport);
       }

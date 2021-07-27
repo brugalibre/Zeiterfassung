@@ -12,9 +12,9 @@ import com.adcubum.timerecording.work.date.TimeFactory;
 class TimeSnippetTest {
 
    @Test
-   void testGetDurationRepEmptyTimeSnippted() {
+   void testGetDurationRepEmptyTimeSnipptet() {
       // Given
-      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(TimeFactory.createNew());
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
       String expectedDurationRep = "0";
 
       // When
@@ -25,9 +25,21 @@ class TimeSnippetTest {
    }
 
    @Test
+   void testGetDate_EmptyTimeSnipptet() {
+      // Given
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
+
+      // When
+      Date actualDate = timeSnippet.getDate();
+
+      // Then
+      assertThat(actualDate, is(new Date()));
+   }
+
+   @Test
    void testGetDurationRepTimeSnipptetWithoutEnd() {
       // Given
-      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(new Date());
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
       timeSnippet.setBeginTimeStamp(TimeFactory.createNew());
       String expectedDurationRep = "0";
 

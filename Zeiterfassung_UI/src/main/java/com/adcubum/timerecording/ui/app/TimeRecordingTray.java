@@ -96,6 +96,8 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       trayIcon.addMouseMotionListener(getMouseMotionListener());
       trayIcon.addMouseListener(getMouseListener(popupMenu));
       registerHotKeys();
+      // Update the ui-states, depending on the current BusinessDay
+      updateUIStates();
    }
 
    private void registerHotKeys() {
@@ -264,6 +266,17 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       showImportDialogItem.setEnabled(hasNoContentAndIsNotRecording() && isNotBooking && hasNoComeAndGoes);
       comeAndGoItem.setEnabled(!TimeRecorder.INSTANCE.isRecordindg());
       showComeAndGoItem.setEnabled(!comeAndGoes.getComeAndGoEntries().isEmpty());
+      setTrayIconImage();
+   }
+
+   private void setTrayIconImage() {
+      if (TimeRecorder.INSTANCE.isComeAndGoActive()) {
+         trayIcon.setImage(PictureLibrary.getComeOrGoImage());
+      } else if (TimeRecorder.INSTANCE.isRecordindg()) {
+         trayIcon.setImage(PictureLibrary.getWorkingImage());
+      } else {
+         trayIcon.setImage(PictureLibrary.getNotWorkingImage());
+      }
    }
 
    private boolean hasNoContentAndIsNotRecording() {

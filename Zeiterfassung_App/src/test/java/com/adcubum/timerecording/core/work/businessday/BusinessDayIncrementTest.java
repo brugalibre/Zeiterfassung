@@ -3,8 +3,6 @@ package com.adcubum.timerecording.core.work.businessday;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.util.Date;
-
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.settings.round.RoundMode;
@@ -18,7 +16,7 @@ class BusinessDayIncrementTest {
 
       // Given
       float expectedDurationOfLastIncrement = 1;
-      BusinessDayIncrement businessDayIncrement = new BusinessDayIncrementImpl(new Date());
+      BusinessDayIncrement businessDayIncrement = new BusinessDayIncrementImpl();
       long startTimeStamp = System.currentTimeMillis();
       int timeBetweenStartAndStop = 3600 * 1000;
       addTimeSnippet2BDIncrement(businessDayIncrement, startTimeStamp, timeBetweenStartAndStop);

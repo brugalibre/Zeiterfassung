@@ -14,5 +14,7 @@
 	<bean id="timerecorder" class="com.adcubum.timerecording.app.TimeRecorderImpl" lazy-init="true"/>
 	<bean id="bdaychangedcallbackhandler" class="com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl" scope="prototype" lazy-init="true"/>
 	<bean id="usercredentials" class="com.adcubum.timerecording.security.login.auth.usercredentials.JiraUserCredentialsAuthenticatorImpl" lazy-init="true"/>
+	<bean id="businessday-increment" class="com.adcubum.timerecording.core.work.businessday.BusinessDayIncrementImpl" scope="prototype" lazy-init="true"/>
+	<bean id="businessday" class="com.adcubum.timerecording.core.work.businessday.BusinessDayImpl" scope="prototype" lazy-init="true"/>
 
 </beans>

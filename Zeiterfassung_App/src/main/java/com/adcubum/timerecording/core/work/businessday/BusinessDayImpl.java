@@ -3,9 +3,13 @@
  */
 package com.adcubum.timerecording.core.work.businessday;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -19,6 +23,7 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
+import com.adcubum.timerecording.core.work.businessday.factory.BusinessDayFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.settings.round.TimeRounder;
@@ -46,6 +51,7 @@ import com.adcubum.util.utils.StringUtil;
  * 
  */
 public class BusinessDayImpl implements BusinessDay {
+   private UUID id;
    // all increments of this BusinessDayImpl (those are all finished!)
    private CopyOnWriteArrayList<BusinessDayIncrement> increments;
    // the current increment which has been started but not yet finished so far
@@ -54,36 +60,34 @@ public class BusinessDayImpl implements BusinessDay {
    private ComeAndGoes comeAndGoes;
 
    /**
+    * Creates a new {@link BusinessDayImpl} from the {@link BusinessDayFactory}
+    */
+   public BusinessDayImpl(UUID id, List<BusinessDayIncrement> businessDayIncrements, BusinessDayIncrement currentBDIncrement) {
+      this.comeAndGoes = ComeAndGoesImpl.of();
+      this.increments = new CopyOnWriteArrayList<>(businessDayIncrements);
+      this.currentBussinessDayIncremental = currentBDIncrement;
+      this.id = id;
+   }
+
+   /**
     * Creates a new {@link BusinessDayImpl}
     */
    public BusinessDayImpl() {
-      initialize(new Date());
+      this(ComeAndGoesImpl.of());
    }
 
    /**
     * Creates a new {@link BusinessDayImpl}
     * Constructor only for testing purpose!
     */
-   public BusinessDayImpl(Date date, ComeAndGoes comeAndGoes) {
+   public BusinessDayImpl(ComeAndGoes comeAndGoes) {
+      initialize(comeAndGoes);
+   }
+
+   private void initialize(ComeAndGoes comeAndGoes) {
       increments = new CopyOnWriteArrayList<>();
-      currentBussinessDayIncremental = new BusinessDayIncrementImpl(date);
+      currentBussinessDayIncremental = new BusinessDayIncrementImpl();
       this.comeAndGoes = comeAndGoes;
-   }
-
-   /**
-    * Creates a new {@link BusinessDayImpl} for the given {@link Date}
-    * 
-    * @param date
-    *        the given Date
-    */
-   public BusinessDayImpl(Date date) {
-      initialize(date);
-   }
-
-   private void initialize(Date date) {
-      increments = new CopyOnWriteArrayList<>();
-      currentBussinessDayIncremental = new BusinessDayIncrementImpl(date);
-      this.comeAndGoes = ComeAndGoesImpl.of();
    }
 
    @Override
@@ -207,6 +211,8 @@ public class BusinessDayImpl implements BusinessDay {
       BusinessDayIncrement businessDayIncrement = bdIncSupplier.get();
       validateIfCanAdd(businessDayIncrement);
       increments.add(businessDayIncrement);
+      // recreate / reset the currentIncrement in 
+      createNewIncremental();
    }
 
    private void validateIfCanAdd(BusinessDayIncrement businessDayIncrement) {
@@ -242,6 +248,13 @@ public class BusinessDayImpl implements BusinessDay {
    public ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue) {
       comeAndGoes = comeAndGoes.changeComeAndGo(changedComeAndGoValue);
       return comeAndGoes;
+   }
+
+   @Override
+   public boolean hasUnfinishedBusinessDayIncrement() {
+      TimeSnippet currentTimeSnippet = currentBussinessDayIncremental.getCurrentTimeSnippet();
+      return nonNull(currentTimeSnippet) && nonNull(currentTimeSnippet.getBeginTimeStamp())
+            && isNull(currentTimeSnippet.getEndTimeStamp());
    }
 
    @Override
@@ -283,6 +296,11 @@ public class BusinessDayImpl implements BusinessDay {
                + endPoint.getEndTimeStamp();
       }
       return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE;
+   }
+
+   @Override
+   public UUID getId() {
+      return id;
    }
 
    private Optional<BusinessDayIncrement> getBusinessIncrement(int orderNr) {
@@ -356,7 +374,7 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    private void createNewIncremental() {
-      currentBussinessDayIncremental = new BusinessDayIncrementImpl(new Date());
+      currentBussinessDayIncremental = BusinessDayIncrementImpl.of(currentBussinessDayIncremental);
    }
 
    private float getTotalDuration(TIME_TYPE type) {

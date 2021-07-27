@@ -30,6 +30,7 @@ Erfassen der Stunden:
   - Aufzeichnen der Arbeitsstunden während dem Tag via Start/Stop. Auf diese Art werden die Arbeitsstunden laufend erfasst, sobald die Tätigkeit gewechselt wird
   - Oder alternativ via Aufzeichnen von 'Kommen & Gehen' bei Ankunft bzw. Verlassen des Arbeitsplatzes. Hierbei werden die Arbeitsstunden erst am Ende des Tages erfasst
   - Die beiden Modi können kombiniert werden. Allerdings kann keine Aufzeichnung gestartet werden wenn Kommen/Gehen aktiv ist und vice versa
+  - Die aufgezeichneten Stunden bzw. 'Kommen & Gehen' werden intern persistiert. Die App kann also beendet und neugestartet werden, ohne dass es zu einem Datenverlust kommt
 
 Kommen/Gehen: Kommen:
 - Rechtsklick auf den roten Kreis in der Info-Leiste und dann auf den Menu-Eintrag 'Kommen/Gehen' klicken

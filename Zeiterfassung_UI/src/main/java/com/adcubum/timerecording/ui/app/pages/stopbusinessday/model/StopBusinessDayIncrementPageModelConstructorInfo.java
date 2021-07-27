@@ -152,7 +152,7 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
             end = comeAndGoTimeSnippet.getEndTimeStamp();
          }
       }
-      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(begin);
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
       timeSnippet.setBeginTimeStamp(begin);
       timeSnippet.setEndTimeStamp(end);
       return timeSnippet;

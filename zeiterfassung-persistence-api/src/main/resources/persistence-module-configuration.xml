@@ -10,5 +10,4 @@
 
 	<bean id="settings" class="com.adcubum.timerecording.settings.SettingsImpl" lazy-init="true"/>
 	<bean id="valuekey" class="com.adcubum.timerecording.settings.key.ValueKeyImpl" scope="prototype" lazy-init="true"/>
-
 </beans>

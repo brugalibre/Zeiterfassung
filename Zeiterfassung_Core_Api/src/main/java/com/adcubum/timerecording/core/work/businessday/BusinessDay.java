@@ -8,11 +8,12 @@ import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayInc
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
+import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 
-public interface BusinessDay {
+public interface BusinessDay extends DomainModel {
 
    /**
     * Resumes the {@link #currentBussinessDayIncremental}
@@ -151,6 +152,12 @@ public interface BusinessDay {
     *         <code>false</code> if not
     */
    boolean hasElementsFromPrecedentDays();
+
+   /**
+    * @return <code>true</code> if the {@link BusinessDay#getCurrentBussinessDayIncremental()} has started and yet unfinished
+    *         {@link TimeSnippet}. Otherwise return <code>false</code>
+    */
+   boolean hasUnfinishedBusinessDayIncrement();
 
    float getTotalDuration();
 

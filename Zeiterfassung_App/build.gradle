@@ -37,4 +37,12 @@ dependencies {
 	testImplementation project(':zeiterfassung-book-impl')
 	testImplementation project(':zeiterfassung-jira-impl')
 	testImplementation project(':zeiterfassung-common-impl')
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
+	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.5.3'
+	// https://mvnrepository.com/artifact/org.springframework/spring-test
+	testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.9'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.5.2'
+	
 }

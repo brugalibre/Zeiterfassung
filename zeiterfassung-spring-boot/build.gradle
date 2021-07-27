@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.2'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.5.2'

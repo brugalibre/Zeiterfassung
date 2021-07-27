@@ -2,11 +2,12 @@ package com.adcubum.timerecording.core.work.businessday;
 
 import java.util.Date;
 
+import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
 import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 
-public interface TimeSnippet {
+public interface TimeSnippet extends DomainModel {
    /** String literal for representing a <code>null</code> value for either begin or end TimeStamp */
    public static final String NULL_TIME_REP = "-";
 

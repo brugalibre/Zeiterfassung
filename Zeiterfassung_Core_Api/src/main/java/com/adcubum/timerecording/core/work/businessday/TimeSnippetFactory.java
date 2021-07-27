@@ -4,9 +4,9 @@ import static java.util.Objects.nonNull;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.UUID;
 
 import com.adcubum.timerecording.core.factory.AbstractFactory;
-import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.util.parser.DateParser;
 
 /**
@@ -24,13 +24,10 @@ public class TimeSnippetFactory extends AbstractFactory {
    }
 
    /**
-    * Creates a new {@link TimeSnippet} instance
-    * 
-    * @param begin
-    *        the begin {@link Time} of the created {@link TimeSnippet}
+    * Creates a new / empty {@link TimeSnippet} instance
     */
-   public static TimeSnippet createNew(Time begin) {
-      return INSTANCE.createNewWithAgruments(BEAN_NAME, begin);
+   public static TimeSnippet createNew() {
+      return INSTANCE.createNewWithAgruments(BEAN_NAME);
    }
 
    /**
@@ -44,16 +41,6 @@ public class TimeSnippetFactory extends AbstractFactory {
          return INSTANCE.createNewWithAgruments(BEAN_NAME, timeSnippet);
       }
       return null;
-   }
-
-   /**
-    * Creates a new {@link TimeSnippet} instance
-    * 
-    * @param date
-    *        the begin {@link Date} of the created {@link TimeSnippet}
-    */
-   public static TimeSnippet createNew(Date date) {
-      return INSTANCE.createNewWithAgruments(BEAN_NAME, date);
    }
 
    /**
@@ -72,10 +59,25 @@ public class TimeSnippetFactory extends AbstractFactory {
     *         could'nt be parsed
     */
    public static TimeSnippet createNew(Date date, String beginValue, String endValue) throws ParseException {
-      TimeSnippet timeSnippet = TimeSnippetFactory.createNew(date);
+      TimeSnippet timeSnippet = createNew();
       timeSnippet.setBeginTimeStamp(DateParser.getTime(beginValue, date));
       timeSnippet.setEndTimeStamp(DateParser.getTime(endValue, date));
       return timeSnippet;
+   }
+
+   /**
+    * Creates a new {@link TimeSnippet} instance for the given values
+    * 
+    * @param id
+    *        the id of the {@link TimeSnippet} to create
+    * @param beginTimeStampValue
+    *        the long value of {@link TimeSnippet#getBeginTimeStamp()}
+    * @param endTimeStampValue
+    *        the long value of {@link TimeSnippet#getEndTimeStamp()}
+    * @return a new {@link TimeSnippet} instance
+    */
+   public static TimeSnippet createNew(UUID id, Long beginTimeStampValue, Long endTimeStampValue) {
+      return INSTANCE.createNewWithAgruments(BEAN_NAME, id, beginTimeStampValue, endTimeStampValue);
    }
 
 }

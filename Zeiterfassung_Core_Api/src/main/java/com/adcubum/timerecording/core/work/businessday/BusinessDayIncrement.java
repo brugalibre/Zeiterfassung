@@ -2,11 +2,12 @@ package com.adcubum.timerecording.core.work.businessday;
 
 import java.util.Date;
 
+import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 
-public interface BusinessDayIncrement {
+public interface BusinessDayIncrement extends DomainModel {
 
 
    /**

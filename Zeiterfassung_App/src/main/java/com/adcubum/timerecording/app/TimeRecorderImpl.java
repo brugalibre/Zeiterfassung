@@ -10,16 +10,17 @@ import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.result.BookerResult;
+import com.adcubum.timerecording.core.businessday.repository.impl.BusinessDayRepositoryImpl;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayImporter;
 import com.adcubum.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
 import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.adcubum.timerecording.core.work.WorkStates;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
-import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
+import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
@@ -47,6 +48,7 @@ import com.adcubum.util.utils.FileSystemUtil;
  */
 public class TimeRecorderImpl implements TimeRecorder {
 
+   private BusinessDayRepository businessDayRepository;
    private BusinessDay businessDay;
    private Settings settings;
    private UiCallbackHandler callbackHandler;
@@ -56,34 +58,27 @@ public class TimeRecorderImpl implements TimeRecorder {
    /**
     * Constructor for testing purpose only!
     */
-   TimeRecorderImpl(BookerAdapter bookAdapter, BusinessDay businessDay) {
-      this.bookAdapter = bookAdapter;
-      this.businessDay = businessDay;
-      this.settings = Settings.INSTANCE;
-      currentState = WorkStates.NOT_WORKING;
-   }
-
-   TimeRecorderImpl(BookerAdapter bookAdapter) {
-      this(bookAdapter, Settings.INSTANCE);
+   TimeRecorderImpl(BookerAdapter bookAdapter, BusinessDayRepository businessDayRepository) {
+      this(bookAdapter, Settings.INSTANCE, businessDayRepository);
    }
 
    /**
     * Default constructor used by Spring
     */
    protected TimeRecorderImpl() {
-      this(BookerAdapterFactory.getAdapter(), Settings.INSTANCE);
+      this(BookerAdapterFactory.getAdapter(), Settings.INSTANCE, new BusinessDayRepositoryImpl());
    }
 
-   TimeRecorderImpl(BookerAdapter bookAdapter, Settings settings) {
+   TimeRecorderImpl(BookerAdapter bookAdapter, Settings settings, BusinessDayRepository businessDayRepository) {
+      this.businessDayRepository = businessDayRepository;
       this.bookAdapter = bookAdapter;
       this.settings = settings;
-      init();
    }
 
    @Override
    public void init() {
-      currentState = WorkStates.NOT_WORKING;
-      businessDay = new BusinessDayImpl();
+      this.businessDay = businessDayRepository.findFirstOrCreateNew();
+      this.currentState = TimeRecorderHelper.evalWorkingState4BusinessDay(businessDay);
       settings.init();
    }
 
@@ -141,24 +136,28 @@ public class TimeRecorderImpl implements TimeRecorder {
       businessDay.stopCurrentIncremental();
       currentState = WorkStates.NOT_WORKING;
       callbackHandler.onStop();
+      saveBusinessDay();
    }
 
    private void go() {
       currentState = WorkStates.NOT_WORKING;
       businessDay.comeOrGo();
       callbackHandler.onGo();
+      saveBusinessDay();
    }
 
    private void come() {
       currentState = WorkStates.COME_AND_GO;
       businessDay.comeOrGo();
       callbackHandler.onCome();
+      saveBusinessDay();
    }
 
    private void start() {
       currentState = WorkStates.WORKING;
       businessDay.startNewIncremental();
       callbackHandler.onStart();
+      saveBusinessDay();
    }
 
    @Override
@@ -166,6 +165,7 @@ public class TimeRecorderImpl implements TimeRecorder {
       currentState = WorkStates.WORKING;
       businessDay.resumeLastIncremental();
       callbackHandler.onResume();
+      saveBusinessDay();
    }
 
    /////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,36 +175,44 @@ public class TimeRecorderImpl implements TimeRecorder {
    @Override
    public void clear() {
       businessDay.clearFinishedIncrements();
+      saveBusinessDay();
    }
 
    @Override
    public void clearComeAndGoes() {
       businessDay.clearComeAndGoes();
+      saveBusinessDay();
    }
 
    @Override
    public void addBusinessIncrement(BusinessDayIncrementAdd businessDayIncrementAdd) {
       businessDay.addBusinessIncrement(businessDayIncrementAdd);
+      saveBusinessDay();
    }
 
    @Override
    public void removeIncrementAtIndex(int index) {
       businessDay.removeIncrementAtIndex(index);
+      saveBusinessDay();
    }
 
    @Override
    public void changeBusinesDayIncrement(ChangedValue changeValue) {
       businessDay.changeBusinesDayIncrement(changeValue);
+      saveBusinessDay();
    }
 
    @Override
    public ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue) {
-      return businessDay.changeComeAndGo(changedComeAndGoValue);
+      ComeAndGoes changeComeAndGo = businessDay.changeComeAndGo(changedComeAndGoValue);
+      saveBusinessDay();
+      return changeComeAndGo;
    }
 
    @Override
    public void flagBusinessDayComeAndGoesAsRecorded() {
       businessDay.flagComeAndGoesAsRecorded();
+      saveBusinessDay();
    }
 
    /////////////////////////////////////////////////////////////////////////////////////////////
@@ -219,6 +227,7 @@ public class TimeRecorderImpl implements TimeRecorder {
          currentState = WorkStates.BOOKING;
          try {
             BookerResult bookResult = bookAdapter.book(businessDay);
+            businessDay = businessDayRepository.save(businessDay);
             if (bookResult.hasBooked()) {
                callbackHandler.displayMessage(MessageFactory.createNew(map2MessageType(bookResult), null, bookResult.getMessage()));
                hasBooked = true;
@@ -266,7 +275,7 @@ public class TimeRecorderImpl implements TimeRecorder {
 
    @Override
    public void onSuccessfullyLogin() {
-      // This is necessary if the user startet the recording while he/she was offline
+      // This is necessary if the user started the recording while he/she was offline
       businessDay.refreshDummyTickets();
    }
 
@@ -277,7 +286,8 @@ public class TimeRecorderImpl implements TimeRecorder {
          return true;
       } catch (BusinessDayImportException e) {
          e.printStackTrace();
-         // Nothing more to do
+         // since the import failed, we need to create manually a new one
+         this.businessDay = businessDayRepository.findFirstOrCreateNew();
       }
       return false;
    }
@@ -285,7 +295,10 @@ public class TimeRecorderImpl implements TimeRecorder {
    private void importBusinessDayInternal(File file) {
       FileImporter fileImporter = FileImporterFactory.createNew();
       List<String> fileContent = fileImporter.importFile(file);
-      this.businessDay = BusinessDayImporter.INTANCE.importBusinessDay(fileContent);
+      BusinessDay importedBusinessDay = BusinessDayImporter.INTANCE.importBusinessDay(fileContent);
+      // First delete all existing entries, since we may have already a persistent (but so far empty) businessDay
+      businessDayRepository.deleteAll();
+      this.businessDay = businessDayRepository.save(importedBusinessDay);
    }
 
    /////////////////////////////////////////////////////////////////////////////////////////////
@@ -336,6 +349,11 @@ public class TimeRecorderImpl implements TimeRecorder {
    }
 
    @Override
+   public boolean isComeAndGoActive() {
+      return currentState == WorkStates.COME_AND_GO;
+   }
+
+   @Override
    public boolean isBooking() {
       return currentState == WorkStates.BOOKING;
    }
@@ -358,5 +376,14 @@ public class TimeRecorderImpl implements TimeRecorder {
    @Override
    public void setCallbackHandler(UiCallbackHandler callbackHandler) {
       this.callbackHandler = callbackHandler;
+   }
+
+   /*
+    * Stores the current changes on the BusinessDay to the repository.
+    * Also, since we map from a BusinessDay to a BusinessDayEntity and back, we need to assign
+    * the new re-mapped BusinessDayEntity to the existing BusinessDay instance
+    */
+   private void saveBusinessDay() {
+      this.businessDay = businessDayRepository.save(businessDay);
    }
 }
