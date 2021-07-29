@@ -60,7 +60,7 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Button fx:id="finishButton" nemonicParsing="true" onAction="#onAction" prefHeight="30.0" prefWidth="80.0" text="finishButton">
+                  <Button fx:id="finishButton" mnemonicParsing="true" onAction="#onAction" prefHeight="30.0" prefWidth="80.0" text="finishButton">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
