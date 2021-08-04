@@ -11,20 +11,28 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.work.date.Time;
 
 /**
- * The class {@link ComeAndGoDto} keeps track of when a user comes and goes during the business day
+ * The class {@link ComeAndGo} keeps track of when a user comes and goes during the business day
  * 
  * @author DStalder
  *
  */
 public class ComeAndGoImpl implements ComeAndGo {
 
-   private String id;
+   private UUID id;
    private TimeSnippet comeAndGoSnippet;
    private boolean isRecorded;
 
-   private ComeAndGoImpl(String id) {
-      this.comeAndGoSnippet = TimeSnippetFactory.createNew();
-      this.isRecorded = false;
+   private ComeAndGoImpl() {
+      this((UUID) null);
+   }
+
+   private ComeAndGoImpl(UUID id) {
+      this(id, TimeSnippetFactory.createNew(), false);
+   }
+
+   private ComeAndGoImpl(UUID id, TimeSnippet timeSnippet, boolean isRecorded) {
+      this.comeAndGoSnippet = timeSnippet;
+      this.isRecorded = isRecorded;
       this.id = id;
    }
 
@@ -88,27 +96,43 @@ public class ComeAndGoImpl implements ComeAndGo {
    }
 
    @Override
-   public String getId() {
+   public UUID getId() {
       return id;
    }
 
    /**
-    * Creates a new {@link ComeAndGoDto} with no entries
+    * Creates a new {@link ComeAndGo} with no entries
     * 
     * @param id
     *        the id
-    * @return a new {@link ComeAndGoDto} with no entries
+    * @return a new {@link ComeAndGo} with no entries
     */
-   public static ComeAndGoImpl of(String id) {
+   public static ComeAndGoImpl of(UUID id) {
       return new ComeAndGoImpl(id);
    }
 
    /**
-    * Creates a new {@link ComeAndGoDto} with no entries and a random id
+    * Creates a new {@link ComeAndGo} with no entries and a random id
     * 
-    * @return a new {@link ComeAndGoDto} with no entries and a random id
+    * @return a new {@link ComeAndGo} with no entries and a random id
     */
    public static ComeAndGoImpl of() {
-      return new ComeAndGoImpl(UUID.randomUUID().toString());
+      return new ComeAndGoImpl();
+   }
+
+   /**
+    * Creates a new {@link ComeAndGo} with the given id, {@link TimeSnippet} and the boolean which defines, if this {@link ComeAndGo} is
+    * already recorded
+    * 
+    * @param id
+    *        the id
+    * @param timeSnippet
+    *        the {@link TimeSnippet}
+    * @param isRecorded
+    *        <code>true</code> if this {@link ComeAndGo} is already recorded or <code>false</code> if not
+    * @return a new {@link ComeAndGo}
+    */
+   public static ComeAndGoImpl of(UUID id, TimeSnippet timeSnippet, boolean isRecorded) {
+      return new ComeAndGoImpl(id, timeSnippet, isRecorded);
    }
 }

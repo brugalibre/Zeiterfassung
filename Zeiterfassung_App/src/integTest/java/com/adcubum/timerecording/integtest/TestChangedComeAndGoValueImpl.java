@@ -2,6 +2,8 @@ package com.adcubum.timerecording.integtest;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.UUID;
+
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.work.date.Time;
 
@@ -9,16 +11,16 @@ public class TestChangedComeAndGoValueImpl implements ChangedComeAndGoValue {
 
    private Time newGoValue;
    private Time newComeValue;
-   private String id;
+   private UUID id;
 
-   public TestChangedComeAndGoValueImpl(String id, Time newComeValue, Time newGoValue) {
+   public TestChangedComeAndGoValueImpl(UUID id, Time newComeValue, Time newGoValue) {
       this.newComeValue = requireNonNull(newComeValue);
       this.newGoValue = newGoValue;
       this.id = requireNonNull(id);
    }
 
    @Override
-   public String getId() {
+   public UUID getId() {
       return id;
    }
 

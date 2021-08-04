@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS timesnippet (
 
 CREATE TABLE IF NOT EXISTS businessday (
   id VARCHAR(250) PRIMARY KEY,
+  comeandgoes_id VARCHAR(250),
   current_businessday_increment_id VARCHAR(250)
 );
 
@@ -22,6 +23,22 @@ CREATE TABLE IF NOT EXISTS businessday_increment (
   is_charged BOOLEAN DEFAULT FALSE
 );
 
+CREATE TABLE IF NOT EXISTS comeandgoes (
+  id VARCHAR(250) PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS comeandgo (
+  id VARCHAR(250) PRIMARY KEY,
+  comeandgoes_id VARCHAR(250),
+  CONSTRAINT FK_COME_AND_GOES FOREIGN KEY (comeandgoes_id) REFERENCES comeandgoes(id),
+  timesnippet_id VARCHAR(250),
+  CONSTRAINT FK_COME_AND_GO_TIMESNIPPET FOREIGN KEY (timesnippet_id) REFERENCES timesnippet(id),
+  is_recorded BOOLEAN DEFAULT FALSE
+);
+
 ALTER TABLE businessday
     ADD CONSTRAINT IF NOT EXISTS FK_CURRENT_BUSINESS_DAY_INCREMENT FOREIGN KEY (current_businessday_increment_id) 
+    REFERENCES businessday_increment(id);
+ALTER TABLE businessday
+    ADD CONSTRAINT IF NOT EXISTS FK_COME_AND_GOES FOREIGN KEY (comeandgoes_id) 
     REFERENCES businessday_increment(id);

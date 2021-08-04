@@ -1,12 +1,16 @@
 package com.adcubum.timerecording.app;
 
-import static com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryMockUtil.mockBusinessDayRepository;
+import static com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryIntegMockUtil.mockBusinessDayRepository;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +52,7 @@ class ComeAndGoesUpdaterImplTest {
       ComeAndGoes actualChangedComeAndGoes = tcb.comeAndGoesUpdaterImpl.changeComeAndGo(tcb.changedComeAndGoValue);
 
       // Then
-      Optional<ComeAndGo> comeAndGo4Id = actualChangedComeAndGoes.getComeAndGo4Id(tcb.id);
+      Optional<ComeAndGo> comeAndGo4Id = actualChangedComeAndGoes.getComeAndGo4Id(tcb.idOfComeAndGo2Change);
       assertThat(comeAndGo4Id.isPresent(), is(true));
       assertThat(comeAndGo4Id.get().getComeAndGoTimeStamp().getBeginTimeStampRep(), is(newTimeAsString));
    }
@@ -75,7 +79,7 @@ class ComeAndGoesUpdaterImplTest {
       ComeAndGoes actualChangedComeAndGoes = tcb.comeAndGoesUpdaterImpl.changeComeAndGo(tcb.changedComeAndGoValue);
 
       // Then
-      Optional<ComeAndGo> comeAndGo4Id = actualChangedComeAndGoes.getComeAndGo4Id(tcb.id);
+      Optional<ComeAndGo> comeAndGo4Id = actualChangedComeAndGoes.getComeAndGo4Id(tcb.idOfComeAndGo2Change);
       assertThat(comeAndGo4Id.isPresent(), is(true));
       assertThat(comeAndGo4Id.get().getComeAndGoTimeStamp().getEndTimeStampRep(), is(newGoTimeAsString));
    }
@@ -91,11 +95,10 @@ class ComeAndGoesUpdaterImplTest {
       private ComeAndGoes comeAndGoes;
       private Time newComeTime;
       private Time newGoTime;
-      private String id;
+      private UUID idOfComeAndGo2Change;
 
       private TestCaseBuilder() {
          this.comeAndGoes = ComeAndGoesImpl.of();
-         this.id = "1";
       }
 
       private TestCaseBuilder withNewComeTime(Time newComeTime) {
@@ -123,9 +126,16 @@ class ComeAndGoesUpdaterImplTest {
          BusinessDayRepository businessDayRepository = mockBusinessDayRepository(businessDay);
          TimeRecorder timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businessDayRepository);
          timeRecorder.init();
+         this.idOfComeAndGo2Change = getIdFromRandomSelectedComeAndGo();
          this.comeAndGoesUpdaterImpl = new BusinessDayChangedCallbackHandlerImpl(timeRecorder);
-         changedComeAndGoValue = new TestChangedComeAndGoValueImpl(id, newComeTime, newGoTime);
+         changedComeAndGoValue = new TestChangedComeAndGoValueImpl(idOfComeAndGo2Change, newComeTime, newGoTime);
          return this;
+      }
+
+      private UUID getIdFromRandomSelectedComeAndGo() {
+         List<ComeAndGo> comeAndGoEntries = new ArrayList<>(comeAndGoes.getComeAndGoEntries());
+         Collections.shuffle(comeAndGoEntries);
+         return comeAndGoEntries.get(0).getId();
       }
    }
 }

@@ -56,12 +56,53 @@ class TimeRecorderHelperTest {
       assertThat(actualWorkingState, is(WorkStates.NOT_WORKING));
    }
 
+   @Test
+   void testEvalWorkingState4BusinessDay_Come_ComeAndGo() {
+
+      // Given
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .withCome()
+            .build();
+
+      // When
+      WorkStates actualWorkingState = TimeRecorderHelper.evalWorkingState4BusinessDay(tcb.businessDay);
+
+      // Then
+      assertThat(actualWorkingState, is(WorkStates.COME_AND_GO));
+   }
+
+   @Test
+   void testEvalWorkingState4BusinessDay_ComeAndGo_NotWorking() {
+
+      // Given
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .withCome()
+            .withGo()
+            .build();
+
+      // When
+      WorkStates actualWorkingState = TimeRecorderHelper.evalWorkingState4BusinessDay(tcb.businessDay);
+
+      // Then
+      assertThat(actualWorkingState, is(WorkStates.NOT_WORKING));
+   }
+
    private static class TestCaseBuilder {
 
       private BusinessDay businessDay;
 
       private TestCaseBuilder() {
          this.businessDay = new BusinessDayImpl();
+      }
+
+      private TestCaseBuilder withCome() {
+         businessDay.comeOrGo();
+         return this;
+      }
+
+      private TestCaseBuilder withGo() {
+         businessDay.comeOrGo();
+         return this;
       }
 
       private TestCaseBuilder withCurrentBusinessIncrementStart() {

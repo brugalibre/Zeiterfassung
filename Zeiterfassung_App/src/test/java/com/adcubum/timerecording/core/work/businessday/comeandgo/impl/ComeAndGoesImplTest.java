@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
@@ -53,7 +54,7 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
    void testComeOrGoes_ChangeComeAndGoesWithoutAnyEntries() {
       // Given
       ComeAndGoes comeAndGoes = ComeAndGoesImpl.of();
-      ChangedComeAndGoValue value = new TestChangedComeAndGoValueImpl("1", TimeFactory.createNew(), TimeFactory.createNew());
+      ChangedComeAndGoValue value = new TestChangedComeAndGoValueImpl(UUID.randomUUID(), TimeFactory.createNew(), TimeFactory.createNew());
 
       // When
       ComeAndGoes changeComeAndGo = comeAndGoes.changeComeAndGo(value);
@@ -150,12 +151,12 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
       ComeAndGo secondComeAndGo = actualComeAndGoes.get(1);
       assertThat(firstComeAndGo.isNotDone(), is(false));
       assertThat(secondComeAndGo.isNotDone(), is(true));
-   } 
-   
+   }
+
    private Ticket mockTicket(boolean isDummy, String ticketNr) {
-	   Ticket currentTicket = mock(Ticket.class);
-	   when(currentTicket.isDummyTicket()).thenReturn(isDummy);
-	   when(currentTicket.getNr()).thenReturn("1234");
-	   return currentTicket;
+      Ticket currentTicket = mock(Ticket.class);
+      when(currentTicket.isDummyTicket()).thenReturn(isDummy);
+      when(currentTicket.getNr()).thenReturn("1234");
+      return currentTicket;
    }
 }

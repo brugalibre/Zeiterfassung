@@ -1,5 +1,7 @@
 package com.adcubum.timerecording.ui.app.pages.comeandgo.model;
 
+import java.util.UUID;
+
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
@@ -12,7 +14,7 @@ import com.adcubum.util.parser.DateParser;
 public class ComeAndGoDataModel {
 
    private ComeAndGoesUpdater comeAndGoesUpdater;
-   private String id;
+   private UUID id;
    private TimeSnippet timeSnippet;
    private boolean isNotDone;
    private boolean isNotRecorded;

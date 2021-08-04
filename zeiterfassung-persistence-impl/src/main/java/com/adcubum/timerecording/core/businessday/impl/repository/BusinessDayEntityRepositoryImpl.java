@@ -69,8 +69,8 @@ public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityReposit
 
    @Override
    public void deleteAll() {
-      comeAndGoesDao.deleteAll();
       businessDayDao.deleteAll();
+      comeAndGoesDao.deleteAll();
    }
 
    private List<BusinessDayEntity> findAllAsList() {

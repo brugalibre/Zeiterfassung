@@ -33,6 +33,7 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
@@ -155,7 +156,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testRefreshDummyTickets() {
 
       // Given
-      BusinessDayImpl businessDay = mock(BusinessDayImpl.class);
+      BusinessDayImpl businessDay = mockBusinessDayImpl();
       TimeRecorder timeRecorder = mockTimeRecorderImpl(businessDay);
 
       // When
@@ -239,7 +240,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testComeWithComeAndGoesFromPrecedentDay_DoNotStart() {
       // Given, add an existing increment from the 01.02.2020
       TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
-      BusinessDayImpl businessDay = mock(BusinessDayImpl.class);
+      BusinessDayImpl businessDay = mockBusinessDayImpl();
       when(businessDay.hasComeAndGoesFromPrecedentDays()).thenReturn(true);
       TimeRecorder timeRecorder = mockTimeRecorderImpl(businessDay);
       timeRecorder.setCallbackHandler(testUiCallbackHandler);
@@ -745,6 +746,12 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
          timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
          return timeSnippet;
       }
+   }
+
+   private BusinessDayImpl mockBusinessDayImpl() {
+      BusinessDayImpl businessDay = mock(BusinessDayImpl.class);
+      when(businessDay.getComeAndGoes()).thenReturn(ComeAndGoesImpl.of());
+      return businessDay;
    }
 
    private static class TestBookAdapter implements BookerAdapter {

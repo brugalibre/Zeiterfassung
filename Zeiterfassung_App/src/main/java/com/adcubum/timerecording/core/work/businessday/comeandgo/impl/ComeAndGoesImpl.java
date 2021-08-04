@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -15,7 +16,6 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedC
 import com.adcubum.timerecording.settings.round.TimeRounder;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeFactory;
-import com.adcubum.util.utils.StringUtil;
 
 /**
  * The class {@link ComeAndGoesImpl} keeps track of each time a user comes and goes during the business day.
@@ -26,14 +26,16 @@ import com.adcubum.util.utils.StringUtil;
  */
 public class ComeAndGoesImpl implements ComeAndGoes {
 
+   private UUID id;
    private LinkedList<ComeAndGo> comeAndGoEntries;
 
    private ComeAndGoesImpl() {
-      this.comeAndGoEntries = new LinkedList<>();
+      this(null, new LinkedList<>());
    }
 
-   private ComeAndGoesImpl(List<ComeAndGo> comeAndGoEntries) {
+   private ComeAndGoesImpl(UUID id, List<ComeAndGo> comeAndGoEntries) {
       this.comeAndGoEntries = new LinkedList<>(comeAndGoEntries);
+      this.id = id;
    }
 
    /**
@@ -59,7 +61,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
             .comeOrGo(changedComeAndGoValue.getNewGoValue());
       comeAndGoEntriesCopy.remove(comeAndGo2Change);
       comeAndGoEntriesCopy.add(changedComeAndGo);
-      return new ComeAndGoesImpl(comeAndGoEntriesCopy);
+      return new ComeAndGoesImpl(id, comeAndGoEntriesCopy);
    }
 
    private Optional<ComeAndGo> evalComeAndGo2Change(ChangedComeAndGoValue changedComeAndGoValue) {
@@ -74,7 +76,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
    }
 
    private static boolean isChangedComeAndGo(ComeAndGo comeAndGo, ChangedComeAndGoValue changedComeAndGoValue) {
-      return StringUtil.isEqual(comeAndGo.getId(), changedComeAndGoValue.getId());
+      return comeAndGo.getId().equals(changedComeAndGoValue.getId());
    }
 
    /**
@@ -83,7 +85,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
    @Override
    public ComeAndGoes comeOrGo(Time time) {
       List<ComeAndGo> changedComeAndGoEntries = comeOrGoInternal(time, new LinkedList<>(comeAndGoEntries));
-      return new ComeAndGoesImpl(changedComeAndGoEntries);
+      return new ComeAndGoesImpl(id, changedComeAndGoEntries);
    }
 
    private LinkedList<ComeAndGo> comeOrGoInternal(Time time, LinkedList<ComeAndGo> comeAndGoeEntriesCopy) {
@@ -102,7 +104,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
 
    private static ComeAndGo handleNoCurrentComeOrGo(Time time, LinkedList<ComeAndGo> comeAndGoEntriesCopy) {
       if (comeAndGoEntriesCopy.isEmpty()) {
-         return buildNewComeAndGo(time, "0");
+         return buildNewComeAndGo(time, UUID.randomUUID());
       }
       return handleDoneComeAndGo(time, comeAndGoEntriesCopy);
    }
@@ -133,12 +135,12 @@ public class ComeAndGoesImpl implements ComeAndGoes {
          comeAndGoEntriesCopy.remove(currentDoneComeAndGo);// remove it, since we have to add the resumed ComeAndGo later
          currentDoneComeAndGo = currentDoneComeAndGo.resume();
       } else {
-         currentDoneComeAndGo = buildNewComeAndGo(time, String.valueOf(comeAndGoEntriesCopy.size()));
+         currentDoneComeAndGo = buildNewComeAndGo(time, UUID.randomUUID());
       }
       return currentDoneComeAndGo;
    }
 
-   private static ComeAndGo buildNewComeAndGo(Time time, String id) {
+   private static ComeAndGo buildNewComeAndGo(Time time, UUID id) {
       return ComeAndGoImpl.of(id)
             .comeOrGo(time);
    }
@@ -149,9 +151,14 @@ public class ComeAndGoesImpl implements ComeAndGoes {
    }
 
    @Override
-   public Optional<ComeAndGo> getComeAndGo4Id(String id) {
+   public boolean hasUnfinishedComeAndGo() {
+      return getCurrentComeAndGo().isPresent();
+   }
+
+   @Override
+   public Optional<ComeAndGo> getComeAndGo4Id(UUID id) {
       return comeAndGoEntries.stream()
-            .filter(comeAndGo -> StringUtil.isEqual(id, comeAndGo.getId()))
+            .filter(comeAndGo -> comeAndGo.getId().equals(id))
             .findFirst();
    }
 
@@ -172,7 +179,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
       List<ComeAndGo> doneComeAndGoes = evalAllDoneComeAndGoes();
       List<ComeAndGo> comeAndGoEntriesCopy = new ArrayList<>(comeAndGoEntries);
       comeAndGoEntriesCopy.removeAll(doneComeAndGoes);
-      return new ComeAndGoesImpl(comeAndGoEntriesCopy);
+      return new ComeAndGoesImpl(id, comeAndGoEntriesCopy);
    }
 
    private List<ComeAndGo> evalAllDoneComeAndGoes() {
@@ -184,14 +191,14 @@ public class ComeAndGoesImpl implements ComeAndGoes {
 
    @Override
    public ComeAndGoesImpl flagComeAndGoesAsRecorded() {
-      return new ComeAndGoesImpl(comeAndGoEntries.stream()
+      return new ComeAndGoesImpl(id, comeAndGoEntries.stream()
             .map(ComeAndGo::flagAsRecorded)
             .collect(Collectors.toList()));
    }
 
    @Override
    public boolean hasComeAndGoesFromPrecedentDays() {
-      Time now =TimeFactory.createNew();
+      Time now = TimeFactory.createNew();
       return comeAndGoEntries.stream()
             .map(ComeAndGo::getComeAndGoTimeStamp)
             .map(TimeSnippet::getBeginTimeStamp)
@@ -206,6 +213,11 @@ public class ComeAndGoesImpl implements ComeAndGoes {
       return Collections.unmodifiableList(comeAndGoEntries);
    }
 
+   @Override
+   public UUID getId() {
+      return id;
+   }
+
    /**
     * Creates a new {@link ComeAndGoesDto} with no entries
     * 
@@ -213,5 +225,18 @@ public class ComeAndGoesImpl implements ComeAndGoes {
     */
    public static ComeAndGoesImpl of() {
       return new ComeAndGoesImpl();
+   }
+
+   /**
+    * Creates a new {@link ComeAndGoesDto} with no entries
+    * 
+    * @param id
+    *        the id of this {@link ComeAndGoesImpl}
+    * @param comeAndGoEntries
+    *        the list of {@link ComeAndGo} entries
+    * @return a new {@link ComeAndGoesDto} with the given id and {@link ComeAndGo} entries
+    */
+   public static ComeAndGoesImpl of(UUID id, List<ComeAndGo> comeAndGoEntries) {
+      return new ComeAndGoesImpl(id, comeAndGoEntries);
    }
 }

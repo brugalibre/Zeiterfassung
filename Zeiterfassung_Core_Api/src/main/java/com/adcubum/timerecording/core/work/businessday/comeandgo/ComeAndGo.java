@@ -2,6 +2,7 @@ package com.adcubum.timerecording.core.work.businessday.comeandgo;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
 import com.adcubum.timerecording.work.date.Time;
 
 /**
@@ -10,7 +11,7 @@ import com.adcubum.timerecording.work.date.Time;
  * @author DStalder
  *
  */
-public interface ComeAndGo {
+public interface ComeAndGo extends DomainModel {
 
    /**
     * @return the {@link TimeSnippet} of this {@link ComeAndGo}
@@ -27,11 +28,6 @@ public interface ComeAndGo {
     * @return <code>false</code> if for this {@link ComeAndGo} exists a {@link BusinessDayIncrement} otherwise return <code>true</code>
     */
    boolean isNotRecorded();
-
-   /**
-    * @return the id of this {@link ComeAndGo}
-    */
-   String getId();
 
    /**
     * Flags this {@link ComeAndGo} as recorded and returns a new, recorded instance

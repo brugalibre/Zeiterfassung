@@ -7,12 +7,15 @@ import static java.util.Objects.requireNonNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.adcubum.timerecording.core.businessday.comeandgo.entity.ComeAndGoesEntity;
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayIncrementEntity;
 import com.adcubum.timerecording.core.businessday.entity.TimeSnippetEntity;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.mapper.ComeAndGoesEntityMapper;
 import com.adcubum.timerecording.core.work.businessday.factory.BusinessDayFactory;
 import com.adcubum.timerecording.core.work.businessday.factory.BusinessDayIncrementFactory;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
@@ -45,7 +48,8 @@ public class BusinessDayEntityMapper {
       requireNonNull(businessDayEntity);
       List<BusinessDayIncrement> increments = map2BusinessDayIncrements(businessDayEntity);
       BusinessDayIncrement currentBDayIncrement = map2BusinessDayIncrement(businessDayEntity.getCurrentBusinessDayIncrementEntity());
-      return BusinessDayFactory.createNew(businessDayEntity.getId(), increments, currentBDayIncrement);
+      ComeAndGoes comeAndGoes = ComeAndGoesEntityMapper.INSTANCE.map2ComeAndGoes(businessDayEntity.getComeAndGoesEntity());
+      return BusinessDayFactory.createNew(businessDayEntity.getId(), increments, currentBDayIncrement, comeAndGoes);
    }
 
    /**
@@ -62,8 +66,10 @@ public class BusinessDayEntityMapper {
             map2CompleteBusinessDayIncrementEntity(businessDay.getCurrentBussinessDayIncremental(), null);
       List<BusinessDayIncrementEntity> businessDayIncrementEntities =
             map2BusinessDayIncrementEntities(businessDay.getIncrements(), businessDayEntity);
+      ComeAndGoesEntity comeAndGoesEntity = ComeAndGoesEntityMapper.INSTANCE.map2ComeAndGoesEntity(businessDay.getComeAndGoes());
       businessDayEntity.setBusinessDayIncrementEntities(businessDayIncrementEntities);
       businessDayEntity.setCurrentBusinessDayIncrementEntity(currentBusinessDayIncrementEntity);
+      businessDayEntity.setComeAndGoesEntity(comeAndGoesEntity);
       return businessDayEntity;
    }
 

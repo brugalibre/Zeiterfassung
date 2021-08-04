@@ -62,8 +62,9 @@ public class BusinessDayImpl implements BusinessDay {
    /**
     * Creates a new {@link BusinessDayImpl} from the {@link BusinessDayFactory}
     */
-   public BusinessDayImpl(UUID id, List<BusinessDayIncrement> businessDayIncrements, BusinessDayIncrement currentBDIncrement) {
-      this.comeAndGoes = ComeAndGoesImpl.of();
+   public BusinessDayImpl(UUID id, List<BusinessDayIncrement> businessDayIncrements, BusinessDayIncrement currentBDIncrement,
+         ComeAndGoes comeAndGoes) {
+      this.comeAndGoes = comeAndGoes;
       this.increments = new CopyOnWriteArrayList<>(businessDayIncrements);
       this.currentBussinessDayIncremental = currentBDIncrement;
       this.id = id;

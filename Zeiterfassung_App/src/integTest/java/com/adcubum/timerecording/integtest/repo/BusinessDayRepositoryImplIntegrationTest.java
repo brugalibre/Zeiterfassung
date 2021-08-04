@@ -23,8 +23,14 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
+import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
+import com.adcubum.timerecording.integtest.TestChangedComeAndGoValueImpl;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 
 @SpringBootTest(classes = {TestBusinessDayRepoConfig.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -227,6 +233,129 @@ class BusinessDayRepositoryImplIntegrationTest {
 
       // Then
       assertThrows(ObjectNotFoundException.class, ex);
+   }
+
+   @Test
+   @Order(7)
+   void test_CreateNew_AndCome() {
+      // Given
+      BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
+
+      // When
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
+      businessDay.comeOrGo();
+      ComeAndGoes originComeAndGoes = businessDay.getComeAndGoes();
+      ComeAndGo originComeAndGo = originComeAndGoes.getComeAndGoEntries().get(0);
+
+      businessDayRepository.save(businessDay);
+
+      BusinessDay changedBusinessDay = businessDayRepository.findById(businessDay.getId());
+      ComeAndGoes changedComeAndGoes = changedBusinessDay.getComeAndGoes();
+
+      // Then
+      assertThat(changedComeAndGoes.getComeAndGoEntries().size(), is(1));
+      ComeAndGo changedComeAndGo = changedComeAndGoes.getComeAndGoEntries().get(0);
+      assertThat(originComeAndGo.getComeAndGoTimeStamp().getBeginTimeStamp(), is(changedComeAndGo.getComeAndGoTimeStamp().getBeginTimeStamp()));
+      assertThat(changedComeAndGo.isNotDone(), is(true));
+   }
+
+   @Test
+   @Order(7)
+   void test_FindExisting_AndGo() {
+      // Given
+      BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
+
+      // When
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
+      businessDay.comeOrGo();
+      ComeAndGoes originComeAndGoes = businessDay.getComeAndGoes();
+      ComeAndGo originComeAndGo = originComeAndGoes.getComeAndGoEntries().get(0);
+
+      businessDayRepository.save(businessDay);
+
+      BusinessDay changedBusinessDay = businessDayRepository.findById(businessDay.getId());
+      ComeAndGoes changedComeAndGoes = changedBusinessDay.getComeAndGoes();
+
+      // Then
+      assertThat(changedComeAndGoes.getComeAndGoEntries().size(), is(1));
+      ComeAndGo changedComeAndGo = changedComeAndGoes.getComeAndGoEntries().get(0);
+      assertThat(originComeAndGo.getComeAndGoTimeStamp().getBeginTimeStamp(), is(changedComeAndGo.getComeAndGoTimeStamp().getBeginTimeStamp()));
+      assertThat(originComeAndGo.getComeAndGoTimeStamp().getEndTimeStamp(), is(changedComeAndGo.getComeAndGoTimeStamp().getEndTimeStamp()));
+      assertThat(changedComeAndGo.isNotDone(), is(false));
+      assertThat(originComeAndGo.getId(), is(changedComeAndGo.getId()));
+   }
+
+   @Test
+   @Order(8)
+   void test_FindExisting_AndChangeExistingComeAndGo() {
+      // Given
+      BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
+
+      // When
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
+      ComeAndGoes originComeAndGoes = businessDay.getComeAndGoes();
+
+      // change existing comeandgo
+      ComeAndGo originComeAndGo = originComeAndGoes.getComeAndGoEntries().get(0);
+      Time newComeValue = TimeFactory.createNew(originComeAndGo.getComeAndGoTimeStamp().getBeginTimeStamp().getTime() + 90);
+      Time newGoValue = TimeFactory.createNew(originComeAndGo.getComeAndGoTimeStamp().getEndTimeStamp().getTime() + 1000);
+      ChangedComeAndGoValue changedComeAndGoValue = new TestChangedComeAndGoValueImpl(originComeAndGo.getId(), newComeValue, newGoValue);
+      businessDay.changeComeAndGo(changedComeAndGoValue);
+
+      businessDayRepository.save(businessDay);
+
+      BusinessDay changedBusinessDay = businessDayRepository.findById(businessDay.getId());
+      ComeAndGoes changedComeAndGoes = changedBusinessDay.getComeAndGoes();
+
+      // Then
+      assertThat(changedComeAndGoes.getComeAndGoEntries().size(), is(1));
+      ComeAndGo changedComeAndGo = changedComeAndGoes.getComeAndGoEntries().get(0);
+      assertThat(originComeAndGo.getComeAndGoTimeStamp().getBeginTimeStamp(), is(changedComeAndGo.getComeAndGoTimeStamp().getBeginTimeStamp()));
+      assertThat(originComeAndGo.getComeAndGoTimeStamp().getEndTimeStamp(), is(changedComeAndGo.getComeAndGoTimeStamp().getEndTimeStamp()));
+      assertThat(changedComeAndGo.isNotDone(), is(false));
+      assertThat(originComeAndGo.getId(), is(changedComeAndGo.getId()));
+      assertThat(changedComeAndGo.isNotRecorded(), is(true));
+      assertThat(originComeAndGo.isNotRecorded(), is(true));
+   }
+
+   @Test
+   @Order(9)
+   void test_FlagExistingComeAndGoAsRecorded() {
+      // Given
+      BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
+
+      // When
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
+      businessDay.flagComeAndGoesAsRecorded();
+
+      businessDayRepository.save(businessDay);
+      BusinessDay changedBusinessDay = businessDayRepository.findById(businessDay.getId());
+      ComeAndGoes changedComeAndGoes = changedBusinessDay.getComeAndGoes();
+
+      // Then
+      assertThat(changedComeAndGoes.getComeAndGoEntries().size(), is(1));
+      ComeAndGo changedComeAndGo = changedComeAndGoes.getComeAndGoEntries().get(0);
+      assertThat(changedComeAndGo.isNotDone(), is(false));
+      assertThat(changedComeAndGo.isNotRecorded(), is(false));
+   }
+
+   @Test
+   @Order(10)
+   void test_DeleteExistingComeAndGo() {
+      // Given
+      BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
+
+      // When
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
+      businessDay.clearComeAndGoes();
+
+      businessDayRepository.save(businessDay);
+
+      BusinessDay changedBusinessDay = businessDayRepository.findById(businessDay.getId());
+      ComeAndGoes changedComeAndGoes = changedBusinessDay.getComeAndGoes();
+
+      // Then
+      assertThat(changedComeAndGoes.getComeAndGoEntries().isEmpty(), is(true));
    }
 
    private static Ticket mockTicket(String ticketNr) {

@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 import org.springframework.lang.NonNull;
 
+import com.adcubum.timerecording.core.businessday.comeandgo.entity.ComeAndGoesEntity;
 import com.adcubum.timerecording.core.businessday.common.entity.BaseEntity;
 
 @Entity
@@ -39,6 +40,10 @@ public class BusinessDayEntity extends BaseEntity {
    @NonNull
    private BusinessDayIncrementEntity currentBusinessDayIncrementEntity;
 
+   @OneToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "comeandgoes_id")
+   private ComeAndGoesEntity comeAndGoesEntity;
+
    public BusinessDayEntity() {
       this(null);
    }
@@ -53,6 +58,7 @@ public class BusinessDayEntity extends BaseEntity {
       super(id);
       this.currentBusinessDayIncrementEntity = new BusinessDayIncrementEntity(null, null, null, null, 0, false);
       this.businessDayIncrementEntities = Collections.emptyList();
+      this.comeAndGoesEntity = new ComeAndGoesEntity();
    }
 
    public BusinessDayIncrementEntity getCurrentBusinessDayIncrementEntity() {
@@ -61,6 +67,14 @@ public class BusinessDayEntity extends BaseEntity {
 
    public List<BusinessDayIncrementEntity> getBusinessDayIncrementEntities() {
       return businessDayIncrementEntities;
+   }
+
+   public ComeAndGoesEntity getComeAndGoesEntity() {
+      return comeAndGoesEntity;
+   }
+
+   public UUID getComeAndGoesEntityId() {
+      return comeAndGoesEntity.getId();
    }
 
    @Override
@@ -86,6 +100,7 @@ public class BusinessDayEntity extends BaseEntity {
       final int prime = 31;
       int result = super.hashCode();
       result = prime * result + businessDayIncrementEntities.hashCode();
+      result = prime * result + comeAndGoesEntity.hashCode();
       result = prime * result + currentBusinessDayIncrementEntity.hashCode();
       return result;
    }
@@ -101,6 +116,12 @@ public class BusinessDayEntity extends BaseEntity {
       BusinessDayEntity other = (BusinessDayEntity) obj;
       if (!businessDayIncrementEntities.equals(other.businessDayIncrementEntities))
          return false;
-      return currentBusinessDayIncrementEntity.equals(other.currentBusinessDayIncrementEntity);
+      if (!comeAndGoesEntity.equals(other.comeAndGoesEntity))
+         return false;
+      return !currentBusinessDayIncrementEntity.equals(other.currentBusinessDayIncrementEntity);
+   }
+
+   public void setComeAndGoesEntity(ComeAndGoesEntity comeAndGoesEntity) {
+      this.comeAndGoesEntity = requireNonNull(comeAndGoesEntity);
    }
 }

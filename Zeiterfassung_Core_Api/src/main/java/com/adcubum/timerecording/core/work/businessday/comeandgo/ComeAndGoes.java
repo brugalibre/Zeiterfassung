@@ -2,8 +2,10 @@ package com.adcubum.timerecording.core.work.businessday.comeandgo;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
+import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
 import com.adcubum.timerecording.work.date.Time;
 
 /**
@@ -12,7 +14,7 @@ import com.adcubum.timerecording.work.date.Time;
  * @author DStalder
  *
  */
-public interface ComeAndGoes {
+public interface ComeAndGoes extends DomainModel {
 
    /**
     * @return a unmodifiable list of it's come's and goes
@@ -30,6 +32,14 @@ public interface ComeAndGoes {
    boolean hasComeAndGoesFromPrecedentDays();
 
    /**
+    * Return <code>true</code> if there is a {@link ComeAndGo} which is unfinished, that means which has a begin time stamp but no end time
+    * stamp. Otherwise return <code>false</code>
+    * 
+    * @return <code>true</code> if there is a {@link ComeAndGo} which is unfinished or <code>false</code> if not
+    */
+   boolean hasUnfinishedComeAndGo();
+
+   /**
     * @return an {@link Optional} of the current and therefore unfinished {@link ComeAndGo} if there is any or {@link Optional#empty()}
     *         if there is none
     */
@@ -43,7 +53,7 @@ public interface ComeAndGoes {
     *        the id of the desired {@link ComeAndGo}
     * @return the {@link ComeAndGo} for the given Id
     */
-   Optional<ComeAndGo> getComeAndGo4Id(String id);
+   Optional<ComeAndGo> getComeAndGo4Id(UUID id);
 
    /**
     * Removes all {@link ComeAndGoes} and return a new instance

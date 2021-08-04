@@ -24,6 +24,8 @@ public class TimeRecorderHelper {
       WorkStates currentState = WorkStates.NOT_WORKING;
       if (businessDay.hasUnfinishedBusinessDayIncrement()) {
          currentState = WorkStates.WORKING;
+      } else if (businessDay.getComeAndGoes().hasUnfinishedComeAndGo()) {
+         currentState = WorkStates.COME_AND_GO;
       }
       return currentState;
    }
