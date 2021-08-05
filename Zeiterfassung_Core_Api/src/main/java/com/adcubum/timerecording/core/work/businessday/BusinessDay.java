@@ -159,6 +159,12 @@ public interface BusinessDay extends DomainModel {
     */
    boolean hasUnfinishedBusinessDayIncrement();
 
+   /**
+    * @return <code>true</code> if there is at least one {@link ComeAndGo} entry which is not yet recorded. Otherwise return
+    *         <code>false</code>
+    */
+   boolean hasNotRecordedComeAndGoContent();
+
    float getTotalDuration();
 
    /**

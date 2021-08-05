@@ -303,7 +303,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       // When
       timeRecorderImpl.handleUserInteraction(false);
-      boolean isRecordingAfterFirstHandle = timeRecorderImpl.isRecordindg();
+      boolean isRecordingAfterFirstHandle = timeRecorderImpl.isRecording();
       boolean actualIsBooking = timeRecorderImpl.isBooking();
 
       // Then
@@ -325,11 +325,11 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       // When
       timeRecorderImpl.handleUserInteraction(false);
-      boolean isRecordingAfterFirstHandle = timeRecorderImpl.isRecordindg();
+      boolean isRecordingAfterFirstHandle = timeRecorderImpl.isRecording();
       TimeUnit.MILLISECONDS.sleep(500);
 
       timeRecorderImpl.handleUserInteraction(false);
-      boolean isRecordingAfterSecondHandle = timeRecorderImpl.isRecordindg();
+      boolean isRecordingAfterSecondHandle = timeRecorderImpl.isRecording();
       BusinessDayIncrementVO currentBussinessDayIncrement = timeRecorderImpl.getCurrentBussinessDayIncrement();
       assertThat(currentBussinessDayIncrement.getCurrentTimeSnippet().getBeginTimeStamp(), is(notNullValue()));
       assertThat(currentBussinessDayIncrement.getCurrentTimeSnippet().getEndTimeStamp(), is(notNullValue()));

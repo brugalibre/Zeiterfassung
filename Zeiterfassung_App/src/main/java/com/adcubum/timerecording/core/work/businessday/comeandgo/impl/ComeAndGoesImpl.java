@@ -205,6 +205,13 @@ public class ComeAndGoesImpl implements ComeAndGoes {
             .anyMatch(comeAndGoBegin -> comeAndGoBegin.isBefore(now));
    }
 
+   @Override
+   public boolean hasNotRecordedComeAndGoContent() {
+      return evalAllDoneComeAndGoes()
+            .stream()
+            .anyMatch(ComeAndGo::isNotRecorded);
+   }
+
    /**
     * @return a unmodifiable list of it's come's and goes
     */

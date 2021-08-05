@@ -2,7 +2,7 @@ package com.adcubum.scheduler.startrecordingdobooking;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.scheduler.Scheduler;
@@ -28,7 +28,7 @@ public class StartRecordingAndDoBookingReminderImpl implements StartRecordingAnd
    static final String END_WORK_KEY = "endWork";
    private BooleanSupplier needsStartReminder;
    private BooleanSupplier needsEndReminder;
-   private Function<String, String> settingsValueProvider;
+   private UnaryOperator<String> settingsValueProvider;
    private TimeUnit timeUnits;
    private long reminderSleepInterval;
 
@@ -43,7 +43,7 @@ public class StartRecordingAndDoBookingReminderImpl implements StartRecordingAnd
     * @param needsEndReminder
     *        defines if a reminder to end is still necessary
     */
-   public StartRecordingAndDoBookingReminderImpl(Function<String, String> settingsValueProvider, BooleanSupplier needsStartReminder,
+   public StartRecordingAndDoBookingReminderImpl(UnaryOperator<String> settingsValueProvider, BooleanSupplier needsStartReminder,
          BooleanSupplier needsEndReminder) {
       this(settingsValueProvider, needsStartReminder, needsEndReminder, 30);
    }
@@ -61,7 +61,7 @@ public class StartRecordingAndDoBookingReminderImpl implements StartRecordingAnd
     * @param reminderSleepInterval
     *        the sleeping interval of the created {@link SchedulerImpl}s
     */
-   StartRecordingAndDoBookingReminderImpl(Function<String, String> settingsValueProvider, BooleanSupplier needsStartReminder,
+   StartRecordingAndDoBookingReminderImpl(UnaryOperator<String> settingsValueProvider, BooleanSupplier needsStartReminder,
          BooleanSupplier needsEndReminder, long reminderSleepInterval) {
       this.needsStartReminder = needsStartReminder;
       this.needsEndReminder = needsEndReminder;

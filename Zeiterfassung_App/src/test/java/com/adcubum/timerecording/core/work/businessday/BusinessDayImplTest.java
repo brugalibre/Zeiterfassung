@@ -32,6 +32,50 @@ import com.adcubum.util.parser.DateParser;
 class BusinessDayImplTest extends BaseTestWithSettings {
 
    @Test
+   void testHasNotRecordedComeAndGo_HasNot() {
+      // Given
+      BusinessDayImpl businessDay = new BusinessDayImpl();
+
+      // When
+      boolean actualHasNotRecordedComeOrGoContent = businessDay.hasNotRecordedComeAndGoContent();
+
+      // Then
+      assertThat(actualHasNotRecordedComeOrGoContent, is(false));
+   }
+
+   @Test
+   void testHasNotRecordedComeAndGo_HasOneComeAndGo_NotRecorded() {
+      // Given
+      BusinessDayImpl businessDay = new BusinessDayImpl();
+
+      // When
+      businessDay.comeOrGo();
+      businessDay.comeOrGo();
+      boolean actualHasNotRecordedComeOrGoContent = businessDay.hasNotRecordedComeAndGoContent();
+
+      // Then
+      assertThat(actualHasNotRecordedComeOrGoContent, is(true));
+   }
+
+   @Test
+   void testHasNotRecordedComeAndGo_HasTwoComeAndGo_OneIsNotRecorded() {
+      // Given
+      BusinessDayImpl businessDay = new BusinessDayImpl();
+
+      // When
+      ComeAndGoes comeAndGoes = businessDay.getComeAndGoes()
+            .comeOrGo()
+            .comeOrGo()
+            .flagComeAndGoesAsRecorded()
+            .comeOrGo();
+
+      boolean actualHasNotRecordedComeOrGoContent = comeAndGoes.hasNotRecordedComeAndGoContent();
+
+      // Then
+      assertThat(actualHasNotRecordedComeOrGoContent, is(false));
+   }
+
+   @Test
    void testGetComeAndGoMsgWithoutComeAndGoes() {
       // Given
       BusinessDayImpl businessDay = new BusinessDayImpl();

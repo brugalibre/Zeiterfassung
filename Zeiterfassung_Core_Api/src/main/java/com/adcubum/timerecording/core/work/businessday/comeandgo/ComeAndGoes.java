@@ -40,6 +40,12 @@ public interface ComeAndGoes extends DomainModel {
    boolean hasUnfinishedComeAndGo();
 
    /**
+    * @return <code>true</code> if there is at least one finished {@link ComeAndGo} entry which is not yet recorded. Otherwise return
+    *         <code>false</code>
+    */
+   boolean hasNotRecordedComeAndGoContent();
+
+   /**
     * @return an {@link Optional} of the current and therefore unfinished {@link ComeAndGo} if there is any or {@link Optional#empty()}
     *         if there is none
     */

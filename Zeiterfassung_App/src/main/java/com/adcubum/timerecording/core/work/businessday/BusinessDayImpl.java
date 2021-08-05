@@ -184,6 +184,11 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
+   public boolean hasNotRecordedComeAndGoContent() {
+      return comeAndGoes.hasNotRecordedComeAndGoContent();
+   }
+
+   @Override
    public Date getDate() {
       if (increments.isEmpty()) {
          return new Date();

@@ -204,7 +204,7 @@ public interface TimeRecorder {
     * @return <code>true</code> if the {@link TimeRecorder} is currently recording
     *         and <code>false</code> if not
     */
-   boolean isRecordindg();
+   boolean isRecording();
 
    /**
     * @return <code>true</code> if the {@link TimeRecorder} has currently an active {@link ComeAndGo}
@@ -217,6 +217,16 @@ public interface TimeRecorder {
     * <code>false</code> if not
     */
    boolean isBooking();
+
+   /**
+    * @return <code>true</code> if this {@link TimeRecorder} needs a reminder to start recording or <code>false</code> if not
+    */
+   boolean needsStartRecordingReminder();
+
+   /**
+    * @return <code>true</code> if this {@link TimeRecorder} needs a reminder to book the recorded content or <code>false</code> if not
+    */
+   boolean needsStartBookingReminder();
 
    /**
     * @return a {@link BusinessDayIncrementVO} for the current {@link BusinessDayIncrement} of the {@link BusinessDay}

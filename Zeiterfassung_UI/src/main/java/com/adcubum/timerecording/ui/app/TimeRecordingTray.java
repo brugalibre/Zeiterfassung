@@ -264,7 +264,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       startTurboBucher.setEnabled(isUserAuthenticated && hasNotChargedElements && isNotBooking);
       doUserAuthenticationMenuItem.setEnabled(!isUserAuthenticated);
       showImportDialogItem.setEnabled(hasNoContentAndIsNotRecording() && isNotBooking && hasNoComeAndGoes);
-      comeAndGoItem.setEnabled(!TimeRecorder.INSTANCE.isRecordindg());
+      comeAndGoItem.setEnabled(!TimeRecorder.INSTANCE.isRecording());
       showComeAndGoItem.setEnabled(!comeAndGoes.getComeAndGoEntries().isEmpty());
       setTrayIconImage();
    }
@@ -272,7 +272,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    private void setTrayIconImage() {
       if (TimeRecorder.INSTANCE.isComeAndGoActive()) {
          trayIcon.setImage(PictureLibrary.getComeOrGoImage());
-      } else if (TimeRecorder.INSTANCE.isRecordindg()) {
+      } else if (TimeRecorder.INSTANCE.isRecording()) {
          trayIcon.setImage(PictureLibrary.getWorkingImage());
       } else {
          trayIcon.setImage(PictureLibrary.getNotWorkingImage());
@@ -280,7 +280,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    }
 
    private boolean hasNoContentAndIsNotRecording() {
-      return !TimeRecorder.INSTANCE.hasContent() && !TimeRecorder.INSTANCE.isRecordindg();
+      return !TimeRecorder.INSTANCE.hasContent() && !TimeRecorder.INSTANCE.isRecording();
    }
 
    public void clearBusinessDayContents() {

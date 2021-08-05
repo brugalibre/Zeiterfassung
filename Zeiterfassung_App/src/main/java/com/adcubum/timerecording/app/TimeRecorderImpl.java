@@ -344,7 +344,7 @@ public class TimeRecorderImpl implements TimeRecorder {
    }
 
    @Override
-   public boolean isRecordindg() {
+   public boolean isRecording() {
       return currentState == WorkStates.WORKING;
    }
 
@@ -356,6 +356,18 @@ public class TimeRecorderImpl implements TimeRecorder {
    @Override
    public boolean isBooking() {
       return currentState == WorkStates.BOOKING;
+   }
+
+   @Override
+   public boolean needsStartRecordingReminder() {
+      return !isRecording()
+            && !isComeAndGoActive()
+            && !hasContent();
+   }
+
+   @Override
+   public boolean needsStartBookingReminder() {
+      return businessDay.hasNotChargedElements() || businessDay.hasNotRecordedComeAndGoContent();
    }
 
    @Override
