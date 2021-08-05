@@ -6,8 +6,8 @@ public enum BookResultType {
    SUCCESS,
    /** Almost went smoothly, we don't now where the issue is */
    PARTIAL_SUCCESS_WITH_ERROR,
-   /** Almost went smoothly, we know there are some tickets which can't be booked. Probalby misconfigured */
+   /** Almost went smoothly, we know there are some tickets which can't be booked. Probably misconfigured */
    PARTIAL_SUCCESS_WITH_NON_BOOKABLE,
-   /** Nothing went smoothly, it was a total desaster */
+   /** Nothing went smoothly, it was a total disaster */
    FAILURE,
 }

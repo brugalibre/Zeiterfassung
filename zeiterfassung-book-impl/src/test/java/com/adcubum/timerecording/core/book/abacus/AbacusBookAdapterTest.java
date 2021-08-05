@@ -109,6 +109,7 @@ class AbacusBookAdapterTest {
 
       // Then
       assertThat(actualBookResult.getBookResultType(), is(BookResultType.PARTIAL_SUCCESS_WITH_ERROR));
+      assertThat(actualBookResult.hasBooked(), is(true));
       verify(tcb.abacusBookingConnector, times(tcb.businessDay.getIncrements().size())).book(any());
    }
 
@@ -135,6 +136,7 @@ class AbacusBookAdapterTest {
 
       // Then
       assertThat(actualBookResult.getBookResultType(), is(BookResultType.PARTIAL_SUCCESS_WITH_NON_BOOKABLE));
+      assertThat(actualBookResult.hasBooked(), is(true));
       verify(tcb.abacusBookingConnector).book(any());
    }
 
