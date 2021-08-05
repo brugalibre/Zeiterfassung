@@ -71,6 +71,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
       inPageModel.comeAndGoesDataModels = getComeAndGoesDataModels(comeAndGoes);
       List<ComeAndGoDataModel> comeAndGoesDataModels = inPageModel.comeAndGoesDataModels;
       inPageModel.isStartAddBDIncrementButtonDisabled = evalIsStartAddBDIncrementButtonDisabled(comeAndGoesDataModels);
+      inPageModel.isClearAllComeAndGoesButtonDisabled = evalIsClearAllComeAndGoesButtonDisabled(comeAndGoesDataModels);
       inPageModel.currentComeAndGoIndex = evalCurrentComeAndGoIndex(comeAndGoesDataModels);
       inPageModel.prevComeAndGoEnd = TimeFactory.createNew(0);
       inPageModel.comeAndGoTableRowValuesProperty.setValue(map2ComeAndGoTableRowValues(comeAndGoesDataModels));
@@ -133,7 +134,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
     * We can't press 'delete all' if there is only one element which is not done yet
     * As soon as there are more then one elements (and only one is not done) we can delete all the done ones
     */
-   private boolean evalIsClearAllComeAndGoesButtonDisabled(List<ComeAndGoDataModel> comeAndGoesDataModels) {
+   private static boolean evalIsClearAllComeAndGoesButtonDisabled(List<ComeAndGoDataModel> comeAndGoesDataModels) {
       List<ComeAndGoDataModel> notDoneComeAndGoes = evalNotDoneComeAndGoes(comeAndGoesDataModels);
       return !notDoneComeAndGoes.isEmpty()
             && comeAndGoesDataModels.size() == 1;
