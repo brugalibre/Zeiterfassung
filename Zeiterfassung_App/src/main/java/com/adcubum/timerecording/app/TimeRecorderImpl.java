@@ -325,11 +325,6 @@ public class TimeRecorderImpl implements TimeRecorder {
       return businessDay.getTotalDuration() > 0f;
    }
 
-   private boolean hasComeOrGoContent() {
-      ComeAndGoes comeAndGoes = businessDay.getComeAndGoes();
-      return !comeAndGoes.getComeAndGoEntries().isEmpty();
-   }
-
    @Override
    public boolean hasNotChargedElements() {
       return businessDay.hasNotChargedElements();
@@ -373,7 +368,7 @@ public class TimeRecorderImpl implements TimeRecorder {
 
    @Override
    public boolean needsStartBookingReminder() {
-      return hasContent() || hasComeOrGoContent();
+      return businessDay.hasNotChargedElements() || businessDay.hasNotRecordedComeAndGoContent();
    }
 
    @Override

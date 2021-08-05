@@ -58,7 +58,7 @@ public class TimeRecordingLauncher extends Application {
    }
 
    private static BooleanSupplier needsEndReminder() {
-      return TimeRecorder.INSTANCE::hasContent;
+      return TimeRecorder.INSTANCE::needsStartBookingReminder;
    }
 
    private void initApplication() {

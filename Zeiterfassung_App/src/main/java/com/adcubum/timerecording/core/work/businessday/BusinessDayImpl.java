@@ -257,6 +257,11 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
+   public boolean hasNotRecordedComeAndGoContent() {
+      return comeAndGoes.hasNotRecordedComeAndGoContent();
+   }
+
+   @Override
    public String getCapturingActiveSinceMsg() {
       TimeSnippet startPoint = currentBussinessDayIncremental.getCurrentTimeSnippet();
       String time = startPoint.getDuration() > 0 ? " (" + startPoint.getDuration() + "h)" : "";

@@ -191,11 +191,18 @@ public class ComeAndGoesImpl implements ComeAndGoes {
 
    @Override
    public boolean hasComeAndGoesFromPrecedentDays() {
-      Time now =TimeFactory.createNew();
+      Time now = TimeFactory.createNew();
       return comeAndGoEntries.stream()
             .map(ComeAndGo::getComeAndGoTimeStamp)
             .map(TimeSnippet::getBeginTimeStamp)
             .anyMatch(comeAndGoBegin -> comeAndGoBegin.isBefore(now));
+   }
+
+   @Override
+   public boolean hasNotRecordedComeAndGoContent() {
+      return evalAllDoneComeAndGoes()
+            .stream()
+            .anyMatch(ComeAndGo::isNotRecorded);
    }
 
    /**

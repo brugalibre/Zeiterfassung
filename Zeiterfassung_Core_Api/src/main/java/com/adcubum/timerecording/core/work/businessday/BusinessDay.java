@@ -152,6 +152,12 @@ public interface BusinessDay {
     */
    boolean hasElementsFromPrecedentDays();
 
+   /**
+    * @return <code>true</code> if there is at least one {@link ComeAndGo} entry which is not yet recorded. Otherwise return
+    *         <code>false</code>
+    */
+   boolean hasNotRecordedComeAndGoContent();
+
    float getTotalDuration();
 
    /**
@@ -195,4 +201,5 @@ public interface BusinessDay {
     * @return the {@link ComeAndGoes} of this {@link BusinessDay}
     */
    ComeAndGoes getComeAndGoes();
+
 }
