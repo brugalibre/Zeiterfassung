@@ -53,6 +53,7 @@ import javafx.scene.control.Tooltip;
  */
 public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnippedChangedCallbackHandler {
 
+   private static final String MNEMONIC_PREFIX = "_";
    private BusinessDayChangedCallbackHandler businessDayChangedCallbackHandler;
    private Property<String> ticketNoProperty;
    private StringProperty multipleTicketsNoFieldProperty;
@@ -98,9 +99,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       endLabelProperty = new SimpleStringProperty(TextLabel.BIS_LABEL);
       amountOfHoursLabelProperty = new SimpleStringProperty(TextLabel.AMOUNT_OF_HOURS_LABEL);
       serviceCodesLabelProperty = new SimpleStringProperty(TextLabel.BOOK_TYPE_LABEL);
-      finishButtonText = new SimpleStringProperty(TextLabel.FINISH_BUTTON_TEXT);
+      finishButtonText = new SimpleStringProperty(getFinishButtonTextValue2Set());
       abortButtonText = new SimpleStringProperty(TextLabel.ABORT_BUTTON_TEXT);
-      cancelButtonText = new SimpleStringProperty(TextLabel.CANCEL_BUTTON_TEXT);
+      cancelButtonText = new SimpleStringProperty(getCancelButtonTextValue2Set());
       setAbortButtonToolTipText(new SimpleObjectProperty<>(new Tooltip(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT)));
       setFinishButtonToolTipTextProperty(new SimpleObjectProperty<>(new Tooltip(pageModelConstructorInfo.getFinishContinueButtonToolTipText())));
       setCancelButtonToolTipText(new SimpleObjectProperty<>(new Tooltip(pageModelConstructorInfo.getAbortButtonToolTipText())));
@@ -161,13 +162,13 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    }
 
    protected void onEndTimeStampChanged(String currentFinishComeAndGoButtonTooltipText) {
-      getFinishButtonText().set(TextLabel.FINISH_BUTTON_TEXT);
+      getFinishButtonText().set(getFinishButtonTextValue2Set());
       getFinishButtonToolTipTextProperty().getValue().setText(currentFinishComeAndGoButtonTooltipText);
       if (isEndValueNonNull()) {
          boolean isEndTimeSmallerMaxValue = isEndTimeSmallerMaxValue();
          if (hasNextIncrements()
                && isEndTimeSmallerMaxValue) {
-            getFinishButtonText().set(TextLabel.NEXT_BUTTON_TEXT);
+            getFinishButtonText().set(getNextButtonTextValue2Set());
             getFinishButtonToolTipTextProperty().getValue().setText(TextLabel.CONTINUE_COME_AND_GO_BUTTON_TOOLTIP_TEXT);
          } else if (!isEndTimeSmallerMaxValue) {
             timeSnippet.setEndTimeStamp(maxEndTime);
@@ -213,9 +214,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       inPageModel.getEndLabelProperty().set(TextLabel.BIS_LABEL);
       inPageModel.getAmountOfHoursLabelProperty().set(TextLabel.AMOUNT_OF_HOURS_LABEL);
       inPageModel.getServiceCodesLabelProperty().set(TextLabel.BOOK_TYPE_LABEL);
-      inPageModel.getFinishButtonText().set(TextLabel.FINISH_BUTTON_TEXT);
+      inPageModel.getFinishButtonText().set(getFinishButtonTextValue2Set());
       inPageModel.getAbortButtonText().set(TextLabel.ABORT_BUTTON_TEXT);
-      inPageModel.getCancelButtonText().set(TextLabel.CANCEL_BUTTON_TEXT);
+      inPageModel.getCancelButtonText().set(getCancelButtonTextValue2Set());
 
       inPageModel.getAbortButtonToolTipText().getValue().setText(TextLabel.ABORT_BUTTON_TOOLTIP_TEXT);
       inPageModel.getFinishButtonToolTipTextProperty().getValue().setText(pageModelConstructorInfo.getFinishContinueButtonToolTipText());
@@ -536,5 +537,17 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    public Time getMaxEndTime() {
       return maxEndTime;
+   }
+
+   private String getNextButtonTextValue2Set() {
+      return MNEMONIC_PREFIX + TextLabel.NEXT_BUTTON_TEXT;
+   }
+
+   private static String getFinishButtonTextValue2Set() {
+      return MNEMONIC_PREFIX + TextLabel.FINISH_BUTTON_TEXT;
+   }
+
+   private static String getCancelButtonTextValue2Set() {
+      return MNEMONIC_PREFIX + TextLabel.CANCEL_BUTTON_TEXT;
    }
 }

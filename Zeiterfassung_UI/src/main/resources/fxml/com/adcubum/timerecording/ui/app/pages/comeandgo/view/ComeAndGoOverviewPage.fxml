@@ -15,7 +15,7 @@
    <children>
       <StackPane>
          <children>
-            <BorderPane fx:id="comeAndGoOverviewPane" prefHeight="160.0" prefWidth="290.0">
+            <BorderPane fx:id="comeAndGoOverviewPane" prefHeight="180.0" prefWidth="290.0">
                <padding>
                   <Insets bottom="10.0" left="10.0" right="5.0" top="10.0" />
                </padding>
@@ -29,7 +29,7 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Button fx:id="startAddBDIncrementButton" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="140.0" text="Start Button" />
+                        <Button fx:id="startAddBDIncrementButton" alignment="CENTER" mnemonicParsing="true" onAction="#onAction" prefHeight="30.0" prefWidth="140.0" text="Start Button" />
                         <Button fx:id="clearAllComeAndGoes" alignment="CENTER" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="140.0" text="Clear All" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
@@ -40,7 +40,7 @@
                         <Insets bottom="5.0" />
                      </BorderPane.margin>
                      <content>
-                        <TableView fx:id="comeAndGoTableView" prefHeight="102.0" prefWidth="275.0" />
+                        <TableView fx:id="comeAndGoTableView" prefHeight="120.0" prefWidth="275.0" />
                      </content>
                   </ScrollPane>
                </top>

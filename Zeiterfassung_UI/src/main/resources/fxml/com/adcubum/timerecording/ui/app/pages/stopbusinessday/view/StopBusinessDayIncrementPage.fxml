@@ -60,18 +60,18 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Button fx:id="finishButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="80.0" text="finishButton">
+                  <Button fx:id="finishButton" mnemonicParsing="true" onAction="#onAction" prefHeight="30.0" prefWidth="80.0" text="finishButton">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="80.0" text="cancelButton" GridPane.columnIndex="1" />
+                  <Button fx:id="cancelButton" mnemonicParsing="true" onAction="#onAction" prefHeight="30.0" prefWidth="80.0" text="cancelButton" GridPane.columnIndex="1" />
                </children>
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </GridPane>
-            <Button fx:id="abortButton" mnemonicParsing="false" onAction="#onAction" prefHeight="30.0" prefWidth="160.0" text="abortButton" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
+            <Button fx:id="abortButton" mnemonicParsing="true" onAction="#onAction" prefHeight="30.0" prefWidth="160.0" text="abortButton" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8" />
          </children>
       </GridPane>
    </children>

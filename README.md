@@ -56,7 +56,8 @@ Kommen/Gehen: Arbeitsstunden erfassen:
 - Dies wird so lange wiederholt bis die Arbeitsstunden für das letzte 'Kommen/Gehen' erfasst wurden.-
 - Beim letzten Eintrag wird anstelle von 'Weiter' 'Fertig' angezeigt und beim Klick darauf wird der Dialog beendet und die erfassten Stunden sind wie gewohnt in
 der Übersichtsseite ersichtlich
-- Klick auf 'Abbrechen' verwirft die gemachten Erfassungen
+- Anstelle von einem Klick auf Fertig bzw. Weiter kann die Tastenkombination 'Alt' & 'F' bzw. 'Alt' & 'W' verwendeten werden
+- Klick auf 'Abbrechen' bzw. 'Alt' & 'A' verwirft die gemachten Erfassungen
 
 Aufzeichnung starten:
 - Durch Klick auf den roten Kreis unten in der Info-Leiste
@@ -72,6 +73,8 @@ Aufzeichnung stoppen:
 - Story-Time Buchungen: Durch die Eingabe mehrerer Ticket-Nrs, welche durch Semikolons separiert sind, wird die gesammt Zeit auf die Anzahl einzelner Tickets aufgeteilt
 - Dieses Eingabefeld ist nur aktive, wenn das Eingabefeld 'Ticket-Nr.', in welchem ein einzelnes Ticket eingegeben werden kann, leer ist und vice versa.
 - Eingabe der Start- bzw. Endzeit z.B. also 0915, 915 bzw. 09:15
+- Durch klicken auf Fertig bzw. 'Alt' & 'F' wird die Eingabe validiert und sofern gültig, gespeichert
+- 
 
 Integriertes Ticketbacklog
 - Damit beim Stoppen der Aufzeichnung aus den Tickets im aktuellen Sprint ausgewählt werden kann, bedarf es einem Eintrag im zeiterfassung.properties
