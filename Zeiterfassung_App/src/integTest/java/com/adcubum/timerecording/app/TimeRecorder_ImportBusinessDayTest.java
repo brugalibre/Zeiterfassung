@@ -4,12 +4,14 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 import java.io.File;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
@@ -29,14 +31,15 @@ class TimeRecorder_ImportBusinessDayTest {
       String secondTicketNr = "INTA-556";
       String secondTicketLeistungsartRep = "122 - Qualtitätssicherung";
       float secondTicketDuration = 4.25f;
+      TimeRecorder timeRecorder = buildTimeRecorder();
 
       // When
-      boolean actualImported = TimeRecorder.INSTANCE.importBusinessDayFromFile(testImportFile);
+      boolean actualImported = timeRecorder.importBusinessDayFromFile(testImportFile);
 
       // Then
       ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       assertThat(actualImported, is(true));
-      BusinessDayVO bussinessDayVO = TimeRecorder.INSTANCE.getBussinessDayVO();
+      BusinessDayVO bussinessDayVO = timeRecorder.getBussinessDayVO();
       assertThat(bussinessDayVO.getBusinessDayIncrements().size(), is(2));
       BusinessDayIncrementVO firstBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(firstTicketNr, bussinessDayVO);
       BusinessDayIncrementVO secondBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(secondTicketNr, bussinessDayVO);
@@ -54,9 +57,10 @@ class TimeRecorder_ImportBusinessDayTest {
    void testImportBusinessDayFromFile_Failure_InvalidChargeType() {
       // Given
       File testImportFile = new File("src\\integTest\\resources\\io\\testImportFileWithInvalidChargeType.csv");
+      TimeRecorder timeRecorder = buildTimeRecorder();
 
       // When
-      boolean actualImported = TimeRecorder.INSTANCE.importBusinessDayFromFile(testImportFile);
+      boolean actualImported = timeRecorder.importBusinessDayFromFile(testImportFile);
 
       // Then
       assertThat(actualImported, is(false));
@@ -66,9 +70,10 @@ class TimeRecorder_ImportBusinessDayTest {
    void testImportBusinessDayFromFile_Failure_WithMultipleBeginAndEndElements() {
       // Given
       File testImportFile = new File("src\\integTest\\resources\\io\\testImportFileWithMultipleBeginEnd.csv");
+      TimeRecorder timeRecorder = buildTimeRecorder();
 
       // When
-      boolean actualImported = TimeRecorder.INSTANCE.importBusinessDayFromFile(testImportFile);
+      boolean actualImported = timeRecorder.importBusinessDayFromFile(testImportFile);
 
       // Then
       assertThat(actualImported, is(false));
@@ -79,10 +84,11 @@ class TimeRecorder_ImportBusinessDayTest {
       // Given
       File testImportFile = new File("src\\integTest\\resources\\io\\testImportFileWithoutHeader.csv");
       File testImportFile2 = new File("src\\integTest\\resources\\io\\testImportFileWithEmptyHeader.csv");
+      TimeRecorder timeRecorder = buildTimeRecorder();
 
       // When
-      boolean actualImported = TimeRecorder.INSTANCE.importBusinessDayFromFile(testImportFile);
-      boolean actualImported2 = TimeRecorder.INSTANCE.importBusinessDayFromFile(testImportFile2);
+      boolean actualImported = timeRecorder.importBusinessDayFromFile(testImportFile);
+      boolean actualImported2 = timeRecorder.importBusinessDayFromFile(testImportFile2);
 
       // Then
       assertThat(actualImported, is(false));
@@ -93,9 +99,10 @@ class TimeRecorder_ImportBusinessDayTest {
    void testImportBusinessDayFromFile_Failure_EmptyFile() {
       // Given
       File testImportFile = new File("src\\integTest\\resources\\io\\emptyTestImport.csv");
+      TimeRecorder timeRecorder = buildTimeRecorder();
 
       // When
-      boolean actualImported = TimeRecorder.INSTANCE.importBusinessDayFromFile(testImportFile);
+      boolean actualImported = timeRecorder.importBusinessDayFromFile(testImportFile);
 
       // Then
       assertThat(actualImported, is(false));
@@ -105,9 +112,10 @@ class TimeRecorder_ImportBusinessDayTest {
    void testImportBusinessDayFromFile_Failure_FileDoesNotExist() {
       // Given
       File testImportFile = new File("src\\integTest\\resources\\io\\IDontEvenExist.csv");
+      TimeRecorder timeRecorder = buildTimeRecorder();
 
       // When
-      Executable ex = () -> TimeRecorder.INSTANCE.importBusinessDayFromFile(testImportFile);
+      Executable ex = () -> timeRecorder.importBusinessDayFromFile(testImportFile);
 
       // Then
       assertThrows(FileImportException.class, ex);
@@ -119,5 +127,11 @@ class TimeRecorder_ImportBusinessDayTest {
             .filter(bdIncrement -> bdIncrement.getTicketNumber().equals(firstTicketNr))
             .findFirst()
             .orElse(null);
+   }
+
+   private static TimeRecorder buildTimeRecorder() {
+      TimeRecorder timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class));
+      timeRecorder.init();
+      return timeRecorder;
    }
 }
