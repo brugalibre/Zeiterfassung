@@ -465,7 +465,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       // Given
       boolean expectedHasComeAndGoesFromPrecedentDays = true;
-      String dateAsString = "01-02-2020";
+      String dateAsString = "01.02.2020";
       String comeHourAndMinAsString = "10:00";
       String goHourAndMinAsString = "12:00";
       Time come = createTime(dateAsString, comeHourAndMinAsString);

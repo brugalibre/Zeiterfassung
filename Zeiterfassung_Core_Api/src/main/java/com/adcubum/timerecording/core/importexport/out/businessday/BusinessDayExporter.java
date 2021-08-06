@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.adcubum.util.parser.DateParser;
 
 /**
  * The {@link BusinessDayExporter} exports a {@link BusinessDay} into a
@@ -14,7 +15,7 @@ import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
  */
 public interface BusinessDayExporter {
    /** The pattern for representing a date */
-   public static final String DATE_REP_PATTERN = "EEEEE, d MMM yyyy HH:mm:ss";
+   public static final String DATE_REP_PATTERN = DateParser.DATE_PATTERN;
 
    /**
     * The singleton instance of a {@link BusinessDayExporter}

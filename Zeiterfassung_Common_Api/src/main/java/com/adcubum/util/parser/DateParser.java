@@ -21,8 +21,8 @@ public class DateParser {
 
    private static final String HOUR_MIN_PATTERN = "HH:mm";
    public static final String HOUR_MIN_SEC_PATTERN = "HH:mm:ss";
-   private static final String DATE_WITH_SEC_PATTERN = "dd-MM-yyyy "+ HOUR_MIN_SEC_PATTERN;
-   public static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
+   private static final String DATE_WITH_SEC_PATTERN = "dd-MM-yyyy " + HOUR_MIN_SEC_PATTERN;
+   public static final String DATE_PATTERN = "dd.MM.yyyy HH:mm";
 
    private DateParser() {
       // private 
@@ -141,18 +141,19 @@ public class DateParser {
 
    /**
     * Converts the given String input and parses the resulting value to a {@link Time}
-    * With the given {@link TimeUnit} it's possible to define the accuracy. 
-    *  E.g.: The input '800': This will be converted to '08:00' whereas this value 
-    *  is parsed into a Time. Use {@link TimeUnit#SECONDS} if you want to include seconds in the resulting Time instance
+    * With the given {@link TimeUnit} it's possible to define the accuracy.
+    * E.g.: The input '800': This will be converted to '08:00' whereas this value
+    * is parsed into a Time. Use {@link TimeUnit#SECONDS} if you want to include seconds in the resulting Time instance
     * 
     * 
     * @param timeAsString
     *        the time as a String
-    * @param timeUnit the {@link TimeUnit} which defines the accuracy of the returned time
+    * @param timeUnit
+    *        the {@link TimeUnit} which defines the accuracy of the returned time
     * @return a {@link Time} instance for the given time value as a String
     */
    public static Time convertAndParse2Time(String timeAsString, TimeUnit timeUnit) {
-      return convertString2Time(timeAsString,timeUnit);
+      return convertString2Time(timeAsString, timeUnit);
    }
 
    private static Time convertString2Time(String timeAsString, TimeUnit timeUnit) {

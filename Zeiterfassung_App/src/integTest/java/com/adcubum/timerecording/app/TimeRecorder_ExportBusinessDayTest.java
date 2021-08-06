@@ -16,12 +16,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
+import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
+import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryIntegMockUtil;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
@@ -35,17 +38,6 @@ import com.adcubum.util.parser.DateParser;
 
 class TimeRecorder_ExportBusinessDayTest {
 
-   @BeforeEach
-   public void tearDown() {
-      try {
-         // make sure there is no garbage..
-         TimeRecorder.INSTANCE.clear();
-      } catch (Exception e) {
-         e.printStackTrace();
-         // silently ignore -.-
-      }
-   }
-
    @Test
    void testExpotBusinessDayFromFile_Success() throws IOException, ParseException {
       // Given
@@ -55,13 +47,13 @@ class TimeRecorder_ExportBusinessDayTest {
       int kindOfService = 113;
       int timeSnippedDuration = 3600 * 1000;
       TestUiCallbackHandler uiCallbackHandler = spy(new TestUiCallbackHandler());
-      new TestCaseBuilder()
+      TestCaseBuilder tcb = new TestCaseBuilder()
             .withBusinessDayIncrement(ticketNr, description, kindOfService, timeSnippedDuration)
             .withUiCallbackHandler(uiCallbackHandler)
             .build();
 
       // When
-      FileExportResult fileExportResult = TimeRecorder.INSTANCE.export();
+      FileExportResult fileExportResult = tcb.timeRecorder.export();
 
       // Then
       verify(uiCallbackHandler).displayMessage(any());
@@ -90,13 +82,17 @@ class TimeRecorder_ExportBusinessDayTest {
    private static class TestCaseBuilder {
 
       private List<BusinessDayIncrementAdd> businessDayIncrementAdds;
+      private TimeRecorderImpl timeRecorder;
 
       private TestCaseBuilder() {
          this.businessDayIncrementAdds = new ArrayList<>();
+         BusinessDayRepository businessDayRepository = BusinessDayRepositoryIntegMockUtil.mockBusinessDayRepository(new BusinessDayImpl());
+         this.timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businessDayRepository);
+         this.timeRecorder.init();
       }
 
       private TestCaseBuilder withUiCallbackHandler(UiCallbackHandler callbackHandler) {
-         TimeRecorder.INSTANCE.setCallbackHandler(callbackHandler);
+         timeRecorder.setCallbackHandler(callbackHandler);
          return this;
       }
 
@@ -125,12 +121,12 @@ class TimeRecorder_ExportBusinessDayTest {
 
       private void addBusinessIncrements() {
          for (BusinessDayIncrementAdd businessDayIncrementAdd : businessDayIncrementAdds) {
-            TimeRecorder.INSTANCE.addBusinessIncrement(businessDayIncrementAdd);
+            timeRecorder.addBusinessIncrement(businessDayIncrementAdd);
          }
       }
 
       private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) throws ParseException {
-         Date startDate = DateParser.parse2Date("01-02-2020 00:00", DateParser.DATE_PATTERN);
+         Date startDate = DateParser.parse2Date("01.01.2020 00:00", DateParser.DATE_PATTERN);
          Time beginTimeStamp = TimeFactory.createNew(startDate.getTime());
          TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
          timeSnippet.setBeginTimeStamp(beginTimeStamp);
