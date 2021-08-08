@@ -16,11 +16,14 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.app.startstopresult.StartNotPossibleInfo;
+import com.adcubum.timerecording.app.startstopresult.UserInteractionResult;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.result.BookResultType;
@@ -228,12 +231,16 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
             .withBusinessDayIncrement("SYRIUS-534534", "Test", 113, 600 * 1000)
             .setCallbackHandler(testUiCallbackHandler)
             .build();
-
       // When
-      tcb.timeRecorder.handleUserInteraction(false);
+      UserInteractionResult userInteractionResult = tcb.timeRecorder.handleUserInteraction(false);
 
       // Then
       verify(testUiCallbackHandler, never()).onStart();
+      assertThat(userInteractionResult.getOptionalStartNotPossibleInfo().isPresent(), is(true));
+      StartNotPossibleInfo startNotPossibleInfo = userInteractionResult.getOptionalStartNotPossibleInfo().get();
+      Message message = startNotPossibleInfo.getMessage();
+      assertThat(message.getMessageTitle(), is(TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE));
+      assertThat(message.getMessage(), is(TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS));
       assertThat(testUiCallbackHandler.receivedMessageType, is(MessageType.ERROR));
    }
 
@@ -368,12 +375,12 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       startBookThread.start();
       TimeUnit.MILLISECONDS.sleep(50);
       boolean actualIsBooking = timeRecorder.isBooking();
-      boolean actualHandle = timeRecorder.handleUserInteraction(false);
+      UserInteractionResult actualHandleResult = timeRecorder.handleUserInteraction(false);
 
       // Then
       verify(bookAdapter).book(any());
       assertThat(actualIsBooking, is(true));
-      assertThat(actualHandle, is(false));
+      assertThat(actualHandleResult.isUserInteractionRequired(), is(false));
    }
 
    @Test
@@ -388,11 +395,11 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       // When
       // start come and go
       tcb.timeRecorder.handleUserInteraction(true);
-      boolean isActualHandleUserInteraction = tcb.timeRecorder.handleUserInteraction(false);
+      UserInteractionResult actualUserInteractionResult = tcb.timeRecorder.handleUserInteraction(false);
 
       // Then
       ComeAndGoes comeAndGoes = tcb.timeRecorder.getBussinessDayVO().getComeAndGoes();
-      assertThat(isActualHandleUserInteraction, is(false));
+      assertThat(actualUserInteractionResult.isUserInteractionRequired(), is(false));
       assertThat(comeAndGoes.getComeAndGoEntries().size(), is(1));
    }
 
@@ -432,7 +439,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
             .build();
       BusinessDayIncrementVO businessDayIncrementVO = tcb.timeRecorder.getBussinessDayVO().getBusinessDayIncrements().get(0);
 
-      ChangedValue changeValue = ChangedValue.of(businessDayIncrementVO.getId(), "111 - Meeting", ValueTypes.CHARGE_TYPE);
+      ChangedValue changeValue = ChangedValue.of(businessDayIncrementVO.getId(), "111 - Meeting", ValueTypes.SERVICE_CODE_DESCRIPTION);
 
       // When
       tcb.timeRecorder.changeBusinesDayIncrement(changeValue);
@@ -453,7 +460,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
             .build();
       BusinessDayIncrementVO businessDayIncrementVO = tcb.timeRecorder.getBussinessDayVO().getBusinessDayIncrements().get(0);
 
-      ChangedValue changeValue = ChangedValue.of(businessDayIncrementVO.getId(), "Schubedibuuu", ValueTypes.CHARGE_TYPE);
+      ChangedValue changeValue = ChangedValue.of(businessDayIncrementVO.getId(), "Schubedibuuu", ValueTypes.SERVICE_CODE_DESCRIPTION);
 
       // When
       tcb.timeRecorder.changeBusinesDayIncrement(changeValue);
@@ -713,6 +720,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
                .withTimeSnippet(createTimeSnippet(timeSnippedDuration, false))
                .withDescription(description)
                .withTicket(ticket)
+               .withId(UUID.randomUUID())
                .withKindOfService(kindOfService)
                .build());
          return this;

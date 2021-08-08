@@ -3,6 +3,8 @@
  */
 package com.adcubum.timerecording.core.work.businessday.update.callback.impl;
 
+import java.util.UUID;
+
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
@@ -22,6 +24,7 @@ public class BusinessDayIncrementAdd {
    private String amountOfHours;
    private int kindOfService;
    private TimeSnippet timeSnippet;
+   private UUID id;
 
    private BusinessDayIncrementAdd() {
       // private 
@@ -29,6 +32,10 @@ public class BusinessDayIncrementAdd {
 
    public final Ticket getTicket() {
       return this.ticket;
+   }
+
+   public UUID getId() {
+      return id;
    }
 
    public final String getDescription() {
@@ -73,9 +80,22 @@ public class BusinessDayIncrementAdd {
       private String amountOfHours;
       private int kindOfService;
       private TimeSnippet timeSnippet;
+      private UUID id;
 
       public BusinessDayIncrementAddBuilder withTicket(Ticket ticket) {
          this.ticket = ticket;
+         return this;
+      }
+
+      /**
+       * Sets an id if it's requried (e.g. for testing purpose) to provide an id for a non persisten {@link BusinessDayIncrement}
+       * 
+       * @param id
+       *        id
+       * @return
+       */
+      public BusinessDayIncrementAddBuilder withId(UUID id) {
+         this.id = id;
          return this;
       }
 
@@ -106,6 +126,7 @@ public class BusinessDayIncrementAdd {
          businessDayIncrementAdd.setTicket(ticket);
          businessDayIncrementAdd.setKindOfService(kindOfService);
          businessDayIncrementAdd.setAmountOfHours(amountOfHours);
+         businessDayIncrementAdd.id = id;
          return businessDayIncrementAdd;
       }
    }

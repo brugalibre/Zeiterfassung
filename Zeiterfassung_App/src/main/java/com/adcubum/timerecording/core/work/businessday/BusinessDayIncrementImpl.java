@@ -142,13 +142,19 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     *        the new representation of a charge type
     */
    @Override
-   public void setChargeType(String chargeTypeRep) {
+   public void setServiceCode4Description(String chargeTypeRep) {
       ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       this.chargeType = serviceCodeAdapter.getServiceCode4Description(chargeTypeRep);
    }
 
    @Override
-   public void setChargeType(int chargeType) {
+   public String getServiceCodeDescription() {
+      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
+      return serviceCodeAdapter.getServiceCodeDescription4ServiceCode(chargeType);
+   }
+
+   @Override
+   public void setServiceCode(int chargeType) {
       this.chargeType = chargeType;
    }
 
@@ -201,7 +207,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
       businessDayIncremental.id = update.getId();
       businessDayIncremental.setDescription(update.getDescription());
       businessDayIncremental.setTicket(update.getTicket());
-      businessDayIncremental.setChargeType(update.getKindOfService());
+      businessDayIncremental.setServiceCode(update.getKindOfService());
       businessDayIncremental.startCurrentTimeSnippet(update.getTimeSnippet().getBeginTimeStamp());
       businessDayIncremental.stopCurrentTimeSnippet(update.getTimeSnippet().getEndTimeStamp());
       return businessDayIncremental;
@@ -221,7 +227,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
       businessDayIncremental.setDescription(businessDayIncrementImport.getDescription());
       TicketBacklog ticketBacklog = TicketBacklogSPI.getTicketBacklog();
       businessDayIncremental.setTicket(ticketBacklog.getTicket4Nr(businessDayIncrementImport.getTicketNo()));
-      businessDayIncremental.setChargeType(businessDayIncrementImport.getKindOfService());
+      businessDayIncremental.setServiceCode(businessDayIncrementImport.getKindOfService());
 
       for (TimeSnippet timeSnippet : timeSnippets2Add) {
          businessDayIncremental.startCurrentTimeSnippet(timeSnippet.getBeginTimeStamp());

@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.UUID;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.app.startstopresult.StartNotPossibleInfo;
+import com.adcubum.timerecording.app.startstopresult.StartNotPossibleInfoImpl;
+import com.adcubum.timerecording.app.startstopresult.UserInteractionResult;
+import com.adcubum.timerecording.app.startstopresult.UserInteractionResultImpl;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.result.BookerResult;
@@ -32,6 +36,7 @@ import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 import com.adcubum.timerecording.importexport.out.file.FileExporter;
+import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageFactory;
 import com.adcubum.timerecording.message.MessageType;
 import com.adcubum.timerecording.settings.Settings;
@@ -84,37 +89,42 @@ public class TimeRecorderImpl implements TimeRecorder {
    }
 
    @Override
-   public boolean handleUserInteraction(boolean comeOrGo) {
+   public UserInteractionResult handleUserInteraction(boolean comeOrGo) {
       switch (currentState) {
          case NOT_WORKING:
+            StartNotPossibleInfo wasStartSucessful = null;
             if (comeOrGo) {
                tryComeIfPossible();
             } else {
-               tryStartIfPossible();
+               wasStartSucessful = tryStartIfPossible();
             }
-            return false;
+            return new UserInteractionResultImpl(false, wasStartSucessful, currentState);
          case WORKING:
             stop();
-            return true;
+            return new UserInteractionResultImpl(true, currentState);
          case COME_AND_GO:
             if (comeOrGo) {
                go();
             }
-            return false;
+            return new UserInteractionResultImpl(false, currentState);
          case BOOKING:
-            return false;
+            return new UserInteractionResultImpl(false, currentState);
          default:
             throw new IllegalStateException("Unknowing working state '" + currentState + "'!");
       }
    }
 
-   private void tryStartIfPossible() {
+   private StartNotPossibleInfo tryStartIfPossible() {
+      StartNotPossibleInfo startNotPossibleInfo = null;
       if (businessDay.hasElementsFromPrecedentDays()) {
-         callbackHandler.displayMessage(MessageFactory.createNew(MessageType.ERROR,
-               TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS, TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE));
+         Message message = MessageFactory.createNew(MessageType.ERROR,
+               TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS, TextLabel.START_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE);
+         callbackHandler.displayMessage(message);
+         startNotPossibleInfo = new StartNotPossibleInfoImpl(message);
       } else {
          start();
       }
+      return startNotPossibleInfo;
    }
 
    private void tryComeIfPossible() {

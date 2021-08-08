@@ -30,7 +30,9 @@ import com.adcubum.timerecording.core.work.businessday.exception.BusinessIncreme
 import com.adcubum.timerecording.core.work.businessday.factory.BusinessDayFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.settings.round.TimeRounder;
+import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
@@ -206,9 +208,7 @@ public class BusinessDayImpl implements BusinessDay {
    @Override
    public void removeIncrement4Id(UUID id) {
       getBusinessIncrement(id)
-            .ifPresent(businessDayIncrement -> {
-               increments.remove(businessDayIncrement);
-            });
+            .ifPresent(businessDayIncrement -> increments.remove(businessDayIncrement));
    }
 
    @Override
@@ -332,7 +332,6 @@ public class BusinessDayImpl implements BusinessDay {
 
    private void handleBusinessDayChangedInternal(BusinessDayIncrement businessDayIncremental,
          ChangedValue changedValue) {
-
       switch (changedValue.getValueTypes()) {
          case DESCRIPTION:
             businessDayIncremental.setDescription(changedValue.getNewValue());
@@ -346,9 +345,16 @@ public class BusinessDayImpl implements BusinessDay {
          case TICKET:
             businessDayIncremental.setTicket(changedValue.getNewTicket());
             break;
-         case CHARGE_TYPE:
+         case TICKET_NR:
+            Ticket newTicket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(changedValue.getNewValue());
+            businessDayIncremental.setTicket(newTicket);
+            break;
+         case SERVICE_CODE:
+            businessDayIncremental.setServiceCode(Integer.parseInt(changedValue.getNewValue()));
+            break;
+         case SERVICE_CODE_DESCRIPTION:
             try {
-               businessDayIncremental.setChargeType(changedValue.getNewValue());
+               businessDayIncremental.setServiceCode4Description(changedValue.getNewValue());
             } catch (InvalidChargeTypeRepresentationException e) {
                e.printStackTrace();
                // ignore failures

@@ -80,6 +80,8 @@ public interface BusinessDayIncrement extends DomainModel {
     */
    int getChargeType();
 
+   String getServiceCodeDescription();
+
    String getDescription();
 
    float getTotalDuration();
@@ -89,15 +91,20 @@ public interface BusinessDayIncrement extends DomainModel {
    void setTicket(Ticket ticket);
 
    /**
-    * Sets the charge-type as int from @Override
-    * the given representation.
+    * Sets the service code int from the given representation of
+    * a service code
     * 
-    * @param chargeTypeRep
-    *        the new representation of a charge type
+    * @param serviceCodeRep
+    *        the new representation of a service-code
     */
-   void setChargeType(String chargeTypeRep);
+   void setServiceCode4Description(String serviceCodeRep);
 
-   void setChargeType(int chargeType);
+   /**
+    * Defines the service code of this {@link BusinessDayIncrement}
+    * 
+    * @param serviceCode
+    */
+   void setServiceCode(int serviceCode);
 
    void setDescription(String description);
 

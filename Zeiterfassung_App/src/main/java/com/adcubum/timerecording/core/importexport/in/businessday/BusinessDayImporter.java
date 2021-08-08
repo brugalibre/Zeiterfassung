@@ -143,7 +143,7 @@ public class BusinessDayImporter {
                currentValueType = evalNextValue2Import(currentValueType);
                break;
 
-            case CHARGE_TYPE:
+            case SERVICE_CODE_DESCRIPTION:
                parseAndSetChargeType(importLine, businessDayIncrementImport, currentElementIndex);
                businessDayIncImported = true;
                break;
@@ -225,7 +225,7 @@ public class BusinessDayImporter {
          case DESCRIPTION:
             return BEGIN;
          case BEGIN:
-            return ValueTypes.CHARGE_TYPE;
+            return ValueTypes.SERVICE_CODE_DESCRIPTION;
          default:
             throw new BusinessDayImportException("Unsupported ValueTypes '" + currentValueType + "'");
       }

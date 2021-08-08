@@ -105,7 +105,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
    }
 
    @Test
-   public void testChangeDBIncTicketNr() {
+   public void testChangeDBInc_UnknownValuesType() {
 
       // Given
       String newTicketNr = "ABES-1324";
@@ -114,7 +114,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       UUID id = businessDay.getIncrements().get(0).getId();
 
 
-      ChangedValue changeValue = ChangedValue.of(id, newTicketNr, ValueTypes.TICKET_NR);
+      ChangedValue changeValue = ChangedValue.of(id, newTicketNr, ValueTypes.NONE);
 
       // When
       Executable exe = () -> businessDay.changeBusinesDayIncrement(changeValue);
@@ -132,7 +132,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       UUID id = businessDay.getIncrements().get(0).getId();
 
       // When
-      Executable exe = () -> ChangedValue.of(id, "", ValueTypes.NONE);
+      Executable exe = () -> ChangedValue.of(id, null, ValueTypes.NONE);
 
       // Then
       assertThrows(IllegalStateException.class, exe);
@@ -157,6 +157,35 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       // Then
       BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
       assertThat(businessDayIncrement.getTicket().getNr(), is(newTicket.getNr()));
+   }
+
+   @Test
+   public void testChangeDBServiceCode() {
+
+      // Given
+      TimeSnippet firstSnippet = TimeSnippetBuilder.of()
+            .withDay(1)
+            .withMonth(1)
+            .withYear(2021)
+            .withStartHourAndDuration(8, 9)
+            .build();
+      int oldServiceCode = 113;
+      String newServiceCode = "111";
+
+      BusinessDayImpl businessDay = new BusinessDayImpl();
+      businessDay.addBusinessIncrement(createUpdate(firstSnippet, oldServiceCode, getTicket4Nr()));
+      UUID id = businessDay.getIncrements().get(0).getId();
+      String expectedServiceCodeDesc = "111 - Meeting";
+
+      ChangedValue changeValue = ChangedValue.of(id, newServiceCode, ValueTypes.SERVICE_CODE);
+
+      // When
+      businessDay.changeBusinesDayIncrement(changeValue);
+
+      // Then
+      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
+      assertThat(businessDayIncrement.getChargeType(), is(Integer.parseInt(newServiceCode)));
+      assertThat(businessDayIncrement.getServiceCodeDescription(), is(expectedServiceCodeDesc));
    }
 
    @Test
@@ -543,6 +572,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
             .withDescription("Default Description")
             .withTicket(ticket)
             .withKindOfService(kindOfService)
+            .withId(UUID.randomUUID())
             .build();
    }
 

@@ -120,4 +120,15 @@ public class TextLabel {
    public static final String REMINDER_TO_START_RECORDING_TITLE = "Huhuuuu!";
    public static final String REMINDER_TO_BOOK_MSG = "Vergiss nicht, die erfassten Zeiten abzubuchen :D";
    public static final String REMINDER_TO_BOOK_TITLE = "Ciao du sau!";
+
+   // Web-ui sachen
+   public static final String SHOW_WEB_UI = "Zeiterfassung im Browser anzeigen";
+   public static final String SHOW_WEB_UI_NOT_SUPPORTED = "Die Aktion ist auf dem aktuellem System nicht unterstützt!";
+   public static final String SHOW_WEB_UI_FAILED = "Browser konnte aufgrund eines Fehlers nicht gestartet werden!";
+
+   // Soll/Ist-Stundenvergleich
+   public static final String SET_ACTUAL_HOURS_TITLE = "Soll-Ist-Arbeitszeit Übersicht";
+   public static final String SET_HOURS_LABEL = "Soll-Arbeitszeit";
+   public static final String ACTUAL_HOURS_LABEL = "Ist-Arbeitszeit";
+
 }

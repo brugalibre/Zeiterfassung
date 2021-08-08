@@ -5,9 +5,11 @@ import org.springframework.stereotype.Component;
 
 import com.adcubum.timerecording.core.businessday.entity.repository.BusinessDayEntityRepository;
 
-@Component("business-day-entity-repository-factory")
+@Component(BusinessDayEntityRepositoryHolder.BUSINESS_DAY_ENTITY_REPOSITORY_FACTORY)
 public class BusinessDayEntityRepositoryHolder {
 
+   /** Name of the bean */
+   public static final String BUSINESS_DAY_ENTITY_REPOSITORY_FACTORY = "business-day-entity-repository-factory";
    private static BusinessDayEntityRepository businessDayEntityRepository;
 
    @Autowired

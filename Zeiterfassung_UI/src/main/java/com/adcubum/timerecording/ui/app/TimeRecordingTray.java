@@ -29,6 +29,7 @@ import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.app.startstopresult.UserInteractionResult;
 import com.adcubum.timerecording.application.ApplicationLaunchException;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
@@ -48,6 +49,8 @@ import com.adcubum.timerecording.ui.app.pages.mainpage.view.MainWindowPage;
 import com.adcubum.timerecording.ui.app.settings.hotkey.HotKeyManager;
 import com.adcubum.timerecording.ui.app.tray.TrayIconDelegate;
 import com.adcubum.timerecording.ui.app.tray.TrayIconDelegateImpl;
+import com.adcubum.timerecording.ui.app.web.WebUiConst;
+import com.adcubum.timerecording.ui.app.web.WebUiHelper;
 import com.adcubum.timerecording.ui.security.login.auth.UiAuthenticationService;
 import com.adcubum.timerecording.ui.util.ExceptionUtil;
 import com.adcubum.timerecording.workerfactory.ThreadFactory;
@@ -175,6 +178,14 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       JMenuItem closePopupMenuItem = new JMenuItem(TextLabel.CLOSE_POPUP_MENU);
       closePopupMenuItem.addActionListener(actionEvent -> popupMenuSupplier.get().setVisible(false));
       return closePopupMenuItem;
+   }
+
+   private JMenuItem createShowWebUiMenueItem() {
+      JMenuItem showWebUiItem = new JMenuItem(TextLabel.SHOW_WEB_UI);
+      WebUiHelper webUiHelper = new WebUiHelper(getCallbackHandler());
+      showWebUiItem.addActionListener(actionEvent -> webUiHelper.openUrlInBrowser(WebUiConst.WEB_UI_ADRESS));
+      showWebUiItem.setEnabled(true);
+      return showWebUiItem;
    }
 
    private void createComeAndGoMenueItem() {
@@ -335,7 +346,8 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    }
 
    private void handleUserInteractionAndShowInputIfStopped(boolean comeOrGo) {
-      if (TimeRecorder.INSTANCE.handleUserInteraction(comeOrGo)) {
+      UserInteractionResult handleUserInteraction = TimeRecorder.INSTANCE.handleUserInteraction(comeOrGo);
+      if (handleUserInteraction.isUserInteractionRequired()) {
          showInputMask();
       }
    }
@@ -484,6 +496,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    }
 
    private JPopupMenu createPopupMenu(JMenu settingsRoundMenu, JMenuItem exitItem, JMenuItem closePopupItem) {
+      JMenuItem showWebUiMenueItem = createShowWebUiMenueItem();
       JPopupMenu popupMenu = new JPopupMenu();
       popupMenu.add(settingsRoundMenu);
       popupMenu.addSeparator();
@@ -491,7 +504,9 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       popupMenu.addSeparator();
       popupMenu.add(showImportDialogItem);
       popupMenu.add(startTurboBucher);
+      popupMenu.addSeparator();
       popupMenu.add(showHoursItem);
+      popupMenu.add(showWebUiMenueItem);
       popupMenu.addSeparator();
       popupMenu.add(showComeAndGoItem);
       popupMenu.add(comeAndGoItem);

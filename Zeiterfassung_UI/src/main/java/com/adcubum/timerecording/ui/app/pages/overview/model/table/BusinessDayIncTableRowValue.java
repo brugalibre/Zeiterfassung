@@ -72,7 +72,7 @@ public class BusinessDayIncTableRowValue {
       index++;
       valueTypesForIndex.put(index, beginAndEndCellValue.getEndCellValue().getValueType());
       index++;
-      valueTypesForIndex.put(index, ValueTypes.CHARGE_TYPE);
+      valueTypesForIndex.put(index, ValueTypes.SERVICE_CODE_DESCRIPTION);
    }
 
    /**

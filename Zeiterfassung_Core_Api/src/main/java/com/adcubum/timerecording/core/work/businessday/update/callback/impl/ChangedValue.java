@@ -1,6 +1,7 @@
 package com.adcubum.timerecording.core.work.businessday.update.callback.impl;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 import java.util.UUID;
@@ -51,7 +52,7 @@ public class ChangedValue {
 
    public static ChangedValue of(UUID id, Object newValue, ValueTypes valueType) {
       Ticket ticket = castNewValue2Ticket(valueType, newValue);
-      String newValue4Type = castNewValue2String(valueType, newValue);
+      String newValue4Type = castNewValue2String(newValue);
       return new ChangedValue(id, newValue4Type, ticket, valueType);
    }
 
@@ -66,19 +67,7 @@ public class ChangedValue {
       return null;
    }
 
-   private static String castNewValue2String(ValueTypes valueType, Object newValue) {
-      requireNonNull(newValue, "newValue must not be null!");
-      switch (valueType) {
-         case AMOUNT_OF_TIME:
-         case BEGIN:
-         case END:
-         case DESCRIPTION:
-         case CHARGE_TYPE:
-         case TICKET_NR:
-            return newValue.toString();
-         default:
-            break;
-      }
-      return null;
+   private static String castNewValue2String(Object newValue) {
+      return nonNull(newValue) ? newValue.toString() : null;
    }
 }

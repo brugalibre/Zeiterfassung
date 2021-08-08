@@ -3,6 +3,7 @@ package com.adcubum.timerecording.app;
 import java.io.File;
 import java.util.UUID;
 
+import com.adcubum.timerecording.app.startstopresult.UserInteractionResult;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
@@ -22,7 +23,7 @@ public interface TimeRecorder {
    /**
     * The version of the application
     */
-   public static final String VERSION = "1.9.0";
+   public static final String VERSION = "2.0.0";
 
    /**
     * Initializes this {@link TimeRecorder}
@@ -48,11 +49,10 @@ public interface TimeRecorder {
      *          </li>
      *	</ul>
      * @formatter:on
-    * @param comeOrGo <code>true</code> if the user started/stopped a come or go or <code>false</code> if the user started/stopped a recording
-     * @return <code>true</code> if the {@link TimeRecorder} is working or
-     *         <code>false</code> if not
+     * @param comeOrGo <code>true</code> if the user started/stopped a come or go or <code>false</code> if the user started/stopped a recording
+     * @return a {@link UserInteractionResult}
      */
-   boolean handleUserInteraction(boolean comeOrGo);
+   UserInteractionResult handleUserInteraction(boolean comeOrGo);
 
    /**
     * Resumes a previously stopped recording
