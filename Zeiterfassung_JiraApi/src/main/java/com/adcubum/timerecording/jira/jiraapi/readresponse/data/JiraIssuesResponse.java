@@ -8,6 +8,13 @@ import com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.error.JiraErrorResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * Contains the json return element with all the jira issues
+ * Note that this {@link JiraIssueResponse} filters all done {@link JiraIssue}s by default
+ * 
+ * @author domin
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JiraIssuesResponse extends JiraErrorResponse {
 
@@ -28,16 +35,13 @@ public class JiraIssuesResponse extends JiraErrorResponse {
       this.issues = new ArrayList<>();
    }
 
-   /**
+   /*
     * Removes all {@link JiraIssue} which are a subtask
-    * 
-    * @return the {@link JiraIssuesResponse}
     */
-   public JiraIssuesResponse filterDoneTasks() {
-      this.issues = issues.stream()
+   private List<JiraIssue> filterDoneTasks(List<JiraIssue> issues) {
+      return issues.stream()
             .filter(JiraIssue::isNotDone)
             .collect(Collectors.toList());
-      return this;
    }
 
    public List<JiraIssue> getIssues() {
@@ -51,7 +55,7 @@ public class JiraIssuesResponse extends JiraErrorResponse {
    }
 
    public void setIssues(List<JiraIssue> issues) {
-      this.issues = issues;
+      this.issues = filterDoneTasks(issues);
    }
 
    /**
@@ -65,12 +69,15 @@ public class JiraIssuesResponse extends JiraErrorResponse {
    /**
     * Applies the issues of this {@link JiraIssuesResponse} and the other given {@link JiraIssueResponse}
     * 
+    * @return this {@link JiraIssueResponse}
+    * 
     * @param otherParseIssuesFromJira
     *        the other {@link JiraIssuesResponse}
     */
-   public void applyFromOther(JiraIssuesResponse otherParseIssuesFromJira) {
+   public JiraIssuesResponse applyFromOther(JiraIssuesResponse otherParseIssuesFromJira) {
       List<JiraIssue> allIssues = new ArrayList<>(issues);
       allIssues.addAll(otherParseIssuesFromJira.getIssues());
       setIssues(allIssues);
+      return this;
    }
 }
