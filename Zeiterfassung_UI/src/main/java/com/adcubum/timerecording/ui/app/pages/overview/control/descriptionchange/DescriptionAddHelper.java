@@ -6,6 +6,7 @@ package com.adcubum.timerecording.ui.app.pages.overview.control.descriptionchang
 import static com.adcubum.timerecording.core.work.businessday.ValueTypes.DESCRIPTION;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
@@ -88,7 +89,7 @@ public class DescriptionAddHelper {
 
       TextField field = new TextField();
       EventHandler<? super KeyEvent> keyEventHandler =
-            keyEvent -> handleKeyPressed(keyEvent, field, stage, businessDayIncTableRowValue.getNumberAsInt());
+            keyEvent -> handleKeyPressed(keyEvent, field, stage, businessDayIncTableRowValue.getId());
       initContent(stage, field, keyEventHandler, x, y);
       stage.show();
    }
@@ -105,12 +106,12 @@ public class DescriptionAddHelper {
       stage.setY(y);
    }
 
-   private void handleKeyPressed(KeyEvent keyEvent, TextField textField, Stage stage, int indexOfChangedEntry) {
+   private void handleKeyPressed(KeyEvent keyEvent, TextField textField, Stage stage, UUID id) {
       if (keyEvent.getCode() == KeyCode.ESCAPE) {
          stage.close();
          closeStageAndRefreshUI(stage, FinishAction.ABORT);
       } else if (keyEvent.getCode() == KeyCode.ENTER) {
-         handler.handleBusinessDayChanged(ChangedValue.of(indexOfChangedEntry, textField.getText(), DESCRIPTION));
+         handler.handleBusinessDayChanged(ChangedValue.of(id, textField.getText(), DESCRIPTION));
          closeStageAndRefreshUI(stage, FinishAction.FINISH);
       }
       keyEvent.consume();

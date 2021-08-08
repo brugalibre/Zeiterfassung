@@ -3,6 +3,7 @@
  */
 package com.adcubum.timerecording.core.work.businessday.vo;
 
+import java.util.UUID;
 import java.util.function.Function;
 
 import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
@@ -23,6 +24,7 @@ import com.adcubum.util.utils.StringUtil;
  */
 public class BusinessDayIncrementVOImpl implements BusinessDayIncrementVO {
 
+   private UUID id;
    private TimeSnippet currentTimeSnippet;
 
    private float totalDuration;
@@ -33,6 +35,7 @@ public class BusinessDayIncrementVOImpl implements BusinessDayIncrementVO {
    private Function<Integer, String> serviceCodeDescProvider;
 
    private BusinessDayIncrementVOImpl(BusinessDayIncrement businessDayIncremental) {
+      this.id = businessDayIncremental.getId();
       this.currentTimeSnippet = businessDayIncremental.getCurrentTimeSnippet();
       this.description = businessDayIncremental.getDescription();
       this.ticket = businessDayIncremental.getTicket();
@@ -45,6 +48,11 @@ public class BusinessDayIncrementVOImpl implements BusinessDayIncrementVO {
    private static Function<Integer, String> getSserviceCodeDescProvider() {
       ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       return serviceCodeAdapter::getServiceCodeDescription4ServiceCode;
+   }
+
+   @Override
+   public UUID getId() {
+      return id;
    }
 
    @Override

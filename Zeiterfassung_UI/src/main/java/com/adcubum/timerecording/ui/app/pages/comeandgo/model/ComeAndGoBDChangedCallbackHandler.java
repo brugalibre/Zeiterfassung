@@ -1,6 +1,7 @@
 package com.adcubum.timerecording.ui.app.pages.comeandgo.model;
 
 import java.util.LinkedList;
+import java.util.UUID;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
@@ -28,8 +29,8 @@ public class ComeAndGoBDChangedCallbackHandler implements BusinessDayChangedCall
    }
 
    @Override
-   public void handleBusinessDayIncrementDeleted(int index) {
-      defaultBusinessDayChangedCallbackHandler.handleBusinessDayIncrementDeleted(index);
+   public void handleBusinessDayIncrementDeleted(UUID id) {
+      defaultBusinessDayChangedCallbackHandler.handleBusinessDayIncrementDeleted(id);
    }
 
    /**

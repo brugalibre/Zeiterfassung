@@ -1,5 +1,7 @@
 package com.adcubum.timerecording.core.work.businessday.vo;
 
+import java.util.UUID;
+
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
@@ -34,5 +36,10 @@ public interface BusinessDayIncrementVO {
     * @see BusinessDayIncrementVO#getChargeType()
     */
    String getServiceCodeDescription4ServiceCode();
+
+   /**
+    * @return the id of this {@link BusinessDayIncrementVO}
+    */
+   UUID getId();
 
 }

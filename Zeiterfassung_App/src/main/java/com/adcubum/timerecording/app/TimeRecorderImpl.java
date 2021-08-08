@@ -5,6 +5,7 @@ package com.adcubum.timerecording.app;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
@@ -191,8 +192,8 @@ public class TimeRecorderImpl implements TimeRecorder {
    }
 
    @Override
-   public void removeIncrementAtIndex(int index) {
-      businessDay.removeIncrementAtIndex(index);
+   public void removeIncrement4Id(UUID id) {
+      businessDay.removeIncrement4Id(id);
       saveBusinessDay();
    }
 
@@ -382,6 +383,13 @@ public class TimeRecorderImpl implements TimeRecorder {
    public BusinessDayVO getBussinessDayVO() {
       synchronized (businessDay) {
          return BusinessDayVOImpl.of(businessDay);
+      }
+   }
+
+   @Override
+   public BusinessDay getBussinessDay() {
+      synchronized (businessDay) {
+         return businessDay;
       }
    }
 

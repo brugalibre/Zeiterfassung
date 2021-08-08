@@ -5,6 +5,7 @@ package com.adcubum.timerecording.ui.app.pages.overview.model.table;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
@@ -26,6 +27,7 @@ import javafx.scene.control.TableView;
 public class BusinessDayIncTableRowValue {
 
    private StringProperty numberProperty;
+   private ObjectProperty<UUID> idProperty;
    private StringProperty totalDurationProperty;
    private ObjectProperty<Ticket> ticketProperty;
    private StringProperty descriptionProperty;
@@ -37,11 +39,14 @@ public class BusinessDayIncTableRowValue {
 
    /**
     * Creates a new empty {@link BusinessDayIncTableRowValue}
+    * 
+    * @param id
     */
-   public BusinessDayIncTableRowValue() {
+   public BusinessDayIncTableRowValue(UUID id) {
       numberProperty = new SimpleStringProperty();
       totalDurationProperty = new SimpleStringProperty();
       ticketProperty = new SimpleObjectProperty<>();
+      idProperty = new SimpleObjectProperty<>(id);
       descriptionProperty = new SimpleStringProperty();
       chargeTypeProperty = new SimpleStringProperty();
       isBookedProperty = new SimpleStringProperty();
@@ -150,6 +155,14 @@ public class BusinessDayIncTableRowValue {
 
    public int getNumberAsInt() {
       return Integer.valueOf(getNumber()) - 1;// minus one, since the index start at 1
+   }
+
+   public UUID getId() {
+      return idProperty.get();
+   }
+
+   public void setId(UUID id) {
+      idProperty.set(id);
    }
 
    public ObjectProperty<Ticket> getTicketProperty() {

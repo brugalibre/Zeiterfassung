@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -110,8 +111,10 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       String newTicketNr = "ABES-1324";
       BusinessDayImpl businessDay = new BusinessDayImpl();
       businessDay.addBusinessIncrement(createUpdate(createTimeSnippet(3600 * 1000, 10), 113, getTicket4Nr()));
+      UUID id = businessDay.getIncrements().get(0).getId();
 
-      ChangedValue changeValue = ChangedValue.of(0, newTicketNr, ValueTypes.TICKET_NR);
+
+      ChangedValue changeValue = ChangedValue.of(id, newTicketNr, ValueTypes.TICKET_NR);
 
       // When
       Executable exe = () -> businessDay.changeBusinesDayIncrement(changeValue);
@@ -126,10 +129,10 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       // Given
       BusinessDayImpl businessDay = new BusinessDayImpl();
       businessDay.addBusinessIncrement(createUpdate(createTimeSnippet(3600 * 1000, 10), 113, getTicket4Nr()));
-
+      UUID id = businessDay.getIncrements().get(0).getId();
 
       // When
-      Executable exe = () -> ChangedValue.of(0, "", ValueTypes.NONE);
+      Executable exe = () -> ChangedValue.of(id, "", ValueTypes.NONE);
 
       // Then
       assertThrows(IllegalStateException.class, exe);
@@ -144,8 +147,9 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       BusinessDayImpl businessDay = new BusinessDayImpl();
       businessDay.addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+      UUID id = businessDay.getIncrements().get(0).getId();
 
-      ChangedValue changeValue = ChangedValue.of(0, newTicket, ValueTypes.TICKET);
+      ChangedValue changeValue = ChangedValue.of(id, newTicket, ValueTypes.TICKET);
 
       // When
       businessDay.changeBusinesDayIncrement(changeValue);
@@ -228,8 +232,9 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       BusinessDayImpl businessDay = new BusinessDayImpl();
       businessDay.addBusinessIncrement(firstInc);
+      UUID id = businessDay.getIncrements().get(0).getId();
 
-      ChangedValue changeValue = ChangedValue.of(0, newTotalBDDuration, ValueTypes.AMOUNT_OF_TIME);
+      ChangedValue changeValue = ChangedValue.of(id, newTotalBDDuration, ValueTypes.AMOUNT_OF_TIME);
 
       // When
       businessDay.changeBusinesDayIncrement(changeValue);
@@ -252,8 +257,9 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       BusinessDayImpl businessDay = new BusinessDayImpl();
       businessDay.addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+      UUID id = businessDay.getIncrements().get(0).getId();
 
-      ChangedValue changeValue = ChangedValue.of(0, newDescription, ValueTypes.DESCRIPTION);
+      ChangedValue changeValue = ChangedValue.of(id, newDescription, ValueTypes.DESCRIPTION);
 
       // When
       businessDay.changeBusinesDayIncrement(changeValue);
@@ -302,10 +308,11 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       BusinessDayImpl businessDay = new BusinessDayImpl();
       businessDay.addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+      UUID id = businessDay.getIncrements().get(0).getId();
       TestTimeSnippedChangedCallbackHandler callbackHandler = new TestTimeSnippedChangedCallbackHandler();
       businessDay.getIncrements().get(0).getCurrentTimeSnippet().setCallbackHandler(callbackHandler);
 
-      ChangedValue changeValue = ChangedValue.of(0, newBegin, ValueTypes.BEGIN);
+      ChangedValue changeValue = ChangedValue.of(id, newBegin, ValueTypes.BEGIN);
 
       // When
       businessDay.changeBusinesDayIncrement(changeValue);
@@ -328,8 +335,9 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       BusinessDayImpl businessDay = new BusinessDayImpl();
       businessDay.addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+      UUID id = businessDay.getIncrements().get(0).getId();
 
-      ChangedValue changeValue = ChangedValue.of(0, newBegin, ValueTypes.END);
+      ChangedValue changeValue = ChangedValue.of(id, newBegin, ValueTypes.END);
 
       // When
       businessDay.changeBusinesDayIncrement(changeValue);
@@ -351,8 +359,9 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       BusinessDayImpl businessDay = new BusinessDayImpl();
       businessDay.addBusinessIncrement(firstInc);
+      UUID id = businessDay.getIncrements().get(0).getId();
 
-      ChangedValue changeValue = ChangedValue.of(0, newTotalBDDuration, ValueTypes.AMOUNT_OF_TIME);
+      ChangedValue changeValue = ChangedValue.of(id, newTotalBDDuration, ValueTypes.AMOUNT_OF_TIME);
 
       // When
       businessDay.changeBusinesDayIncrement(changeValue);
@@ -377,8 +386,9 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       BusinessDayImpl businessDay = new BusinessDayImpl();
       businessDay.addBusinessIncrement(secondInc);
+      UUID id = businessDay.getIncrements().get(0).getId();
 
-      ChangedValue changeValue = ChangedValue.of(0, newTotalBDDuration, ValueTypes.AMOUNT_OF_TIME);
+      ChangedValue changeValue = ChangedValue.of(id, newTotalBDDuration, ValueTypes.AMOUNT_OF_TIME);
 
       // When
       businessDay.changeBusinesDayIncrement(changeValue);

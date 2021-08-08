@@ -50,8 +50,7 @@ public abstract class AbstractBusinessDayChangeHelper<T> implements EventHandler
          uiRefresher.onFinish(FinishAction.ABORT);
          return;
       }
-      int orderNumber = Integer.parseInt(businessDayIncTableCellValue.getNumber()) - 1;// minus one, since we start now counting with 1
-      handler.handleBusinessDayChanged(ChangedValue.of(orderNumber, newValue, valueType));
+      handler.handleBusinessDayChanged(ChangedValue.of(businessDayIncTableCellValue.getId(), newValue, valueType));
       uiRefresher.onFinish(FinishAction.FINISH);
    }
 

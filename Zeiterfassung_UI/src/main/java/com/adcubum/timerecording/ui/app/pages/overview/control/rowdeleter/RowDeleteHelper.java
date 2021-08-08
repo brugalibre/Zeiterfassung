@@ -54,7 +54,7 @@ public class RowDeleteHelper {
       Optional<BusinessDayIncTableRowValue> optionalBusinessDayIncTableRowValue =
             Optional.ofNullable(tableView.getSelectionModel().getSelectedItem());
       optionalBusinessDayIncTableRowValue.ifPresent(businessDayIncTableRowValue -> {
-         handler.handleBusinessDayIncrementDeleted(businessDayIncTableRowValue.getNumberAsInt());
+         handler.handleBusinessDayIncrementDeleted(businessDayIncTableRowValue.getId());
          afterDelete(event);
       });
    }

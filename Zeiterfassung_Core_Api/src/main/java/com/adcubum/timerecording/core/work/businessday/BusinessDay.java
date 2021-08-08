@@ -3,6 +3,7 @@ package com.adcubum.timerecording.core.work.businessday;
 import java.sql.Time;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayIncrementImport;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
@@ -59,13 +60,13 @@ public interface BusinessDay extends DomainModel {
    void stopCurrentIncremental();
 
    /**
-    * Removes the {@link BusinessDayIncrement} at the given index. If there is no
-    * {@link BusinessDayIncrement} for this index nothing is done
+    * Removes the {@link BusinessDayIncrement} for the given id. If there is no
+    * {@link BusinessDayIncrement} for this id, nothing is done
     * 
-    * @param index
-    *        the given index
+    * @param id
+    *        the given id
     */
-   void removeIncrementAtIndex(int index);
+   void removeIncrement4Id(UUID id);
 
    /**
     * Creates and adds a new {@link BusinessDayIncrement} for the given

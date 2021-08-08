@@ -144,13 +144,13 @@ public class TimeSnippetImpl implements TimeSnippet {
    @Override
    public void setBeginTimeStamp(Time beginTimeStamp) {
       this.beginTimeStamp = beginTimeStamp;
-      notifyCallbackHandler(ChangedValue.of(-1, getBeginTimeStampRep(), ValueTypes.BEGIN));
+      notifyCallbackHandler(ChangedValue.of(getBeginTimeStampRep(), ValueTypes.BEGIN));
    }
 
    @Override
    public void setEndTimeStamp(Time endTimeStamp) {
       this.endTimeStamp = endTimeStamp;
-      notifyCallbackHandler(ChangedValue.of(-1, getEndTimeStampRep(), ValueTypes.END));
+      notifyCallbackHandler(ChangedValue.of(getEndTimeStampRep(), ValueTypes.END));
    }
 
    @Override

@@ -1,5 +1,7 @@
 package com.adcubum.timerecording.core.work.businessday.update.callback;
 
+import java.util.UUID;
+
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
@@ -19,12 +21,12 @@ public interface BusinessDayChangedCallbackHandler extends ComeAndGoesUpdater {
    public void handleBusinessDayChanged(ChangedValue changeValue);
 
    /**
-    * Removes the {@link BusinessDayIncrement} at the given index
+    * Removes the {@link BusinessDayIncrement} with the given id
     * 
-    * @param index
-    *        the given index
+    * @param id
+    *        the id of the {@link BusinessDayIncrement} to delete
     */
-   public void handleBusinessDayIncrementDeleted(int index);
+   public void handleBusinessDayIncrementDeleted(UUID id);
 
    /**
     * Adds the given {@link BusinessDayIncrement} to the current

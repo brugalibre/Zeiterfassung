@@ -167,7 +167,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    }
 
    @Test
-   void testRemoveBusinessIncrementAtIndexOutOfBounds() {
+   void testRemoveBusinessIncrementWithUnknownId() {
       // Given
       String ticketNr = "SYRIUS-4321";
       String description = "Test";
@@ -178,7 +178,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
             .build();
 
       // When
-      tcb.timeRecorder.removeIncrementAtIndex(1);
+      tcb.timeRecorder.removeIncrement4Id(UUID.randomUUID());
 
       // Then
       BusinessDayVO bussinessDayVO = tcb.timeRecorder.getBussinessDayVO();
@@ -194,8 +194,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       // When
       BusinessDayVO bussinessDayVO = tcb.timeRecorder.getBussinessDayVO();
+      BusinessDayIncrementVO businessDayIncrementVO = tcb.timeRecorder.getBussinessDayVO().getBusinessDayIncrements().get(0);
       assertThat(bussinessDayVO.getBusinessDayIncrements().size(), is(1));
-      tcb.timeRecorder.removeIncrementAtIndex(0);
+      tcb.timeRecorder.removeIncrement4Id(businessDayIncrementVO.getId());
 
       // Then
       bussinessDayVO = tcb.timeRecorder.getBussinessDayVO();
@@ -407,8 +408,8 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
             .withBusinessDayIncrement(ticketNr, description, kindOfService, firstTimeBetweenStartAndStop)
             .build();
-
-      ChangedValue changeValue = ChangedValue.of(0, newDescription, ValueTypes.DESCRIPTION);
+      BusinessDayIncrementVO businessDayIncrementVO = tcb.timeRecorder.getBussinessDayVO().getBusinessDayIncrements().get(0);
+      ChangedValue changeValue = ChangedValue.of(businessDayIncrementVO.getId(), newDescription, ValueTypes.DESCRIPTION);
 
       // When
       tcb.timeRecorder.changeBusinesDayIncrement(changeValue);
@@ -429,8 +430,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
             .withBusinessDayIncrement("SYRIUS-11111", "Test", kindOfService, 3600 * 1000)
             .build();
+      BusinessDayIncrementVO businessDayIncrementVO = tcb.timeRecorder.getBussinessDayVO().getBusinessDayIncrements().get(0);
 
-      ChangedValue changeValue = ChangedValue.of(0, "111 - Meeting", ValueTypes.CHARGE_TYPE);
+      ChangedValue changeValue = ChangedValue.of(businessDayIncrementVO.getId(), "111 - Meeting", ValueTypes.CHARGE_TYPE);
 
       // When
       tcb.timeRecorder.changeBusinesDayIncrement(changeValue);
@@ -449,8 +451,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
             .withBusinessDayIncrement("SYRIUS-11111", "Test", currentServiceCode, 3600 * 1000)
             .build();
+      BusinessDayIncrementVO businessDayIncrementVO = tcb.timeRecorder.getBussinessDayVO().getBusinessDayIncrements().get(0);
 
-      ChangedValue changeValue = ChangedValue.of(0, "Schubedibuuu", ValueTypes.CHARGE_TYPE);
+      ChangedValue changeValue = ChangedValue.of(businessDayIncrementVO.getId(), "Schubedibuuu", ValueTypes.CHARGE_TYPE);
 
       // When
       tcb.timeRecorder.changeBusinesDayIncrement(changeValue);

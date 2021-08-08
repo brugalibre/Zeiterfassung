@@ -204,10 +204,11 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
-   public void removeIncrementAtIndex(int index) {
-      if (index >= 0 && index < increments.size()) {
-         increments.remove(index);
-      }
+   public void removeIncrement4Id(UUID id) {
+      getBusinessIncrement(id)
+            .ifPresent(businessDayIncrement -> {
+               increments.remove(businessDayIncrement);
+            });
    }
 
    @Override
@@ -249,7 +250,7 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public void changeBusinesDayIncrement(ChangedValue changeValue) {
-      Optional<BusinessDayIncrement> businessDayIncOpt = getBusinessIncrement(changeValue.getSequence());
+      Optional<BusinessDayIncrement> businessDayIncOpt = getBusinessIncrement(changeValue.getId());
       businessDayIncOpt.ifPresent(businessDayIncrement -> handleBusinessDayChangedInternal(businessDayIncrement, changeValue));
    }
 
@@ -315,14 +316,10 @@ public class BusinessDayImpl implements BusinessDay {
       return id;
    }
 
-   private Optional<BusinessDayIncrement> getBusinessIncrement(int orderNr) {
-      BusinessDayIncrement businessDayIncremental = null;
-      for (int i = 0; i < increments.size(); i++) {
-         if (orderNr == i) {
-            businessDayIncremental = increments.get(i);
-         }
-      }
-      return Optional.ofNullable(businessDayIncremental);
+   private Optional<BusinessDayIncrement> getBusinessIncrement(UUID id) {
+      return increments.stream()
+            .filter(businessDayIncrements -> businessDayIncrements.getId().equals(id))
+            .findFirst();
    }
 
    /**

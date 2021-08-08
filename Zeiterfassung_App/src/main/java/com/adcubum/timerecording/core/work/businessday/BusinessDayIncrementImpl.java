@@ -197,7 +197,8 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     */
    public static BusinessDayIncrement of(BusinessDayIncrementAdd update) {
 
-      BusinessDayIncrement businessDayIncremental = new BusinessDayIncrementImpl();
+      BusinessDayIncrementImpl businessDayIncremental = new BusinessDayIncrementImpl();
+      businessDayIncremental.id = update.getId();
       businessDayIncremental.setDescription(update.getDescription());
       businessDayIncremental.setTicket(update.getTicket());
       businessDayIncremental.setChargeType(update.getKindOfService());

@@ -3,6 +3,8 @@ package com.adcubum.timerecording.core.work.businessday.update.callback.impl;
 import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
+import java.util.UUID;
+
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
@@ -16,23 +18,23 @@ import com.adcubum.timerecording.jira.data.ticket.Ticket;
  */
 public class ChangedValue {
 
-   private int sequence; // the sequence of the increment
+   private UUID id; // the id of the increment
    private String newValue; // When description, begin or end has changed
    private Ticket newTicket; // When the Ticket itself has changed
    private ValueTypes valueTypes;
 
-   private ChangedValue(int sequence, String newValue, Ticket newTicket, ValueTypes valueTypes) {
+   private ChangedValue(UUID id, String newValue, Ticket newTicket, ValueTypes valueTypes) {
       if (isNull(newTicket) && isNull(newValue)) {
          throw new IllegalStateException("New Ticket and new String value must not both be null!");
       }
-      this.sequence = sequence;
+      this.id = requireNonNull(id);
       this.newTicket = newTicket;
       this.newValue = newValue;
       this.valueTypes = valueTypes;
    }
 
-   public int getSequence() {
-      return sequence;
+   public UUID getId() {
+      return id;
    }
 
    public String getNewValue() {
@@ -47,10 +49,14 @@ public class ChangedValue {
       return newTicket;
    }
 
-   public static ChangedValue of(int orderNumber, Object newValue, ValueTypes valueType) {
+   public static ChangedValue of(UUID id, Object newValue, ValueTypes valueType) {
       Ticket ticket = castNewValue2Ticket(valueType, newValue);
       String newValue4Type = castNewValue2String(valueType, newValue);
-      return new ChangedValue(orderNumber, newValue4Type, ticket, valueType);
+      return new ChangedValue(id, newValue4Type, ticket, valueType);
+   }
+
+   public static ChangedValue of(Object newValue, ValueTypes valueType) {
+      return of(UUID.randomUUID(), newValue, valueType);
    }
 
    private static Ticket castNewValue2Ticket(ValueTypes valueType, Object newValue) {

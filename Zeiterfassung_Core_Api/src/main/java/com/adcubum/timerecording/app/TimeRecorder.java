@@ -1,6 +1,7 @@
 package com.adcubum.timerecording.app;
 
 import java.io.File;
+import java.util.UUID;
 
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
@@ -82,10 +83,10 @@ public interface TimeRecorder {
     * Removes the {@link BusinessDayIncrement} at the given index. If there is no
     * {@link BusinessDayIncrement} for this index nothing is done
     * 
-    * @param index
+    * @param id
     *        the given index
     */
-   void removeIncrementAtIndex(int index);
+   void removeIncrement4Id(UUID id);
 
    /**
     * According to the given {@link ChangedValue} the corresponding
@@ -238,5 +239,8 @@ public interface TimeRecorder {
     */
    BusinessDayVO getBussinessDayVO();
 
+   BusinessDay getBussinessDay();
+
    void setCallbackHandler(UiCallbackHandler callbackHandler);
+
 }

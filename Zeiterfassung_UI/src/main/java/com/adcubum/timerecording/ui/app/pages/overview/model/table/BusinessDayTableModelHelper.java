@@ -221,7 +221,7 @@ public class BusinessDayTableModelHelper {
          boolean isDescriptionTitleNecessary, int no) {
       // create Cells for the introduction of a BD-inc.
 
-      BusinessDayIncTableRowValue businessDayIncTableCellValue = new BusinessDayIncTableRowValue();
+      BusinessDayIncTableRowValue businessDayIncTableCellValue = new BusinessDayIncTableRowValue(bussinessDayIncremental.getId());
 
       businessDayIncTableCellValue.setNumber(String.valueOf(no));
       businessDayIncTableCellValue.setTotalDuration(bussinessDayIncremental.getTotalDurationRep());
