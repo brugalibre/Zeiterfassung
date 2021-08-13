@@ -305,10 +305,9 @@ public class BusinessDayImpl implements BusinessDay {
    public String getCapturingInactiveSinceMsg() {
       TimeSnippet endPoint = getLastTimeSnippet();
       if (endPoint != null) {
-         return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INCTIVE_SINCE + " "
-               + endPoint.getEndTimeStamp();
+         return TextLabel.CAPTURING_INCTIVE_SINCE + " " + endPoint.getEndTimeStamp();
       }
-      return TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE;
+      return TextLabel.CAPTURING_INACTIVE;
    }
 
    @Override

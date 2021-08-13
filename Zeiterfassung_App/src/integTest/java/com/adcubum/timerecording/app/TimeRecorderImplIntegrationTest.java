@@ -484,7 +484,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testGetInfoStringForStateNotWorking() {
 
       // Given
-      String expectedInfoStatePrefix = "Adcubum Zeiterfassung: Zeiterfassung inaktiv seit: ";
+      String expectedInfoStatePrefix = "Zeiterfassung inaktiv seit: ";
       TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
             .withBusinessDayIncrement("SYRIUS-1234", "Test", 113, 3600 * 1000)
             .build();
@@ -501,7 +501,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       // Given
       TimeRecorderImpl timeRecorderImpl = mockTimeRecorderImpl();
-      String expectedInfoStatePrefix = TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE;
+      String expectedInfoStatePrefix = TextLabel.CAPTURING_INACTIVE;
       // When
       String infoStringForStateNotWorking = timeRecorderImpl.getInfoStringForState();
 
