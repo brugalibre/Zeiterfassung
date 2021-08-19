@@ -3,6 +3,8 @@
  */
 package com.adcubum.timerecording.core.work.businessday;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,11 +16,12 @@ import java.util.function.Supplier;
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayIncrementImport;
-import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrementImpl.TimeStampComparator;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
+import com.adcubum.timerecording.core.work.businessday.compare.BusinessDayIncrementComparator;
+import com.adcubum.timerecording.core.work.businessday.compare.TimeStampComparator;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.settings.round.TimeRounder;
@@ -170,7 +173,9 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public List<BusinessDayIncrement> getIncrements() {
-      return increments;
+      List<BusinessDayIncrement> incrementsCopy = new ArrayList<>(increments);
+      Collections.sort(incrementsCopy, new BusinessDayIncrementComparator());
+      return incrementsCopy;
    }
 
    @Override

@@ -7,7 +7,6 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -180,15 +179,6 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    @Override
    public void updateEndTimeSnippetAndCalculate(String newTimeStampValue) {
       currentTimeSnippet.updateAndSetEndTimeStamp(newTimeStampValue, true);
-   }
-
-   public static class TimeStampComparator implements Comparator<TimeSnippet> {
-      @Override
-      public int compare(TimeSnippet timeSnippet, TimeSnippet timeSnippet2) {
-         Time beginTimeStamp1 = timeSnippet.getBeginTimeStamp();
-         Time beginTimeStamp2 = timeSnippet2.getBeginTimeStamp();
-         return beginTimeStamp1.compareTo(beginTimeStamp2);
-      }
    }
 
    /**

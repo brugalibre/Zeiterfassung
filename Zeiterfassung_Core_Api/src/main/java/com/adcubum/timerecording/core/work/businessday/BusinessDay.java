@@ -166,6 +166,9 @@ public interface BusinessDay {
    BusinessDayIncrement getCurrentBussinessDayIncremental();
 
    /**
+    * Returns all {@link BusinessDayIncrement} of this {@link BusinessDay} ordered, so that the order of the {@link BusinessDayIncrement}s
+    * depends on the {@link TimeSnippet} respectively depends on the time stamp of their {@link TimeSnippet}s
+    * 
     * @return all {@link BusinessDayIncrement} of this {@link BusinessDay}
     */
    List<BusinessDayIncrement> getIncrements();
