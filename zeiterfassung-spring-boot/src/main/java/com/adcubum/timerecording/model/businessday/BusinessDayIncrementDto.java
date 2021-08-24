@@ -61,7 +61,7 @@ public class BusinessDayIncrementDto {
    private static String evalDescription(String givenDescription) {
       String description;
       if (StringUtil.isEmptyOrNull(givenDescription)) {
-         description = "                  ";
+         description = "                ";
       } else {
          description = givenDescription;
       }

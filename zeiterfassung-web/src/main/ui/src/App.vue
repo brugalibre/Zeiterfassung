@@ -1,16 +1,15 @@
 <template>
   <div id="app">
-    <img width="25%" src="./assets/logo.png">
+    <ZeiterfassungDashboard class="zeiterfassungDashboard"/>
     <ZeiterfassungOverview
       class="zeiterfassungOverview"
-      @refreshUi="refreshRequested"
       :key="overviewKey"
+      @refreshUi="refreshRequested"
     />
     <SetActualHoursComparison
       class="setActualHoursComparison"
       :key="setActualHoursComparisonKey"
     />
-    <ZeiterfassungDashboard class="zeiterfassungDashboard"/>
     <ZeiterfassungRecordingStatus
       class="zeiterfassungRecordingStatus"
       :key="zeiterfassungStatusKey"
@@ -119,28 +118,28 @@ export default {
   .zeiterfassungDashboard{
     position: fixed;
     top: 20%;
-    left: 50%;
+    left: 45%;
     transform: translate(-50%, -50%);
   }
 
   .setActualHoursComparison{
     position: fixed;
-    top: 33%;
-    left: 82%;
+    top: 50%;
+    left: 75%;
   }
 
   .zeiterfassungRecordingStatus{
     position: fixed;
     width: 20%;
     top: 33%;
-    left: 20%;
+    left: 15%;
   }
 
   .zeiterfassungOverview{
     position: fixed;
     width: 50%;
     top: 50%;
-    left: 20%;
+    left: 15%;
   }
 
 </style>

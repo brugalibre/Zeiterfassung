@@ -1,14 +1,14 @@
-package com.adcubum.timerecording.model.setactual;
+package com.adcubum.timerecording.model.businessdayconfig;
 
-import com.adcubum.timerecording.app.setactual.SetActualWorkingHours;
+import com.adcubum.timerecording.app.businessdayconfig.BusinessDayConfig;
 import com.adcubum.util.parser.NumberFormat;
 
-public class SetActualWorkingHoursDto {
+public class BusinessDayConfigDto {
 
    private String hoursLeft;
    private String actualHours;
 
-   public SetActualWorkingHoursDto(SetActualWorkingHours setActualWorkingHours, float actualHours) {
+   public BusinessDayConfigDto(BusinessDayConfig setActualWorkingHours, float actualHours) {
       this.hoursLeft = NumberFormat.format(setActualWorkingHours.getHoursLeft(actualHours));
       this.actualHours = NumberFormat.format(actualHours);
    }

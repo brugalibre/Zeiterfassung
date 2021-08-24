@@ -13,7 +13,8 @@
       v-bind:initEndTimeStampRepresentation="endTimeStampRepresentation"
       v-if="isAddBusinessDayIncrementActive"
       @businessDayIncrementAdded="refreshUiState"
-      @resumed="refreshUiState">
+      @resumed="refreshUiState"
+    >
     </add-businessday-increment>
     <error-box v-if="postErrorDetails">
       {{postErrorDetails}}
@@ -25,9 +26,10 @@
   import AddNewBusinessDayIncrement from '../components/AddNewBusinessDayIncrement.vue';
   import ErrorBox from '../components/ErrorBox.vue';
   import timeRecorderApi from '../mixins/TimeRecorderApi';
+  import appApi from '../mixins/AppApi';
   export default {
     name: 'ZeiterfassungRecordingStatus',
-    mixins: [timeRecorderApi],
+    mixins: [timeRecorderApi, appApi],
     components: {
       'add-businessday-increment': AddNewBusinessDayIncrement,
       'error-box': ErrorBox
@@ -47,18 +49,16 @@
     },
     methods: {
       bookAndRefresh: function(){
-        // call the actual api for booking and reload ui afterwards
         this.book();
-        this.$emit('refreshUi', false);
+        this.requestUiRefresh();
       },
       startStopRecordingAndRefresh: function(){
-        // call the actual api for start/stop and reload ui afterwards
         this.startStopRecording();
-        this.fetchTimeRecorderDto();
+        this.fetchTimeRecorderDto();// only 'refresh' this view
       },
       refreshUiState: function(){
         console.log("ZeiterfassungRecordStatus: refreshUiStates");
-        this.$emit('refreshUi', false);
+        this.requestUiRefresh();
       },
   },
   mounted() {
@@ -66,15 +66,9 @@
   }
 }
 </script>
-
 <style scoped>
-
   .deleteAllButton{
     margin-right: 1em
-  }
-
-  .isBookedRecord{
-    background-color:lightslategray
   }
 
   .isNotRecording{
@@ -84,5 +78,4 @@
   .isRecording{
     background-color: #90EE90;
   }
-
 </style>

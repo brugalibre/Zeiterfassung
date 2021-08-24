@@ -14,11 +14,11 @@
       </tr>
       <tr v-for="businessDayIncrement in businessDay.businessDayIncrementDtos" :key="businessDayIncrement.id" v-bind:class="{ isBookedRecord: businessDayIncrement.isBooked}" >
         <td>
-          <div v-show="!businessDayIncrement.isDurationRepEditable">
+          <div v-show="!businessDayIncrement.isDurationRepEditable||businessDayIncrement.isBooked">
             <label @click="businessDayIncrement.isDurationRepEditable=true;">{{businessDayIncrement.timeSnippetDto.durationRep}} </label>
           </div>
             <input name="durationRep"
-              v-show="businessDayIncrement.isDurationRepEditable"
+              v-show="businessDayIncrement.isDurationRepEditable&&!businessDayIncrement.isBooked"
               v-model="businessDayIncrement.timeSnippetDto.durationRep"
               v-on:blur= "businessDayIncrement.isDurationRepEditable=false;"
               @keydown.esc="businessDayIncrement.isDurationRepEditable=false"
@@ -26,11 +26,11 @@
             />
         </td>
         <td>
-          <div class="ticketNrCell" v-show="!businessDayIncrement.isTicketNrEditable">
+          <div class="ticketNrCell" v-show="!businessDayIncrement.isTicketNrEditable||businessDayIncrement.isBooked">
             <label @click="businessDayIncrement.isTicketNrEditable=true;">{{businessDayIncrement.ticketDto.ticketNr}} </label>
           </div>
           <ticket-nr-input-field
-            v-show="businessDayIncrement.isTicketNrEditable"
+            v-show="businessDayIncrement.isTicketNrEditable&&!businessDayIncrement.isBooked"
             v-model="businessDayIncrement.ticketDto.ticketNr"
             v-bind:initTicketNr="businessDayIncrement.ticketDto.ticketNr"
             v-on:blur="businessDayIncrement.isTicketNrEditable=false"
@@ -42,11 +42,12 @@
           </ticket-nr-input-field>
         </td>
         <td class="editableTableCell">
-        <div v-show="!businessDayIncrement.isDescriptionEditable">
+        <div v-show="!businessDayIncrement.isDescriptionEditable||businessDayIncrement.isBooked">
           <label @click="businessDayIncrement.isDescriptionEditable=true;">{{businessDayIncrement.description}} </label>
         </div>
           <input name="description"
-            v-show="businessDayIncrement.isDescriptionEditable"
+            class="description"
+            v-show="businessDayIncrement.isDescriptionEditable&&!businessDayIncrement.isBooked"
             v-model="businessDayIncrement.description"
             v-on:blur="businessDayIncrement.isDescriptionEditable=false;"
             @keydown.esc="businessDayIncrement.isDescriptionEditable=false"
@@ -54,33 +55,33 @@
           />
         </td>
         <td>
-          <div v-show="!businessDayIncrement.isBeginTimeStampEditable">
+          <div v-show="!businessDayIncrement.isBeginTimeStampEditable||businessDayIncrement.isBooked">
           <label @click="businessDayIncrement.isBeginTimeStampEditable=true;">{{businessDayIncrement.timeSnippetDto.beginTimeStampRepresentation}} </label>
         </div>
           <input type="time" id="beginTimeStamp" name="beginTimeStamp"
-            v-show="businessDayIncrement.isBeginTimeStampEditable"
+            v-show="businessDayIncrement.isBeginTimeStampEditable&&!businessDayIncrement.isBooked"
             v-model="businessDayIncrement.timeSnippetDto.beginTimeStampRepresentation"
             @keydown.esc="businessDayIncrement.isBeginTimeStampEditable=false"
             @keyup.enter="businessDayIncrement.isBeginTimeStampEditable=false;changeBusinessDayIncrementAndRefresh(businessDayIncrement)"
             />
         </td>
         <td>
-          <div v-show="!businessDayIncrement.isEndTimeStampEditable">
+          <div v-show="!businessDayIncrement.isEndTimeStampEditable||businessDayIncrement.isBooked">
             <label @click="businessDayIncrement.isEndTimeStampEditable=true;">{{businessDayIncrement.timeSnippetDto.endTimeStampRepresentation}} </label>
           </div>
           <input type="time" id="beginTimeStamp" name="beginTimeStamp"
-            v-show="businessDayIncrement.isEndTimeStampEditable"
+            v-show="businessDayIncrement.isEndTimeStampEditable&&!businessDayIncrement.isBooked"
             v-model="businessDayIncrement.timeSnippetDto.endTimeStampRepresentation"
             @keydown.esc="businessDayIncrement.isEndTimeStampEditable=false"
             @keyup.enter="businessDayIncrement.isBeginTimeStampEditable=false;changeBusinessDayIncrementAndRefresh(businessDayIncrement)"
             />
         </td>
         <td>
-          <div class="serviceCodeCell" v-show="!businessDayIncrement.isServiceCodeEditable">
+          <div class="serviceCodeCell" v-show="!businessDayIncrement.isServiceCodeEditable||businessDayIncrement.isBooked">
             <label @click="businessDayIncrement.isServiceCodeEditable=true;">{{businessDayIncrement.serviceCodeDto.representation}} </label>
           </div>
           <service-code-select
-            v-show="businessDayIncrement.isServiceCodeEditable"
+            v-show="businessDayIncrement.isServiceCodeEditable&&!businessDayIncrement.isBooked"
             v-bind:ticketNr="businessDayIncrement.ticketDto.ticketNr"
             v-bind:initialServiceCode="businessDayIncrement.serviceCodeDto.value"
             v-bind:initialServiceCodeRepresentation="businessDayIncrement.serviceCodeDto.representation"
@@ -92,8 +93,12 @@
           </service-code-select>
         </td>
         <td>{{businessDayIncrement.isBooked ? 'Ja' : 'Nein'}}</td>
-        <td><button class="deleteButton" v-on:click="deleteBusinessDayIncrementAndRefresh(businessDayIncrement)">
-          <img src='../assets/white_trash.png'></button></td>
+        <td>
+          <button
+            class="deleteButton"
+            v-on:click="deleteBusinessDayIncrementAndRefresh(businessDayIncrement)">
+          </button>
+        </td>
       </tr>
     </table>
     <p>Gesamt Anzahl Stunden: {{businessDay.totalDurationRep}}h</p>
@@ -109,13 +114,14 @@
 <script>
 import timeRecorderApi from '../mixins/TimeRecorderApi';
 import businessDayApi from '../mixins/BusinessDayApi';
+import appApi from '../mixins/AppApi';
 import ServiceCodeSelect from '../components/ServiceCodeSelect.vue';
 import TicketNrInputField from '../components/TicketNrInputField.vue';
 import ErrorBox from '../components/ErrorBox.vue';
 
 export default {
   name: 'ZeiterfassungOverview',
-  mixins: [timeRecorderApi, businessDayApi],
+  mixins: [timeRecorderApi, businessDayApi, appApi],
   components: {
     'service-code-select': ServiceCodeSelect,
     'ticket-nr-input-field': TicketNrInputField,
@@ -137,15 +143,15 @@ export default {
     },
     deleteBusinessDayIncrementAndRefresh: function(businessDayIncrement){
       this.deleteBusinessDayIncrement(businessDayIncrement);
-      this.$emit('refreshUi', false);
+      this.requestUiRefresh();
     },
     deleteAllAndRefresh: function(){
       this.deleteAll();
-      this.$emit('refreshUi', false);
+      this.requestUiRefresh();
     },
     changeBusinessDayIncrementAndRefresh: function(businessDayIncrement){
       this.changeBusinessDayIncrement(businessDayIncrement);
-      this.$emit('refreshUi', false);
+      this.requestUiRefresh();
     },
   },
   mounted() {
@@ -159,25 +165,24 @@ export default {
   .serviceCodeCell{
     width: 225px;
   }
+
   .ticketNrCell{
     width: 125px;
   }
 
-  .deleteButton img{
-    width: 150%;
-    height: 150%;
-    left:50%;
-    right:50%;
-    transform: translate(-15%, 0%);
-    padding: 0px 0px;
-    margin: 0px;
-    padding:0px;
+  .deleteButton{
+    padding: 0;
+    margin: 0;
+    height: 4vh;
+    width: 4vh;
+    vertical-align: center;
+    cursor:pointer;
+    background: url("../assets/white_trash.png") #004587 no-repeat center center;
+    background-size: 200% 125%;
   }
-  .deleteButton {
-    margin: 0px;
-    padding:0px;
-    height: 75%;
-    width: 75%;
+
+  .description{
+    width: 150px;
   }
 
   .isBookedRecord{

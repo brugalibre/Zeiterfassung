@@ -39,8 +39,8 @@
             ticketNr: businessDayIncrement.ticketNr,
         },
         timeSnippetDto: {
-            beginTimeStampRepresentation: businessDayIncrement.beginTimeStampRepresentation,
-            endTimeStampRepresentation: businessDayIncrement.endTimeStampRepresentation
+            beginTimeStampRepresentation: businessDayIncrement.beginTimeValue.timeRepresentation,
+            endTimeStampRepresentation: businessDayIncrement.endTimeValue.timeRepresentation
         },
       })
     };
@@ -61,7 +61,6 @@
           return data;
         }
       }).catch(error => console.error("Error occurred while adding a new businessDayIncrement", error));
-      this.$emit('businessDayIncrementAdded');
     },
     changeBusinessDayIncrement: function(businessDayIncrement){
       const requestOptions = {

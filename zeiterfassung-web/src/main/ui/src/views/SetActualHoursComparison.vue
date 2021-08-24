@@ -1,13 +1,13 @@
 <template>
-<div>
-    <h2>{{ title }}</h2>
-    <p></p>
+<div >
+  <h2>{{ title }}</h2>
     <pie-chart
-    id="set-actual-pie-chart"
+      class="pieChart"
+      id="set-actual-pie-chart"
       legend="bottom"
-      width="250px" height="250px"
+      width="230px" height="230px"
       donut="true"
-      :precision="1"
+      :round="2"
       :colors="['#004587', '#358fe6']"
       :data="setActualWorkingPieChartData"
       >
@@ -16,18 +16,25 @@
 </template>
 
 <script>
-import setActualWorkingHoursApi from '../mixins/SetActualWorkingHoursApi';
+import setActualWorkingPieApi from '../mixins/SetActualWorkingPieApi';
 
 export default {
   name: 'SetActualComparison',
-  mixins: [setActualWorkingHoursApi],
+  mixins: [setActualWorkingPieApi],
   data() {
     return {
       title: 'Soll/Ist-Stundenvergleich',
     }
   },
   mounted() {
-    this.fetchSetActualWorkingHoursDto();
+    this.fetchSetActualWorkingPieChartData();
   }
 }
 </script>
+<style>
+  .pieChart{
+    position: fixed;
+    top: 60%;
+    left: 77%;
+  }
+</style>

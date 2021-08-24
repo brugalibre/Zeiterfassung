@@ -1,14 +1,14 @@
-const setActualWorkingHoursApiUrl = "/api/v1/setactualworkinghours";
+const businessDayConfigApiUrl = "/api/v1/businessdayconfig";
 export default {
-  name: 'setActualWorkingHours',
+  name: 'setActualWorkingPieApi',
   data (){
     return {
       setActualWorkingPieChartData: {},
     }
   },
   methods: {
-    fetchSetActualWorkingHoursDto: function(){
-      fetch(setActualWorkingHoursApiUrl)
+    fetchSetActualWorkingPieChartData: function(){
+      fetch(businessDayConfigApiUrl)
         .then(response => response.json())
         .then(data => {
           this.setActualWorkingHoursDto = data;

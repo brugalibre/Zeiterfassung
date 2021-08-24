@@ -33,25 +33,30 @@
       </p>
       <p class="container">
         <label for="von">Von: </label>
-        <input
+        <time-input-field
           id="beginTimeStamp"
+          @timeRepChanged="onBeginTimeRepChanged"
           required
-          v-model="businessDayIncrement.beginTimeStampRepresentation"
-          type="time"
+          v-model="businessDayIncrement.beginTimeValue"
+          v-bind:initTimeRepresentation="businessDayIncrement.beginTimeValue.timeRepresentation"
           name="beginTimeStamp"
-        />
+        >
+        </time-input-field>
         <label for="upto">Bis: </label>
-        <input
+        <time-input-field
           id="endTimeStamp"
+          @timeRepChanged="onEndTimeRepChanged"
           required
-          v-model="businessDayIncrement.endTimeStampRepresentation"
-          type="time"
+          v-model="businessDayIncrement.endTimeValue"
+          v-bind:initTimeRepresentation="businessDayIncrement.endTimeValue.timeRepresentation"
           name="endTimeStamp"
-        />
+        >
+        </time-input-field>
       </p>
       <p>
         <label>Dauer: </label>
         <input
+          class="timeInputField"
           id="duration"
           type="number"
           required
@@ -61,61 +66,86 @@
         <label> h</label>
       </p>
       <p class="container containerElement100">
-        <button class="containerElement" :disabled="isSubmitButtonDisabled" v-on:click="addBusinessDayIncrement(businessDayIncrement)">Speichern</button>
+        <button class="containerElement" :disabled="isSubmitButtonDisabled" v-on:click="addBusinessDayIncrementAndRefresh(businessDayIncrement)">Speichern</button>
         <button class="containerElement" v-on:click="resume">Abbrechen</button>
       </p>
     </div>
+    <error-box v-if="postErrorDetails">
+      {{postErrorDetails}}
+    </error-box>
 	</div>
 </template>
 <script>
 import timeRecorderApi from '../mixins/TimeRecorderApi';
 import businessDayApi from '../mixins/BusinessDayApi';
 import dateCalculation from '../mixins/DateCalculation';
+import appApi from '../mixins/AppApi';
+
+import ErrorBox from './ErrorBox.vue';
 import ServiceCodeSelect from './ServiceCodeSelect.vue';
+import TimeInputField from './TimeInputField.vue';
 import TicketNrInputField from './TicketNrInputField.vue';
 
 export default {
   name: 'AddNewBusinessDayIncrement',
-  mixins: [timeRecorderApi, businessDayApi, dateCalculation],
+  mixins: [timeRecorderApi, businessDayApi, dateCalculation, appApi],
   components: {
     'service-code-select': ServiceCodeSelect,
-    'ticket-nr-input-field': TicketNrInputField
+    'time-input-field': TimeInputField,
+    'ticket-nr-input-field': TicketNrInputField,
+    'error-box': ErrorBox
   },
   props: ['initBeginTimeStampRepresentation', 'initEndTimeStampRepresentation'],
   data (){
     return {
       businessDayIncrement : {
-        currentDuration: '',
+        currentDuration: 0,
         ticketNr: 'SYRIUS',
         description: '',
         serviceCodeDto: {
           value: '',
           representation: '',
         },
-        beginTimeStampRepresentation: this.initBeginTimeStampRepresentation,
-        endTimeStampRepresentation: this.initEndTimeStampRepresentation,
+        beginTimeValue: {
+          timeRepresentation: this.initBeginTimeStampRepresentation,
+          timeValue: null,
+        },
+        endTimeValue: {
+          timeRepresentation: this.initEndTimeStampRepresentation,
+          timeValue: null,
+        },
         possibleServiceCodes: '',
       }
     }
   },
   watch: {
-    'businessDayIncrement.currentDuration': function (newVal, oldVal){
+    'businessDayIncrement.currentDuration': function(newVal, oldVal){
       console.log("Changed duration from old '" + oldVal + ", to new '" + newVal);
-      this.businessDayIncrement.endTimeStampRepresentation = this.calculateDateFromDuration(this.businessDayIncrement.beginTimeStampRepresentation,
-        this.businessDayIncrement.endTimeStampRepresentation, newVal);
-    },
-    'businessDayIncrement.beginTimeStampRepresentation': function (newVal, oldVal){
-      console.log("Changed begin-time from old '" + oldVal + ", to new '" + newVal);
-      this.businessDayIncrement.currentDuration = this.beginOrEndTimeStampChanged(newVal,
-        this.businessDayIncrement.endTimeStampRepresentation, this.businessDayIncrement.currentDuration);
-    },
-    'businessDayIncrement.endTimeStampRepresentation': function (newVal, oldVal){
-      console.log("Changed end-time from old '" + oldVal + ", to new '" + newVal);
-      this.businessDayIncrement.currentDuration = this.beginOrEndTimeStampChanged(this.businessDayIncrement.beginTimeStampRepresentation,
-        newVal, this.businessDayIncrement.currentDuration );
+      var newEndTimeValue = this.calculateDateFromDuration(this.businessDayIncrement.beginTimeValue.timeValue, newVal);
+      this.businessDayIncrement.endTimeValue.timeValue = newEndTimeValue.timeValue;
+      this.businessDayIncrement.endTimeValue.timeRepresentation = newEndTimeValue.timeRepresentation;
     },
   },
   methods: {
+    addBusinessDayIncrementAndRefresh: function(businessDayIncrement){
+      this.addBusinessDayIncrement(businessDayIncrement);
+      this.requestUiRefresh();
+      console.log("Request refresh");
+    },
+    onBeginTimeRepChanged: function(beginTimeValue){
+      console.log("On-Begin-Time-Rep-Changed '" + beginTimeValue.timeValue + ", amount of Hours '" + beginTimeValue.timeValue.getHours() + "', amount of minutes '" + beginTimeValue.timeValue.getMinutes() +"'");
+      this.businessDayIncrement.beginTimeValue = beginTimeValue;
+      if (this.businessDayIncrement.endTimeValue.timeValue !== null){
+        this.businessDayIncrement.currentDuration = this.beginOrEndTimeStampChanged (beginTimeValue.timeValue, this.businessDayIncrement.endTimeValue.timeValue);
+      }
+    },
+    onEndTimeRepChanged: function(endTimeValue){
+      console.log("On-End-Time-Rep-Changed '" + endTimeValue + ", amount of Hours '" + endTimeValue.timeValue.getHours()+ "', amount of minutes '" + endTimeValue.timeValue.getMinutes() +"'");
+      this.businessDayIncrement.endTimeValue = endTimeValue;
+      if (this.businessDayIncrement.beginTimeValue.timeValue !== null){
+        this.businessDayIncrement.currentDuration = this.beginOrEndTimeStampChanged(this.businessDayIncrement.beginTimeValue.timeValue, endTimeValue.timeValue);
+      }
+    },
     onTicketNrChanged: function(newTicketNr){
       this.businessDayIncrement.ticketNr = newTicketNr;
     },
@@ -123,7 +153,8 @@ export default {
   computed: {
     isSubmitButtonDisabled: function() {
       return !this.businessDayIncrement.ticketNr || !this.businessDayIncrement.serviceCodeDto.value
-        || !this.businessDayIncrement.beginTimeStampRepresentation || !this.businessDayIncrement.endTimeStampRepresentation;
+        || !this.businessDayIncrement.endTimeValue.timeRepresentation || !this.businessDayIncrement.beginTimeValue.timeRepresentation
+        || this.businessDayIncrement.currentDuration <= 0;
     },
   },
 }
@@ -136,23 +167,23 @@ export default {
   }
 
   .border{
-    top: 0;
-    left: 0;
     border: 10px;
-    border-width: 10px;
-    border-color: red
+    border-width: 2px;
+    border-color: black;
+  }
 
+  .timeInputField{
+    width: 5vh;
   }
 
   .inputForm{
     position: fixed;
     top: 50%;
-    left: 35%;
+    left: 33.33%;
     transform: translate(-50%, -50%);
   }
 
   .blurBackground{
-    /* background: red; */
     background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(8px);
     height: 100vh;
