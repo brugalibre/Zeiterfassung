@@ -18,7 +18,6 @@ import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklog;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.NumberFormat;
@@ -228,12 +227,6 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
          businessDayIncremental.stopCurrentTimeSnippet(timeSnippet.getEndTimeStamp());
       }
       return businessDayIncremental;
-   }
-
-   @Override
-   public boolean isBefore(Time time2Check) {
-      Date date = getDate();
-      return TimeFactory.createNew(date.getTime()).isBefore(time2Check);
    }
 
    @Override

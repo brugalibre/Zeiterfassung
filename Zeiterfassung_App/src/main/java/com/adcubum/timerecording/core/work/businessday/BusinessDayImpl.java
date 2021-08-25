@@ -26,6 +26,7 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedC
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
 import com.adcubum.timerecording.core.work.businessday.compare.BusinessDayIncrementComparator;
 import com.adcubum.timerecording.core.work.businessday.compare.TimeStampComparator;
+import com.adcubum.timerecording.core.work.businessday.exception.BusinessIncrementBevorOthersException;
 import com.adcubum.timerecording.core.work.businessday.factory.BusinessDayFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
@@ -34,6 +35,7 @@ import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
+import com.adcubum.timerecording.work.date.TimeUtil;
 import com.adcubum.util.parser.NumberFormat;
 import com.adcubum.util.utils.StringUtil;
 
@@ -235,16 +237,12 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    private static Predicate<BusinessDayIncrement> newBusinessDayIncIsBeforeOrAfter(Time newBDIncTime) {
-      return bDayInc -> {
-         Time bdIncDate = TimeFactory.createNew(bDayInc.getDate());
-         return newBDIncTime.isBefore(bdIncDate)
-               || bDayInc.isBefore(newBDIncTime);
-      };
+      return bDayInc -> TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(newBDIncTime, bDayInc.getDate());
    }
 
    private static Consumer<BusinessDayIncrement> throwException() {
       return bdIncrement -> {
-         throw new IllegalStateException(
+         throw new BusinessIncrementBevorOthersException(
                "Can not add a BusinessDayIncrement which takes place before or after the day of this BusinessDayImpl!");
       };
    }
@@ -270,9 +268,12 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public boolean hasElementsFromPrecedentDays() {
-      Time now = TimeFactory.createNew();
+      Date now = new Date();
       return increments.stream()
-            .anyMatch(bDayInc -> bDayInc.isBefore(now));
+            .anyMatch(bDayInc -> {
+               Time bdIncTime = TimeFactory.createNew(bDayInc.getDate());
+               return TimeUtil.isTimeBeforeMidnightOfGivenDate(bdIncTime, now);
+            });
    }
 
    @Override

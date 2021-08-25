@@ -49,19 +49,6 @@ public interface BusinessDayIncrement extends DomainModel {
    void flagAsCharged();
 
    /**
-    * Returns <code>true</code> if this {@link BusinessDayIncrement} has started
-    * before the given date. This method returns <code>false</code> if this
-    * {@link BusinessDayIncrement} was created on the same day the given Time
-    * instance has.
-    * 
-    * @param time2Check
-    *        the {@link Time} to check
-    * @return <code>true</code> if this {@link BusinessDayIncrement} was created
-    *         before the given date. Otherwise return <code>false</code>
-    */
-   boolean isBefore(Time time2Check);
-
-   /**
     * @return <code>true</code> if there this {@link BusinessDayIncrement} contains a {@link Ticket} for which are all relevant value
     *         present or <code>false</code> if not
     */
