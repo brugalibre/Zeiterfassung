@@ -1,6 +1,6 @@
 package com.adcubum.timerecording.model.businessdayconfig;
 
-import com.adcubum.timerecording.app.businessdayconfig.BusinessDayConfig;
+import com.adcubum.timerecording.app.businessday.businessdayconfig.BusinessDayConfig;
 import com.adcubum.util.parser.NumberFormat;
 
 public class BusinessDayConfigDto {

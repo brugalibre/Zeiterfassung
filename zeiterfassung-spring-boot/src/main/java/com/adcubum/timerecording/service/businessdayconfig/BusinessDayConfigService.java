@@ -2,7 +2,7 @@ package com.adcubum.timerecording.service.businessdayconfig;
 
 import org.springframework.stereotype.Service;
 
-import com.adcubum.timerecording.app.businessdayconfig.BusinessDayConfig;
+import com.adcubum.timerecording.app.businessday.businessdayconfig.BusinessDayConfig;
 import com.adcubum.timerecording.model.businessday.BusinessDayDto;
 import com.adcubum.timerecording.model.businessdayconfig.BusinessDayConfigDto;
 import com.adcubum.timerecording.service.businessday.impl.BusinessDayService;

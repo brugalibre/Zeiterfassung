@@ -1,4 +1,4 @@
-package com.adcubum.timerecording.app.businessdayconfig;
+package com.adcubum.timerecording.app.businessday.businessdayconfig;
 
 import static java.util.Objects.isNull;
 
