@@ -52,6 +52,7 @@ public abstract class AbstractBusinessDayChangeHelper<T> implements EventHandler
       }
       handler.handleBusinessDayChanged(ChangedValue.of(businessDayIncTableCellValue.getId(), newValue, valueType));
       uiRefresher.onFinish(FinishAction.FINISH);
+      event.consume();
    }
 
    private static boolean isNotValidValueType(ValueTypes valueType) {

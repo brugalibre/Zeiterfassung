@@ -13,8 +13,8 @@ export default {
         .then(data => {
           this.setActualWorkingHoursDto = data;
           this.setActualWorkingPieChartData =
-            [['Rest Stunden', this.setActualWorkingHoursDto.hoursLeft],
-          ['Bereits geleistete Stunden', this.setActualWorkingHoursDto.actualHours]];
+         [['Bereits geleistete Stunden', this.setActualWorkingHoursDto.actualHours],
+         ['Rest Stunden', this.setActualWorkingHoursDto.hoursLeft]];
       });
     },
   }

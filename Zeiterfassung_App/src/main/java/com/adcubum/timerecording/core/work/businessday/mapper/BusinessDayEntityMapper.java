@@ -49,7 +49,8 @@ public class BusinessDayEntityMapper {
       List<BusinessDayIncrement> increments = map2BusinessDayIncrements(businessDayEntity);
       BusinessDayIncrement currentBDayIncrement = map2BusinessDayIncrement(businessDayEntity.getCurrentBusinessDayIncrementEntity());
       ComeAndGoes comeAndGoes = ComeAndGoesEntityMapper.INSTANCE.map2ComeAndGoes(businessDayEntity.getComeAndGoesEntity());
-      return BusinessDayFactory.createNew(businessDayEntity.getId(), increments, currentBDayIncrement, comeAndGoes);
+      return BusinessDayFactory.createNew(businessDayEntity.getId(), businessDayEntity.isBooked(), increments, currentBDayIncrement,
+            comeAndGoes);
    }
 
    /**
@@ -61,7 +62,7 @@ public class BusinessDayEntityMapper {
     */
    public BusinessDayEntity map2BusinessDayEntity(BusinessDay businessDay) {
       requireNonNull(businessDay);
-      BusinessDayEntity businessDayEntity = new BusinessDayEntity(businessDay.getId());
+      BusinessDayEntity businessDayEntity = new BusinessDayEntity(businessDay.getId(), businessDay.isBooked());
       BusinessDayIncrementEntity currentBusinessDayIncrementEntity =
             map2CompleteBusinessDayIncrementEntity(businessDay.getCurrentBussinessDayIncremental(), null);
       List<BusinessDayIncrementEntity> businessDayIncrementEntities =
@@ -121,7 +122,7 @@ public class BusinessDayEntityMapper {
       TimeSnippet timeSnippet = TimeSnippetEntityMapper.INSTANCE.map2TimeSnippet(businessDayIncrementEntity.getCurrentTimeSnippetEntity());
       Ticket ticket = map2Ticket(businessDayIncrementEntity);
       return BusinessDayIncrementFactory.createNew(timeSnippet, businessDayIncrementEntity.getId(), businessDayIncrementEntity.getDescription(),
-            ticket, businessDayIncrementEntity.getChargeType(), businessDayIncrementEntity.isCharged());
+            ticket, businessDayIncrementEntity.getChargeType(), businessDayIncrementEntity.isBooked());
    }
 
    private static Ticket map2Ticket(BusinessDayIncrementEntity businessDayIncrementEntity) {

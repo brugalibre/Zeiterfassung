@@ -1,6 +1,6 @@
 <template>
-  <div id=addBusinessDayIncrementForm class="blurBackground">
-    <div class="inputForm container0 border">
+  <div id="addBusinessDayIncrementForm" class="blurBackground">
+    <div class="inputForm centered tile">
       <p>
         <ticket-nr-input-field
           class="containerElement100"
@@ -129,8 +129,8 @@ export default {
   methods: {
     addBusinessDayIncrementAndRefresh: function(businessDayIncrement){
       this.addBusinessDayIncrement(businessDayIncrement);
-      this.requestUiRefresh();
-      console.log("Request refresh");
+      setTimeout(() => this.requestUiRefresh(), 1000);
+      console.log("AddNewBusinessDayInc: refresh Ui requested");
     },
     onBeginTimeRepChanged: function(beginTimeValue){
       console.log("On-Begin-Time-Rep-Changed '" + beginTimeValue.timeValue + ", amount of Hours '" + beginTimeValue.timeValue.getHours() + "', amount of minutes '" + beginTimeValue.timeValue.getMinutes() +"'");
@@ -159,17 +159,18 @@ export default {
   },
 }
 </script>
-
 <style scoped>
+  .container0{
+    display: inline-block;
+    justify-content: space-between;
+  }
 
   .descriptionInput{
     width: 97%;/* don't ask me why but with a width of 100% the input field is slightly to long :S*/
   }
 
-  .border{
-    border: 10px;
-    border-width: 2px;
-    border-color: black;
+  .containerElement100{
+    width: 100%;
   }
 
   .timeInputField{
@@ -177,19 +178,23 @@ export default {
   }
 
   .inputForm{
+    background: white;
     position: fixed;
+    max-width: 15%;
     top: 50%;
-    left: 33.33%;
+    left: 50%;
     transform: translate(-50%, -50%);
+    z-index: 2;
   }
 
   .blurBackground{
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(5px);
     height: 100vh;
     width: 250vh;
     position: fixed;
     top: 0%;
     left: 0%;
+    z-index: 1;
   }
 </style>

@@ -1,6 +1,9 @@
 package com.adcubum.timerecording.core.businessday.repository.impl;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
 import com.adcubum.timerecording.core.businessday.entity.repository.BusinessDayEntityRepository;
@@ -9,6 +12,8 @@ import com.adcubum.timerecording.core.repository.ObjectNotFoundException;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.mapper.BusinessDayEntityMapper;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
+import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeUtil;
 
 /**
  * The {@link BusinessDayRepository} serves as a dao on the "business" side of the application, since the actual persistence-repository
@@ -32,6 +37,30 @@ public class BusinessDayRepositoryImpl implements BusinessDayRepository {
    }
 
    @Override
+   public BusinessDay findBookedBusinessDayByDate(Time time) {
+      Time lowerBounds = TimeUtil.getBeginOfDay(time);
+      Time upperBounds = TimeUtil.getEndOfDay(time);
+      Optional<BusinessDayEntity> businessDayEntityOpt = businessDayEntityRepository.findBookedBusinessDayEntityWithinRange(lowerBounds, upperBounds);
+      return businessDayEntityOpt
+            .map(BusinessDayEntityMapper.INSTANCE::map2BusinessDay)
+            .orElse(null);
+   }
+
+   @Override
+   public List<BusinessDay> findBookedBussinessDaysWithinRange(Time lowerBounds, Time upperBounds) {
+      return businessDayEntityRepository.findAllBookedBusinessDayEntitiesWithinRange(lowerBounds, upperBounds)
+            .stream()
+            .map(BusinessDayEntityMapper.INSTANCE::map2BusinessDay)
+            .collect(Collectors.toList());
+   }
+
+   @Override
+   public BusinessDay createNew(boolean isBooked) {
+      BusinessDayEntity businessDayEntity = businessDayEntityRepository.createNew(isBooked);
+      return BusinessDayEntityMapper.INSTANCE.map2BusinessDay(businessDayEntity);
+   }
+
+   @Override
    public BusinessDay findById(UUID businessDayId) throws ObjectNotFoundException {
       BusinessDayEntity businessDayEntity = businessDayEntityRepository.findById(businessDayId);
       return BusinessDayEntityMapper.INSTANCE.map2BusinessDay(businessDayEntity);
@@ -45,7 +74,7 @@ public class BusinessDayRepositoryImpl implements BusinessDayRepository {
    }
 
    @Override
-   public void deleteAll() {
-      businessDayEntityRepository.deleteAll();
+   public void deleteAll(boolean isBooked) {
+      businessDayEntityRepository.deleteAll(isBooked);
    }
 }

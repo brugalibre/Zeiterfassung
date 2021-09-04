@@ -11,6 +11,7 @@ import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
+import com.adcubum.timerecording.core.work.businessday.history.resolver.BusinessDayHistoryOverviewResolver;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
@@ -18,7 +19,7 @@ import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 
-public interface TimeRecorder {
+public interface TimeRecorder extends BusinessDayHistoryOverviewResolver {
 
    /**
     * The version of the application

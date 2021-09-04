@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2>{{ title }} </h2>
-    <div class="timeRecorderStatusView">
+    <h2 class="centeredText">{{ title }} </h2>
+    <div class="timeRecorderStatusView centered">
       <div v-bind:class="{ isRecording: timeRecorderDto.isRecording, isNotRecording: !timeRecorderDto.isRecording}" >{{timeRecorderDto.statusMsg}}</div>
       <div class="container">
         <button class="containerElement" :disabled="isAddBusinessDayIncrementActive" v-on:click="startStopRecordingAndRefresh">{{timeRecorderDto.isRecording ? 'Aufzeichnung beenden' : 'Aufzeichnung starten' }}</button>
@@ -12,7 +12,7 @@
       v-bind:initBeginTimeStampRepresentation="beginTimeStampRepresentation"
       v-bind:initEndTimeStampRepresentation="endTimeStampRepresentation"
       v-if="isAddBusinessDayIncrementActive"
-      @businessDayIncrementAdded="refreshUiState"
+      @refreshUi="refreshUiState"
       @resumed="refreshUiState"
     >
     </add-businessday-increment>
@@ -50,7 +50,7 @@
     methods: {
       bookAndRefresh: function(){
         this.book();
-        this.requestUiRefresh();
+        this.refreshUiWithHistory();
       },
       startStopRecordingAndRefresh: function(){
         this.startStopRecording();
@@ -73,9 +73,13 @@
 
   .isNotRecording{
     background-color: #ffcccb;
+    margin-bottom: 3px;
+    padding: 3px;
   }
 
   .isRecording{
     background-color: #90EE90;
+    margin-bottom: 3px;
+    padding: 3px;
   }
 </style>

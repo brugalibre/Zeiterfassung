@@ -1,5 +1,5 @@
 <template>
-  <h1> {{dashboardMsg}} </h1>
+  <h1 class="centeredText"> {{dashboardMsg}} </h1>
 </template>
 
 <script>

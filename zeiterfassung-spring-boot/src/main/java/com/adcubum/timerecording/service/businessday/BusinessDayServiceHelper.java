@@ -7,13 +7,21 @@ import org.springframework.lang.NonNull;
 import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.model.businessday.BusinessDayDto;
 import com.adcubum.timerecording.model.businessday.BusinessDayIncrementDto;
+import com.adcubum.timerecording.model.businessday.history.BusinessDayHistoryOverviewDto;
 
 public interface BusinessDayServiceHelper {
 
    /**
     * @return the {@link BusinessDayDto} from the {@link TimeRecorder}
     */
+   @NonNull
    BusinessDayDto getBusinessDayDto();
+
+   /**
+    * @return the {@link BusinessDayHistoryOverviewDto}
+    */
+   @NonNull
+   BusinessDayHistoryOverviewDto getBusinessDayHistoryDto();
 
    /**
     * Delete the {@link BusinessDayIncrementDto} with the given id

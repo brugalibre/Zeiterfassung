@@ -7,22 +7,6 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 
 public interface BusinessDayVO {
 
-   /**
-    * Returns the default representation of a date using the pattern 'dd.MM.yyyy'
-    * 
-    * @return the default representation of a date using the pattern 'dd.MM.yyyy'
-    */
-   String getDateRep();
-
-   /**
-    * Returns the default representation of a date using the given pattern
-    * 
-    * @param pattern
-    *        the pattern to use
-    * @return the default representation of a date using the given pattern
-    */
-   String getDateRep(String pattern);
-
    List<BusinessDayIncrementVO> getBusinessDayIncrements();
 
    /**

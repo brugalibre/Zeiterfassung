@@ -57,7 +57,7 @@ class BusinessDayExporterImplTest {
             .withTimeSnippet(timeSnippet)
             .withDescription(description)
             .withTicket(ticket)
-            .withKindOfService(kindOfService)
+            .withServiceCode(kindOfService)
             .build();
    }
 

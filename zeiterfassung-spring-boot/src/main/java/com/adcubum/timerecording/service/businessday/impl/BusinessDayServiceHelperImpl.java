@@ -17,6 +17,7 @@ import com.adcubum.timerecording.core.businessday.repository.factory.BusinessDay
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
+import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistoryOverview;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
@@ -26,10 +27,13 @@ import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.model.businessday.BusinessDayDto;
 import com.adcubum.timerecording.model.businessday.BusinessDayIncrementDto;
 import com.adcubum.timerecording.model.businessday.TimeSnippetDto;
+import com.adcubum.timerecording.model.businessday.history.BusinessDayHistoryOverviewDto;
 import com.adcubum.timerecording.service.businessday.BusinessDayServiceHelper;
 import com.adcubum.timerecording.service.exception.BeginOrEndTimeParseException;
 import com.adcubum.timerecording.service.exception.NoPersistentBusinessDayIncrementToChangeFoundException;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
+import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeUtil;
 
 @Component("BusinessDayServiceHelper")
 @DependsOn(BusinessDayEntityRepositoryHolder.BUSINESS_DAY_ENTITY_REPOSITORY_FACTORY)
@@ -61,7 +65,7 @@ public class BusinessDayServiceHelperImpl implements BusinessDayServiceHelper {
       return new BusinessDayIncrementAddBuilder()
             .withAmountOfHours(businessDayIncrementDto.getTimeSnippetDto().getDurationRep())
             .withDescription(businessDayIncrementDto.getDescription())
-            .withKindOfService(businessDayIncrementDto.getServiceCodeDto().getValue())
+            .withServiceCode(businessDayIncrementDto.getServiceCodeDto().getValue())
             .withTicket(ticket)
             .withTimeSnippet(timeSnippet)
             .build();
@@ -112,6 +116,15 @@ public class BusinessDayServiceHelperImpl implements BusinessDayServiceHelper {
    public int deleteAllBusinessDayIncrements() {
       businessDayChangedCallbackHandler.clear();
       return HttpStatus.OK.value();
+   }
+
+   @Override
+   public BusinessDayHistoryOverviewDto getBusinessDayHistoryDto() {
+      Time firstDayOfCurrentMonth = TimeUtil.getFirstDayOfCurrentMonth();
+      Time lastDayOfCurrentMonth = TimeUtil.getLastDayOfCurrentMonth();
+      BusinessDayHistoryOverview businessDayHistoryOverview =
+            TimeRecorder.INSTANCE.getBusinessDayHistoryOverview(firstDayOfCurrentMonth, lastDayOfCurrentMonth);
+      return BusinessDayHistoryOverviewDto.of(businessDayHistoryOverview);
    }
 
    @Override

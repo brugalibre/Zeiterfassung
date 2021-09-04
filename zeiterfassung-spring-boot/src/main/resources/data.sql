@@ -1,4 +1,3 @@
-
 CREATE TABLE IF NOT EXISTS timesnippet (
   id VARCHAR(250) PRIMARY KEY,
   begin_timestamp timestamp(0), 
@@ -8,6 +7,7 @@ CREATE TABLE IF NOT EXISTS timesnippet (
 CREATE TABLE IF NOT EXISTS businessday (
   id VARCHAR(250) PRIMARY KEY,
   comeandgoes_id VARCHAR(250),
+  is_booked BOOLEAN DEFAULT FALSE,
   current_businessday_increment_id VARCHAR(250)
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS businessday_increment (
   description VARCHAR(250),
   ticket_nr VARCHAR(250),
   charge_type INT,
-  is_charged BOOLEAN DEFAULT FALSE
+  is_booked BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS comeandgoes (

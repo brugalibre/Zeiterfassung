@@ -103,7 +103,7 @@ class TimeRecorder_ExportBusinessDayTest {
                .withTimeSnippet(createTimeSnippet(timeSnippedDuration))
                .withDescription(description)
                .withTicket(ticket)
-               .withKindOfService(kindOfService)
+               .withServiceCode(kindOfService)
                .build());
          return this;
       }

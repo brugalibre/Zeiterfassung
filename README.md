@@ -74,7 +74,15 @@ Aufzeichnung stoppen:
 - Dieses Eingabefeld ist nur aktive, wenn das Eingabefeld 'Ticket-Nr.', in welchem ein einzelnes Ticket eingegeben werden kann, leer ist und vice versa.
 - Eingabe der Start- bzw. Endzeit z.B. also 0915, 915 bzw. 09:15
 - Durch klicken auf Fertig bzw. 'Alt' & 'F' wird die Eingabe validiert und sofern gültig, gespeichert
-- 
+
+Datenhaltung:
+Versionen >= 2.0.0
+- Die aufgezeichneten Stunden werden automatisch gespeichert. D.h. ist aktuell eine Aufzeichnung bzw. ein Kommen/Gehen am Laufen und wird die App unerwartet beendet, 
+  so sind weder die bereits vollständig erfassten Aufzeichnungen noch die aktuell gestartete verloren. 
+- Beim nächsten Start der Applikation ist eine allfällig laufende Aufzeichnung, welche unerwartet unterbrochen wurde, rekonstruiert und zeichnet somit direkt wieder auf 
+Versionen <= v1.8.x
+- Die Datenhaltung erfolgt transient. D.h. beim Beenden der App gehen alle aufgezeichneten Einträge verloren. Es empfiehlt sich daher, die nicht verbuchten Einträge auf den Deskopt zu exportieren
+- Wird die App unerwartet beendet, erfolgt automatisch ein Export auf den Desktop
 
 Integriertes Ticketbacklog
 - Damit beim Stoppen der Aufzeichnung aus den Tickets im aktuellen Sprint ausgewählt werden kann, bedarf es einem Eintrag im zeiterfassung.properties
@@ -97,7 +105,6 @@ Aufzeichnung exportieren:
 - Sollte ein Abbuchen nicht möglich sein, kann die aktuelle Aufzeichnung exportiert werden
 - Dazu einfach via Kontext-Menü 'Zeige Arbeitsstunden' auf die Übersichtsseite navigieren und von dor aus auf 'Exportieren' klicken
 - Export erfolgt auf den Desktop
-- Ebenfalls erfolgt automatisch ein Export auf den Desktop wenn die App beendet wird und Aufzeichnungen vorhanden sind. Damit soll ein ungewollter Datenverlust z.B. beim Herunterfahren des PCs vorgebeugt werden
 
 Leistungsarten:
 - Per Default sind folgende Leistungsarten unterstützt:
@@ -128,4 +135,38 @@ Anzeige und Ändern von aufgezeichneten Stunden
 - Ist für kein Entrag ein Buchungstext vorhanden kann mittels Rechtsklick auf die gewünschte Zeile ein Kontext-Menü angezeigt werden. In diesem klickst du auf 'Beschreibung hinzufügen'
 - Klick auf 'Abbuchen' startet das Abbuchen
 - Klick auf 'Exportieren' startet den Export auf den Desktop
-- Klick auf 'Alles Löschen' löscht die Aufzeichnung ohne Vorwahrnung
+- Klick auf 'Alles Löschen' löscht die Aufzeichnung ohne Vorwahrnung. Bereits abgebuchte Einträge sind davon nicht betroffen
+
+Anzeige im Web (nur ab v 2.0.0)
+- Über das Kontext-Menü 'Zeiterfassung im Browser anzeigen' zbw. direkt via http://localhost:8080 kann ein Webbasiertes UI angezeigt werden
+![AdcZeiterfassung 1v2](https://user-images.githubusercontent.com/29772244/137001312-bb757da1-f113-427d-ac23-c17387051814.png)
+![AdcZeiterfassung 2v2](https://user-images.githubusercontent.com/29772244/137001458-791bac14-7764-4746-ac22-a54c6cbd74dc.png)
+
+Tagesübersicht
+- Die Kachel (1) 'Tagesübersicht' zeigt das Verhältnis von bereits erfassten Stunden und dem Tagessoll an. Dabei werden nur vollständig aufgezeichnete Stunden berücksichtigt. 
+- Das Tagessoll kann im 'zeiterfassungs.properties' mit dem Schlüssel 'setWorkingHours' definiert werden
+
+Verwaltung der aufgezeichneten Stunden
+- In der Kachel (2) 'Verwaltung der aufgezeichneten Stunden' können bereits erfasste Stunden gelöscht bzw. mutiert werden
+- Dafür genügt ein Doppelklick auf den zu mutierenden Eintrag
+- Bereits verbuchte Stunden können nicht mehr verändert werden
+
+Aktueller Status
+- In der Kachel (3) 'Aktueller Status' ist der aktuelle Status der Aufzeichnung ersichtlich und es kann eine laufende Aufzeichnung gestopt bzw. gestartet werden
+- Bei einer laufenden Aufzeichnung kann durch Klick auf 'Aufzeichnung beenden' ein Dialog gestartet werden, mithilfe dessen die laufende Aufzeichnung ins System überführt wird.
+- Der Funktionsumfang sowie die abzufüllenden Felder orientieren sich dabei fast vollständig dem integrierten Fx GUI. D.h. erfassen von Ticket-Nr, optionaler Beschreibung, Leistungsart sowie von, bis sowie der Anzahl an Stunden. Das Fenster zur Eingabe erscheint mittig im Browserfenster, vor dem restlichen Web-Ui.
+- Der Hintergrund wird dabei verwischt/weichgezeichnet dargestellt, damit es die Erfassung der Daten nicht behindert:
+ <img width="992" alt="AdcZeiterfassung_Eingabemaske" src="https://user-images.githubusercontent.com/29772244/136999655-858ee2ac-4e99-47e8-9db2-54099e0f1c22.png">
+- Hinweis: Für Firefox muss dieser Effekt manuell aktiviert werden:
+  - Öffne einen neuen Tab
+  - Navigiere nach about:config
+  - Suche nach 'layout.css.backdrop-filter.enabled' -> klick darauf und dann den Wert auf 'true' zu setzen
+  
+- Die erfassten Stunden können durch Klick auf 'Abbuchen' verbucht werden. Hinweis: Hier hat es evtl. noch einen klitzekleinen Fehler drin, durch welchen das 
+  Abbuchen übers Web nicht funktioniert. Das Entwickler-Team arbeitet unter Hochdruck an einer Lösung des Problems..
+
+Monatsübersicht
+- Die Kachel (4) 'Monatsübersicht' stellt alle im aktuellen Monat abgebuchten Stunden dar. Somit ist es auf einen Blick möglich zu prüfen, ob an einem Tag noch 
+  Stunden fehlen
+- Hinweis: Es werden nur Stunden berücksichtigt, welche über die Zeiterfassungs-App
+  abgebucht wurden.

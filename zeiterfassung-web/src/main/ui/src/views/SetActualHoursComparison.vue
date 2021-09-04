@@ -1,16 +1,19 @@
 <template>
-<div >
-  <h2>{{ title }}</h2>
+<div>
+  <h2 class="centeredText">{{ title }}</h2>
     <pie-chart
-      class="pieChart"
+      class="centered"
+      empty="Keine Daten"
+      loading="Lade Daten..."
       id="set-actual-pie-chart"
       legend="bottom"
       width="230px" height="230px"
+      suffix="h"
       donut="true"
       :round="2"
       :colors="['#004587', '#358fe6']"
       :data="setActualWorkingPieChartData"
-      >
+    >
     </pie-chart>
 </div>
 </template>
@@ -23,7 +26,7 @@ export default {
   mixins: [setActualWorkingPieApi],
   data() {
     return {
-      title: 'Soll/Ist-Stundenvergleich',
+      title: 'Tagesübersicht',
     }
   },
   mounted() {
@@ -31,10 +34,3 @@ export default {
   }
 }
 </script>
-<style>
-  .pieChart{
-    position: fixed;
-    top: 60%;
-    left: 77%;
-  }
-</style>

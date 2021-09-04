@@ -212,4 +212,11 @@ public interface BusinessDay extends DomainModel {
     * @return the {@link ComeAndGoes} of this {@link BusinessDay}
     */
    ComeAndGoes getComeAndGoes();
+
+   /**
+    * Return <code>true</code> if this {@link BusinessDay} is already booked and therefore is read-only or <code>false</code> if not
+    * 
+    * @return <code>true</code> if this {@link BusinessDay} is already booked and therefore is read-only or <code>false</code> if not
+    */
+   boolean isBooked();
 }

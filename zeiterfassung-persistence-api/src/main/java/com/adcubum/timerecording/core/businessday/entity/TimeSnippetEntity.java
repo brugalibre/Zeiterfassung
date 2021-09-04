@@ -18,8 +18,12 @@ public class TimeSnippetEntity extends BaseEntity {
    private Timestamp beginTimestamp;
    private Timestamp endTimestamp;
 
+   /*
+    * Private constructor used by jpa
+    */
+   @SuppressWarnings("unused")
    private TimeSnippetEntity() {
-      super(null);
+      this(null, new Timestamp(System.currentTimeMillis()), null);
    }
 
    /**
@@ -52,4 +56,37 @@ public class TimeSnippetEntity extends BaseEntity {
             "TimeSnippetEntity[id=%s, beginTimestamp='%s', endTimestamp='%s']",
             id, beginTimestamp, endTimestamp);
    }
+
+   @Override
+   public int hashCode() {
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + ((beginTimestamp == null) ? 0 : beginTimestamp.hashCode());
+      result = prime * result + ((endTimestamp == null) ? 0 : endTimestamp.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj)
+         return true;
+      if (!super.equals(obj))
+         return false;
+      if (getClass() != obj.getClass())
+         return false;
+      TimeSnippetEntity other = (TimeSnippetEntity) obj;
+      if (beginTimestamp == null) {
+         if (other.beginTimestamp != null)
+            return false;
+      } else if (!beginTimestamp.equals(other.beginTimestamp))
+         return false;
+      if (endTimestamp == null) {
+         if (other.endTimestamp != null)
+            return false;
+      } else if (!endTimestamp.equals(other.endTimestamp))
+         return false;
+      return true;
+   }
+
+
 }

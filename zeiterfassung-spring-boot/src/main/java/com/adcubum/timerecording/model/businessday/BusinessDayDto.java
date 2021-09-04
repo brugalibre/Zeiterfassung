@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.adcubum.util.parser.DateParser;
 import com.adcubum.util.parser.NumberFormat;
 
 /**
@@ -18,15 +19,17 @@ import com.adcubum.util.parser.NumberFormat;
  */
 public class BusinessDayDto {
 
+   private String dateRepresentation;
    private List<BusinessDayIncrementDto> businessDayIncrementDtos;
    private float totalDuration;
 
-   private BusinessDayDto(BusinessDay businessDay) {
+   private BusinessDayDto(BusinessDay businessDay, String dateRepPattern) {
       totalDuration = businessDay.getTotalDuration();
       businessDayIncrementDtos = businessDay.getIncrements()
             .stream()
             .map(BusinessDayIncrementDto::of)
             .collect(Collectors.toList());
+      this.dateRepresentation = DateParser.parse2String(businessDay.getDate(), dateRepPattern);
    }
 
    public final List<BusinessDayIncrementDto> getBusinessDayIncrementDtos() {
@@ -45,9 +48,14 @@ public class BusinessDayDto {
       return totalDuration;
    }
 
+   public String getDateRepresentation() {
+      return dateRepresentation;
+   }
+
    @Override
    public String toString() {
-      return "BusinessDayDto [businessDayIncrementDtos=" + businessDayIncrementDtos + ", totalDuration=" + totalDuration + "]";
+      return "BusinessDayDto [businessDayIncrementDtos=" + businessDayIncrementDtos + ", date=" + dateRepresentation + ", totalDuration="
+            + totalDuration + "]";
    }
 
    /**
@@ -58,6 +66,6 @@ public class BusinessDayDto {
     * @return a new {@link BusinessDayVO}
     */
    public static BusinessDayDto of(BusinessDay businessDay) {
-      return new BusinessDayDto(businessDay);
+      return new BusinessDayDto(businessDay, DateParser.DD_MM_YYYY);
    }
 }

@@ -571,7 +571,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
             .withTimeSnippet(timeSnippet)
             .withDescription("Default Description")
             .withTicket(ticket)
-            .withKindOfService(kindOfService)
+            .withServiceCode(kindOfService)
             .withId(UUID.randomUUID())
             .build();
    }

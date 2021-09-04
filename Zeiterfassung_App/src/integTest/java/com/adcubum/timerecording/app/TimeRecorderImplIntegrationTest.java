@@ -721,7 +721,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
                .withDescription(description)
                .withTicket(ticket)
                .withId(UUID.randomUUID())
-               .withKindOfService(kindOfService)
+               .withServiceCode(kindOfService)
                .build());
          return this;
       }

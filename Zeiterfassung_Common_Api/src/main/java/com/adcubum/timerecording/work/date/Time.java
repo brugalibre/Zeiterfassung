@@ -1,10 +1,19 @@
 package com.adcubum.timerecording.work.date;
 
+import java.time.LocalDate;
+
 import org.joda.time.Duration;
 
 import com.adcubum.timerecording.settings.round.RoundMode;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 
+/**
+ * The Time interface represents date and time. So basically this interface should probably be renamed
+ * into DateTime or something like that
+ * 
+ * @author dstalder
+ *
+ */
 public interface Time {
 
    /**
@@ -17,37 +26,42 @@ public interface Time {
    int compareTo(Time otherTime);
 
    /**
-    * Returns <code>true</code> if this {@link TimeImpl} has been started
+    * Returns <code>true</code> if this {@link Time} has been started
     * before the given date or <code>false</code> if not
-    * Note that this methods only compares the days of both {@link TimeImpl} instances.
+    * Note that this methods only compares the days of both {@link Time} instances.
     * 
     * @param time2Check
-    *        the {@link TimeImpl} to check
-    * @return <code>true</code> if this {@link TimeImpl} has been started
+    *        the {@link Time} to check
+    * @return <code>true</code> if this {@link Time} has been started
     *         before the given date, otherwise returns <code>false</code>
     */
    boolean isBefore(Time time2Check);
 
    /**
-    * Adds the given amount of seconds to this {@link TimeImpl} and returns a new instance
+    * Adds the given amount of seconds to this {@link Time} and returns a new instance
     * 
     * @param seconds2Add
-    * @return a new {@link TimeImpl} instance which has added the given amount of seconds
+    * @return a new {@link Time} instance which has added the given amount of seconds
     */
    Time addSeconds(long seconds2Add);
 
    /**
-    * @return the amount of days of this TimeImpl instance
+    * @return the plain date representation of this {@link Time} as a {@link LocalDate}
+    */
+   LocalDate getLocalDate();
+
+   /**
+    * @return the amount of days of this {@link Time} instance
     */
    long getDays();
 
    /**
-    * @return the amount of minutes of this TimeImpl instance
+    * @return the amount of minutes of this {@link Time} instance
     */
    long getMinutes();
 
    /**
-    * Returns the amount of milliseconds of this {@link TimeImpl}
+    * Returns the amount of milliseconds of this {@link Time}
     * 
     * @return the amount of milliseconds
     */
@@ -85,5 +99,4 @@ public interface Time {
             throw new IllegalStateException("Unknown TIME_TYPE value '" + type + "'!");
       }
    }
-
 }

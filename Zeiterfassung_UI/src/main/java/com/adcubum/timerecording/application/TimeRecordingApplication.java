@@ -3,6 +3,11 @@
  */
 package com.adcubum.timerecording.application;
 
+import static com.adcubum.timerecording.settings.common.Const.TURBO_BUCHER_PROPERTIES;
+import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.function.BooleanSupplier;
 import java.util.function.UnaryOperator;
 
@@ -80,10 +85,25 @@ public class TimeRecordingApplication extends Application {
    private void initApplication() {
       PictureLibrary.loadPictures();
       Platform.setImplicitExit(false);
+      createPropertieFileIfNotExists(ZEITERFASSUNG_PROPERTIES);
+      createPropertieFileIfNotExists(TURBO_BUCHER_PROPERTIES);
 
       UiAuthenticationService.prepare();
       TimeRecorder.INSTANCE.init();
       initTimeRounder();
+   }
+
+   private void createPropertieFileIfNotExists(String propertiesFileName) {
+      File file = new File(propertiesFileName);
+      if (!file.exists()) {
+         try {
+            if (!file.createNewFile()) {
+               throw new ApplicationLaunchException("Unable to create the '" + propertiesFileName + "' file!");
+            }
+         } catch (IOException e) {
+            throw new ApplicationLaunchException(e);
+         }
+      }
    }
 
    private static void initTimeRounder() {

@@ -6,7 +6,10 @@ package com.adcubum.timerecording.work.date;
 import static com.adcubum.timerecording.work.date.Time.getTimeRefactorValue;
 import static java.util.Objects.requireNonNull;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.joda.time.Duration;
 import org.joda.time.Period;
@@ -190,6 +193,25 @@ public class TimeImpl implements Time {
    @Override
    public Duration getDuration() {
       return duration;
+   }
+
+   @Override
+   public LocalDate getLocalDate() {
+      Calendar calendarDay = getCalendarFromTime();
+      int currentDay = calendarDay.get(Calendar.DAY_OF_MONTH);
+      int currentMonth = calendarDay.get(Calendar.MONTH) + 1;// month starts at 0
+      int currentYear = calendarDay.get(Calendar.YEAR);
+      return LocalDate.of(currentYear, currentMonth, currentDay);
+   }
+
+   private Calendar getCalendarFromTime() {
+      Calendar calendarDay = new GregorianCalendar();
+      calendarDay.setTimeInMillis(getTime());
+      calendarDay.set(Calendar.HOUR, 1);
+      calendarDay.set(Calendar.MINUTE, 0);
+      calendarDay.set(Calendar.SECOND, 0);
+      calendarDay.set(Calendar.MILLISECOND, 0);
+      return calendarDay;
    }
 
    @Override

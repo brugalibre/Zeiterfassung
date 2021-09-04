@@ -1,9 +1,11 @@
 package com.adcubum.timerecording.core.businessday.impl.repository;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,12 @@ import com.adcubum.timerecording.core.businessday.dao.BusinessDayDao;
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
 import com.adcubum.timerecording.core.businessday.entity.repository.BusinessDayEntityRepository;
 import com.adcubum.timerecording.core.repository.ObjectNotFoundException;
+import com.adcubum.timerecording.work.date.Time;
 
 @Repository("business-day-entity-repository")
 public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityRepository {
 
-   private static Logger LOG = Logger.getLogger(BusinessDayEntityRepositoryImpl.class);
+   private static final Logger LOG = Logger.getLogger(BusinessDayEntityRepositoryImpl.class);
 
    private BusinessDayDao businessDayDao;
    private ComeAndGoesDao comeAndGoesDao;
@@ -31,16 +34,57 @@ public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityReposit
    }
 
    @Override
-   public BusinessDayEntity findFirstOrCreateNew() {
-      List<BusinessDayEntity> allBusinessDayEntities = findAllAsList();
-      logAmountOfExistingBusinessDayFound(allBusinessDayEntities);
-      if (allBusinessDayEntities.size() >= 1) {
-         BusinessDayEntity businessDayEntity = allBusinessDayEntities.get(0);
-         ComeAndGoesEntity comeAndGoesEntity = findExistingComesAndGoEntity(businessDayEntity);
+   public List<BusinessDayEntity> findAllBookedBusinessDayEntitiesWithinRange(Time lowerBounds, Time upperBounds) {
+      Timestamp lowerBoundsTimestamp = new Timestamp(lowerBounds.getTime());
+      Timestamp upperBoundsTimestamp = new Timestamp(upperBounds.getTime());
+      List<BusinessDayEntity> allBusinessDayEntitiesWithinRange =
+            businessDayDao.findAllBookedBusinessDayEntitiesWithinRange(lowerBoundsTimestamp, upperBoundsTimestamp);
+      return setAdditionalComesAndGoes(allBusinessDayEntitiesWithinRange);
+   }
+
+   private List<BusinessDayEntity> setAdditionalComesAndGoes(List<BusinessDayEntity> businessDayEntities) {
+      return businessDayEntities.stream()
+            .map(findAndSetComesAndGoes())
+            .collect(Collectors.toList());
+   }
+
+   @Override
+   public Optional<BusinessDayEntity> findBookedBusinessDayEntityWithinRange(Time lowerBounds, Time upperBounds) {
+      Timestamp lowerBoundsTimestamp = new Timestamp(lowerBounds.getTime());
+      Timestamp upperBoundsTimestamp = new Timestamp(upperBounds.getTime());
+      return businessDayDao.findAllBookedBusinessDayEntitiesWithinRange(lowerBoundsTimestamp, upperBoundsTimestamp)
+            .stream()
+            .findFirst()
+            .map(findAndSetComesAndGoes());
+   }
+
+   private Function<BusinessDayEntity, BusinessDayEntity> findAndSetComesAndGoes() {
+      return businessDayEntity -> {
+         ComeAndGoesEntity comeAndGoesEntity = findExistingOrCreateEmptyComesAndGoes(businessDayEntity.getComeAndGoesEntityId());
          businessDayEntity.setComeAndGoesEntity(comeAndGoesEntity);
          return businessDayEntity;
+      };
+   }
+
+   private ComeAndGoesEntity findExistingOrCreateEmptyComesAndGoes(UUID comesAndGoesId) {
+      Optional<ComeAndGoesEntity> comesAndGoesEntityOpt = comeAndGoesDao.findById(comesAndGoesId);
+      return comesAndGoesEntityOpt
+            .orElse(new ComeAndGoesEntity());
+   }
+
+   @Override
+   public BusinessDayEntity findFirstOrCreateNew() {
+      List<UUID> allBusinessDayEntityIds = businessDayDao.findAllBusinessDayIds4BookingStatus(false);
+      logAmountOfExistingBusinessDayFound(allBusinessDayEntityIds);
+      if (!allBusinessDayEntityIds.isEmpty()) {
+         return findById(allBusinessDayEntityIds.get(0));
       }
-      BusinessDayEntity businessDayEntity = createNewBusinessDayEntity();
+      return createNew(false);
+   }
+
+   @Override
+   public BusinessDayEntity createNew(boolean isBooked) {
+      BusinessDayEntity businessDayEntity = createNewBusinessDayEntity(isBooked);
       return save(businessDayEntity);
    }
 
@@ -68,15 +112,16 @@ public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityReposit
    }
 
    @Override
-   public void deleteAll() {
-      businessDayDao.deleteAll();
-      comeAndGoesDao.deleteAll();
+   public void deleteAll(boolean isBooked) {
+      businessDayDao.findAllBusinessDayIds4BookingStatus(isBooked)
+            .stream()
+            .map(this::getBusinessDayEntity)
+            .forEach(this::deleteCompleteBusinessDayEntity);
    }
 
-   private List<BusinessDayEntity> findAllAsList() {
-      return StreamSupport.stream(businessDayDao.findAll()
-            .spliterator(), false)
-            .collect(Collectors.toList());
+   private void deleteCompleteBusinessDayEntity(BusinessDayEntity businessDayEntity) {
+      businessDayDao.delete(businessDayEntity);
+      comeAndGoesDao.delete(businessDayEntity.getComeAndGoesEntity());
    }
 
    private BusinessDayEntity getBusinessDayEntity(UUID businessDayId) {
@@ -84,15 +129,15 @@ public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityReposit
             .orElseThrow(() -> new ObjectNotFoundException("No BusinesDay found for id '" + businessDayId + "'"));
    }
 
-   private static BusinessDayEntity createNewBusinessDayEntity() {
-      return new BusinessDayEntity();
+   private static BusinessDayEntity createNewBusinessDayEntity(boolean isBooked) {
+      return new BusinessDayEntity(isBooked);
    }
 
-   private static void logAmountOfExistingBusinessDayFound(List<BusinessDayEntity> allBusinessDayEntities) {
-      if (allBusinessDayEntities.size() > 1) {
-         LOG.warn("Found total '" + allBusinessDayEntities.size()
+   private static void logAmountOfExistingBusinessDayFound(List<UUID> allBusinessDayEntityIds) {
+      if (allBusinessDayEntityIds.size() > 1) {
+         LOG.warn("Found total '" + allBusinessDayEntityIds.size()
                + "' businessdays, select first one. Check current db and remove unnecessary entries!");
-      } else if (allBusinessDayEntities.size() == 1) {
+      } else if (allBusinessDayEntityIds.size() == 1) {
          LOG.info("Found one businessdays to select from'");
       } else {
          LOG.info("No existing businessday found, create new one");

@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.lang.NonNull;
+
 import com.adcubum.timerecording.core.businessday.common.entity.BaseEntity;
 
 @Entity
@@ -24,9 +26,10 @@ public class BusinessDayIncrementEntity extends BaseEntity {
    private TimeSnippetEntity currentTimeSnippetEntity;
 
    private String description;
+   @NonNull
    private String ticketNr;
    private Integer chargeType;
-   private boolean isCharged;
+   private boolean isBooked;
 
    private BusinessDayIncrementEntity() {
       // private constructor for JPA
@@ -46,17 +49,17 @@ public class BusinessDayIncrementEntity extends BaseEntity {
     *        the ticket nr
     * @param chargeType
     *        the charge type
-    * @param isCharged
-    *        defines if this {@link BusinessDayIncrementEntity} is already charged
+    * @param isBooked
+    *        defines if this {@link BusinessDayIncrementEntity} is already isBooked
     */
    public BusinessDayIncrementEntity(UUID id, BusinessDayEntity businessDayEntity, String description, String ticketNr, Integer chargeType,
-         boolean isCharged) {
+         boolean isBooked) {
       super(id);
       this.businessDayEntity = businessDayEntity;
       this.description = description;
       this.ticketNr = ticketNr;
       this.chargeType = chargeType;
-      this.isCharged = isCharged;
+      this.isBooked = isBooked;
    }
 
    public TimeSnippetEntity getCurrentTimeSnippetEntity() {
@@ -75,15 +78,15 @@ public class BusinessDayIncrementEntity extends BaseEntity {
       return chargeType;
    }
 
-   public boolean isCharged() {
-      return isCharged;
+   public boolean isBooked() {
+      return isBooked;
    }
 
    @Override
    public String toString() {
       return String.format(
-            "BusinessDayIncrementEntity[id=%s, description='%s', ticketNr='%s', chargeType='%s', isCharged='%s', currentTimeSnippetEntity='%s']",
-            id, description, ticketNr, chargeType, isCharged, currentTimeSnippetEntity);
+            "BusinessDayIncrementEntity[id=%s, description='%s', ticketNr='%s', chargeType='%s', isBooked='%s', currentTimeSnippetEntity='%s']",
+            id, description, ticketNr, chargeType, isBooked, currentTimeSnippetEntity);
    }
 
    /**
@@ -104,7 +107,7 @@ public class BusinessDayIncrementEntity extends BaseEntity {
       result = prime * result + ((chargeType == null) ? 0 : chargeType.hashCode());
       result = prime * result + ((currentTimeSnippetEntity == null) ? 0 : currentTimeSnippetEntity.hashCode());
       result = prime * result + ((description == null) ? 0 : description.hashCode());
-      result = prime * result + (isCharged ? 1231 : 1237);
+      result = prime * result + (isBooked ? 1231 : 1237);
       result = prime * result + ((ticketNr == null) ? 0 : ticketNr.hashCode());
       return result;
    }
@@ -138,7 +141,7 @@ public class BusinessDayIncrementEntity extends BaseEntity {
             return false;
       } else if (!description.equals(other.description))
          return false;
-      if (isCharged != other.isCharged)
+      if (isBooked != other.isBooked)
          return false;
       if (ticketNr == null) {
          if (other.ticketNr != null)
@@ -147,6 +150,4 @@ public class BusinessDayIncrementEntity extends BaseEntity {
          return false;
       return true;
    }
-
-
 }

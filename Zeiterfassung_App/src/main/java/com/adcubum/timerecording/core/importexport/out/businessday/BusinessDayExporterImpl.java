@@ -13,6 +13,7 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVOImpl;
+import com.adcubum.util.parser.DateParser;
 
 public class BusinessDayExporterImpl implements BusinessDayExporter {
 
@@ -32,7 +33,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
       BusinessDayVO bussinessDayVO = BusinessDayVOImpl.of(bussinessDay);
 
       // First line to mark the date, when the time was recorded
-      builder.append(bussinessDayVO.getDateRep(DATE_REP_PATTERN));
+      builder.append(DateParser.parse2String(bussinessDay.getDate(), DATE_REP_PATTERN));
       builder.append(System.getProperty(LINE_SEPARATOR));
       builder.append(System.getProperty(LINE_SEPARATOR));
 
@@ -107,7 +108,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
          builder.append(inc.getTotalDurationRep());
          builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 
-         builder.append(bussinessDayVO.getDateRep());
+         builder.append(DateParser.parse2String(bussinessDay.getDate()));
          if (inc.hasDescription()) {
             builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
             builder.append(inc.getDescription());

@@ -27,6 +27,8 @@ public class BusinessDayFactory extends AbstractFactory {
     * 
     * @param id
     *        the id of the {@link BusinessDay}
+    * @param isBooked
+    *        <code>true</code> if this {@link BusinessDay} is already booked and therefore is read-only or <code>false</code> if not
     * @param increments
     *        the {@link BusinessDayIncrement}s of this {@link BusinessDay}
     * @param currentBDIncrement
@@ -35,8 +37,8 @@ public class BusinessDayFactory extends AbstractFactory {
     *        the {@link ComeAndGoes}
     * @return a new {@link BusinessDay} instance
     */
-   public static BusinessDay createNew(UUID id, List<BusinessDayIncrement> increments, BusinessDayIncrement currentBDIncrement,
+   public static BusinessDay createNew(UUID id, boolean isBooked, List<BusinessDayIncrement> increments, BusinessDayIncrement currentBDIncrement,
          ComeAndGoes comeAndGoes) {
-      return INSTANCE.createNewWithAgruments(BEAN_NAME, id, increments, currentBDIncrement, comeAndGoes);
+      return INSTANCE.createNewWithAgruments(BEAN_NAME, id, isBooked, increments, currentBDIncrement, comeAndGoes);
    }
 }

@@ -3,9 +3,6 @@
  */
 package com.adcubum.timerecording.core.work.businessday.vo;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,28 +20,13 @@ public class BusinessDayVOImpl implements BusinessDayVO {
 
    private List<BusinessDayIncrementVO> businessDayIncrements;
    private float totalDuration;
-   private Date date;
    private boolean hasNotChargedElements;
    private boolean hasIncrementWithDescription;
    private ComeAndGoes comeAndGoes;
 
-   @Override
-   public String getDateRep() {
-      return getDateRep("dd.MM.yyyy");
-   }
-
-   @Override
-   public String getDateRep(String pattern) {
-      SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-      df.applyPattern(pattern);
-      return df.format(date);
-   }
-
    private BusinessDayVOImpl(BusinessDay businessDay) {
 
       totalDuration = businessDay.getTotalDuration();
-      date = businessDay.getDate();
-
       businessDayIncrements = businessDay.getIncrements()//
             .stream()//
             .map(BusinessDayIncrementVOImpl::of)//

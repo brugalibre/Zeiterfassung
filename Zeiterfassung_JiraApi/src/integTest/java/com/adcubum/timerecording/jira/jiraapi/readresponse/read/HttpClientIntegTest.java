@@ -29,11 +29,11 @@ class HttpClientIntegTest {
    @Test
    void test_Success() {
       // Given
-      int portNumber = 8080;
+      int portNumber = 8081; // Anpassung port auf 8081, damit sich Springboot deser Test nicht stören
       String host = "127.0.0.1";
       String path = "test";
       DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
-            .withHost(host + ":" + 8080)
+            .withHost(host + ":" + 8081)
             .withHeaderAndResponse(path, JiraApiTestReadConst.READ_BOARD_SUCCESSFULL_RESPONSE)
             .withHttpWrapper(new HttpClientInterceptor(host, host, portNumber))
             .build();
@@ -45,5 +45,8 @@ class HttpClientIntegTest {
       // Then
       assertThat(jiraGetBoardsResponse.getException(), is(nullValue()));
       assertThat(jiraGetBoardsResponse.getValues().size(), is(2));
+
+      // finally
+      tcb.clientServer.stop();
    }
 }

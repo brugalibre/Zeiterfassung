@@ -3,6 +3,7 @@
  */
 package com.adcubum.timerecording.core.work.businessday;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
@@ -198,10 +199,45 @@ public class TimeSnippetImpl implements TimeSnippet {
             .build();
    }
 
+   @Override
+   public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((beginTimeStamp == null) ? 0 : beginTimeStamp.hashCode());
+      result = prime * result + ((endTimeStamp == null) ? 0 : endTimeStamp.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj)
+         return true;
+      if (obj == null)
+         return false;
+      if (getClass() != obj.getClass())
+         return false;
+      TimeSnippetImpl other = (TimeSnippetImpl) obj;
+      if (beginTimeStamp == null) {
+         if (other.beginTimeStamp != null)
+            return false;
+      } else if (!beginTimeStamp.equals(other.beginTimeStamp))
+         return false;
+      if (endTimeStamp == null) {
+         if (other.endTimeStamp != null)
+            return false;
+      } else if (!endTimeStamp.equals(other.endTimeStamp))
+         return false;
+      return true;
+   }
+
+
+
    public static final class TimeSnippetBuilder {
 
       private long beginTimeStampValue;
       private long endTimeStampValue;
+      private Time beginTime;
+      private Time endTime;
 
       private TimeSnippetBuilder() {
          // private
@@ -221,11 +257,30 @@ public class TimeSnippetImpl implements TimeSnippet {
          return this;
       }
 
+      public TimeSnippetBuilder withBeginTime(Time beginTime) {
+         this.beginTime = beginTime;
+         return this;
+      }
+
+      public TimeSnippetBuilder withEndTime(Time endTime) {
+         this.endTime = endTime;
+         return this;
+      }
+
       public TimeSnippetImpl build() {
          TimeSnippetImpl timeSnippetImpl = new TimeSnippetImpl();
-         timeSnippetImpl.setBeginTimeStamp(TimeFactory.createNew(beginTimeStampValue));
-         timeSnippetImpl.setEndTimeStamp(TimeFactory.createNew(endTimeStampValue));
+         if (isNull(beginTime)) {
+            timeSnippetImpl.setBeginTimeStamp(TimeFactory.createNew(beginTimeStampValue));
+         } else {
+            timeSnippetImpl.setBeginTimeStamp(beginTime);
+         }
+         if (isNull(endTime)) {
+            timeSnippetImpl.setEndTimeStamp(TimeFactory.createNew(endTimeStampValue));
+         } else {
+            timeSnippetImpl.setEndTimeStamp(endTime);
+         }
          return timeSnippetImpl;
       }
+
    }
 }

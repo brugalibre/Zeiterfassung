@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.adcubum.timerecording.model.businessday.BusinessDayDto;
 import com.adcubum.timerecording.model.businessday.BusinessDayIncrementDto;
+import com.adcubum.timerecording.model.businessday.history.BusinessDayHistoryOverviewDto;
 import com.adcubum.timerecording.service.businessday.BusinessDayServiceHelper;
 
 @Service
@@ -22,6 +23,10 @@ public class BusinessDayService {
 
    public BusinessDayDto getBusinessDayDto() {
       return businessDayServiceHelper.getBusinessDayDto();
+   }
+
+   public BusinessDayHistoryOverviewDto getBusinessDayHistoryDto() {
+      return businessDayServiceHelper.getBusinessDayHistoryDto();
    }
 
    public BusinessDayIncrementDto addBusinessDayIncrementDto(BusinessDayIncrementDto businessDayIncrementDto) {

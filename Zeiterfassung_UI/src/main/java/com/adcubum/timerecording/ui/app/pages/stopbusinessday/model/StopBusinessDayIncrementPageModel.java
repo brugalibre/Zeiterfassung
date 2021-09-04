@@ -378,7 +378,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
             .withTimeSnippet(timeSnippet)
             .withDescription(descriptionProperty.getValue())
             .withTicket(ticket)
-            .withKindOfService(kindOfService)
+            .withServiceCode(kindOfService)
             .build();
       businessDayChangedCallbackHandler.handleBusinessDayIncrementAdd(update);
    }

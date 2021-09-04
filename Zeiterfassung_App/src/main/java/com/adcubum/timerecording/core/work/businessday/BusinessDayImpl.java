@@ -15,7 +15,6 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
@@ -65,15 +64,18 @@ public class BusinessDayImpl implements BusinessDay {
    private BusinessDayIncrement currentBussinessDayIncremental;
    // the amount of times a user comes and goes during the day
    private ComeAndGoes comeAndGoes;
+   // true if this BusinessDay is alreay booked
+   private boolean isBooked;
 
    /**
     * Creates a new {@link BusinessDayImpl} from the {@link BusinessDayFactory}
     */
-   public BusinessDayImpl(UUID id, List<BusinessDayIncrement> businessDayIncrements, BusinessDayIncrement currentBDIncrement,
+   public BusinessDayImpl(UUID id, boolean isBooked, List<BusinessDayIncrement> businessDayIncrements, BusinessDayIncrement currentBDIncrement,
          ComeAndGoes comeAndGoes) {
       this.comeAndGoes = comeAndGoes;
       this.increments = new CopyOnWriteArrayList<>(businessDayIncrements);
       this.currentBussinessDayIncremental = currentBDIncrement;
+      this.isBooked = isBooked;
       this.id = id;
    }
 
@@ -213,16 +215,15 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public void addBusinessIncrement(BusinessDayIncrementAdd update) {
-      addBusinessIncrementInternal(() -> BusinessDayIncrementImpl.of(update));
+      addBusinessIncrementInternal(BusinessDayIncrementImpl.of(update));
    }
 
    @Override
    public void addBusinessIncrement(BusinessDayIncrementImport businessDayIncrementImport) {
-      addBusinessIncrementInternal(() -> BusinessDayIncrementImpl.of(businessDayIncrementImport));
+      addBusinessIncrementInternal(BusinessDayIncrementImpl.of(businessDayIncrementImport));
    }
 
-   private void addBusinessIncrementInternal(Supplier<BusinessDayIncrement> bdIncSupplier) {
-      BusinessDayIncrement businessDayIncrement = bdIncSupplier.get();
+   private void addBusinessIncrementInternal(BusinessDayIncrement businessDayIncrement) {
       validateIfCanAdd(businessDayIncrement);
       increments.add(businessDayIncrement);
       // recreate / reset the currentIncrement in 
@@ -293,6 +294,11 @@ public class BusinessDayImpl implements BusinessDay {
    public String getComeAndGoMsg() {
       TimeSnippet currentComeAndGoTimeSnippet = getCurrentComeAndGoTimeSnippet();
       return TextLabel.CAPTURING_INACTIVE + ". " + TextLabel.COME_OR_GO + ": " + currentComeAndGoTimeSnippet.getBeginTimeStampRep();
+   }
+
+   @Override
+   public boolean isBooked() {
+      return isBooked;
    }
 
    private TimeSnippet getCurrentComeAndGoTimeSnippet() {

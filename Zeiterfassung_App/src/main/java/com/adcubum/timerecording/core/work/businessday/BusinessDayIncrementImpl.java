@@ -193,6 +193,54 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
       currentTimeSnippet.updateAndSetEndTimeStamp(newTimeStampValue, true);
    }
 
+   @Override
+   public UUID getId() {
+      return id;
+   }
+
+   @Override
+   public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + chargeType;
+      result = prime * result + ((currentTimeSnippet == null) ? 0 : currentTimeSnippet.hashCode());
+      result = prime * result + ((description == null) ? 0 : description.hashCode());
+      result = prime * result + (isCharged ? 1231 : 1237);
+      result = prime * result + ((ticket == null) ? 0 : ticket.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj) {
+      if (this == obj)
+         return true;
+      if (obj == null)
+         return false;
+      if (getClass() != obj.getClass())
+         return false;
+      BusinessDayIncrementImpl other = (BusinessDayIncrementImpl) obj;
+      if (chargeType != other.chargeType)
+         return false;
+      if (currentTimeSnippet == null) {
+         if (other.currentTimeSnippet != null)
+            return false;
+      } else if (!currentTimeSnippet.equals(other.currentTimeSnippet))
+         return false;
+      if (description == null) {
+         if (other.description != null)
+            return false;
+      } else if (!description.equals(other.description))
+         return false;
+      if (isCharged != other.isCharged)
+         return false;
+      if (ticket == null) {
+         if (other.ticket != null)
+            return false;
+      } else if (!ticket.equals(other.ticket))
+         return false;
+      return true;
+   }
+
    /**
     * Creates a new {@link BusinessDayIncrement} for the given
     * {@link BusinessDayIncrementAdd}
@@ -234,11 +282,6 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
          businessDayIncremental.stopCurrentTimeSnippet(timeSnippet.getEndTimeStamp());
       }
       return businessDayIncremental;
-   }
-
-   @Override
-   public UUID getId() {
-      return id;
    }
 
    public static BusinessDayIncrement of(BusinessDayIncrement otherBussinessDayIncremental) {

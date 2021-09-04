@@ -27,6 +27,7 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
+import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistoryOverview;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
@@ -44,6 +45,7 @@ import com.adcubum.timerecording.message.MessageType;
 import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.settings.key.ValueKey;
 import com.adcubum.timerecording.settings.key.ValueKeyFactory;
+import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.util.utils.FileSystemUtil;
 
 /**
@@ -256,6 +258,7 @@ public class TimeRecorderImpl implements TimeRecorder {
             BookerResult bookResult = bookAdapter.book(businessDay);
             businessDay = businessDayHelper.save(businessDay);
             if (bookResult.hasBooked()) {
+               businessDayHelper.addBookedBusinessDayIncrements(businessDay.getIncrements());
                callbackHandler.displayMessage(MessageFactory.createNew(map2MessageType(bookResult), null, bookResult.getMessage()));
                hasBooked = true;
             }
@@ -328,6 +331,7 @@ public class TimeRecorderImpl implements TimeRecorder {
       List<String> fileContent = fileImporter.importFile(file);
       BusinessDay importedBusinessDay = BusinessDayImporter.INTANCE.importBusinessDay(fileContent);
       // First delete all existing entries, since we may have already a persistent (but so far empty) businessDay
+      businessDayHelper.deleteAll(false);
       businessDayHelper.save(importedBusinessDay);
    }
 
@@ -425,6 +429,11 @@ public class TimeRecorderImpl implements TimeRecorder {
       synchronized (businessDayHelper) {
          return businessDayHelper.getBusinessDay();
       }
+   }
+
+   @Override
+   public BusinessDayHistoryOverview getBusinessDayHistoryOverview(Time lowerBounds, Time upperBounds) {
+      return businessDayHelper.getBusinessDayHistoryOverview(lowerBounds, upperBounds);
    }
 
    @Override

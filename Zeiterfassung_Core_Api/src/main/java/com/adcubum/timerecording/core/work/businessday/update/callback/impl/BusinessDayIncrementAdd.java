@@ -70,7 +70,7 @@ public class BusinessDayIncrementAdd {
       this.amountOfHours = amountOfHours;
    }
 
-   public final void setKindOfService(int kindOfService) {
+   public final void setServiceCode(int kindOfService) {
       this.kindOfService = kindOfService;
    }
 
@@ -109,7 +109,7 @@ public class BusinessDayIncrementAdd {
          return this;
       }
 
-      public BusinessDayIncrementAddBuilder withKindOfService(int kindOfService) {
+      public BusinessDayIncrementAddBuilder withServiceCode(int kindOfService) {
          this.kindOfService = kindOfService;
          return this;
       }
@@ -119,12 +119,23 @@ public class BusinessDayIncrementAdd {
          return this;
       }
 
+      /**
+       * Creates a new {@link BusinessDayIncrementAdd} from the given {@link BusinessDayIncrement}
+       */
+      public BusinessDayIncrementAddBuilder from(BusinessDayIncrement businessDayIncrement) {
+         return withDescription(businessDayIncrement.getDescription())
+               .withServiceCode(businessDayIncrement.getChargeType())
+               .withTicket(businessDayIncrement.getTicket())
+               .withTimeSnippet(businessDayIncrement.getCurrentTimeSnippet())
+               .withId(null);
+      }
+
       public BusinessDayIncrementAdd build() {
          BusinessDayIncrementAdd businessDayIncrementAdd = new BusinessDayIncrementAdd();
          businessDayIncrementAdd.setTimeSnippet(timeSnippet);
          businessDayIncrementAdd.setDescription(description);
          businessDayIncrementAdd.setTicket(ticket);
-         businessDayIncrementAdd.setKindOfService(kindOfService);
+         businessDayIncrementAdd.setServiceCode(kindOfService);
          businessDayIncrementAdd.setAmountOfHours(amountOfHours);
          businessDayIncrementAdd.id = id;
          return businessDayIncrementAdd;

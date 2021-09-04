@@ -37,15 +37,20 @@ public class BusinessDayEntity extends BaseEntity {
 
    @OneToOne(cascade = CascadeType.ALL)
    @JoinColumn(name = "current_businessday_increment_id")
-   @NonNull
    private BusinessDayIncrementEntity currentBusinessDayIncrementEntity;
 
    @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "comeandgoes_id")
    private ComeAndGoesEntity comeAndGoesEntity;
 
+   private boolean isBooked;
+
    public BusinessDayEntity() {
-      this(null);
+      this(null, false);
+   }
+
+   public BusinessDayEntity(boolean isBooked) {
+      this(null, isBooked);
    }
 
    /**
@@ -54,9 +59,10 @@ public class BusinessDayEntity extends BaseEntity {
     * @param id
     *        the id
     */
-   public BusinessDayEntity(UUID id) {
+   public BusinessDayEntity(UUID id, boolean isBooked) {
       super(id);
-      this.currentBusinessDayIncrementEntity = new BusinessDayIncrementEntity(null, null, null, null, 0, false);
+      this.isBooked = isBooked;
+      this.currentBusinessDayIncrementEntity = new BusinessDayIncrementEntity(null, null, null, null, 0, isBooked);
       this.businessDayIncrementEntities = Collections.emptyList();
       this.comeAndGoesEntity = new ComeAndGoesEntity();
    }
@@ -77,14 +83,18 @@ public class BusinessDayEntity extends BaseEntity {
       return comeAndGoesEntity.getId();
    }
 
+   public boolean isBooked() {
+      return isBooked;
+   }
+
    @Override
    public String toString() {
       String bdIncEntitiesRep = businessDayIncrementEntities.stream()
             .map(bDIncEntity -> String.format("BusinessDayIncrementEntity='%s'", bDIncEntity))
             .reduce("", (a, b) -> a + "," + b);
       return String.format(
-            "BusinessDayEntity[id=%s, bdIncEntitiesRep='%s']",
-            id, bdIncEntitiesRep);
+            "BusinessDayEntity[id=%s, isBooked=%s, bdIncEntitiesRep='%s']",
+            id, isBooked, bdIncEntitiesRep);
    }
 
    public void setBusinessDayIncrementEntities(List<BusinessDayIncrementEntity> businessDayIncrementEntities) {
@@ -99,9 +109,10 @@ public class BusinessDayEntity extends BaseEntity {
    public int hashCode() {
       final int prime = 31;
       int result = super.hashCode();
-      result = prime * result + businessDayIncrementEntities.hashCode();
-      result = prime * result + comeAndGoesEntity.hashCode();
-      result = prime * result + currentBusinessDayIncrementEntity.hashCode();
+      result = prime * result + ((businessDayIncrementEntities == null) ? 0 : businessDayIncrementEntities.hashCode());
+      result = prime * result + ((comeAndGoesEntity == null) ? 0 : comeAndGoesEntity.hashCode());
+      result = prime * result + ((currentBusinessDayIncrementEntity == null) ? 0 : currentBusinessDayIncrementEntity.hashCode());
+      result = prime * result + (isBooked ? 1231 : 1237);
       return result;
    }
 
@@ -118,10 +129,17 @@ public class BusinessDayEntity extends BaseEntity {
          return false;
       if (!comeAndGoesEntity.equals(other.comeAndGoesEntity))
          return false;
-      return !currentBusinessDayIncrementEntity.equals(other.currentBusinessDayIncrementEntity);
+      if (!currentBusinessDayIncrementEntity.equals(other.currentBusinessDayIncrementEntity)) {
+         return false;
+      }
+      return isBooked == other.isBooked;
    }
 
    public void setComeAndGoesEntity(ComeAndGoesEntity comeAndGoesEntity) {
-      this.comeAndGoesEntity = requireNonNull(comeAndGoesEntity);
+      this.comeAndGoesEntity = /*requireNonNull(*/comeAndGoesEntity/*)*/;
+   }
+
+   public void setIsBooked(boolean isBooked) {
+      this.isBooked = isBooked;
    }
 }

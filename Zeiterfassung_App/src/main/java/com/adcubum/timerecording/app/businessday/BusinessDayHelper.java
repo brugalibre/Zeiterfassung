@@ -1,7 +1,11 @@
 package com.adcubum.timerecording.app.businessday;
 
+import java.util.List;
+
 import com.adcubum.timerecording.app.TimeRecorderImpl;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.core.work.businessday.history.resolver.BusinessDayHistoryOverviewResolver;
 
 /**
  * The {@link BusinessDayHelper} acts as a helper for the {@link TimeRecorderImpl} in order to retrieve
@@ -10,7 +14,7 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDay;
  * @author dstalder
  *
  */
-public interface BusinessDayHelper {
+public interface BusinessDayHelper extends BusinessDayHistoryOverviewResolver {
 
    /**
     * Returns the current {@link BusinessDay} of this helper or <code>null</code> if there is none
@@ -40,4 +44,21 @@ public interface BusinessDayHelper {
     * @return the already existing or new created {@link BusinessDay}
     */
    BusinessDay loadExistingOrCreateNew();
+
+   /**
+    * Adds the given {@link BusinessDayIncrement} and adds the booked one to the booked {@link BusinessDay}
+    * of this {@link BusinessDayHelper}
+    * 
+    * @param increments
+    *        the {@link BusinessDayIncrement} to check and add the booked ones
+    */
+   void addBookedBusinessDayIncrements(List<BusinessDayIncrement> increments);
+
+   /**
+    * Delete all {@link BusinessDay} which are either booked or not booked, depending on the given parameter
+    * 
+    * @param isBooked
+    *        <code>true</code> if only booked ones should be deleted or <code>false</code> if not-booked
+    */
+   void deleteAll(boolean isBooked);
 }

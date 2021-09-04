@@ -6,6 +6,8 @@ package com.adcubum.util.parser;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -21,6 +23,7 @@ public class DateParser {
 
    private static final String HOUR_MIN_PATTERN = "HH:mm";
    public static final String HOUR_MIN_SEC_PATTERN = "HH:mm:ss";
+   public static final String DD_MM_YYYY = "dd.MM.yyyy";
    private static final String DATE_WITH_SEC_PATTERN = "dd-MM-yyyy " + HOUR_MIN_SEC_PATTERN;
    public static final String DATE_PATTERN = "dd.MM.yyyy HH:mm";
 
@@ -51,6 +54,44 @@ public class DateParser {
       df.applyPattern(pattern);
       Date date = new Date(time.getTime());
       return df.format(date);
+   }
+
+
+   /**
+    * Returns the default representation of a date using the pattern 'dd.MM.yyyy'
+    * 
+    * @return the default representation of a date using the pattern 'dd.MM.yyyy'
+    */
+   public static String parse2String(Date date) {
+      return parse2String(date, "dd.MM.yyyy");
+   }
+
+   /**
+    * Returns the default representation of a date using the given pattern
+    * 
+    * @param date
+    *        the {@link Date} to parse
+    * @param pattern
+    *        the pattern to use
+    * @return the default representation of a date using the given pattern
+    */
+   public static String parse2String(Date date, String pattern) {
+      SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
+      df.applyPattern(pattern);
+      return df.format(date);
+   }
+
+   /**
+    * Returns the default representation of a date using the given pattern
+    * 
+    * @param date
+    *        the {@link Date} to parse
+    * @param pattern
+    *        the pattern to use
+    * @return the default representation of a date using the given pattern
+    */
+   public static String parse2String(LocalDate date, String pattern) {
+      return date.format(DateTimeFormatter.ofPattern(pattern));
    }
 
    public static Time getTime(String input, Time currentSetDate) {

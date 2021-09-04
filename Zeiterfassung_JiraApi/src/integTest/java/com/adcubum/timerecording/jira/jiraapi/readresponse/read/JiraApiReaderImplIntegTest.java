@@ -54,6 +54,9 @@ class JiraApiReaderImplIntegTest {
       assertThat(ticketsFromBoard.getTickets().size(), is(1));
       Ticket ticket = ticketsFromBoard.getTickets().get(0);
       assertThat(ticket.getNr(), is(ISSUE_NR));
+
+      // finally
+      tcb.clientServer.stop();
    }
 
    @Test
@@ -84,6 +87,9 @@ class JiraApiReaderImplIntegTest {
       Ticket ticketOfSprint2 = findTicket4Id(ticketsFromBoard.getTickets(), ISSUE_NR_FROM_ACTIVE_SPRINT_2);
       assertThat(ticketOfSprint1, is(notNullValue()));
       assertThat(ticketOfSprint2, is(notNullValue()));
+
+      // finally
+      tcb.clientServer.stop();
    }
 
    private Ticket findTicket4Id(List<Ticket> tickets, String id) {
