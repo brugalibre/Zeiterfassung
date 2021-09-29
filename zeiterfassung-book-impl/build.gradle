@@ -20,22 +20,6 @@ dependencies {
 	
 	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
-		
-	// Dependencies für abbuchen via Chrome-Driver 
-	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
-	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
-
-	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-api
-	implementation group: 'org.seleniumhq.selenium', name: 'selenium-api', version: '3.141.59'
-	
-	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-support
-	implementation group: 'org.seleniumhq.selenium', name: 'selenium-support', version: '3.141.59'
-	
-	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-remote-driver
-	implementation group: 'org.seleniumhq.selenium', name: 'selenium-remote-driver', version: '3.141.59'
-
-	// https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager
-	implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.4.0'
 	
     implementation project(':zeiterfassung-jira-api')
     implementation project(':zeiterfassung-book-api')
@@ -46,6 +30,6 @@ dependencies {
     testImplementation project(':zeiterfassung-core-impl')
     testImplementation project(':zeiterfassung-common-impl')
     
-    implementation files('libs/turbo-bucher-6.4.jar')
+    implementation files('libs/turbo-bucher-6.6.jar')
     implementation files('libs/tool-jira2abacus-1.1.14-SNAPSHOT-jar-with-dependencies.jar')
 }
