@@ -95,14 +95,17 @@
         <td>{{businessDayIncrement.isBooked ? 'Ja' : 'Nein'}}</td>
         <td>
           <button
-            class="deleteButton"
+            v-bind:class="{ deleteButton: !businessDayIncrement.isBooked, inactiveDeleteButton: businessDayIncrement.isBooked}"
+            :disabled="businessDayIncrement.isBooked"
             v-on:click="deleteBusinessDayIncrementAndRefresh(businessDayIncrement)">
           </button>
         </td>
       </tr>
     </table>
-    <p>Gesamt Anzahl Stunden: {{businessDay.totalDurationRep}}h</p>
-    <div >
+    <div class="bottom">
+      <div>
+        <label>Gesamt Anzahl Stunden: {{businessDay.totalDurationRep}}h</label>
+      </div>
       <button :disabled="isDeleteAllButtonDisabled" v-on:click="deleteAllAndRefresh">Alles löschen</button>
     </div>
     <error-box v-if="postErrorDetails">
@@ -180,6 +183,14 @@ export default {
     background: url("../assets/white_trash.png") #004587 no-repeat center center;
     background-size: 200% 125%;
   }
+  .inactiveDeleteButton{
+    padding: 0;
+    margin: 0;
+    height: 4vh;
+    width: 4vh;
+    background: url("../assets/white_trash.png") lightslategray no-repeat center center;
+    background-size: 200% 125%;
+  }
 
   .description{
     width: 150px;
@@ -187,6 +198,12 @@ export default {
 
   .isBookedRecord{
     background-color:lightslategray
+  }
+
+  .bottom{
+    position: absolute;
+    bottom: 0;
+    padding: 5px;
   }
 
 </style>
