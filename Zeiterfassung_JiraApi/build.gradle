@@ -2,19 +2,11 @@ plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
     id 'eclipse'
-    id 'java'
 }
 
+apply from: '..//Zeiterfassung-zeiterfassung/zeiterfassung.gradle'
 apply from: '..//Zeiterfassung-zeiterfassung/test.gradle'
 apply from: '..//Zeiterfassung-zeiterfassung/integtest.gradle'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    // Use JCenter for resolving dependencies.
-    jcenter()
-}
 
 dependencies {
 	// https://mvnrepository.com/artifact/org.mock-server/mockserver-netty

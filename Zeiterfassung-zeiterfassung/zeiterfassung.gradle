@@ -1,0 +1,10 @@
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+    jcenter()
+}
+
+subprojects{
+	task allDeps(type: DependencyReportTask) {}
+}

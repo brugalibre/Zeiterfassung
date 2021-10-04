@@ -1,15 +1,9 @@
 plugins {
     id 'java-library'
     id 'eclipse'
-    id 'java'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    jcenter()
-}
+apply from: '..//Zeiterfassung-zeiterfassung/zeiterfassung.gradle'
 
 dependencies {
 	implementation project(':zeiterfassung-auth-impl')

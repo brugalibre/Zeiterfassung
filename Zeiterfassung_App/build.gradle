@@ -1,27 +1,15 @@
 plugins {
-    // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
     id 'eclipse'
-    id 'java'
 }
 
+apply from: '..//Zeiterfassung-zeiterfassung/zeiterfassung.gradle'
 apply from: '..//Zeiterfassung-zeiterfassung/test.gradle'
 apply from: '..//Zeiterfassung-zeiterfassung/integtest.gradle'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    // Use JCenter for resolving dependencies.
-    jcenter()
-}
 
 dependencies {
 	// https://mvnrepository.com/artifact/log4j/log4j
 	implementation group: 'log4j', name: 'log4j', version: '1.2.17'
-	
-	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 	
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
@@ -33,16 +21,24 @@ dependencies {
 	implementation project(':zeiterfassung-book-api')
 	implementation project(':zeiterfassung-persistence-api')
 	
+	implementation ('org.springframework.boot:spring-boot-starter-data-jpa:2.5.2')
+	
+	implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+	
 	testImplementation project(':zeiterfassung-persistence-impl')
 	testImplementation project(':zeiterfassung-book-impl')
 	testImplementation project(':zeiterfassung-jira-impl')
 	testImplementation project(':zeiterfassung-common-impl')
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
-	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.5.3'
-	// https://mvnrepository.com/artifact/org.springframework/spring-test
-	testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.9'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.5.2'
+
+	// Test dependency bc of AbstractFactory calls
+	testImplementation ('org.springframework.boot:spring-boot-starter-test:2.5.3')
 	
+	testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.9'
+	testImplementation group: 'org.springframework', name: 'spring-context', version: '5.3.8'
+	testImplementation group: 'org.springframework', name: 'spring-core', version: '5.3.8'
+}
+
+configurations {
+	compile.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+	compile.exclude group: 'ch.qos.logback', module: 'logback-classic'
 }

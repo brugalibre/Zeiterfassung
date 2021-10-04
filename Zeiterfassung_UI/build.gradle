@@ -3,22 +3,16 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'java-library'
     id 'eclipse'
-    id 'java'
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
 }
+
+apply from: '..//Zeiterfassung-zeiterfassung/zeiterfassung.gradle'
 
 def timerecorderMainClass = 'com.adcubum.timerecording.launch.TimeRecordingLauncher' 
 
 application {
     mainClass = timerecorderMainClass
-}
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-repositories {
-    // Use JCenter for resolving dependencies.
-    jcenter()
 }
 
 dependencies {
@@ -56,7 +50,7 @@ dependencies {
     implementation project(':zeiterfassung-auth-impl')
 }
 
-shadowJar {
-	archiveBaseName = 'zeiterfassung'
-	mainClassName = timerecorderMainClass
- }
+javafx {
+    version = "11"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.base']
+}

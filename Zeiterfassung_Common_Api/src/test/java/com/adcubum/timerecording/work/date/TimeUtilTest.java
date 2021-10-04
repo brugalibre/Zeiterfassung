@@ -53,14 +53,14 @@ class TimeUtilTest {
       int expectedDaysBetween = 57;
       Time lowerBounds = TimeBuilder.of()
             .withDay(firstDayInPeriod)
-            .withMonth(1)
+            .withMonth(2)
             .withYear(2020)
             .withHour(15)
             .withMinute(0)
             .build();
       Time upperBounds = TimeBuilder.of()
             .withDay(lastDayInPeriod)
-            .withMonth(2)
+            .withMonth(3)
             .withYear(2020)
             .withHour(1)
             .withMinute(0)
