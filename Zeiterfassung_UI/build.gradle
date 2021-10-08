@@ -1,6 +1,4 @@
 plugins {
-    // Apply the java-library plugin for API and implementation separation.
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'java-library'
     id 'eclipse'
     id 'application'
@@ -8,12 +6,6 @@ plugins {
 }
 
 apply from: '..//Zeiterfassung-zeiterfassung/zeiterfassung.gradle'
-
-def timerecorderMainClass = 'com.adcubum.timerecording.launch.TimeRecordingLauncher' 
-
-application {
-    mainClass = timerecorderMainClass
-}
 
 dependencies {
 	

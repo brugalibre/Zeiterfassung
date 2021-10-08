@@ -1,14 +1,22 @@
 plugins {
     id 'java-library'
     id 'eclipse'
+    id 'application'
 	id 'org.springframework.boot' version '2.5.1'
     id 'org.openjfx.javafxplugin' version '0.0.10'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 apply from: '..//Zeiterfassung-zeiterfassung/zeiterfassung.gradle'
 apply from: '..//Zeiterfassung-zeiterfassung/test.gradle'
 apply from: '..//Zeiterfassung-zeiterfassung/integtest.gradle'
+
+def timerecorderMainClass = 'com.adcubum.timerecording.application.TimeRecordingSpringBootApplication' 
+
+application {
+    mainClass = timerecorderMainClass
+}
 
 dependencies {
 	implementation ('org.springframework.boot:spring-boot-starter-web')
@@ -16,6 +24,11 @@ dependencies {
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.2'
 	implementation ('org.springframework.boot:spring-boot-starter-data-jpa:2.5.2')
 	
+    implementation project(':zeiterfassung-persistence-api')
+    implementation project(':zeiterfassung-core-api')
+    implementation project(':zeiterfassung-book-api')
+    implementation project(':zeiterfassung-jira-api')
+    implementation project(':zeiterfassung-common-api')
     implementation project(':zeiterfassung-ui')
 
 	// Test dependency bc of AbstractFactory calls
@@ -35,3 +48,8 @@ javafx {
     version = "11"
     modules = [ 'javafx.controls']
 }
+
+shadowJar {
+	archiveBaseName = 'zeiterfassung'
+	mainClassName = timerecorderMainClass
+ }
