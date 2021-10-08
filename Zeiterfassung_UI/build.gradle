@@ -48,6 +48,7 @@ dependencies {
     runtimeOnly project(':zeiterfassung-jira-impl')
     runtimeOnly project(':zeiterfassung-common-impl')
     
+    implementation project(':zeiterfassung-persistence-api')
     implementation project(':zeiterfassung-core-api')
     implementation project(':zeiterfassung-book-api')
     implementation project(':zeiterfassung-common-api')

@@ -1,36 +1,32 @@
-package com.adcubum.timerecording.app.businessday.businessdayconfig;
+package com.adcubum.timerecording.app.businessday.businessdayconfig.impl;
 
 import static java.util.Objects.isNull;
 
+import com.adcubum.timerecording.app.businessday.businessdayconfig.BusinessDayConfig;
 import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.settings.key.ValueKey;
 import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 
-/**
- * The {@link BusinessDayConfig} defines the set amount of hours and knows also the actual working hours
- * It can therefore define the amount of percentage of work which is needs stil to be done
- * 
- * @author dstalder
- *
- */
-public class BusinessDayConfig {
+public class BusinessDayConfigImpl implements BusinessDayConfig {
 
    private static final ValueKey<String> SET_HOURS_KEY = ValueKeyFactory.createNew("setWorkingHours", String.class);
    private float setHours;
 
-   public BusinessDayConfig() {
+   public BusinessDayConfigImpl() {
       this(Settings.INSTANCE);
    }
 
-   public BusinessDayConfig(Settings settings) {
+   public BusinessDayConfigImpl(Settings settings) {
       String setHoursAsString = settings.getSettingsValue(SET_HOURS_KEY);
       this.setHours = isNull(setHoursAsString) ? 8.5f : Float.parseFloat(setHoursAsString);
    }
 
+   @Override
    public float getSetHours() {
       return setHours;
    }
 
+   @Override
    public float getHoursLeft(float currentHours) {
       return Math.max(0, setHours - currentHours);
    }

@@ -4,6 +4,7 @@ export default {
   data (){
     return {
       setActualWorkingPieChartData: {},
+      setHours: 0,
     }
   },
   methods: {
@@ -13,8 +14,9 @@ export default {
         .then(data => {
           this.setActualWorkingHoursDto = data;
           this.setActualWorkingPieChartData =
-         [['Bereits geleistete Stunden', this.setActualWorkingHoursDto.actualHours],
-         ['Rest Stunden', this.setActualWorkingHoursDto.hoursLeft]];
+         [['Bereits geleistete Stunden (' + this.setActualWorkingHoursDto.actualHours + ')', this.setActualWorkingHoursDto.actualHours],
+         ['Rest Stunden (' + this.setActualWorkingHoursDto.hoursLeft +')', this.setActualWorkingHoursDto.hoursLeft]];
+         this.setHours = this.setActualWorkingHoursDto.setHours;
       });
     },
   }

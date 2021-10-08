@@ -3,6 +3,7 @@ package com.adcubum.timerecording.service.businessdayconfig;
 import org.springframework.stereotype.Service;
 
 import com.adcubum.timerecording.app.businessday.businessdayconfig.BusinessDayConfig;
+import com.adcubum.timerecording.app.businessday.businessdayconfig.factory.BusinessDayConfigFactory;
 import com.adcubum.timerecording.model.businessday.BusinessDayDto;
 import com.adcubum.timerecording.model.businessdayconfig.BusinessDayConfigDto;
 import com.adcubum.timerecording.service.businessday.impl.BusinessDayService;
@@ -22,7 +23,7 @@ public class BusinessDayConfigService {
    public BusinessDayConfigDto getBusinessDayConfigDto() {
       BusinessDayDto businessDayDto = businessDayService.getBusinessDayDto();
       float duration = businessDayDto.getTotalDuration();
-      BusinessDayConfig businessDayConfig = new BusinessDayConfig();
+      BusinessDayConfig businessDayConfig = BusinessDayConfigFactory.createNew();
       return new BusinessDayConfigDto(businessDayConfig, duration);
    }
 }

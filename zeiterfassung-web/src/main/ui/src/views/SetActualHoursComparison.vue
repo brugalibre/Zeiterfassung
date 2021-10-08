@@ -15,6 +15,7 @@
       :data="setActualWorkingPieChartData"
     >
     </pie-chart>
+    <label>Tagessoll: {{setHours}}h</label>
 </div>
 </template>
 
