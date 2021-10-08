@@ -37,7 +37,7 @@ public class TimeRecorderController {
    }
 
    @PostMapping("/book")
-   public void book() {
-      timeRecorderService.book();
+   public int book() {
+      return timeRecorderService.book();
    }
 }
