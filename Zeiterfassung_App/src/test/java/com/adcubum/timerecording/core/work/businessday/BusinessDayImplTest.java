@@ -18,6 +18,7 @@ import org.junit.jupiter.api.function.Executable;
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
+import com.adcubum.timerecording.core.work.businessday.exception.BusinessIncrementBevorOthersException;
 import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
@@ -287,7 +288,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       Executable ex = () -> businessDay.addBusinessIncrement(createUpdate(secondSnippet, 113, getTicket4Nr()));
 
       // Then
-      assertThrows(IllegalStateException.class, ex);
+      assertThrows(BusinessIncrementBevorOthersException.class, ex);
    }
 
    @Test
