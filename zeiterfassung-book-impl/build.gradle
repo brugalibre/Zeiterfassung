@@ -20,5 +20,4 @@ dependencies {
     testImplementation project(':zeiterfassung-common-impl')
     
     implementation files('libs/turbo-bucher-6.6.1.jar')
-    implementation files('libs/tool-jira2abacus-1.1.14-SNAPSHOT-jar-with-dependencies.jar')
 }
