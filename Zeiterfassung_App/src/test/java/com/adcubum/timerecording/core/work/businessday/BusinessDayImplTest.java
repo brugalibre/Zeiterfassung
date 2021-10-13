@@ -478,20 +478,51 @@ class BusinessDayImplTest extends BaseTestWithSettings {
    }
 
    @Test
+   public void testCanNotAddBusinessDayIncrement_SinceThereAreElementsFromPrecedentDays() {
+
+      // Given
+      BusinessDayImpl businessDay = new BusinessDayImpl();
+      int day = 1;
+      TimeSnippet firstTimeSnippet = TimeSnippetBuilder.of()
+            .withYear(2021)
+            .withMonth(2)
+            .withDay(day)
+            .withStartHourAndDuration(2, 1)
+            .build();
+      BusinessDayIncrementAdd updateWithFirstTimeSnippet = createUpdate(firstTimeSnippet, 113, getTicket4Nr());
+
+      TimeSnippet timeSnippetADayLater = TimeSnippetBuilder.of()
+            .withYear(2021)
+            .withMonth(2)
+            .withDay(day + 1)
+            .withStartHourAndDuration(2, 1)
+            .build();
+      BusinessDayIncrementAdd updateWithTimeSnippetFromADayLater = createUpdate(timeSnippetADayLater, 114, getTicket4Nr());
+
+      businessDay.addBusinessIncrement(updateWithFirstTimeSnippet);
+
+      // When
+      Executable exe = () -> businessDay.addBusinessIncrement(updateWithTimeSnippetFromADayLater);
+
+      // Then
+      assertThrows(BusinessIncrementBevorOthersException.class, exe);
+   }
+
+   @Test
    public void testHasElementsFromPrecedentDays_PrecedentElements() {
 
       // Given
       boolean expectedHasElementsFromPrecedentDays = true;
       BusinessDayImpl businessDay = new BusinessDayImpl();
 
-      TimeSnippet timeSnippet = createTimeSnippet(0);
-      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, getTicket4Nr());
-
-      TimeSnippet timeSnippetYesterday = createTimeSnippet(-24 * 60 * 3600 * 1000);// One day in Miliseconds
-      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, getTicket4Nr());
-
-      businessDay.addBusinessIncrement(updateWithTimeSnippet);
-      businessDay.addBusinessIncrement(updateWithTimeSnippetTomorrow);
+      TimeSnippet timeSnippet = TimeSnippetBuilder.of()
+            .withYear(2021)
+            .withMonth(2)
+            .withDay(1)
+            .withStartHourAndDuration(2, 1)
+            .build();
+      BusinessDayIncrementAdd businessDayIncrementAddFromThePast = createUpdate(timeSnippet, 114, getTicket4Nr());
+      businessDay.addBusinessIncrement(businessDayIncrementAddFromThePast);
 
       // When
       boolean actualHasElementsFromPrecedentDays = businessDay.hasElementsFromPrecedentDays();

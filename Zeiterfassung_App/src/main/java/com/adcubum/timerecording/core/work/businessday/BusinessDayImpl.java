@@ -239,7 +239,7 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    private static Predicate<BusinessDayIncrement> newBusinessDayIncIsBeforeOrAfter(Time newBDIncTime) {
-      return bDayInc -> TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(newBDIncTime, bDayInc.getDate());
+      return bDayInc -> TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(TimeFactory.createNew(bDayInc.getDate()), new Date(newBDIncTime.getTime()));
    }
 
    private static Consumer<BusinessDayIncrement> throwException() {

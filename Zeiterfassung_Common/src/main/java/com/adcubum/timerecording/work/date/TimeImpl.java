@@ -4,6 +4,7 @@
 package com.adcubum.timerecording.work.date;
 
 import static com.adcubum.timerecording.work.date.Time.getTimeRefactorValue;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDate;
@@ -139,8 +140,9 @@ public class TimeImpl implements Time {
 
    @Override
    public boolean isBefore(Time time2Check) {
-      long days = time2Check.getDays();
-      return this.getDays() < days;
+      long daysBetween = DAYS.between(getLocalDate(), time2Check.getLocalDate());
+      // attention: when calculating the days between using Time::getDays does not work in all situations!
+      return daysBetween > 0;
    }
 
    @Override
