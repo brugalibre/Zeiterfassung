@@ -19,9 +19,9 @@ public class BusinessDayHistoryOverviewImpl implements BusinessDayHistoryOvervie
 
    private List<BusinessDayHistory> businessDayHistoryEntries;
 
-   private BusinessDayHistoryOverviewImpl(Time lowerBounds, Time upperBounds, List<BusinessDay> businessDaysHistory) {
+   private BusinessDayHistoryOverviewImpl(Time historyBegin, Time historyEnd, List<BusinessDay> businessDaysHistory) {
       buildBusinessDayHistroyEntries(businessDaysHistory);
-      addEmptyBusinessDayHistoryEntryIfNeeded(lowerBounds, upperBounds);
+      addEmptyBusinessDayHistoryEntryIfNeeded(historyBegin, historyEnd);
       Collections.sort(businessDayHistoryEntries, new BusinessDayHistoryComparator());
    }
 
@@ -32,8 +32,8 @@ public class BusinessDayHistoryOverviewImpl implements BusinessDayHistoryOvervie
             .collect(Collectors.toList());
    }
 
-   private void addEmptyBusinessDayHistoryEntryIfNeeded(Time lowerBounds, Time upperBounds) {
-      List<BusinessDayHistory> buildEmptyBusinessDayHistory = buildEmptyBusinessDayHistory(lowerBounds, upperBounds);
+   private void addEmptyBusinessDayHistoryEntryIfNeeded(Time historyBegin, Time historyEnd) {
+      List<BusinessDayHistory> buildEmptyBusinessDayHistory = buildEmptyBusinessDayHistory(historyBegin, historyEnd);
       Collections.sort(buildEmptyBusinessDayHistory, new BusinessDayHistoryComparator());
       for (BusinessDayHistory emptyBusinessDayHistory : buildEmptyBusinessDayHistory) {
          Optional<BusinessDayHistory> businessDayHistoryOpt4Date = findBusinessDayHistoryOpt4Date(emptyBusinessDayHistory.getLocalDate());
@@ -59,8 +59,8 @@ public class BusinessDayHistoryOverviewImpl implements BusinessDayHistoryOvervie
       };
    }
 
-   private static List<BusinessDayHistory> buildEmptyBusinessDayHistory(Time lowerBounds, Time upperBounds) {
-      return TimeUtil.getDatesInBetween(lowerBounds, upperBounds)
+   private static List<BusinessDayHistory> buildEmptyBusinessDayHistory(Time historyBegin, Time historyEnd) {
+      return TimeUtil.getDatesInBetween(historyBegin, historyEnd)
             .stream()
             .map(BusinessDayHistoryImpl::of)
             .collect(Collectors.toList());
@@ -71,7 +71,22 @@ public class BusinessDayHistoryOverviewImpl implements BusinessDayHistoryOvervie
       return Collections.unmodifiableList(businessDayHistoryEntries);
    }
 
-   public static BusinessDayHistoryOverviewImpl of(Time lowerBounds, Time upperBounds, List<BusinessDay> businessDayHistory) {
-      return new BusinessDayHistoryOverviewImpl(lowerBounds, upperBounds, businessDayHistory);
+   /**
+    * Creates a new {@link BusinessDayHistoryOverviewImpl} for the given period and for the given booked business-days
+    * For each day between the given period (incl. begin & end) there is a {@link BusinessDayHistory}.
+    * If there is a booked {@link BusinessDay} for a {@link BusinessDayHistory} the total duration of this {@link BusinessDay} is used
+    * for the {@link BusinessDayHistory#getBookedHours()}. If there is no {@link BusinessDay} the amount of booked hours is <code>0</code>
+    * 
+    * 
+    * @param historyBegin
+    *        the begin of the history
+    * @param historyEnd
+    *        the end of the history
+    * @param businessDayHistory
+    *        the booked {@link BusinessDay}s
+    * @return a {@link BusinessDayHistoryOverviewImpl}
+    */
+   public static BusinessDayHistoryOverviewImpl of(Time historyBegin, Time historyEnd, List<BusinessDay> businessDayHistory) {
+      return new BusinessDayHistoryOverviewImpl(historyBegin, historyEnd, businessDayHistory);
    }
 }

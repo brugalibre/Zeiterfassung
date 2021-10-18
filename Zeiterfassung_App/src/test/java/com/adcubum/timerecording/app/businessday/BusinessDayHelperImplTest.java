@@ -50,8 +50,10 @@ class BusinessDayHelperImplTest {
    void testAddBookedIncrements_NoBookedOnes() {
 
       // Given
+      BookedBusinessDayDeleter bookedBusinessDayDeleter = mock(BookedBusinessDayDeleter.class);
       TestCaseBuilder tcb = new TestCaseBuilder()
             .withBusinessDayRepository(mock(BusinessDayRepository.class))
+            .withBookedBusinessDayDeleter(bookedBusinessDayDeleter)
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
                   .withDescription("Test")
                   .withServiceCode(113)
@@ -66,6 +68,7 @@ class BusinessDayHelperImplTest {
 
       // Then
       verify(tcb.businessDayRepository, never()).createNew(eq(false));
+      verify(bookedBusinessDayDeleter).cleanUpBookedBusinessDays();
       assertThat(tcb.bookedBusinessDay.getIncrements().isEmpty(), is(true));
    }
 
@@ -73,8 +76,10 @@ class BusinessDayHelperImplTest {
    void testAddBookedIncrements_OneBookedOne() {
 
       // Given
+      BookedBusinessDayDeleter bookedBusinessDayDeleter = mock(BookedBusinessDayDeleter.class);
       TestCaseBuilder tcb = new TestCaseBuilder()
             .withBusinessDayRepository(mock(BusinessDayRepository.class))
+            .withBookedBusinessDayDeleter(bookedBusinessDayDeleter)
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
                   .withDescription("Test")
                   .withServiceCode(113)
@@ -104,12 +109,14 @@ class BusinessDayHelperImplTest {
       assertThat(firstBookedBDInc.getDescription(), is(tcb.businessDayIncrements.get(1).getDescription()));
       assertThat(firstBookedBDInc.getId(), is(nullValue()));
       verify(tcb.businessDayRepository).save(eq(tcb.bookedBusinessDay));
+      verify(bookedBusinessDayDeleter).cleanUpBookedBusinessDays();
    }
 
    @Test
    void testAddBookedIncrements_CallTwice_ButCreateBDayOnlyOnce() {
 
       // Given
+      BookedBusinessDayDeleter bookedBusinessDayDeleter = mock(BookedBusinessDayDeleter.class);
       BusinessDayIncrement thirdBDIncrement = BusinessDayIncrementBuilder.of()
             .withDescription("ThirdIncrement")
             .withServiceCode(111)
@@ -138,6 +145,7 @@ class BusinessDayHelperImplTest {
                   .withTimeSnippet(TimeSnippetBuilder.of()
                         .build())
                   .build())
+            .withBookedBusinessDayDeleter(bookedBusinessDayDeleter)
             .build();
 
       // When
@@ -149,6 +157,7 @@ class BusinessDayHelperImplTest {
       verify(tcb.businessDayRepository).createNew(eq(true));
       assertThat(tcb.bookedBusinessDay.getIncrements().size(), is(2));
       verify(tcb.businessDayRepository, times(2)).save(eq(tcb.bookedBusinessDay));
+      verify(bookedBusinessDayDeleter, times(2)).cleanUpBookedBusinessDays();
    }
 
    @Test
@@ -172,8 +181,10 @@ class BusinessDayHelperImplTest {
       private BusinessDayHelperImpl businessDayHelperImpl;
       private BusinessDayRepository businessDayRepository;
       private BusinessDayImpl bookedBusinessDay;
+      private BookedBusinessDayDeleter bookedBusinessDayDeleter;
 
       private TestCaseBuilder() {
+         this.bookedBusinessDayDeleter = mock(BookedBusinessDayDeleter.class);
          this.bookedBusinessDay =
                spy(new BusinessDayImpl(UUID.randomUUID(), true, Collections.emptyList(), new BusinessDayIncrementImpl(), ComeAndGoesImpl.of()));
          this.businessDayIncrements = new ArrayList<>();
@@ -194,8 +205,13 @@ class BusinessDayHelperImplTest {
          return this;
       }
 
+      private TestCaseBuilder withBookedBusinessDayDeleter(BookedBusinessDayDeleter bookedBusinessDayDeleter) {
+         this.bookedBusinessDayDeleter = bookedBusinessDayDeleter;
+         return this;
+      }
+
       private TestCaseBuilder build() {
-         this.businessDayHelperImpl = new BusinessDayHelperImpl(businessDayRepository);
+         this.businessDayHelperImpl = new BusinessDayHelperImpl(businessDayRepository, bookedBusinessDayDeleter);
          when(businessDayRepository.createNew(eq(true))).thenReturn(bookedBusinessDay);
          return this;
       }

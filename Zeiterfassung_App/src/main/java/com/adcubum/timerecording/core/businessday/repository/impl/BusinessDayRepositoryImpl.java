@@ -77,4 +77,9 @@ public class BusinessDayRepositoryImpl implements BusinessDayRepository {
    public void deleteAll(boolean isBooked) {
       businessDayEntityRepository.deleteAll(isBooked);
    }
+
+   @Override
+   public void deleteBookedBusinessDaysWithinRange(Time lowerBounds, Time upperBounds) {
+      businessDayEntityRepository.deleteBookedBusinessDaysWithinRange(lowerBounds, upperBounds);
+   }
 }

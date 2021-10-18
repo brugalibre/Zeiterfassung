@@ -112,6 +112,36 @@ public class TimeUtil {
    }
 
    /**
+    * @return a {@link Time} instance representing the last day of the previous month
+    */
+   public static Time getLastOfPrevMonth() {
+      return getLastOfPrevMonth(new GregorianCalendar());
+   }
+
+   /**
+    * @return a {@link Time} instance representing the last day of the previous month
+    */
+   public static Time getLastOfPrevMonth(Calendar calendar) {
+      int month = calendar.get(Calendar.MONTH);
+      int year = calendar.get(Calendar.YEAR);
+      if (month == 0) {
+         month = 11;
+         year--;
+      } else {
+         month--;
+      }
+      calendar.set(Calendar.YEAR, year);
+      calendar.set(Calendar.MONTH, month);
+      int lastDayInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+      calendar.set(Calendar.DAY_OF_MONTH, lastDayInMonth);
+      calendar.set(Calendar.HOUR_OF_DAY, 1);
+      calendar.set(Calendar.MINUTE, 0);
+      calendar.set(Calendar.SECOND, 0);
+      calendar.set(Calendar.MILLISECOND, 0);
+      return TimeFactory.createNew(calendar.getTimeInMillis(), RoundMode.ONE_MIN);
+   }
+
+   /**
     * Verifies if the given {@link Time} instance is before midnight of the given reference {@link Date}
     * 
     * @param time2Check

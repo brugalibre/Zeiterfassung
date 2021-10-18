@@ -2,6 +2,7 @@ package com.adcubum.timerecording.app.businessday;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.Date;
 import java.util.List;
@@ -28,10 +29,30 @@ import com.adcubum.timerecording.work.date.TimeFactory;
 public class BusinessDayHelperImpl implements BusinessDayHelper {
 
    private BusinessDayRepository businessDayRepository;
+   private BookedBusinessDayDeleter bookedBusinessDayDeleter;
    private BusinessDay businessDay;
 
+   /**
+    * Creates a new {@link BusinessDayHelperImpl} for the given {@link BusinessDayRepository}
+    * 
+    * @param businessDayRepository
+    *        the {@link BusinessDayRepository} which provides access to the database
+    */
    public BusinessDayHelperImpl(BusinessDayRepository businessDayRepository) {
-      this.businessDayRepository = businessDayRepository;
+      this(businessDayRepository, BookedBusinessDayDeleterImpl.of(businessDayRepository));
+   }
+
+   /**
+    * Visible for testing purpose only!
+    * 
+    * @param businessDayRepository
+    *        the {@link BusinessDayRepository}
+    * @param bookedBusinessDayDeleter
+    *        the {@link BookedBusinessDayDeleter}
+    */
+   BusinessDayHelperImpl(BusinessDayRepository businessDayRepository, BookedBusinessDayDeleter bookedBusinessDayDeleter) {
+      this.businessDayRepository = requireNonNull(businessDayRepository);
+      this.bookedBusinessDayDeleter = requireNonNull(bookedBusinessDayDeleter);
    }
 
    @Override
@@ -43,6 +64,7 @@ public class BusinessDayHelperImpl implements BusinessDayHelper {
       if (nonNull(bookedBusinessDay)) {
          addAllBusinessDayIncrements(bookedBusinessDay, increments);
       }
+      bookedBusinessDayDeleter.cleanUpBookedBusinessDays();
    }
 
    /*

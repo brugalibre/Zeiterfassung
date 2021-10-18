@@ -76,6 +76,11 @@ public class BusinessDayRepositoryIntegMockUtil {
       }
 
       @Override
+      public void deleteBookedBusinessDaysWithinRange(Time lowerBounds, Time upperBounds) {
+         // nothing todo
+      }
+
+      @Override
       public BusinessDay findBookedBusinessDayByDate(Time time) {
          // nothing todo
          return null;

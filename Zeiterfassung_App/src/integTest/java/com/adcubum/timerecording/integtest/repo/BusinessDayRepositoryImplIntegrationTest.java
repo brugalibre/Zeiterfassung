@@ -454,6 +454,75 @@ class BusinessDayRepositoryImplIntegrationTest {
       assertThat(changedComeAndGoes.getComeAndGoEntries().isEmpty(), is(true));
    }
 
+   @Test
+   @Order(11)
+   void test_DeleteWithinRange() {
+      // Given
+      BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
+      int day = 1;
+      int month = 2;
+
+      Time lowerBounds = TimeBuilder.of()
+            .withDay(day)
+            .withMonth(month)
+            .withYear(2021)
+            .withHour(0)
+            .build();
+      Time upperBounds = TimeBuilder.of()
+            .withDay(day + 1)
+            .withMonth(month)
+            .withYear(2021)
+            .withHour(23)
+            .build();
+
+      createNewBookedBusinessDayAtDate(businessDayRepository, day, month).getId();
+      createNewBookedBusinessDayAtDate(businessDayRepository, day + 1, month).getId();
+      BusinessDay otherBusinessDay = createNewBookedBusinessDayAtDate(businessDayRepository, day + 2, month);
+
+      // When
+      // First make sure all BDays within the range exists 
+      List<BusinessDay> bookedBussinessDaysWithinRange = businessDayRepository.findBookedBussinessDaysWithinRange(lowerBounds, upperBounds);
+      assertThat(bookedBussinessDaysWithinRange.size(), is(2));
+
+      // Then delete and verify that all BDays within the range are deleted
+      businessDayRepository.deleteBookedBusinessDaysWithinRange(lowerBounds, upperBounds);
+      bookedBussinessDaysWithinRange = businessDayRepository.findBookedBussinessDaysWithinRange(lowerBounds, upperBounds);
+      assertThat(bookedBussinessDaysWithinRange.size(), is(0));
+
+      // Also make sure, that the one out of scope does still exists
+      otherBusinessDay = businessDayRepository.findById(otherBusinessDay.getId());
+      assertThat(otherBusinessDay, is(notNullValue()));
+
+      // Finally
+      deleteAll(businessDayRepository, true);
+   }
+
+   private static BusinessDay createNewBookedBusinessDayAtDate(BusinessDayRepositoryImpl businessDayRepository, int day, int month) {
+      BusinessDay businessDay = businessDayRepository.createNew(true);
+      businessDay.addBusinessIncrement(new BusinessDayIncrementAddBuilder()
+            .withAmountOfHours("3")
+            .withDescription("test")
+            .withServiceCode(113)
+            .withTicket(mockTicket("ABES-1"))
+            .withTimeSnippet(TimeSnippetBuilder.of()
+                  .withBeginTime(TimeBuilder.of()
+                        .withDay(day)
+                        .withMonth(month)
+                        .withYear(2021)
+                        .withHour(1)
+                        .build())
+                  .withEndTime(TimeBuilder.of()
+                        .withDay(day)
+                        .withMonth(month)
+                        .withYear(2021)
+                        .withHour(1)
+                        .build())
+                  .build())
+            .build());
+      businessDay.flagBusinessDayAsCharged();
+      return businessDayRepository.save(businessDay);
+   }
+
    private static Ticket mockTicket(String ticketNr) {
       Ticket ticket = mock(Ticket.class);
       when(ticket.getNr()).thenReturn(ticketNr);

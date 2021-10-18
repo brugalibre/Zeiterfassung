@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -76,6 +77,53 @@ class TimeUtilTest {
 
       LocalDate lastDate = datesInPeriod.get(datesInPeriod.size() - 1);
       assertThat(lastDate.getDayOfMonth(), is(lastDayInPeriod));
+   }
+
+   @Test
+   void testGetLastOfPrevMonth_January() {
+
+      // Given
+      int year = 2021;
+      Time time = TimeBuilder.of()
+            .withDay(1)
+            .withMonth(0)
+            .withYear(year)
+            .withHour(10)
+            .withMinute(0)
+            .build();
+
+      // When
+      Calendar timeAsCalendar = ((TimeImpl) time).getCalendarFromTime();
+      Time lastOfPrevMonth = TimeUtil.getLastOfPrevMonth(timeAsCalendar);
+
+      // Then
+      assertThat(lastOfPrevMonth.getLocalDate().getYear(), is(year - 1));
+      assertThat(lastOfPrevMonth.getLocalDate().getMonthValue(), is(12));
+      assertThat(lastOfPrevMonth.getLocalDate().getDayOfMonth(), is(31));
+   }
+
+   @Test
+   void testGetLastOfPrevMonth_February() {
+
+      // Given
+      int year = 2021;
+      int month = 1;
+      Time time = TimeBuilder.of()
+            .withDay(1)
+            .withMonth(month)
+            .withYear(year)
+            .withHour(10)
+            .withMinute(0)
+            .build();
+
+      // When
+      Calendar timeAsCalendar = ((TimeImpl) time).getCalendarFromTime();
+      Time lastOfPrevMonth = TimeUtil.getLastOfPrevMonth(timeAsCalendar);
+
+      // Then
+      assertThat(lastOfPrevMonth.getLocalDate().getYear(), is(year));
+      assertThat(lastOfPrevMonth.getLocalDate().getMonthValue(), is(month));
+      assertThat(lastOfPrevMonth.getLocalDate().getDayOfMonth(), is(31));
    }
 
    @Test

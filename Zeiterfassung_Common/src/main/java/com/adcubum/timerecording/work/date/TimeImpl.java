@@ -206,7 +206,7 @@ public class TimeImpl implements Time {
       return LocalDate.of(currentYear, currentMonth, currentDay);
    }
 
-   private Calendar getCalendarFromTime() {
+   public Calendar getCalendarFromTime() {
       Calendar calendarDay = new GregorianCalendar();
       calendarDay.setTimeInMillis(getTime());
       calendarDay.set(Calendar.HOUR, 1);

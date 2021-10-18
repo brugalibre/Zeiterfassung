@@ -119,6 +119,13 @@ public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityReposit
             .forEach(this::deleteCompleteBusinessDayEntity);
    }
 
+   @Override
+   public void deleteBookedBusinessDaysWithinRange(Time lowerBounds, Time upperBounds) {
+      findAllBookedBusinessDayEntitiesWithinRange(lowerBounds, upperBounds)
+            .stream()
+            .forEach(this::deleteCompleteBusinessDayEntity);
+   }
+
    private void deleteCompleteBusinessDayEntity(BusinessDayEntity businessDayEntity) {
       businessDayDao.delete(businessDayEntity);
       comeAndGoesDao.delete(businessDayEntity.getComeAndGoesEntity());
