@@ -47,8 +47,8 @@ public class TimeImpl implements Time {
     * 
     * @param time
     */
-   private TimeImpl(Time time) {
-      this(time.getTime(), time.getRoundMode());
+   private TimeImpl(TimeImpl time) {
+      this(time.getTime(), time.roundMode);
    }
 
    /**
@@ -174,7 +174,10 @@ public class TimeImpl implements Time {
 
    @Override
    public int compareTo(Time otherTime) {
-      return duration.compareTo(otherTime.getDuration());
+      if (otherTime instanceof TimeImpl) {
+         return duration.compareTo(((TimeImpl) otherTime).duration);
+      }
+      return -1;
    }
 
    @Override
@@ -185,16 +188,6 @@ public class TimeImpl implements Time {
    @Override
    public long getMinutes() {
       return duration.getStandardMinutes();
-   }
-
-   @Override
-   public long getDays() {
-      return duration.getStandardDays();
-   }
-
-   @Override
-   public Duration getDuration() {
-      return duration;
    }
 
    @Override
@@ -214,10 +207,5 @@ public class TimeImpl implements Time {
       calendarDay.set(Calendar.SECOND, 0);
       calendarDay.set(Calendar.MILLISECOND, 0);
       return calendarDay;
-   }
-
-   @Override
-   public RoundMode getRoundMode() {
-      return roundMode;
    }
 }

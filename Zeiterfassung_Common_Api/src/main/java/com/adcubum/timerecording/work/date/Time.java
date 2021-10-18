@@ -2,9 +2,6 @@ package com.adcubum.timerecording.work.date;
 
 import java.time.LocalDate;
 
-import org.joda.time.Duration;
-
-import com.adcubum.timerecording.settings.round.RoundMode;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 
 /**
@@ -51,11 +48,6 @@ public interface Time {
    LocalDate getLocalDate();
 
    /**
-    * @return the amount of days of this {@link Time} instance
-    */
-   long getDays();
-
-   /**
     * @return the amount of minutes of this {@link Time} instance
     */
    long getMinutes();
@@ -66,16 +58,6 @@ public interface Time {
     * @return the amount of milliseconds
     */
    long getTime();
-
-   /**
-    * @return the {@link Duration} of this {@link Time}
-    */
-   Duration getDuration();
-
-   /**
-    * @return the {@link RoundMode} of this {@link Time}
-    */
-   RoundMode getRoundMode();
 
    /**
     * Returns the factor to make proper calculations with the given time. E.g. for
