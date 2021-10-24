@@ -75,7 +75,7 @@ public interface TimeSnippet extends DomainModel {
     */
    String getDurationRep();
 
-   Date getDate();
+   Time getDate();
 
    void setBeginTimeStamp(Time beginTimeStamp);
 

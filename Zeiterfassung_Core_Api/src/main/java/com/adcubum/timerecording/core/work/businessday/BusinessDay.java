@@ -1,7 +1,5 @@
 package com.adcubum.timerecording.core.work.businessday;
 
-import java.sql.Time;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +11,7 @@ import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.work.date.Time;
 
 public interface BusinessDay extends DomainModel {
 
@@ -182,14 +181,14 @@ public interface BusinessDay extends DomainModel {
    List<BusinessDayIncrement> getIncrements();
 
    /**
-    * Returns the {@link Date} of this {@link BusinessDay}. If this
+    * Returns the {@link Time} of this {@link BusinessDay}. If this
     * {@link BusinessDay} has no <br>
     * {@link BusinessDayIncrement}, so the {@link #increments} is empty, a new
-    * instance of {@link Date} is returned.
+    * instance of {@link Time} is returned.
     * 
-    * @return the {@link Date} of this BussinessDay.
+    * @return the {@link Time} of this BussinessDay.
     */
-   Date getDate();
+   Time getDate();
 
    /**
     * Returns a message since when the capturing is active

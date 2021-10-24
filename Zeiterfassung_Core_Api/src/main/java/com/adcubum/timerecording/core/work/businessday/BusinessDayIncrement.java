@@ -1,7 +1,5 @@
 package com.adcubum.timerecording.core.work.businessday;
 
-import java.util.Date;
-
 import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.work.date.Time;
@@ -86,7 +84,7 @@ public interface BusinessDayIncrement extends DomainModel {
 
    float getTotalDuration();
 
-   Date getDate();
+   Time getDate();
 
    void setTicket(Ticket ticket);
 

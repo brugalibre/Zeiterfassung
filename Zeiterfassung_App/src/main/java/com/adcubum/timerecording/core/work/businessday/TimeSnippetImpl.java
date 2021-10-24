@@ -8,7 +8,6 @@ import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.UUID;
 
 import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
@@ -135,11 +134,8 @@ public class TimeSnippetImpl implements TimeSnippet {
    }
 
    @Override
-   public Date getDate() {
-      if (nonNull(beginTimeStamp)) {
-         return new Date(beginTimeStamp.getTime());
-      }
-      return new Date();
+   public Time getDate() {
+      return nonNull(beginTimeStamp) ? beginTimeStamp : TimeFactory.createNew();
    }
 
    @Override

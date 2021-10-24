@@ -6,7 +6,6 @@ package com.adcubum.timerecording.core.work.businessday;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +17,7 @@ import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklog;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.TimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.NumberFormat;
@@ -83,8 +83,8 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    }
 
    @Override
-   public Date getDate() {
-      return isNull(currentTimeSnippet) ? new Date() : currentTimeSnippet.getDate();
+   public Time getDate() {
+      return isNull(currentTimeSnippet) ? TimeFactory.createNew() : currentTimeSnippet.getDate();
    }
 
    @Override

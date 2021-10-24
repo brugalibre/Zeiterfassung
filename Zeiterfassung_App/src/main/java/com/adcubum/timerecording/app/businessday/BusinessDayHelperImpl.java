@@ -4,7 +4,6 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -17,7 +16,6 @@ import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRep
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
 
 /**
  * Lazy access implementation of the {@link BusinessDayHelper}. This means, this class stores an instance of the
@@ -80,7 +78,7 @@ public class BusinessDayHelperImpl implements BusinessDayHelper {
    private BusinessDay findBookedBusiness4BookedBusinessDayIncs(List<BusinessDayIncrement> increments) {
       return findFirstBookedBusinessDayInc(increments)
             .map(BusinessDayIncrement::getDate)
-            .map(this::findBookedBusinessDayPerDate)
+            .map(businessDayRepository::findBookedBusinessDayByDate)
             .orElse(null);
    }
 
@@ -88,11 +86,6 @@ public class BusinessDayHelperImpl implements BusinessDayHelper {
       return increments.stream()
             .filter(BusinessDayIncrement::isCharged)
             .findFirst();
-   }
-
-   private BusinessDay findBookedBusinessDayPerDate(Date date) {
-      Time businessDayTime = TimeFactory.createNew(date);
-      return businessDayRepository.findBookedBusinessDayByDate(businessDayTime);
    }
 
    private void addAllBusinessDayIncrements(BusinessDay bookedBusinessDay, List<BusinessDayIncrement> increments) {

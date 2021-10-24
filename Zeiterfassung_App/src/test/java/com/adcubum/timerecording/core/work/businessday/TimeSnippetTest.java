@@ -3,10 +3,9 @@ package com.adcubum.timerecording.core.work.businessday;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.util.Date;
-
 import org.junit.jupiter.api.Test;
 
+import com.adcubum.timerecording.work.date.Time;
 import com.adcubum.timerecording.work.date.TimeFactory;
 
 class TimeSnippetTest {
@@ -30,10 +29,10 @@ class TimeSnippetTest {
       TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
 
       // When
-      Date actualDate = timeSnippet.getDate();
+      Time actualTime = timeSnippet.getDate();
 
       // Then
-      assertThat(actualDate, is(new Date()));
+      assertThat(actualTime, is(TimeSnippetFactory.createNew()));
    }
 
    @Test

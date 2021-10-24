@@ -5,7 +5,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -139,7 +138,7 @@ class TimeUtilTest {
             .build();
 
       // When
-      boolean isActualBeforOrAfter = TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(time2Check, new Date());
+      boolean isActualBeforOrAfter = TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(time2Check, TimeFactory.createNew());
 
       // Then
       assertThat(isActualBeforOrAfter, is(true));
@@ -165,7 +164,7 @@ class TimeUtilTest {
             .build();
 
       // When
-      boolean isActualBeforOrAfter = TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(time2Check, new Date(referenceTime.getTime()));
+      boolean isActualBeforOrAfter = TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(time2Check, referenceTime);
 
       // Then
       assertThat(isActualBeforOrAfter, is(true));
@@ -191,7 +190,7 @@ class TimeUtilTest {
             .build();
 
       // When
-      boolean isActualBeforOrAfter = TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(time2Check, new Date(referenceTime.getTime()));
+      boolean isActualBeforOrAfter = TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(time2Check, referenceTime);
 
       // Then
       assertThat(isActualBeforOrAfter, is(false));

@@ -24,19 +24,19 @@ public class TimeUtil {
     * 
     * @param time2Check
     *        the {@link Time} which is checked
-    * @param referenceDate
-    *        the reference date
+    * @param referenceTime
+    *        the reference time
     * @return <code>true</code> if the given {@link Time} instance is before or after midnight of the given reference {@link Date}.
     *         Otherwise this returns <code>false</code>
     */
-   public static boolean isTimeBeforeOrAfterMidnightOfGivenDate(Time time2Check, Date referenceDate) {
-      return isTimeBeforeMidnightOfGivenDate(time2Check, referenceDate)
-            || isTimeAfterMidnightOfGivenDate(time2Check, referenceDate);
+   public static boolean isTimeBeforeOrAfterMidnightOfGivenDate(Time time2Check, Time referenceTime) {
+      return isTimeBeforeMidnightOfGivenDate(time2Check, referenceTime)
+            || isTimeAfterMidnightOfGivenDate(time2Check, referenceTime);
    }
 
-   private static boolean isTimeAfterMidnightOfGivenDate(Time time2Check, Date referenceDate) {
+   private static boolean isTimeAfterMidnightOfGivenDate(Time time2Check, Time referenceTime) {
       Calendar calender2CheckUpperBounds = new GregorianCalendar();
-      calender2CheckUpperBounds.setTime(referenceDate);
+      calender2CheckUpperBounds.setTimeInMillis(referenceTime.getTime());
       calender2CheckUpperBounds.set(Calendar.HOUR_OF_DAY, 23);
       calender2CheckUpperBounds.set(Calendar.MINUTE, 59);
       calender2CheckUpperBounds.set(Calendar.SECOND, 59);
@@ -146,13 +146,13 @@ public class TimeUtil {
     * 
     * @param time2Check
     *        the {@link Time} which is checked
-    * @param referenceDate
-    *        the reference date
+    * @param referenceTime
+    *        the reference time
     * @return <code>true</code> if the given {@link Time} instance is before midnight of the given reference {@link Date}.
     *         Otherwise this returns <code>false</code>
     */
-   public static boolean isTimeBeforeMidnightOfGivenDate(Time time2Check, Date referenceDate) {
-      Date resetedReferenceDate = setHoursMinSecondsAndMillisToMin(referenceDate.getTime());
+   public static boolean isTimeBeforeMidnightOfGivenDate(Time time2Check, Time referenceTime) {
+      Date resetedReferenceDate = setHoursMinSecondsAndMillisToMin(referenceTime.getTime());
       Time time2CheckLowerBounds = TimeFactory.createNew(resetedReferenceDate);
       return time2Check.isBefore(time2CheckLowerBounds);
    }

@@ -8,7 +8,6 @@ import static java.util.Objects.nonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,10 +46,7 @@ import com.adcubum.util.utils.StringUtil;
  * those snippet's has a begin time-stamp, an end time-stamp and a specific
  * amount of hours <br>
  * 
- * A {@link BusinessDayIncrement} can have several of those snippet's -
- * scattered over the entire day. But each of this {@link BusinessDayIncrement}
- * belongs to the same <br>
- * project. One or more such {@link BusinessDayIncrement} are put together - to
+ * A {@link BusinessDayIncrement} has exactly two snippet's. One or more such {@link BusinessDayIncrement} are put together - to
  * a whole {@link BusinessDayImpl}
  * 
  * @author Dominic
@@ -200,9 +196,9 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
-   public Date getDate() {
+   public Time getDate() {
       if (increments.isEmpty()) {
-         return new Date();
+         return TimeFactory.createNew();
       }
       return increments.get(0).getDate();
    }
@@ -239,7 +235,7 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    private static Predicate<BusinessDayIncrement> newBusinessDayIncIsBeforeOrAfter(Time newBDIncTime) {
-      return bDayInc -> TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(TimeFactory.createNew(bDayInc.getDate()), new Date(newBDIncTime.getTime()));
+      return bDayInc -> TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(bDayInc.getDate(), newBDIncTime);
    }
 
    private static Consumer<BusinessDayIncrement> throwException() {
@@ -270,7 +266,7 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public boolean hasElementsFromPrecedentDays() {
-      Date now = new Date();
+      Time now = TimeFactory.createNew();
       return increments.stream()
             .anyMatch(bDayInc -> {
                Time bdIncTime = TimeFactory.createNew(bDayInc.getDate());
