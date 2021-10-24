@@ -12,8 +12,8 @@ import com.adcubum.timerecording.core.repository.ObjectNotFoundException;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.mapper.BusinessDayEntityMapper;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeUtil;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeUtil;
 
 /**
  * The {@link BusinessDayRepository} serves as a dao on the "business" side of the application, since the actual persistence-repository
@@ -37,9 +37,9 @@ public class BusinessDayRepositoryImpl implements BusinessDayRepository {
    }
 
    @Override
-   public BusinessDay findBookedBusinessDayByDate(Time time) {
-      Time lowerBounds = TimeUtil.getBeginOfDay(time);
-      Time upperBounds = TimeUtil.getEndOfDay(time);
+   public BusinessDay findBookedBusinessDayByDate(DateTime time) {
+      DateTime lowerBounds = DateTimeUtil.getBeginOfDay(time);
+      DateTime upperBounds = DateTimeUtil.getEndOfDay(time);
       Optional<BusinessDayEntity> businessDayEntityOpt = businessDayEntityRepository.findBookedBusinessDayEntityWithinRange(lowerBounds, upperBounds);
       return businessDayEntityOpt
             .map(BusinessDayEntityMapper.INSTANCE::map2BusinessDay)
@@ -47,7 +47,7 @@ public class BusinessDayRepositoryImpl implements BusinessDayRepository {
    }
 
    @Override
-   public List<BusinessDay> findBookedBussinessDaysWithinRange(Time lowerBounds, Time upperBounds) {
+   public List<BusinessDay> findBookedBussinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds) {
       return businessDayEntityRepository.findAllBookedBusinessDayEntitiesWithinRange(lowerBounds, upperBounds)
             .stream()
             .map(BusinessDayEntityMapper.INSTANCE::map2BusinessDay)
@@ -79,7 +79,7 @@ public class BusinessDayRepositoryImpl implements BusinessDayRepository {
    }
 
    @Override
-   public void deleteBookedBusinessDaysWithinRange(Time lowerBounds, Time upperBounds) {
+   public void deleteBookedBusinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds) {
       businessDayEntityRepository.deleteBookedBusinessDaysWithinRange(lowerBounds, upperBounds);
    }
 }

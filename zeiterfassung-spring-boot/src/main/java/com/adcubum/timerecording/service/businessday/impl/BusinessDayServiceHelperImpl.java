@@ -32,8 +32,8 @@ import com.adcubum.timerecording.service.businessday.BusinessDayServiceHelper;
 import com.adcubum.timerecording.service.exception.BeginOrEndTimeParseException;
 import com.adcubum.timerecording.service.exception.NoPersistentBusinessDayIncrementToChangeFoundException;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeUtil;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeUtil;
 
 @Component("BusinessDayServiceHelper")
 @DependsOn(BusinessDayEntityRepositoryHolder.BUSINESS_DAY_ENTITY_REPOSITORY_FACTORY)
@@ -120,8 +120,8 @@ public class BusinessDayServiceHelperImpl implements BusinessDayServiceHelper {
 
    @Override
    public BusinessDayHistoryOverviewDto getBusinessDayHistoryDto() {
-      Time firstDayOfCurrentMonth = TimeUtil.getFirstDayOfCurrentMonth();
-      Time lastDayOfCurrentMonth = TimeUtil.getLastDayOfCurrentMonth();
+      DateTime firstDayOfCurrentMonth = DateTimeUtil.getFirstDayOfCurrentMonth();
+      DateTime lastDayOfCurrentMonth = DateTimeUtil.getLastDayOfCurrentMonth();
       BusinessDayHistoryOverview businessDayHistoryOverview =
             TimeRecorder.INSTANCE.getBusinessDayHistoryOverview(firstDayOfCurrentMonth, lastDayOfCurrentMonth);
       return BusinessDayHistoryOverviewDto.of(businessDayHistoryOverview);

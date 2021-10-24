@@ -4,8 +4,8 @@ import java.util.GregorianCalendar;
 
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 public class TimeSnippetBuilder {
 
@@ -37,16 +37,16 @@ public class TimeSnippetBuilder {
 
    public TimeSnippetBuilder withStartHourAndDuration(int hour, int timeBetweenBeginAndEnd) {
       GregorianCalendar startDate = new GregorianCalendar(year, month, day, hour, 0, 0);// year, month, day, hours, min, second
-      Time beginTimeStamp = TimeFactory.createNew(startDate.getTimeInMillis());
+      DateTime beginTimeStamp = DateTimeFactory.createNew(startDate.getTimeInMillis());
       timeSnippet = TimeSnippetFactory.createNew();
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
-      timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
+      timeSnippet.setEndTimeStamp(DateTimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
       return this;
    }
 
    public TimeSnippetBuilder withStartAndStopTime(long startTime, long stopTime) {
-      Time beginTimeStamp = TimeFactory.createNew(startTime);
-      Time endTimeStamp = TimeFactory.createNew(stopTime);
+      DateTime beginTimeStamp = DateTimeFactory.createNew(startTime);
+      DateTime endTimeStamp = DateTimeFactory.createNew(stopTime);
       timeSnippet = TimeSnippetFactory.createNew();
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(endTimeStamp);

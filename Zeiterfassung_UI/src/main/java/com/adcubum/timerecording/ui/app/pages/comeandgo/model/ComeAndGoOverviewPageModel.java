@@ -20,8 +20,8 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Busi
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.table.ComeAndGoTableRowValue;
 import com.adcubum.timerecording.ui.core.model.PageModel;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -44,7 +44,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
    private SimpleStringProperty clearAllComeAndGoesButtonProperty;
    private List<ComeAndGoDataModel> comeAndGoesDataModels;
    private boolean isStartAddBDIncrementButtonDisabled;
-   private Time prevComeAndGoEnd;
+   private DateTime prevComeAndGoEnd;
    private int currentComeAndGoIndex;
    private boolean isClearAllComeAndGoesButtonDisabled;
    private SimpleListProperty<ComeAndGoTableRowValue> comeAndGoTableRowValuesProperty;
@@ -57,7 +57,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
       this.isClearAllComeAndGoesButtonDisabled = evalIsClearAllComeAndGoesButtonDisabled(comeAndGoesDataModels);
       this.currentComeAndGoIndex = evalCurrentComeAndGoIndex(comeAndGoesDataModels);
       this.businessDayChangedCallbackHandler = new ComeAndGoBDChangedCallbackHandler();
-      this.prevComeAndGoEnd = TimeFactory.createNew(0);
+      this.prevComeAndGoEnd = DateTimeFactory.createNew(0);
       this.comeAndGoTableRowValuesProperty = new SimpleListProperty<>(map2ComeAndGoTableRowValues(comeAndGoesDataModels));
    }
 
@@ -73,7 +73,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
       inPageModel.isStartAddBDIncrementButtonDisabled = evalIsStartAddBDIncrementButtonDisabled(comeAndGoesDataModels);
       inPageModel.isClearAllComeAndGoesButtonDisabled = evalIsClearAllComeAndGoesButtonDisabled(comeAndGoesDataModels);
       inPageModel.currentComeAndGoIndex = evalCurrentComeAndGoIndex(comeAndGoesDataModels);
-      inPageModel.prevComeAndGoEnd = TimeFactory.createNew(0);
+      inPageModel.prevComeAndGoEnd = DateTimeFactory.createNew(0);
       inPageModel.comeAndGoTableRowValuesProperty.setValue(map2ComeAndGoTableRowValues(comeAndGoesDataModels));
       return inPageModel;
    }
@@ -92,7 +92,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
     * @param currentIterationTimeSnippet
     */
    public void prepareForNextIteration(TimeSnippet currentIterationTimeSnippet) {
-      Time currentBDIncrementEnd = currentIterationTimeSnippet.getEndTimeStamp();
+      DateTime currentBDIncrementEnd = currentIterationTimeSnippet.getEndTimeStamp();
       ComeAndGoDataModel comeAndGo = getCurrentComeAndGo();
       if (comeAndGo.getTimeSnippet().getEndTimeStamp().equals(currentBDIncrementEnd)) {
          currentComeAndGoIndex++;
@@ -110,7 +110,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
     */
    public boolean hasUnfinishedComeAndGoes() {
       if (nonNull(getCurrentBDIncTimeSnippet())) {
-         Time currentBDIncEndTimeStamp = getCurrentBDIncTimeSnippet().getEndTimeStamp();
+         DateTime currentBDIncEndTimeStamp = getCurrentBDIncTimeSnippet().getEndTimeStamp();
          TimeSnippet lastComeAndGoTimeSnippet = getLastCurrentComeAndGo().getTimeSnippet();
          return !currentBDIncEndTimeStamp.equals(lastComeAndGoTimeSnippet.getEndTimeStamp());
       }
@@ -172,7 +172,7 @@ public class ComeAndGoOverviewPageModel implements PageModel, EventHandler<CellE
       return comeAndGoesDataModels;
    }
 
-   public Time getPrevComeAndGoEnd() {
+   public DateTime getPrevComeAndGoEnd() {
       return prevComeAndGoEnd;
    }
 

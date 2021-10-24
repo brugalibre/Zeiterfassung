@@ -14,8 +14,8 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.settings.round.TimeRounder;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 /**
  * The class {@link ComeAndGoesImpl} keeps track of each time a user comes and goes during the business day.
@@ -43,7 +43,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
     */
    @Override
    public ComeAndGoes comeOrGo() {
-      Time newTime = TimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
+      DateTime newTime = DateTimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
       return comeOrGo(newTime);
    }
 
@@ -83,12 +83,12 @@ public class ComeAndGoesImpl implements ComeAndGoes {
     * Either triggers a manually come or a go for this {@link ComeAndGoDto}
     */
    @Override
-   public ComeAndGoes comeOrGo(Time time) {
+   public ComeAndGoes comeOrGo(DateTime time) {
       List<ComeAndGo> changedComeAndGoEntries = comeOrGoInternal(time, new LinkedList<>(comeAndGoEntries));
       return new ComeAndGoesImpl(id, changedComeAndGoEntries);
    }
 
-   private LinkedList<ComeAndGo> comeOrGoInternal(Time time, LinkedList<ComeAndGo> comeAndGoeEntriesCopy) {
+   private LinkedList<ComeAndGo> comeOrGoInternal(DateTime time, LinkedList<ComeAndGo> comeAndGoeEntriesCopy) {
       Optional<ComeAndGo> currentComeAndGoOpt = getCurrentComeAndGo(comeAndGoeEntriesCopy);
       ComeAndGo changedComeAndGo;
       if (currentComeAndGoOpt.isPresent()) {
@@ -102,7 +102,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
       return comeAndGoeEntriesCopy;
    }
 
-   private static ComeAndGo handleNoCurrentComeOrGo(Time time, LinkedList<ComeAndGo> comeAndGoEntriesCopy) {
+   private static ComeAndGo handleNoCurrentComeOrGo(DateTime time, LinkedList<ComeAndGo> comeAndGoEntriesCopy) {
       if (comeAndGoEntriesCopy.isEmpty()) {
          return buildNewComeAndGo(time, UUID.randomUUID());
       }
@@ -127,10 +127,10 @@ public class ComeAndGoesImpl implements ComeAndGoes {
     * 
     * 
     */
-   private static ComeAndGo handleDoneComeAndGo(Time time, LinkedList<ComeAndGo> comeAndGoEntriesCopy) {
+   private static ComeAndGo handleDoneComeAndGo(DateTime time, LinkedList<ComeAndGo> comeAndGoEntriesCopy) {
       ComeAndGo currentDoneComeAndGo = comeAndGoEntriesCopy.getLast();
       TimeSnippet comeAndGoTimeStamp = currentDoneComeAndGo.getComeAndGoTimeStamp();
-      Time goTimeStamp = comeAndGoTimeStamp.getEndTimeStamp();
+      DateTime goTimeStamp = comeAndGoTimeStamp.getEndTimeStamp();
       if (goTimeStamp.compareTo(time) == 0) {
          comeAndGoEntriesCopy.remove(currentDoneComeAndGo);// remove it, since we have to add the resumed ComeAndGo later
          currentDoneComeAndGo = currentDoneComeAndGo.resume();
@@ -140,7 +140,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
       return currentDoneComeAndGo;
    }
 
-   private static ComeAndGo buildNewComeAndGo(Time time, UUID id) {
+   private static ComeAndGo buildNewComeAndGo(DateTime time, UUID id) {
       return ComeAndGoImpl.of(id)
             .comeOrGo(time);
    }
@@ -198,7 +198,7 @@ public class ComeAndGoesImpl implements ComeAndGoes {
 
    @Override
    public boolean hasComeAndGoesFromPrecedentDays() {
-      Time now = TimeFactory.createNew();
+      DateTime now = DateTimeFactory.createNew();
       return comeAndGoEntries.stream()
             .map(ComeAndGo::getComeAndGoTimeStamp)
             .map(TimeSnippet::getBeginTimeStamp)

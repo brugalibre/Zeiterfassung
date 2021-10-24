@@ -10,7 +10,7 @@ import com.adcubum.timerecording.core.businessday.common.repository.CommonBusine
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 public interface BusinessDayRepository extends CommonBusinessDayRepository<BusinessDay, UUID> {
 
@@ -24,7 +24,7 @@ public interface BusinessDayRepository extends CommonBusinessDayRepository<Busin
     * @return the firsst found {@link BusinessDay} for the given Date.
     */
    @Nullable
-   BusinessDay findBookedBusinessDayByDate(@NonNull Time time);
+   BusinessDay findBookedBusinessDayByDate(@NonNull DateTime time);
 
    /**
     * Resolves all booked {@link BusinessDay}s within the given range
@@ -38,5 +38,5 @@ public interface BusinessDayRepository extends CommonBusinessDayRepository<Busin
     * @return all booked {@link BusinessDay}s within the given range
     */
    @NonNull
-   List<BusinessDay> findBookedBussinessDaysWithinRange(Time lowerBounds, Time upperBounds);
+   List<BusinessDay> findBookedBussinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds);
 }

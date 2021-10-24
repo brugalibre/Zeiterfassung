@@ -23,7 +23,7 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnipp
 import com.adcubum.timerecording.core.work.businessday.integtest.BusinessDayIncrementBuilder;
 import com.adcubum.timerecording.integtest.repo.TestBusinessDayRepoConfig;
 import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 @SpringBootTest(classes = {TestBusinessDayRepoConfig.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -56,7 +56,7 @@ class BusinessDayHelperImplIntegrationTest {
       // When
       // First add a booked increment
       tcb.businessDayHelperImpl.addBookedBusinessDayIncrements(tcb.businessDayIncrements);
-      BusinessDay bookedBusinessDay = tcb.businessDayRepository.findBookedBusinessDayByDate(TimeFactory.createNew(firstEndTimestamp));
+      BusinessDay bookedBusinessDay = tcb.businessDayRepository.findBookedBusinessDayByDate(DateTimeFactory.createNew(firstEndTimestamp));
 
       // Then add a second booked increment, make sure in the end, there are only 2 booked ones
       tcb.businessDayHelperImpl.addBookedBusinessDayIncrements(Arrays.asList(bookedBusinessDay.getIncrements().get(0),

@@ -31,11 +31,11 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Chan
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.settings.round.TimeRounder;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
+import com.adcubum.timerecording.work.date.DateTimeUtil;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
-import com.adcubum.timerecording.work.date.TimeUtil;
 import com.adcubum.util.parser.NumberFormat;
 import com.adcubum.util.utils.StringUtil;
 
@@ -113,7 +113,7 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public void startNewIncremental() {
-      Time time = TimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
+      DateTime time = DateTimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
       createNewIncremental();
       currentBussinessDayIncremental.startCurrentTimeSnippet(time);
    }
@@ -125,7 +125,7 @@ public class BusinessDayImpl implements BusinessDay {
     */
    @Override
    public void stopCurrentIncremental() {
-      Time endTimeStamp = TimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
+      DateTime endTimeStamp = DateTimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
       currentBussinessDayIncremental.stopCurrentTimeSnippet(endTimeStamp);
    }
 
@@ -196,11 +196,11 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
-   public Time getDate() {
+   public DateTime getDateTime() {
       if (increments.isEmpty()) {
-         return TimeFactory.createNew();
+         return DateTimeFactory.createNew();
       }
-      return increments.get(0).getDate();
+      return increments.get(0).getDateTime();
    }
 
    @Override
@@ -227,15 +227,15 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    private void validateIfCanAdd(BusinessDayIncrement businessDayIncrement) {
-      Time newBDIncTime = TimeFactory.createNew(businessDayIncrement.getDate());
+      DateTime newBDIncTime = businessDayIncrement.getDateTime();
       increments.stream()
             .filter(newBusinessDayIncIsBeforeOrAfter(newBDIncTime))
             .findAny()
             .ifPresent(throwException());
    }
 
-   private static Predicate<BusinessDayIncrement> newBusinessDayIncIsBeforeOrAfter(Time newBDIncTime) {
-      return bDayInc -> TimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(bDayInc.getDate(), newBDIncTime);
+   private static Predicate<BusinessDayIncrement> newBusinessDayIncIsBeforeOrAfter(DateTime newBDIncTime) {
+      return bDayInc -> DateTimeUtil.isTimeBeforeOrAfterMidnightOfGivenDate(bDayInc.getDateTime(), newBDIncTime);
    }
 
    private static Consumer<BusinessDayIncrement> throwException() {
@@ -266,11 +266,11 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public boolean hasElementsFromPrecedentDays() {
-      Time now = TimeFactory.createNew();
+      DateTime now = DateTimeFactory.createNew();
       return increments.stream()
             .anyMatch(bDayInc -> {
-               Time bdIncTime = TimeFactory.createNew(bDayInc.getDate());
-               return TimeUtil.isTimeBeforeMidnightOfGivenDate(bdIncTime, now);
+               DateTime bdIncTime = DateTimeFactory.createNew(bDayInc.getDateTime());
+               return DateTimeUtil.isTimeBeforeMidnightOfGivenDate(bdIncTime, now);
             });
    }
 

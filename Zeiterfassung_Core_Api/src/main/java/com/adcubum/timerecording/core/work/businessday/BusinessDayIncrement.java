@@ -2,7 +2,7 @@ package com.adcubum.timerecording.core.work.businessday;
 
 import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 
 public interface BusinessDayIncrement extends DomainModel {
@@ -31,12 +31,12 @@ public interface BusinessDayIncrement extends DomainModel {
    /**
     * @param endTimeStamp
     */
-   void stopCurrentTimeSnippet(Time endTimeStamp);
+   void stopCurrentTimeSnippet(DateTime endTimeStamp);
 
    /**
     * @param beginTimeStamp
     */
-   void startCurrentTimeSnippet(Time beginTimeStamp);
+   void startCurrentTimeSnippet(DateTime beginTimeStamp);
 
    /**
     * If the {@link Ticket} of this {@link BusinessDayIncrement} is a dummy-Ticket, then it's
@@ -84,8 +84,6 @@ public interface BusinessDayIncrement extends DomainModel {
 
    float getTotalDuration();
 
-   Time getDate();
-
    void setTicket(Ticket ticket);
 
    /**
@@ -106,4 +104,8 @@ public interface BusinessDayIncrement extends DomainModel {
 
    void setDescription(String description);
 
+   /**
+    * @return the {@link DateTime} of this {@link BusinessDayIncrement}
+    */
+   DateTime getDateTime();
 }

@@ -30,7 +30,7 @@ import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.timerecording.ui.app.inputfield.InputFieldVerifier;
 import com.adcubum.timerecording.ui.app.pages.combobox.TicketComboboxItem;
 import com.adcubum.timerecording.ui.core.model.PageModel;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -82,7 +82,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    private ObservableValue<Tooltip> cancelButtonToolTipText;
    private ObservableValue<Tooltip> finishButtonToolTipTextProperty;
    private TimeSnippet timeSnippet;
-   private Time maxEndTime;// defines the max. value for the 'end'-time. 0 means there is no max value
+   private DateTime maxEndTime;// defines the max. value for the 'end'-time. 0 means there is no max value
    private BooleanProperty isAbortButtonDisabledProperty;
    private BooleanProperty isBeginTextFieldEnabledProperty;
    private boolean isLastIncrementAmongOthers;
@@ -364,7 +364,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
 
    private void addMultipleaIncrement2BusinessDay(int kindOfService, String ticketNoPropValue) {
       String[] ticketNrs = ticketNoPropValue.split(MULTI_TICKET_DELIMITER);
-      Time currentBeginTimeStamp = getTimeSnippet().getBeginTimeStamp();
+      DateTime currentBeginTimeStamp = getTimeSnippet().getBeginTimeStamp();
       for (String ticketNr : ticketNrs) {
          TimeSnippet currentTimeSnippet = getTimeSnippet().createTimeStampForIncrement(currentBeginTimeStamp, ticketNrs.length);
          Ticket ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticketNr);
@@ -519,7 +519,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       return isBeginTextFieldEnabledProperty;
    }
 
-   public void setMaxEndTime(Time maxEndTime) {
+   public void setMaxEndTime(DateTime maxEndTime) {
       this.maxEndTime = maxEndTime;
    }
 
@@ -535,7 +535,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       return businessDayChangedCallbackHandler;
    }
 
-   public Time getMaxEndTime() {
+   public DateTime getMaxEndTime() {
       return maxEndTime;
    }
 

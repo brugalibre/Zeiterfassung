@@ -12,8 +12,8 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import com.adcubum.timerecording.settings.round.RoundMode;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 /**
  * @author Dominic
@@ -34,50 +34,25 @@ public class DateParser {
    private static final String DOUBLE_POINT = ":";
 
    /**
-    * Returns the String representation for the given {@link Time} instance
+    * Returns the String representation for the given {@link DateTime} instance
     * 
     * @param duration
-    * @return the String representation for the given {@link Time} instance
+    * @return the String representation for the given {@link DateTime} instance
     */
-   public static String parse2String(Time time) {
+   public static String parse2String(DateTime time) {
       return parse2String(time, HOUR_MIN_PATTERN);
    }
 
    /**
-    * Returns the String representation for the given {@link Time} instance
+    * Returns the String representation for the given {@link DateTime} instance
     * 
     * @param duration
-    * @return the String representation for the given {@link Time} instance
+    * @return the String representation for the given {@link DateTime} instance
     */
-   public static String parse2String(Time time, String pattern) {
+   public static String parse2String(DateTime time, String pattern) {
       SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
       df.applyPattern(pattern);
       Date date = new Date(time.getTime());
-      return df.format(date);
-   }
-
-
-   /**
-    * Returns the default representation of a date using the pattern 'dd.MM.yyyy'
-    * 
-    * @return the default representation of a date using the pattern 'dd.MM.yyyy'
-    */
-   public static String parse2String(Date date) {
-      return parse2String(date, "dd.MM.yyyy");
-   }
-
-   /**
-    * Returns the default representation of a date using the given pattern
-    * 
-    * @param date
-    *        the {@link Date} to parse
-    * @param pattern
-    *        the pattern to use
-    * @return the default representation of a date using the given pattern
-    */
-   public static String parse2String(Date date, String pattern) {
-      SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
-      df.applyPattern(pattern);
       return df.format(date);
    }
 
@@ -94,7 +69,7 @@ public class DateParser {
       return date.format(DateTimeFormatter.ofPattern(pattern));
    }
 
-   public static Time getTime(String input, Time currentSetDate) {
+   public static DateTime getTime(String input, DateTime currentSetDate) {
       try {
          return getTime(input, new Date(currentSetDate.getTime()));
       } catch (ParseException e) {
@@ -104,16 +79,16 @@ public class DateParser {
    }
 
    /**
-    * Tries to parse the given input String into a {@link Time} instance
+    * Tries to parse the given input String into a {@link DateTime} instance
     * 
     * @param input
     *        the given input value
     * @param currentDate
     *        the current Date which is used to append the given input
-    * @return a new {@link Time} instance
+    * @return a new {@link DateTime} instance
     * @throws ParseException
     */
-   public static Time getTime(String input, Date currentDate) throws ParseException {
+   public static DateTime getTime(String input, Date currentDate) throws ParseException {
       SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(DateFormat.SHORT);
       df.applyPattern(DATE_WITH_SEC_PATTERN);
 
@@ -126,7 +101,7 @@ public class DateParser {
       // Append the information about hour, minutes and seconds to the given
       // information
       Date date = df.parse(yearMonthDayInfo + convertInputWithSeconds(input));
-      return TimeFactory.createNew(date.getTime(), RoundMode.SEC);
+      return DateTimeFactory.createNew(date.getTime(), RoundMode.SEC);
    }
 
    /**
@@ -181,7 +156,7 @@ public class DateParser {
    }
 
    /**
-    * Converts the given String input and parses the resulting value to a {@link Time}
+    * Converts the given String input and parses the resulting value to a {@link DateTime}
     * With the given {@link TimeUnit} it's possible to define the accuracy.
     * E.g.: The input '800': This will be converted to '08:00' whereas this value
     * is parsed into a Time. Use {@link TimeUnit#SECONDS} if you want to include seconds in the resulting Time instance
@@ -191,13 +166,13 @@ public class DateParser {
     *        the time as a String
     * @param timeUnit
     *        the {@link TimeUnit} which defines the accuracy of the returned time
-    * @return a {@link Time} instance for the given time value as a String
+    * @return a {@link DateTime} instance for the given time value as a String
     */
-   public static Time convertAndParse2Time(String timeAsString, TimeUnit timeUnit) {
+   public static DateTime convertAndParse2Time(String timeAsString, TimeUnit timeUnit) {
       return convertString2Time(timeAsString, timeUnit);
    }
 
-   private static Time convertString2Time(String timeAsString, TimeUnit timeUnit) {
+   private static DateTime convertString2Time(String timeAsString, TimeUnit timeUnit) {
       try {
          String convertedTimeStampValue;
          if (timeUnit == TimeUnit.SECONDS) {

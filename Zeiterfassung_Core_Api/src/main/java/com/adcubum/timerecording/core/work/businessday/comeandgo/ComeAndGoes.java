@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * The class {@link ComeAndGoes} keeps track of each time a user comes and goes during the business day.
@@ -86,12 +86,12 @@ public interface ComeAndGoes extends DomainModel {
    ComeAndGoes comeOrGo();
 
    /**
-    * Either triggers a manually come or a go for this {@link ComeAndGoes} with the given {@link Time}
+    * Either triggers a manually come or a go for this {@link ComeAndGoes} with the given {@link DateTime}
     * This instance remains unchanged!
     * 
     * @return a new instance with a new started or ended come or go
     */
-   ComeAndGoes comeOrGo(Time time);
+   ComeAndGoes comeOrGo(DateTime time);
 
    /**
     * Updates a given {@link ComeAndGo} for the given changed values

@@ -48,8 +48,8 @@ import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageType;
 import com.adcubum.timerecording.settings.Settings;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
@@ -751,10 +751,10 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
          } else {
             startDate = new GregorianCalendar(2020, 1, 1);// year, month (starts at zero!), day, hours, min, second
          }
-         Time beginTimeStamp = TimeFactory.createNew(startDate.getTimeInMillis());
+         DateTime beginTimeStamp = DateTimeFactory.createNew(startDate.getTimeInMillis());
          TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
          timeSnippet.setBeginTimeStamp(beginTimeStamp);
-         timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
+         timeSnippet.setEndTimeStamp(DateTimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
          return timeSnippet;
       }
    }

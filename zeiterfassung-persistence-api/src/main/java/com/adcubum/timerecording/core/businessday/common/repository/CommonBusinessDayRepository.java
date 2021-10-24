@@ -4,7 +4,7 @@ import org.springframework.lang.NonNull;
 
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
 import com.adcubum.timerecording.core.repository.ObjectNotFoundException;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * Common repository definition for all repositories dealing with any kind of business-day object
@@ -67,12 +67,12 @@ public interface CommonBusinessDayRepository<T, I> {
    void deleteAll(boolean isBooked);
 
    /**
-    * Deletes all BusinessDays which are booked and which took place within or equal the given {@link Time} bounds
+    * Deletes all BusinessDays which are booked and which took place within or equal the given {@link DateTime} bounds
     * 
     * @param lowerBounds
     *        the lower bound
     * @param upperBounds
     *        the upper bound
     */
-   void deleteBookedBusinessDaysWithinRange(@NonNull Time lowerBounds, @NonNull Time upperBounds);
+   void deleteBookedBusinessDaysWithinRange(@NonNull DateTime lowerBounds, @NonNull DateTime upperBounds);
 }

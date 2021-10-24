@@ -8,7 +8,7 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ComeAndGoesUpdater;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.impl.ChangedComeAndGoValueImpl;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.util.parser.DateParser;
 
 public class ComeAndGoDataModel {
@@ -29,10 +29,10 @@ public class ComeAndGoDataModel {
 
    public void changeComeOrGo(boolean hasComeChanged, String newValue) {
       if (hasComeChanged) {
-         Time newTimeValue = DateParser.getTime(newValue, timeSnippet.getBeginTimeStamp());
+         DateTime newTimeValue = DateParser.getTime(newValue, timeSnippet.getBeginTimeStamp());
          changeComeAndGo(newTimeValue, timeSnippet.getEndTimeStamp());
       } else {
-         Time newTimeValue = DateParser.getTime(newValue, timeSnippet.getEndTimeStamp());
+         DateTime newTimeValue = DateParser.getTime(newValue, timeSnippet.getEndTimeStamp());
          changeComeAndGo(timeSnippet.getBeginTimeStamp(), newTimeValue);
       }
    }
@@ -40,7 +40,7 @@ public class ComeAndGoDataModel {
    /*
     * Update the ComeAndGo and our TimeSnippet 
     */
-   private void changeComeAndGo(Time newComeValue, Time newGoValue) {
+   private void changeComeAndGo(DateTime newComeValue, DateTime newGoValue) {
       ChangedComeAndGoValue changedComeAndGoValue = ChangedComeAndGoValueImpl.of(id, newComeValue, newGoValue);
       ComeAndGoes changedComeAndGoes = comeAndGoesUpdater.changeComeAndGo(changedComeAndGoValue);
       updateTimeStamp(changedComeAndGoes);

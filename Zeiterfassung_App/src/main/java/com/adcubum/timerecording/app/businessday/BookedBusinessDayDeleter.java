@@ -4,7 +4,7 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * The {@link BookedBusinessDayDeleter} deletes booked {@link BusinessDay}s including their {@link BusinessDayIncrement},
@@ -16,7 +16,7 @@ import com.adcubum.timerecording.work.date.Time;
 public interface BookedBusinessDayDeleter {
 
    /**
-    * Removes all booked {@link BusinessDay}s which are older than a specific {@link Time}
+    * Removes all booked {@link BusinessDay}s which are older than a specific {@link DateTime}
     */
    void cleanUpBookedBusinessDays();
 }

@@ -29,7 +29,7 @@ public class BusinessDayDto {
             .stream()
             .map(BusinessDayIncrementDto::of)
             .collect(Collectors.toList());
-      this.dateRepresentation = DateParser.parse2String(businessDay.getDate(), dateRepPattern);
+      this.dateRepresentation = DateParser.parse2String(businessDay.getDateTime(), dateRepPattern);
    }
 
    public final List<BusinessDayIncrementDto> getBusinessDayIncrementDtos() {

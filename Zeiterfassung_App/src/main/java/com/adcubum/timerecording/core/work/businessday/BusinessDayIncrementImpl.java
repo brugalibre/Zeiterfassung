@@ -16,8 +16,8 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Busi
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklog;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.NumberFormat;
@@ -64,7 +64,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     * @param beginTimeStamp
     */
    @Override
-   public void startCurrentTimeSnippet(Time beginTimeStamp) {
+   public void startCurrentTimeSnippet(DateTime beginTimeStamp) {
       currentTimeSnippet = TimeSnippetFactory.createNew();
       currentTimeSnippet.setBeginTimeStamp(beginTimeStamp);
    }
@@ -73,7 +73,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     * @param endTimeStamp
     */
    @Override
-   public void stopCurrentTimeSnippet(Time endTimeStamp) {
+   public void stopCurrentTimeSnippet(DateTime endTimeStamp) {
       currentTimeSnippet.setEndTimeStamp(endTimeStamp);
    }
 
@@ -83,8 +83,8 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    }
 
    @Override
-   public Time getDate() {
-      return isNull(currentTimeSnippet) ? TimeFactory.createNew() : currentTimeSnippet.getDate();
+   public DateTime getDateTime() {
+      return isNull(currentTimeSnippet) ? DateTimeFactory.createNew() : currentTimeSnippet.getDateTime();
    }
 
    @Override

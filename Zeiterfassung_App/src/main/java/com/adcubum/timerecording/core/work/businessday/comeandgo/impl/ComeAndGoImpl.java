@@ -8,7 +8,7 @@ import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * The class {@link ComeAndGo} keeps track of when a user comes and goes during the business day
@@ -43,7 +43,7 @@ public class ComeAndGoImpl implements ComeAndGo {
    }
 
    @Override
-   public ComeAndGo comeOrGo(Time time) {
+   public ComeAndGo comeOrGo(DateTime time) {
       ComeAndGoImpl comeAndGoImpl = new ComeAndGoImpl(this);
       if (isNull(comeAndGoImpl.comeAndGoSnippet.getBeginTimeStamp())) {
          comeAndGoImpl.comeAndGoSnippet.setBeginTimeStamp(time);

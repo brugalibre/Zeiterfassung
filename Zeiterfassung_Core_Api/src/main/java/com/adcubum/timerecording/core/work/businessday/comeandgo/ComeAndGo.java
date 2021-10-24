@@ -3,7 +3,7 @@ package com.adcubum.timerecording.core.work.businessday.comeandgo;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * The class {@link ComeAndGo} keeps track of when a user comes and goes during the business day
@@ -51,5 +51,5 @@ public interface ComeAndGo extends DomainModel {
     * 
     * @return a new instance
     */
-   ComeAndGo comeOrGo(Time time);
+   ComeAndGo comeOrGo(DateTime time);
 }

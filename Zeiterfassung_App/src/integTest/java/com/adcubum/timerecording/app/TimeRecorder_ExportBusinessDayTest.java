@@ -32,8 +32,8 @@ import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.message.Message;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.util.parser.DateParser;
 
 class TimeRecorder_ExportBusinessDayTest {
@@ -127,10 +127,10 @@ class TimeRecorder_ExportBusinessDayTest {
 
       private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) throws ParseException {
          Date startDate = DateParser.parse2Date("01.01.2020 00:00", DateParser.DATE_PATTERN);
-         Time beginTimeStamp = TimeFactory.createNew(startDate.getTime());
+         DateTime beginTimeStamp = DateTimeFactory.createNew(startDate.getTime());
          TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
          timeSnippet.setBeginTimeStamp(beginTimeStamp);
-         timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTime() + timeBetweenBeginAndEnd));
+         timeSnippet.setEndTimeStamp(DateTimeFactory.createNew(startDate.getTime() + timeBetweenBeginAndEnd));
          return timeSnippet;
       }
    }

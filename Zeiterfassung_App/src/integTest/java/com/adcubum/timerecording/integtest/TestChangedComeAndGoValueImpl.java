@@ -5,15 +5,15 @@ import static java.util.Objects.requireNonNull;
 import java.util.UUID;
 
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 public class TestChangedComeAndGoValueImpl implements ChangedComeAndGoValue {
 
-   private Time newGoValue;
-   private Time newComeValue;
+   private DateTime newGoValue;
+   private DateTime newComeValue;
    private UUID id;
 
-   public TestChangedComeAndGoValueImpl(UUID id, Time newComeValue, Time newGoValue) {
+   public TestChangedComeAndGoValueImpl(UUID id, DateTime newComeValue, DateTime newGoValue) {
       this.newComeValue = requireNonNull(newComeValue);
       this.newGoValue = newGoValue;
       this.id = requireNonNull(id);
@@ -25,12 +25,12 @@ public class TestChangedComeAndGoValueImpl implements ChangedComeAndGoValue {
    }
 
    @Override
-   public Time getNewComeValue() {
+   public DateTime getNewComeValue() {
       return newComeValue;
    }
 
    @Override
-   public Time getNewGoValue() {
+   public DateTime getNewGoValue() {
       return newGoValue;
    }
 }

@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
 import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 
 public interface TimeSnippet extends DomainModel {
@@ -45,7 +45,7 @@ public interface TimeSnippet extends DomainModel {
    void updateAndSetEndTimeStamp(String newTimeStampValue, boolean negativeDurationNOK);
 
    /**
-    * Creates a new {@link TimeSnippet} with the given {@link Time} as a begin time
+    * Creates a new {@link TimeSnippet} with the given {@link DateTime} as a begin time
     * stamp. The duration of this new created {@link TimeSnippet} is the total
     * duration of this current TimeSnipped divided by the given divisor
     * 
@@ -55,7 +55,7 @@ public interface TimeSnippet extends DomainModel {
     *        the divisor
     * @return a new created {@link TimeSnippet}
     */
-   TimeSnippet createTimeStampForIncrement(Time beginTimeStamp, int divisor);
+   TimeSnippet createTimeStampForIncrement(DateTime beginTimeStamp, int divisor);
 
    /**
     * @return the amount of minutes between the start, and end-point
@@ -75,21 +75,27 @@ public interface TimeSnippet extends DomainModel {
     */
    String getDurationRep();
 
-   Time getDate();
+   void setBeginTimeStamp(DateTime beginTimeStamp);
 
-   void setBeginTimeStamp(Time beginTimeStamp);
+   void setEndTimeStamp(DateTime endTimeStamp);
 
-   void setEndTimeStamp(Time endTimeStamp);
+   /**
+    * Returns the {@link DateTime} when this {@link TimeSnippet} begins
+    * <b>Note</b> That this call is equivalent to {@link #getBeginTimeStamp()}
+    * 
+    * @return the {@link DateTime} when this {@link TimeSnippet} begins
+    */
+   DateTime getDateTime();
 
    /**
     * @return the time stamp object at the begin
     */
-   Time getBeginTimeStamp();
+   DateTime getBeginTimeStamp();
 
    /**
     * @return the time stamp object at the end
     */
-   Time getEndTimeStamp();
+   DateTime getEndTimeStamp();
 
    String getEndTimeStampRep();
 

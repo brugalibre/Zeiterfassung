@@ -6,8 +6,7 @@ import java.time.LocalDate;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistory;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.util.parser.DateParser;
 import com.adcubum.util.parser.NumberFormat;
 
@@ -63,9 +62,9 @@ public class BusinessDayHistoryImpl implements BusinessDayHistory {
     * @return a new {@link BusinessDayHistoryImpl}
     */
    public static BusinessDayHistoryImpl of(BusinessDay businessDay) {
-      String dateAsString = DateParser.parse2String(businessDay.getDate(), DateParser.DD_MM_YYYY);
+      DateTime businessDayDateTime = businessDay.getDateTime();
+      String dateAsString = DateParser.parse2String(businessDayDateTime, DateParser.DD_MM_YYYY);
       String bookedHoursAsString = NumberFormat.format(businessDay.getTotalDuration());
-      Time time = TimeFactory.createNew(businessDay.getDate());
-      return new BusinessDayHistoryImpl(dateAsString, bookedHoursAsString, time.getLocalDate());
+      return new BusinessDayHistoryImpl(dateAsString, bookedHoursAsString, businessDayDateTime.getLocalDate());
    }
 }

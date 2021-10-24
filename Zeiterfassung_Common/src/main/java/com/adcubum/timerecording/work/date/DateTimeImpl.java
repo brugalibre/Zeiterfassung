@@ -3,7 +3,7 @@
  */
 package com.adcubum.timerecording.work.date;
 
-import static com.adcubum.timerecording.work.date.Time.getTimeRefactorValue;
+import static com.adcubum.timerecording.work.date.DateTime.getTimeRefactorValue;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Objects.requireNonNull;
 
@@ -20,77 +20,69 @@ import com.adcubum.timerecording.settings.round.RoundMode;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.DateParser;
 
-/**
- * The {@link TimeImpl} class represents the time, e.g. 18:55:45 It is used to add
- * additionally features such as add a amount of time to an existing
- * 
- * {@link TimeImpl} object
- * 
- * @author Dominic
- */
-public class TimeImpl implements Time {
+public class DateTimeImpl implements DateTime {
 
    private Duration duration;
    private RoundMode roundMode;
 
    /**
-    * Create a new {@link TimeImpl} object according to the given {@link TimeImpl} object and the default {@link RoundMode#ONE_MIN}
+    * Create a new {@link DateTimeImpl} object according to the given {@link DateTimeImpl} object and the default {@link RoundMode#ONE_MIN}
     * 
     * @param time
     */
-   private TimeImpl(Date date) {
+   private DateTimeImpl(Date date) {
       this(date.getTime());
    }
 
    /**
-    * Create a new {@link TimeImpl} object according to the given {@link TimeImpl} object
+    * Create a new {@link DateTimeImpl} object according to the given {@link DateTimeImpl} object
     * 
     * @param time
     */
-   private TimeImpl(TimeImpl time) {
+   private DateTimeImpl(DateTimeImpl time) {
       this(time.getTime(), time.roundMode);
    }
 
    /**
     * Creates a MessageFactory.createNew started right now a
     */
-   private TimeImpl() {
+   private DateTimeImpl() {
       this(System.currentTimeMillis());
    }
 
    /**
-    * Creates a new {@link TimeImpl} with the amount of milliseconds and the default {@link RoundMode#ONE_MIN}
+    * Creates a new {@link DateTimeImpl} with the amount of milliseconds and the default {@link RoundMode#ONE_MIN}
     * 
     * @param time
     *        the actual time
     */
-   private TimeImpl(long time) {
+   private DateTimeImpl(long time) {
       this(time, RoundMode.ONE_MIN);
    }
 
    /**
-    * Creates a new {@link TimeImpl} with the amount of milliseconds and the given {@link RoundMode}
+    * Creates a new {@link DateTimeImpl} with the amount of milliseconds and the given {@link RoundMode}
     * 
     * @param time
     *        the actual time
     * @param roundMode
     *        the {@link RoundMode}
     */
-   private TimeImpl(long time, RoundMode roundMode) {
+   private DateTimeImpl(long time, RoundMode roundMode) {
       duration = new Duration(time);
       this.roundMode = requireNonNull(roundMode);
       round(roundMode);
    }
 
    /**
-    * Adds the given amount of seconds to this {@link TimeImpl} and returns a new instance
+    * Adds the given amount of seconds to this {@link DateTimeImpl} and returns a new instance
     * 
     * @param seconds2Add
-    * @return a new {@link TimeImpl} instance which has added the given amount of seconds
+    * @return a new {@link DateTimeImpl} instance which has added the given amount of seconds
     */
    @Override
-   public Time addSeconds(long seconds2Add) {
-      return new TimeImpl(this.duration.getMillis() + seconds2Add * 1000, this.roundMode);
+   public DateTime addSeconds(long seconds2Add) {
+      return new DateTimeImpl(this.duration.getMillis() + seconds2Add * 1000, this.roundMode);
    }
 
    private void round(RoundMode roundMode) {
@@ -139,7 +131,7 @@ public class TimeImpl implements Time {
    }
 
    @Override
-   public boolean isBefore(Time time2Check) {
+   public boolean isBefore(DateTime time2Check) {
       long daysBetween = DAYS.between(getLocalDate(), time2Check.getLocalDate());
       // attention: when calculating the days between using Time::getDays does not work in all situations!
       return daysBetween > 0;
@@ -163,7 +155,7 @@ public class TimeImpl implements Time {
       if (getClass() != obj.getClass()) {
          return false;
       }
-      TimeImpl other = (TimeImpl) obj;
+      DateTimeImpl other = (DateTimeImpl) obj;
       return duration.getStandardSeconds() == other.duration.getStandardSeconds();
    }
 
@@ -173,9 +165,9 @@ public class TimeImpl implements Time {
    }
 
    @Override
-   public int compareTo(Time otherTime) {
-      if (otherTime instanceof TimeImpl) {
-         return duration.compareTo(((TimeImpl) otherTime).duration);
+   public int compareTo(DateTime otherTime) {
+      if (otherTime instanceof DateTimeImpl) {
+         return duration.compareTo(((DateTimeImpl) otherTime).duration);
       }
       return -1;
    }

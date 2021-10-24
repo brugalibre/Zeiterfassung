@@ -5,8 +5,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 class TimeSnippetTest {
 
@@ -29,17 +29,17 @@ class TimeSnippetTest {
       TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
 
       // When
-      Time actualTime = timeSnippet.getDate();
+      DateTime actualTime = timeSnippet.getDateTime();
 
       // Then
-      assertThat(actualTime, is(TimeSnippetFactory.createNew()));
+      assertThat(actualTime, is(DateTimeFactory.createNew()));
    }
 
    @Test
    void testGetDurationRepTimeSnipptetWithoutEnd() {
       // Given
       TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
-      timeSnippet.setBeginTimeStamp(TimeFactory.createNew());
+      timeSnippet.setBeginTimeStamp(DateTimeFactory.createNew());
       String expectedDurationRep = "0";
 
       // When

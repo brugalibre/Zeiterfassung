@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.adcubum.timerecording.core.repository.ObjectNotFoundException;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 public class BusinessDayRepositoryIntegMockUtil {
 
@@ -44,7 +44,7 @@ public class BusinessDayRepositoryIntegMockUtil {
       }
 
       @Override
-      public List<BusinessDay> findBookedBussinessDaysWithinRange(Time lowerBounds, Time upperBounds) {
+      public List<BusinessDay> findBookedBussinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds) {
          return Collections.emptyList();
       }
 
@@ -76,12 +76,12 @@ public class BusinessDayRepositoryIntegMockUtil {
       }
 
       @Override
-      public void deleteBookedBusinessDaysWithinRange(Time lowerBounds, Time upperBounds) {
+      public void deleteBookedBusinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds) {
          // nothing todo
       }
 
       @Override
-      public BusinessDay findBookedBusinessDayByDate(Time time) {
+      public BusinessDay findBookedBusinessDayByDate(DateTime time) {
          // nothing todo
          return null;
       }

@@ -4,17 +4,17 @@ import static java.util.Objects.requireNonNull;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
-import com.adcubum.timerecording.work.date.TimeUtil;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
+import com.adcubum.timerecording.work.date.DateTimeUtil;
 
 public class BookedBusinessDayDeleterImpl implements BookedBusinessDayDeleter {
 
-   private Time lowerBounds;
-   private Time thresholdTime;
+   private DateTime lowerBounds;
+   private DateTime thresholdTime;
    private BusinessDayRepository businessDayRepository;
 
-   private BookedBusinessDayDeleterImpl(Time lowerBounds, Time thresholdTime, BusinessDayRepository businessDayRepository) {
+   private BookedBusinessDayDeleterImpl(DateTime lowerBounds, DateTime thresholdTime, BusinessDayRepository businessDayRepository) {
       this.lowerBounds = requireNonNull(lowerBounds);
       this.thresholdTime = requireNonNull(thresholdTime);
       this.businessDayRepository = requireNonNull(businessDayRepository);
@@ -30,8 +30,8 @@ public class BookedBusinessDayDeleterImpl implements BookedBusinessDayDeleter {
     * before the first of the current month (exclusively the first)
     */
    public static BookedBusinessDayDeleterImpl of(BusinessDayRepository businessDayRepository) {
-      Time lastOfPrevMonth = TimeUtil.getLastOfPrevMonth();
-      Time zeroTime = TimeFactory.createNew(0);
+      DateTime lastOfPrevMonth = DateTimeUtil.getLastOfPrevMonth();
+      DateTime zeroTime = DateTimeFactory.createNew(0);
       return new BookedBusinessDayDeleterImpl(zeroTime, lastOfPrevMonth, businessDayRepository);
    }
 }

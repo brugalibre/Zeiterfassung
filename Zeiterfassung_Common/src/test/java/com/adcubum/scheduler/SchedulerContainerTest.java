@@ -17,8 +17,8 @@ import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.settings.round.RoundMode;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.util.parser.DateParser;
 
 class SchedulerContainerTest {
@@ -53,7 +53,7 @@ class SchedulerContainerTest {
       // Given
       AtomicBoolean wasInvoked = new AtomicBoolean();
       SchedulerContainerImpl schedulerListener = new SchedulerContainerImpl(TimeUnit.SECONDS, 1);
-      Time now = TimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC);
+      DateTime now = DateTimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC);
       String timeValueAsString = DateParser.parse2String(now.addSeconds(2), DateParser.HOUR_MIN_SEC_PATTERN);
       schedulerListener.addScheduler(() -> wasInvoked.set(true), timeValueAsString);
 
@@ -72,7 +72,7 @@ class SchedulerContainerTest {
       // Given
       AtomicBoolean wasInvoked = new AtomicBoolean();
       SchedulerContainerImpl schedulerListener = new SchedulerContainerImpl(TimeUnit.SECONDS, 1);
-      Time beforNow = TimeFactory.createNew(System.currentTimeMillis() - 1000);// -> accuracy 'MINUTES' in order to create a negativ wait duration
+      DateTime beforNow = DateTimeFactory.createNew(System.currentTimeMillis() - 1000);// -> accuracy 'MINUTES' in order to create a negativ wait duration
       String timeValueAsString = DateParser.parse2String(beforNow, DateParser.HOUR_MIN_SEC_PATTERN);
       schedulerListener.addScheduler(() -> wasInvoked.set(true), timeValueAsString);
 
@@ -90,7 +90,7 @@ class SchedulerContainerTest {
       // Given
       AtomicBoolean wasInvoked = spy(new AtomicBoolean());
       SchedulerContainerImpl schedulerListener = new SchedulerContainerImpl(TimeUnit.SECONDS, 1);
-      Time now = TimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC);
+      DateTime now = DateTimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC);
       String timeValueAsString = DateParser.parse2String(now.addSeconds(1), DateParser.HOUR_MIN_SEC_PATTERN);
       schedulerListener.addScheduler(() -> wasInvoked.set(true), timeValueAsString);
 

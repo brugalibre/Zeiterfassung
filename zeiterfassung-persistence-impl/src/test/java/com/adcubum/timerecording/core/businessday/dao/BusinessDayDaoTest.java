@@ -16,8 +16,8 @@ import com.adcubum.timerecording.core.businessday.dao.config.TestTimeSnippetDaoC
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayIncrementEntity;
 import com.adcubum.timerecording.core.businessday.entity.TimeSnippetEntity;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeBuilder;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeBuilder;
 
 @SpringBootTest(classes = {TestTimeSnippetDaoConfig.class})
 class BusinessDayDaoTest {
@@ -31,7 +31,7 @@ class BusinessDayDaoTest {
       int year = 2021;
       int month = 12;
       int day = 1;
-      Time firstBeginTime = TimeBuilder.of()
+      DateTime firstBeginTime = DateTimeBuilder.of()
             .withYear(year)
             .withMonth(month)
             .withDay(day)
@@ -41,7 +41,7 @@ class BusinessDayDaoTest {
       Timestamp firstBegin = new Timestamp(firstBeginTime.getTime());
       Timestamp firstEnd = new Timestamp(firstBegin.getTime() + 1000);
 
-      Time secondBeginTime = TimeBuilder.of()
+      DateTime secondBeginTime = DateTimeBuilder.of()
             .withYear(year)
             .withMonth(month)
             .withDay(day - 1)
@@ -50,14 +50,14 @@ class BusinessDayDaoTest {
             .build();
       Timestamp secondBegin = new Timestamp(secondBeginTime.getTime());
       Timestamp secondEnd = new Timestamp(firstBegin.getTime());
-      Time lowerBoundsTime = TimeBuilder.of()
+      DateTime lowerBoundsTime = DateTimeBuilder.of()
             .withYear(year)
             .withMonth(month)
             .withDay(day)
             .withHour(0)
             .withMinute(0)
             .build();
-      Time upperBoundsTime = TimeBuilder.of()
+      DateTime upperBoundsTime = DateTimeBuilder.of()
             .withYear(year)
             .withMonth(month)
             .withDay(day)
@@ -89,7 +89,7 @@ class BusinessDayDaoTest {
       int year = 2021;
       int month = 12;
       int day = 1;
-      Time beginTime = TimeBuilder.of()
+      DateTime beginTime = DateTimeBuilder.of()
             .withYear(year)
             .withMonth(month)
             .withDay(day)
@@ -99,14 +99,14 @@ class BusinessDayDaoTest {
       Timestamp begin = new Timestamp(beginTime.getTime());
       Timestamp end = new Timestamp(begin.getTime() + 1000);
 
-      Time lowerBoundsTime = TimeBuilder.of()
+      DateTime lowerBoundsTime = DateTimeBuilder.of()
             .withYear(year)
             .withMonth(month)
             .withDay(day - 1)
             .withHour(0)
             .withMinute(0)
             .build();
-      Time upperBoundsTime = TimeBuilder.of()
+      DateTime upperBoundsTime = DateTimeBuilder.of()
             .withYear(year)
             .withMonth(month)
             .withDay(day - 1)

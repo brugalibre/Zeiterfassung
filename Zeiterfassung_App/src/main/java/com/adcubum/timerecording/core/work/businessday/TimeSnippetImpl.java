@@ -12,8 +12,8 @@ import java.util.UUID;
 
 import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.DateParser;
@@ -31,16 +31,16 @@ import com.adcubum.util.utils.StringUtil;
  */
 public class TimeSnippetImpl implements TimeSnippet {
    private UUID id;
-   private Time beginTimeStamp;
-   private Time endTimeStamp;
+   private DateTime beginTimeStamp;
+   private DateTime endTimeStamp;
    private TimeSnippedChangedCallbackHandler callbackHandler;
 
    protected TimeSnippetImpl(UUID id, Long beginTimeStampValue, Long endTimeStampValue) {
       this.id = id;
       requireNonNull(beginTimeStampValue, "A TimeSnippetImpl needs a begin time stamp!");
-      setBeginTimeStamp(TimeFactory.createNew(beginTimeStampValue));
+      setBeginTimeStamp(DateTimeFactory.createNew(beginTimeStampValue));
       if (nonNull(endTimeStampValue)) {
-         setEndTimeStamp(TimeFactory.createNew(endTimeStampValue));
+         setEndTimeStamp(DateTimeFactory.createNew(endTimeStampValue));
       }
    }
 
@@ -69,19 +69,19 @@ public class TimeSnippetImpl implements TimeSnippet {
    public void addAdditionallyTime(String amountOfTime2Add) {
       float additionallyTime = NumberFormat.parseFloat(amountOfTime2Add) - getDuration();
 
-      long additionallyDuration = (long) (Time.getTimeRefactorValue(TimeType.DEFAULT) * additionallyTime);
-      setEndTimeStamp(TimeFactory.createNew(getEndTimeStamp().getTime() + additionallyDuration));
+      long additionallyDuration = (long) (DateTime.getTimeRefactorValue(TimeType.DEFAULT) * additionallyTime);
+      setEndTimeStamp(DateTimeFactory.createNew(getEndTimeStamp().getTime() + additionallyDuration));
    }
 
    @Override
    public void updateAndSetBeginTimeStamp(String newTimeStampValue, boolean negativeDurationNOK) {
       String convertedTimeStampValue = convertInput(newTimeStampValue);
       if (!StringUtil.isEqual(convertedTimeStampValue, getBeginTimeStampRep())) {
-         Time time = DateParser.getTime(newTimeStampValue, getBeginTimeStamp());
+         DateTime time = DateParser.getTime(newTimeStampValue, getBeginTimeStamp());
          if (getEndTimeStamp().getTime() - time.getTime() < 0 && negativeDurationNOK) {
             return;
          }
-         setBeginTimeStamp(TimeFactory.createNew(time));
+         setBeginTimeStamp(DateTimeFactory.createNew(time));
       }
    }
 
@@ -89,11 +89,11 @@ public class TimeSnippetImpl implements TimeSnippet {
    public void updateAndSetEndTimeStamp(String newTimeStampValue, boolean negativeDurationNOK) {
       String convertedTimeStampValue = convertInput(newTimeStampValue);
       if (!StringUtil.isEqual(convertedTimeStampValue, getEndTimeStampRep())) {
-         Time time = DateParser.getTime(newTimeStampValue, getEndTimeStamp());
+         DateTime time = DateParser.getTime(newTimeStampValue, getEndTimeStamp());
          if (time.getTime() - getBeginTimeStamp().getTime() < 0 && negativeDurationNOK) {
             return;
          }
-         setEndTimeStamp(TimeFactory.createNew(time));
+         setEndTimeStamp(DateTimeFactory.createNew(time));
       }
    }
 
@@ -119,10 +119,10 @@ public class TimeSnippetImpl implements TimeSnippet {
    @Override
    public float getDuration(TIME_TYPE type) {
       long now = System.currentTimeMillis();
-      Time endTimeSnippet = (endTimeStamp != null ? endTimeStamp : TimeFactory.createNew(now));
-      Time tmpBeginTimeStamp = (beginTimeStamp != null ? beginTimeStamp : TimeFactory.createNew(now));
+      DateTime endTimeSnippet = (endTimeStamp != null ? endTimeStamp : DateTimeFactory.createNew(now));
+      DateTime tmpBeginTimeStamp = (beginTimeStamp != null ? beginTimeStamp : DateTimeFactory.createNew(now));
       long time = endTimeSnippet.getTime() - tmpBeginTimeStamp.getTime();
-      int factor = (int) Time.getTimeRefactorValue(type);
+      int factor = (int) DateTime.getTimeRefactorValue(type);
 
       return NumberFormat.parse(time, factor);
    }
@@ -134,29 +134,29 @@ public class TimeSnippetImpl implements TimeSnippet {
    }
 
    @Override
-   public Time getDate() {
-      return nonNull(beginTimeStamp) ? beginTimeStamp : TimeFactory.createNew();
+   public DateTime getDateTime() {
+      return nonNull(beginTimeStamp) ? beginTimeStamp : DateTimeFactory.createNew();
    }
 
    @Override
-   public void setBeginTimeStamp(Time beginTimeStamp) {
+   public void setBeginTimeStamp(DateTime beginTimeStamp) {
       this.beginTimeStamp = beginTimeStamp;
       notifyCallbackHandler(ChangedValue.of(getBeginTimeStampRep(), ValueTypes.BEGIN));
    }
 
    @Override
-   public void setEndTimeStamp(Time endTimeStamp) {
+   public void setEndTimeStamp(DateTime endTimeStamp) {
       this.endTimeStamp = endTimeStamp;
       notifyCallbackHandler(ChangedValue.of(getEndTimeStampRep(), ValueTypes.END));
    }
 
    @Override
-   public Time getEndTimeStamp() {
+   public DateTime getEndTimeStamp() {
       return endTimeStamp;
    }
 
    @Override
-   public Time getBeginTimeStamp() {
+   public DateTime getBeginTimeStamp() {
       return beginTimeStamp;
    }
 
@@ -186,7 +186,7 @@ public class TimeSnippetImpl implements TimeSnippet {
    }
 
    @Override
-   public TimeSnippet createTimeStampForIncrement(Time beginTimeStamp, int divisor) {
+   public TimeSnippet createTimeStampForIncrement(DateTime beginTimeStamp, int divisor) {
       float totalDuration = getDuration(TIME_TYPE.MILI_SEC);
       long newDuration4Increment = (long) (totalDuration / divisor);
       return new TimeSnippetBuilder()
@@ -232,8 +232,8 @@ public class TimeSnippetImpl implements TimeSnippet {
 
       private long beginTimeStampValue;
       private long endTimeStampValue;
-      private Time beginTime;
-      private Time endTime;
+      private DateTime beginTime;
+      private DateTime endTime;
 
       private TimeSnippetBuilder() {
          // private
@@ -253,12 +253,12 @@ public class TimeSnippetImpl implements TimeSnippet {
          return this;
       }
 
-      public TimeSnippetBuilder withBeginTime(Time beginTime) {
+      public TimeSnippetBuilder withBeginTime(DateTime beginTime) {
          this.beginTime = beginTime;
          return this;
       }
 
-      public TimeSnippetBuilder withEndTime(Time endTime) {
+      public TimeSnippetBuilder withEndTime(DateTime endTime) {
          this.endTime = endTime;
          return this;
       }
@@ -266,12 +266,12 @@ public class TimeSnippetImpl implements TimeSnippet {
       public TimeSnippetImpl build() {
          TimeSnippetImpl timeSnippetImpl = new TimeSnippetImpl();
          if (isNull(beginTime)) {
-            timeSnippetImpl.setBeginTimeStamp(TimeFactory.createNew(beginTimeStampValue));
+            timeSnippetImpl.setBeginTimeStamp(DateTimeFactory.createNew(beginTimeStampValue));
          } else {
             timeSnippetImpl.setBeginTimeStamp(beginTime);
          }
          if (isNull(endTime)) {
-            timeSnippetImpl.setEndTimeStamp(TimeFactory.createNew(endTimeStampValue));
+            timeSnippetImpl.setEndTimeStamp(DateTimeFactory.createNew(endTimeStampValue));
          } else {
             timeSnippetImpl.setEndTimeStamp(endTime);
          }

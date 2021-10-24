@@ -3,7 +3,7 @@ package com.adcubum.timerecording.core.work.businessday.comeandgo.change;
 import java.util.UUID;
 
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * The {@link ChangedComeAndGoValue} defines the new values for a {@link ComeAndGo}
@@ -16,12 +16,12 @@ public interface ChangedComeAndGoValue {
    /**
     * @return the new come value
     */
-   Time getNewComeValue();
+   DateTime getNewComeValue();
 
    /**
     * @return the new go value
     */
-   Time getNewGoValue();
+   DateTime getNewGoValue();
 
    /**
     * @return the id of the {@link ComeAndGo} to change

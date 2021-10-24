@@ -15,7 +15,7 @@ import com.adcubum.timerecording.core.work.businessday.history.compare.BusinessD
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * Lazy access implementation of the {@link BusinessDayHelper}. This means, this class stores an instance of the
@@ -77,7 +77,7 @@ public class BusinessDayHelperImpl implements BusinessDayHelper {
 
    private BusinessDay findBookedBusiness4BookedBusinessDayIncs(List<BusinessDayIncrement> increments) {
       return findFirstBookedBusinessDayInc(increments)
-            .map(BusinessDayIncrement::getDate)
+            .map(BusinessDayIncrement::getDateTime)
             .map(businessDayRepository::findBookedBusinessDayByDate)
             .orElse(null);
    }
@@ -125,7 +125,7 @@ public class BusinessDayHelperImpl implements BusinessDayHelper {
    }
 
    @Override
-   public BusinessDayHistoryOverview getBusinessDayHistoryOverview(Time lowerBounds, Time upperBounds) {
+   public BusinessDayHistoryOverview getBusinessDayHistoryOverview(DateTime lowerBounds, DateTime upperBounds) {
       List<BusinessDay> bookedBussinessDaysWithinRange = businessDayRepository.findBookedBussinessDaysWithinRange(lowerBounds, upperBounds);
       return BusinessDayHistoryOverviewImpl.of(lowerBounds, upperBounds, bookedBussinessDaysWithinRange);
    }

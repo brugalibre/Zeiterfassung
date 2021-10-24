@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.adcubum.scheduler.helper.SchedulerTimeHelper;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.workerfactory.ThreadFactory;
 
 /**
@@ -25,7 +25,7 @@ public class SchedulerImpl implements Scheduler {
    private boolean isRunning;
    private boolean wasWaiting;
 
-   private Time scheduleDate;
+   private DateTime scheduleDate;
    private TimeUnit timeUnit;
    private long sleepInterval;
 
@@ -33,13 +33,13 @@ public class SchedulerImpl implements Scheduler {
     * Creates a new {@link SchedulerImpl}
     * 
     * @param time
-    *        the desired {@link Time} to call the registered {@link Runnable}s
+    *        the desired {@link DateTime} to call the registered {@link Runnable}s
     * @param timeUnit
     *        the {@link TimeUnit} which defines the time of each sleep duration
     * @param sleepInterval
     *        the interval this SchedulerImpl sleeps
     */
-   public SchedulerImpl(Time time, TimeUnit timeUnit, long sleepInterval) {
+   public SchedulerImpl(DateTime time, TimeUnit timeUnit, long sleepInterval) {
       this.isRunning = true;
       this.wasWaiting = false;
       this.scheduleDate = requireNonNull(time);

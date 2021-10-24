@@ -24,8 +24,8 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoe
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerImpl;
 import com.adcubum.timerecording.integtest.TestChangedComeAndGoValueImpl;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.util.parser.DateParser;
 
 class ComeAndGoesUpdaterImplTest {
@@ -38,7 +38,7 @@ class ComeAndGoesUpdaterImplTest {
       String comeTimeAsString2 = "11:15";
       String goTimeAsString2 = "13:00";
       String newTimeAsString = "11:30";
-      Time newComeTime = buildTime(newTimeAsString);
+      DateTime newComeTime = buildTime(newTimeAsString);
       TestCaseBuilder tcb = new TestCaseBuilder()
             .withCome(buildTime(comeTimeAsString1))
             .withGo(buildTime(goTimeAsString1))
@@ -65,7 +65,7 @@ class ComeAndGoesUpdaterImplTest {
       String comeTimeAsString2 = "11:15";
       String goTimeAsString2 = "13:00";
       String newGoTimeAsString = "14:30";
-      Time newGoTime = buildTime(newGoTimeAsString);
+      DateTime newGoTime = buildTime(newGoTimeAsString);
       TestCaseBuilder tcb = new TestCaseBuilder()
             .withCome(buildTime(comeTimeAsString1))
             .withGo(buildTime(goTimeAsString1))
@@ -84,8 +84,8 @@ class ComeAndGoesUpdaterImplTest {
       assertThat(comeAndGo4Id.get().getComeAndGoTimeStamp().getEndTimeStampRep(), is(newGoTimeAsString));
    }
 
-   private Time buildTime(String comeTimeAsString) throws ParseException {
-      return TimeFactory.createNew(DateParser.getTime(comeTimeAsString, TimeFactory.createNew()).getTime());
+   private DateTime buildTime(String comeTimeAsString) throws ParseException {
+      return DateTimeFactory.createNew(DateParser.getTime(comeTimeAsString, DateTimeFactory.createNew()).getTime());
    }
 
    private static class TestCaseBuilder {
@@ -93,30 +93,30 @@ class ComeAndGoesUpdaterImplTest {
       private ComeAndGoesUpdater comeAndGoesUpdaterImpl;
       private ChangedComeAndGoValue changedComeAndGoValue;
       private ComeAndGoes comeAndGoes;
-      private Time newComeTime;
-      private Time newGoTime;
+      private DateTime newComeTime;
+      private DateTime newGoTime;
       private UUID idOfComeAndGo2Change;
 
       private TestCaseBuilder() {
          this.comeAndGoes = ComeAndGoesImpl.of();
       }
 
-      private TestCaseBuilder withNewComeTime(Time newComeTime) {
+      private TestCaseBuilder withNewComeTime(DateTime newComeTime) {
          this.newComeTime = newComeTime;
          return this;
       }
 
-      private TestCaseBuilder withNewGoTime(Time newGoTime) {
+      private TestCaseBuilder withNewGoTime(DateTime newGoTime) {
          this.newGoTime = newGoTime;
          return this;
       }
 
-      private TestCaseBuilder withCome(Time comeTime) {
+      private TestCaseBuilder withCome(DateTime comeTime) {
          this.comeAndGoes = comeAndGoes.comeOrGo(comeTime);
          return this;
       }
 
-      private TestCaseBuilder withGo(Time goTime) {
+      private TestCaseBuilder withGo(DateTime goTime) {
          this.comeAndGoes = comeAndGoes.comeOrGo(goTime);
          return this;
       }

@@ -17,7 +17,7 @@ import com.adcubum.timerecording.core.businessday.dao.BusinessDayDao;
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
 import com.adcubum.timerecording.core.businessday.entity.repository.BusinessDayEntityRepository;
 import com.adcubum.timerecording.core.repository.ObjectNotFoundException;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 @Repository("business-day-entity-repository")
 public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityRepository {
@@ -34,7 +34,7 @@ public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityReposit
    }
 
    @Override
-   public List<BusinessDayEntity> findAllBookedBusinessDayEntitiesWithinRange(Time lowerBounds, Time upperBounds) {
+   public List<BusinessDayEntity> findAllBookedBusinessDayEntitiesWithinRange(DateTime lowerBounds, DateTime upperBounds) {
       Timestamp lowerBoundsTimestamp = new Timestamp(lowerBounds.getTime());
       Timestamp upperBoundsTimestamp = new Timestamp(upperBounds.getTime());
       List<BusinessDayEntity> allBusinessDayEntitiesWithinRange =
@@ -49,7 +49,7 @@ public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityReposit
    }
 
    @Override
-   public Optional<BusinessDayEntity> findBookedBusinessDayEntityWithinRange(Time lowerBounds, Time upperBounds) {
+   public Optional<BusinessDayEntity> findBookedBusinessDayEntityWithinRange(DateTime lowerBounds, DateTime upperBounds) {
       Timestamp lowerBoundsTimestamp = new Timestamp(lowerBounds.getTime());
       Timestamp upperBoundsTimestamp = new Timestamp(upperBounds.getTime());
       return businessDayDao.findAllBookedBusinessDayEntitiesWithinRange(lowerBoundsTimestamp, upperBoundsTimestamp)
@@ -120,7 +120,7 @@ public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityReposit
    }
 
    @Override
-   public void deleteBookedBusinessDaysWithinRange(Time lowerBounds, Time upperBounds) {
+   public void deleteBookedBusinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds) {
       findAllBookedBusinessDayEntitiesWithinRange(lowerBounds, upperBounds)
             .stream()
             .forEach(this::deleteCompleteBusinessDayEntity);

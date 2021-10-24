@@ -45,7 +45,7 @@ import com.adcubum.timerecording.message.MessageType;
 import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.settings.key.ValueKey;
 import com.adcubum.timerecording.settings.key.ValueKeyFactory;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.util.utils.FileSystemUtil;
 
 /**
@@ -432,7 +432,7 @@ public class TimeRecorderImpl implements TimeRecorder {
    }
 
    @Override
-   public BusinessDayHistoryOverview getBusinessDayHistoryOverview(Time lowerBounds, Time upperBounds) {
+   public BusinessDayHistoryOverview getBusinessDayHistoryOverview(DateTime lowerBounds, DateTime upperBounds) {
       return businessDayHelper.getBusinessDayHistoryOverview(lowerBounds, upperBounds);
    }
 

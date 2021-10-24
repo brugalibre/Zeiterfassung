@@ -6,8 +6,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.settings.round.RoundMode;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 class BusinessDayIncrementTest {
 
@@ -29,10 +29,10 @@ class BusinessDayIncrementTest {
    }
 
    private static void addTimeSnippet2BDIncrement(BusinessDayIncrement businessDayIncrement, long startTimeStamp, int timeBetweenStartAndStop) {
-      Time startTime = TimeFactory.createNew(startTimeStamp, RoundMode.ONE_MIN);
+      DateTime startTime = DateTimeFactory.createNew(startTimeStamp, RoundMode.ONE_MIN);
       businessDayIncrement.startCurrentTimeSnippet(startTime);
       long endTimeStamp = startTimeStamp + timeBetweenStartAndStop;// 1h
-      Time endTime = TimeFactory.createNew(endTimeStamp, RoundMode.ONE_MIN);
+      DateTime endTime = DateTimeFactory.createNew(endTimeStamp, RoundMode.ONE_MIN);
       businessDayIncrement.stopCurrentTimeSnippet(endTime);
    }
 }

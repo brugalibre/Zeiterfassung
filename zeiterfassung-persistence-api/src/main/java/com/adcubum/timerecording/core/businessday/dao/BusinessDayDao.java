@@ -9,7 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.NonNull;
 
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * The {@link BusinessDayDao} as data-access-object in order to create, retrieve and change {@link BusinessDayEntity}
@@ -23,7 +23,7 @@ public interface BusinessDayDao extends CrudRepository<BusinessDayEntity, UUID> 
          + "JOIN bd.businessDayIncrementEntities bdIncrements ";
 
    /**
-    * Selects all {@link BusinessDayEntity} which are within or equal the given {@link Time} bounds
+    * Selects all {@link BusinessDayEntity} which are within or equal the given {@link DateTime} bounds
     * 
     * @param lowerBounds
     *        the lower bound
@@ -38,7 +38,7 @@ public interface BusinessDayDao extends CrudRepository<BusinessDayEntity, UUID> 
    List<BusinessDayEntity> findAllBusinessDayEntitiesWithinRange(@NonNull Timestamp lowerBounds, @NonNull Timestamp upperBounds);
 
    /**
-    * Selects all booked {@link BusinessDayEntity} which are within or equal the given {@link Time} bounds
+    * Selects all booked {@link BusinessDayEntity} which are within or equal the given {@link DateTime} bounds
     * 
     * @param lowerBounds
     *        the lower bound

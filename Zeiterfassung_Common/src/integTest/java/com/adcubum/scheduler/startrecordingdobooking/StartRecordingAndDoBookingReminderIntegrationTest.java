@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.settings.round.RoundMode;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.util.parser.DateParser;
 
 class StartRecordingAndDoBookingReminderIntegrationTest {
@@ -129,13 +129,13 @@ class StartRecordingAndDoBookingReminderIntegrationTest {
       }
 
       private TestCaseBuilder withBeginRemindTime(int remindTime) {
-         Time nowPlusAdditionallyTime = TimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC).addSeconds(remindTime);
+         DateTime nowPlusAdditionallyTime = DateTimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC).addSeconds(remindTime);
          this.beginTimeValueAsString = DateParser.parse2String(nowPlusAdditionallyTime, DateParser.HOUR_MIN_SEC_PATTERN);
          return this;
       }
 
       private TestCaseBuilder withEndRemindTime(int remindTime) {
-         Time nowPlusAdditionallyTime = TimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC).addSeconds(remindTime);
+         DateTime nowPlusAdditionallyTime = DateTimeFactory.createNew(System.currentTimeMillis(), RoundMode.SEC).addSeconds(remindTime);
          this.endTimeValueAsString = DateParser.parse2String(nowPlusAdditionallyTime, DateParser.HOUR_MIN_SEC_PATTERN);
          return this;
       }

@@ -32,9 +32,9 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Busi
 import com.adcubum.timerecording.integtest.TestChangedComeAndGoValueImpl;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.TimeBuilder;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 @SpringBootTest(classes = {TestBusinessDayRepoConfig.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -48,7 +48,7 @@ class BusinessDayRepositoryImplIntegrationTest {
       int month = 11;
       int day = 1;
 
-      Time lowerBoundsTime = TimeBuilder.of()
+      DateTime lowerBoundsTime = TimeBuilder.of()
             .withYear(year)
             .withMonth(month)
             .withDay(day - 1)
@@ -77,7 +77,7 @@ class BusinessDayRepositoryImplIntegrationTest {
       String description = "Test";
       String otherBusinessDayIncDescDescription = "MichNIxFindenWollen";
 
-      Time lookAtTime = TimeBuilder.of()
+      DateTime lookAtTime = TimeBuilder.of()
             .withYear(year)
             .withMonth(month)
             .withDay(day)
@@ -393,8 +393,8 @@ class BusinessDayRepositoryImplIntegrationTest {
 
       // change existing comeandgo
       ComeAndGo originComeAndGo = originComeAndGoes.getComeAndGoEntries().get(0);
-      Time newComeValue = TimeFactory.createNew(originComeAndGo.getComeAndGoTimeStamp().getBeginTimeStamp().getTime() + 90);
-      Time newGoValue = TimeFactory.createNew(originComeAndGo.getComeAndGoTimeStamp().getEndTimeStamp().getTime() + 1000);
+      DateTime newComeValue = DateTimeFactory.createNew(originComeAndGo.getComeAndGoTimeStamp().getBeginTimeStamp().getTime() + 90);
+      DateTime newGoValue = DateTimeFactory.createNew(originComeAndGo.getComeAndGoTimeStamp().getEndTimeStamp().getTime() + 1000);
       ChangedComeAndGoValue changedComeAndGoValue = new TestChangedComeAndGoValueImpl(originComeAndGo.getId(), newComeValue, newGoValue);
       businessDay.changeComeAndGo(changedComeAndGoValue);
 
@@ -462,13 +462,13 @@ class BusinessDayRepositoryImplIntegrationTest {
       int day = 1;
       int month = 2;
 
-      Time lowerBounds = TimeBuilder.of()
+      DateTime lowerBounds = TimeBuilder.of()
             .withDay(day)
             .withMonth(month)
             .withYear(2021)
             .withHour(0)
             .build();
-      Time upperBounds = TimeBuilder.of()
+      DateTime upperBounds = TimeBuilder.of()
             .withDay(day + 1)
             .withMonth(month)
             .withYear(2021)

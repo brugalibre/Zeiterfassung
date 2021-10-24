@@ -27,8 +27,8 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Chan
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.businessday.TimeSnippetBuilder;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.util.parser.DateParser;
 
 class BusinessDayImplTest extends BaseTestWithSettings {
@@ -539,8 +539,8 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       String dateAsString = "01.02.2020";
       String comeHourAndMinAsString = "10:00";
       String goHourAndMinAsString = "12:00";
-      Time come = createTime(dateAsString, comeHourAndMinAsString);
-      Time go = createTime(dateAsString, goHourAndMinAsString);
+      DateTime come = createTime(dateAsString, comeHourAndMinAsString);
+      DateTime go = createTime(dateAsString, goHourAndMinAsString);
       ComeAndGoes comeAndGoes = ComeAndGoesImpl.of()
             .comeOrGo(come)
             .comeOrGo(go);
@@ -559,8 +559,8 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       // Given
       boolean expectedHasComeAndGoesFromPrecedentDays = false;
-      Time come = TimeFactory.createNew();
-      Time go = TimeFactory.createNew();
+      DateTime come = DateTimeFactory.createNew();
+      DateTime go = DateTimeFactory.createNew();
       ComeAndGoes comeAndGoes = ComeAndGoesImpl.of()
             .comeOrGo(come)
             .comeOrGo(go);
@@ -574,9 +574,9 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       assertThat(actualHasComeAndGoesFromPrecedentDays, is(expectedHasComeAndGoesFromPrecedentDays));
    }
 
-   private Time createTime(String dateAsString, String comeHourAndMinAsString) throws ParseException {
+   private DateTime createTime(String dateAsString, String comeHourAndMinAsString) throws ParseException {
       Date parsedDate = DateParser.parse2Date(dateAsString + " " + comeHourAndMinAsString, DateParser.DATE_PATTERN);
-      return TimeFactory.createNew(parsedDate.getTime());
+      return DateTimeFactory.createNew(parsedDate.getTime());
    }
 
    private Ticket getTicket4Nr() {
@@ -613,16 +613,16 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
    private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd, int hour) {
       GregorianCalendar startDate = new GregorianCalendar(2020, 1, 1, hour, 0, 0);// year, month, day, hours, min, second
-      Time beginTimeStamp = TimeFactory.createNew(startDate.getTimeInMillis());
+      DateTime beginTimeStamp = DateTimeFactory.createNew(startDate.getTimeInMillis());
       TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
-      timeSnippet.setEndTimeStamp(TimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
+      timeSnippet.setEndTimeStamp(DateTimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd));
       return timeSnippet;
    }
 
    private TimeSnippet createTimeSnippet(long startTime, long stopTime) {
-      Time beginTimeStamp = TimeFactory.createNew(startTime);
-      Time endTimeStamp = TimeFactory.createNew(stopTime);
+      DateTime beginTimeStamp = DateTimeFactory.createNew(startTime);
+      DateTime endTimeStamp = DateTimeFactory.createNew(stopTime);
       TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(endTimeStamp);

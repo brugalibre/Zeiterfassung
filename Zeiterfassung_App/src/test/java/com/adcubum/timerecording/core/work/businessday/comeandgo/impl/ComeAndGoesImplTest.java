@@ -20,7 +20,7 @@ import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.businessday.BusinessDayBuilder;
 import com.adcubum.timerecording.work.businessday.TimeSnippetBuilder;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 class ComeAndGoesImplTest extends BaseTestWithSettings {
 
@@ -54,7 +54,7 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
    void testComeOrGoes_ChangeComeAndGoesWithoutAnyEntries() {
       // Given
       ComeAndGoes comeAndGoes = ComeAndGoesImpl.of();
-      ChangedComeAndGoValue value = new TestChangedComeAndGoValueImpl(UUID.randomUUID(), TimeFactory.createNew(), TimeFactory.createNew());
+      ChangedComeAndGoValue value = new TestChangedComeAndGoValueImpl(UUID.randomUUID(), DateTimeFactory.createNew(), DateTimeFactory.createNew());
 
       // When
       ComeAndGoes changeComeAndGo = comeAndGoes.changeComeAndGo(value);
@@ -69,11 +69,11 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
       long begin = System.currentTimeMillis() - 10_000;
       long end = System.currentTimeMillis() - 10_000;
       ComeAndGoes comeAndGoes = ComeAndGoesImpl.of()
-            .comeOrGo(TimeFactory.createNew(begin))
-            .comeOrGo(TimeFactory.createNew(end));// this comeAndGo is done by now
+            .comeOrGo(DateTimeFactory.createNew(begin))
+            .comeOrGo(DateTimeFactory.createNew(end));// this comeAndGo is done by now
 
       // When
-      ComeAndGoes changedComeAndGo = comeAndGoes.comeOrGo(TimeFactory.createNew(end));// start a new one, with the same begin than the previous' end
+      ComeAndGoes changedComeAndGo = comeAndGoes.comeOrGo(DateTimeFactory.createNew(end));// start a new one, with the same begin than the previous' end
       List<ComeAndGo> comeAndGoesEntries = changedComeAndGo.getComeAndGoEntries();
 
       // Then
@@ -139,9 +139,9 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
       long begin2 = end1 + 300_000;
 
       // When
-      ComeAndGoes changedComeAndGos = comeAndGos.comeOrGo(TimeFactory.createNew(begin1))
-            .comeOrGo(TimeFactory.createNew(end1))
-            .comeOrGo(TimeFactory.createNew(begin2));
+      ComeAndGoes changedComeAndGos = comeAndGos.comeOrGo(DateTimeFactory.createNew(begin1))
+            .comeOrGo(DateTimeFactory.createNew(end1))
+            .comeOrGo(DateTimeFactory.createNew(begin2));
       List<ComeAndGo> actualComeAndGoes = changedComeAndGos.getComeAndGoEntries();
 
       // Then

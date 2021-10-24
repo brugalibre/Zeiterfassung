@@ -4,7 +4,7 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistoryOverview;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * The {@link BusinessDayHistoryOverviewResolver} serves as an entry point in order to retrieve an {@link BusinessDayHistoryOverview}
@@ -25,6 +25,6 @@ public interface BusinessDayHistoryOverviewResolver {
     *        the upper time bound
     * @return all booked {@link BusinessDay}s within the given range
     */
-   BusinessDayHistoryOverview getBusinessDayHistoryOverview(Time lowerBounds, Time upperBounds);
+   BusinessDayHistoryOverview getBusinessDayHistoryOverview(DateTime lowerBounds, DateTime upperBounds);
 
 }

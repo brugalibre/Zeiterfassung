@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistory;
 import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistoryOverview;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeUtil;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeUtil;
 
 public class BusinessDayHistoryOverviewImpl implements BusinessDayHistoryOverview {
 
    private List<BusinessDayHistory> businessDayHistoryEntries;
 
-   private BusinessDayHistoryOverviewImpl(Time historyBegin, Time historyEnd, List<BusinessDay> businessDaysHistory) {
+   private BusinessDayHistoryOverviewImpl(DateTime historyBegin, DateTime historyEnd, List<BusinessDay> businessDaysHistory) {
       buildBusinessDayHistroyEntries(businessDaysHistory);
       addEmptyBusinessDayHistoryEntryIfNeeded(historyBegin, historyEnd);
       Collections.sort(businessDayHistoryEntries, new BusinessDayHistoryComparator());
@@ -32,7 +32,7 @@ public class BusinessDayHistoryOverviewImpl implements BusinessDayHistoryOvervie
             .collect(Collectors.toList());
    }
 
-   private void addEmptyBusinessDayHistoryEntryIfNeeded(Time historyBegin, Time historyEnd) {
+   private void addEmptyBusinessDayHistoryEntryIfNeeded(DateTime historyBegin, DateTime historyEnd) {
       List<BusinessDayHistory> buildEmptyBusinessDayHistory = buildEmptyBusinessDayHistory(historyBegin, historyEnd);
       Collections.sort(buildEmptyBusinessDayHistory, new BusinessDayHistoryComparator());
       for (BusinessDayHistory emptyBusinessDayHistory : buildEmptyBusinessDayHistory) {
@@ -59,8 +59,8 @@ public class BusinessDayHistoryOverviewImpl implements BusinessDayHistoryOvervie
       };
    }
 
-   private static List<BusinessDayHistory> buildEmptyBusinessDayHistory(Time historyBegin, Time historyEnd) {
-      return TimeUtil.getDatesInBetween(historyBegin, historyEnd)
+   private static List<BusinessDayHistory> buildEmptyBusinessDayHistory(DateTime historyBegin, DateTime historyEnd) {
+      return DateTimeUtil.getDatesInBetween(historyBegin, historyEnd)
             .stream()
             .map(BusinessDayHistoryImpl::of)
             .collect(Collectors.toList());
@@ -86,7 +86,7 @@ public class BusinessDayHistoryOverviewImpl implements BusinessDayHistoryOvervie
     *        the booked {@link BusinessDay}s
     * @return a {@link BusinessDayHistoryOverviewImpl}
     */
-   public static BusinessDayHistoryOverviewImpl of(Time historyBegin, Time historyEnd, List<BusinessDay> businessDayHistory) {
+   public static BusinessDayHistoryOverviewImpl of(DateTime historyBegin, DateTime historyEnd, List<BusinessDay> businessDayHistory) {
       return new BusinessDayHistoryOverviewImpl(historyBegin, historyEnd, businessDayHistory);
    }
 }

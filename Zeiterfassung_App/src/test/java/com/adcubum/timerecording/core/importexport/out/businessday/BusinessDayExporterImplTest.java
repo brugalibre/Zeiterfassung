@@ -16,8 +16,8 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 class BusinessDayExporterImplTest {
 
@@ -62,8 +62,8 @@ class BusinessDayExporterImplTest {
    }
 
    private TimeSnippet createTimeSnippet(long startTime, long stopTime) {
-      Time beginTimeStamp = TimeFactory.createNew(startTime);
-      Time endTimeStamp = TimeFactory.createNew(stopTime);
+      DateTime beginTimeStamp = DateTimeFactory.createNew(startTime);
+      DateTime endTimeStamp = DateTimeFactory.createNew(stopTime);
       TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
       timeSnippet.setBeginTimeStamp(beginTimeStamp);
       timeSnippet.setEndTimeStamp(endTimeStamp);

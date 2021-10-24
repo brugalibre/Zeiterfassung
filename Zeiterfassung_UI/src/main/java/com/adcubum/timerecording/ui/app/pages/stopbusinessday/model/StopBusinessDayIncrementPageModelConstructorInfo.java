@@ -16,9 +16,9 @@ import com.adcubum.timerecording.jira.constants.TicketConst;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.ComeAndGoOverviewPageModel;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.view.ComeAndGoOverviewPage;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
-import com.adcubum.timerecording.work.date.Time;
-import com.adcubum.timerecording.work.date.TimeFactory;
-import com.adcubum.timerecording.work.date.TimeUtil;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
+import com.adcubum.timerecording.work.date.DateTimeUtil;
 
 /**
  * The {@link StopBusinessDayIncrementPageModelConstructorInfo} acts as a container for the {@link StopBusinessDayIncrementPageModel}
@@ -30,7 +30,7 @@ import com.adcubum.timerecording.work.date.TimeUtil;
  */
 public class StopBusinessDayIncrementPageModelConstructorInfo {
 
-   private static final Time ZERO_MAX_TIME = TimeFactory.createNew(0);
+   private static final DateTime ZERO_MAX_TIME = DateTimeFactory.createNew(0);
    private TimeSnippet currentTimeSnippet;
    private String totalDurationRep;
    private String description;
@@ -42,7 +42,7 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
    private boolean isLastIncrementAmongOthers;
    private boolean isAbortEnabled;
    private boolean isBeginTextFieldEnabled;
-   private Time maxEndTime;
+   private DateTime maxEndTime;
    private BusinessDayChangedCallbackHandler businessDayChangedCallbackHandler;
 
    /**
@@ -116,7 +116,7 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
             : TicketConst.DEFAULT_TICKET_NAME;
    }
 
-   private StopBusinessDayIncrementPageModelConstructorInfo(TimeSnippet currentTimeSnippet, Time maxEndTime, String ticketNumber, String description,
+   private StopBusinessDayIncrementPageModelConstructorInfo(TimeSnippet currentTimeSnippet, DateTime maxEndTime, String ticketNumber, String description,
          String totalDurationRep, boolean isLastIncrementAmongOthers, boolean isAbortEnabled, boolean isBeginTextFieldEnabled,
          BusinessDayChangedCallbackHandler businessDayChangedCallbackHandler, String abortButtonToolTipText, String finishContinueButtonToolTipText) {
       this.businessDayChangedCallbackHandler = businessDayChangedCallbackHandler;
@@ -149,12 +149,12 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
    }
 
    private static TimeSnippet getTimeSnippet(ComeAndGoOverviewPageModel comeAndGoOverviewPageModel) {
-      Time begin = TimeFactory.createNew();
-      Time end = TimeFactory.createNew();
+      DateTime begin = DateTimeFactory.createNew();
+      DateTime end = DateTimeFactory.createNew();
       TimeSnippet comeAndGoTimeSnippet = comeAndGoOverviewPageModel.getComeAndGoTimeSnippet();
       if (nonNull(comeAndGoTimeSnippet)) {
          if (nonNull(comeAndGoTimeSnippet.getBeginTimeStamp())) {
-            begin = TimeUtil.max(comeAndGoTimeSnippet.getBeginTimeStamp(), comeAndGoOverviewPageModel.getPrevComeAndGoEnd());
+            begin = DateTimeUtil.max(comeAndGoTimeSnippet.getBeginTimeStamp(), comeAndGoOverviewPageModel.getPrevComeAndGoEnd());
          }
          if (nonNull(comeAndGoTimeSnippet.getEndTimeStamp())) {
             end = comeAndGoTimeSnippet.getEndTimeStamp();
@@ -174,7 +174,7 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
       return isBeginTextFieldEnabled;
    }
 
-   public Time getMaxEndTime() {
+   public DateTime getMaxEndTime() {
       return maxEndTime;
    }
 

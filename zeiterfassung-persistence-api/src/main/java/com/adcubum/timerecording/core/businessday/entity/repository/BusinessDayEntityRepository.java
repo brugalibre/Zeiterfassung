@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 
 import com.adcubum.timerecording.core.businessday.common.repository.CommonBusinessDayRepository;
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * The {@link BusinessDayEntityRepository} is used within the persistence-layer in order to manage
@@ -20,7 +20,7 @@ import com.adcubum.timerecording.work.date.Time;
 public interface BusinessDayEntityRepository extends CommonBusinessDayRepository<BusinessDayEntity, UUID> {
 
    /**
-    * Selects all booked {@link BusinessDayEntity} which are within or equal the given {@link Time} bounds
+    * Selects all booked {@link BusinessDayEntity} which are within or equal the given {@link DateTime} bounds
     * 
     * @param lowerBounds
     *        the lower bound
@@ -29,10 +29,10 @@ public interface BusinessDayEntityRepository extends CommonBusinessDayRepository
     * @return a list of all selected {@link BusinessDayEntity}
     */
    @NonNull
-   List<BusinessDayEntity> findAllBookedBusinessDayEntitiesWithinRange(@NonNull Time lowerBounds, @NonNull Time upperBounds);
+   List<BusinessDayEntity> findAllBookedBusinessDayEntitiesWithinRange(@NonNull DateTime lowerBounds, @NonNull DateTime upperBounds);
 
    /**
-    * Selects the first {@link BusinessDayEntity} which is within or equal the given {@link Time} bounds
+    * Selects the first {@link BusinessDayEntity} which is within or equal the given {@link DateTime} bounds
     * 
     * @param lowerBounds
     *        the lower bound
@@ -41,5 +41,5 @@ public interface BusinessDayEntityRepository extends CommonBusinessDayRepository
     * @return an optional {@link BusinessDayEntity}
     */
    @NonNull
-   Optional<BusinessDayEntity> findBookedBusinessDayEntityWithinRange(@NonNull Time lowerBounds, @NonNull Time upperBounds);
+   Optional<BusinessDayEntity> findBookedBusinessDayEntityWithinRange(@NonNull DateTime lowerBounds, @NonNull DateTime upperBounds);
 }

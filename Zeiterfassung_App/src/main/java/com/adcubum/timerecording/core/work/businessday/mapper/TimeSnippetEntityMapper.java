@@ -10,7 +10,7 @@ import com.adcubum.timerecording.core.businessday.entity.TimeSnippetEntity;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * The {@link TimeSnippetEntityMapper} is used as a Mapper in order to map from a {@link BusinessDay} into a {@link BusinessDayEntity}
@@ -39,8 +39,8 @@ public class TimeSnippetEntityMapper {
       if (isNull(timeSnippet)) {
          return null;
       }
-      Time beginTimestamp = timeSnippet.getBeginTimeStamp();
-      Time endTimestamp = timeSnippet.getEndTimeStamp();
+      DateTime beginTimestamp = timeSnippet.getBeginTimeStamp();
+      DateTime endTimestamp = timeSnippet.getEndTimeStamp();
       return new TimeSnippetEntity(timeSnippet.getId(), isNull(beginTimestamp) ? null : new Timestamp(beginTimestamp.getTime()),
             isNull(endTimestamp) ? null : new Timestamp(endTimestamp.getTime()));
    }

@@ -10,7 +10,7 @@
 
 	<bean id="reminder" class="com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderImpl" scope="prototype" lazy-init="true"/>
 	<bean id="message" class="com.adcubum.timerecording.message.MessageImpl" scope="prototype" lazy-init="true"/>
-	<bean id="time" class="com.adcubum.timerecording.work.date.TimeImpl" scope="prototype" lazy-init="true"/>
+	<bean id="datetime" class="com.adcubum.timerecording.work.date.DateTimeImpl" scope="prototype" lazy-init="true"/>
 	<bean id="fileimporter" class="com.adcubum.timerecording.importexport.in.file.FileImporterImpl" lazy-init="true"/>
 	<bean id="fileexporter" class="com.adcubum.timerecording.importexport.out.file.FileExporterImpl" lazy-init="true"/>
 	<bean id="timerounder" class="com.adcubum.timerecording.settings.round.TimeRounderImpl" lazy-init="true"/>

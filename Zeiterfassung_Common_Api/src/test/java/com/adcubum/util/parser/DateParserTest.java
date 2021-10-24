@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 class DateParserTest {
 
@@ -23,7 +23,7 @@ class DateParserTest {
       String expectedToStringValue = "07:00";
 
       // When
-      Time actualConvertedInput = DateParser.convertAndParse2Time(input1, TimeUnit.MINUTES);
+      DateTime actualConvertedInput = DateParser.convertAndParse2Time(input1, TimeUnit.MINUTES);
 
       // Then
       assertThat(actualConvertedInput.toString(), is(expectedToStringValue));
@@ -35,7 +35,7 @@ class DateParserTest {
       String input1 = "070015";
 
       // When
-      Time actualConvertedInput = DateParser.convertAndParse2Time(input1, TimeUnit.SECONDS);
+      DateTime actualConvertedInput = DateParser.convertAndParse2Time(input1, TimeUnit.SECONDS);
       Date actualDate = new Date(actualConvertedInput.getTime());
 
       // Then

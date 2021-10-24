@@ -11,7 +11,7 @@ import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
-import com.adcubum.timerecording.work.date.Time;
+import com.adcubum.timerecording.work.date.DateTime;
 
 public interface BusinessDay extends DomainModel {
 
@@ -46,7 +46,7 @@ public interface BusinessDay extends DomainModel {
 
    /**
     * Starts a new {@link BusinessDayIncrement}. That means to create a new
-    * instance of {@link Time} <br>
+    * instance of {@link DateTime} <br>
     * and forward that to the
     */
    void startNewIncremental();
@@ -181,14 +181,14 @@ public interface BusinessDay extends DomainModel {
    List<BusinessDayIncrement> getIncrements();
 
    /**
-    * Returns the {@link Time} of this {@link BusinessDay}. If this
+    * Returns the {@link DateTime} of this {@link BusinessDay}. If this
     * {@link BusinessDay} has no <br>
     * {@link BusinessDayIncrement}, so the {@link #increments} is empty, a new
-    * instance of {@link Time} is returned.
+    * instance of {@link DateTime} is returned.
     * 
-    * @return the {@link Time} of this BussinessDay.
+    * @return the {@link DateTime} of this BussinessDay.
     */
-   Time getDate();
+   DateTime getDateTime();
 
    /**
     * Returns a message since when the capturing is active
