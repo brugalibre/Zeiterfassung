@@ -46,13 +46,12 @@ public class ComeAndGoImpl implements ComeAndGo {
    public ComeAndGo comeOrGo(DateTime time) {
       ComeAndGoImpl comeAndGoImpl = new ComeAndGoImpl(this);
       if (isNull(comeAndGoImpl.comeAndGoSnippet.getBeginTimeStamp())) {
-         comeAndGoImpl.comeAndGoSnippet.setBeginTimeStamp(time);
+         return setBeginTimeStampAndReturnComeAndGo(comeAndGoImpl, time);
       } else if (isNull(comeAndGoSnippet.getEndTimeStamp())) {
-         comeAndGoImpl.comeAndGoSnippet.setEndTimeStamp(time);
+         return setEndTimeStampAndReturnComeAndGo(comeAndGoImpl, time);
       } else {
          throw new IllegalStateException("Come and go are already defined. Calling comeOrGo() is therefore not applicable!");
       }
-      return comeAndGoImpl;
    }
 
    @Override
@@ -65,7 +64,18 @@ public class ComeAndGoImpl implements ComeAndGo {
    @Override
    public ComeAndGo resume() {
       ComeAndGoImpl comeAndGoImpl = new ComeAndGoImpl(this);
-      comeAndGoImpl.comeAndGoSnippet.setEndTimeStamp(null);
+      return setEndTimeStampAndReturnComeAndGo(comeAndGoImpl, null);
+   }
+
+   private ComeAndGoImpl setEndTimeStampAndReturnComeAndGo(ComeAndGoImpl comeAndGoImpl, DateTime time) {
+      TimeSnippet newEndTimeStamp = comeAndGoImpl.comeAndGoSnippet.setEndTimeStamp(time);
+      comeAndGoImpl.comeAndGoSnippet = newEndTimeStamp;
+      return comeAndGoImpl;
+   }
+
+   private ComeAndGoImpl setBeginTimeStampAndReturnComeAndGo(ComeAndGoImpl comeAndGoImpl, DateTime time) {
+      TimeSnippet newBeginTimeStamp = comeAndGoImpl.comeAndGoSnippet.setBeginTimeStamp(time);
+      comeAndGoImpl.comeAndGoSnippet = newBeginTimeStamp;
       return comeAndGoImpl;
    }
 

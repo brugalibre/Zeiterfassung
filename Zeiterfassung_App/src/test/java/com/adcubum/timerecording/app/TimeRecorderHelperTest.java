@@ -96,22 +96,22 @@ class TimeRecorderHelperTest {
       }
 
       private TestCaseBuilder withCome() {
-         businessDay.comeOrGo();
+         businessDay = businessDay.comeOrGo();
          return this;
       }
 
       private TestCaseBuilder withGo() {
-         businessDay.comeOrGo();
+         businessDay = businessDay.comeOrGo();
          return this;
       }
 
       private TestCaseBuilder withCurrentBusinessIncrementStart() {
-         businessDay.startNewIncremental();
+         businessDay = businessDay.startNewIncremental();
          return this;
       }
 
       private TestCaseBuilder withCurrentBusinessIncrementStop() {
-         businessDay.stopCurrentIncremental();
+         businessDay = businessDay.stopCurrentIncremental();
          return this;
       }
 

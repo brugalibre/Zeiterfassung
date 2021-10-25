@@ -9,7 +9,6 @@ import static java.util.Objects.requireNonNull;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.ui.app.pages.mainpage.control.callback.MainWindowCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.book.service.BookerService;
 import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.StringBusinessDayChangeHelper;
@@ -124,8 +123,7 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
    @Override
    public void show(PageModel dataModelIn) {
       super.show(dataModelIn);
-      BusinessDayVO businessDayVO = dataModel.getBusinessDayVO();
-      businessDayTableModel.init(businessDayVO, tableView);
+      businessDayTableModel.init(dataModel.getBusinessDay(), tableView);
       descAddHelper.setDisable(dataModel.getHasBusinessDayDescription().getValue());
       TableUtil.autoResizeTable(tableView);
       Dimension newDimension = new DimensionImpl(tableView.getPrefWidth(), getDimension().getPrefHeight());

@@ -1,5 +1,6 @@
 package com.adcubum.timerecording.integtest.repo;
 
+import static com.adcubum.timerecording.integtest.BusinessDayIntegTestUtil.createNewBookedBusinessDayAtDate;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -31,10 +32,9 @@ import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRep
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.integtest.TestChangedComeAndGoValueImpl;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
-import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
 import com.adcubum.timerecording.work.date.DateTime;
-import com.adcubum.timerecording.work.date.TimeBuilder;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
+import com.adcubum.timerecording.work.date.TimeBuilder;
 
 @SpringBootTest(classes = {TestBusinessDayRepoConfig.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -57,7 +57,7 @@ class BusinessDayRepositoryImplIntegrationTest {
             .build();
 
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
-      createAndChangeBusinessDay(year, month, day, "Test", businessDayRepository);
+      createNewBookedBusinessDayAtDate(year, month, day, "Test", businessDayRepository);
 
       // When
       BusinessDay actualBookedBusinessDay = businessDayRepository.findBookedBusinessDayByDate(lowerBoundsTime);
@@ -87,9 +87,9 @@ class BusinessDayRepositoryImplIntegrationTest {
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
 
       // The first business-day (the one we want to find)
-      createAndChangeBusinessDay(year, month, day, description, businessDayRepository);
+      createNewBookedBusinessDayAtDate(year, month, day, description, businessDayRepository);
       // Another business-day (the one we dont want to find)
-      createAndChangeBusinessDay(year, otherBusinessDaysIncMonth, day, otherBusinessDayIncDescDescription, businessDayRepository);
+      createNewBookedBusinessDayAtDate(year, otherBusinessDaysIncMonth, day, otherBusinessDayIncDescDescription, businessDayRepository);
 
       // When
       BusinessDay actualBookedBusinessDay = businessDayRepository.findBookedBusinessDayByDate(lookAtTime);
@@ -105,33 +105,6 @@ class BusinessDayRepositoryImplIntegrationTest {
       assertThat(businessDayIncrement.getCurrentTimeSnippet().getEndTimeStamp(), is(notNullValue()));
 
       deleteAll(businessDayRepository, false);
-   }
-
-   private void createAndChangeBusinessDay(int year, int month, int day, String description, BusinessDayRepositoryImpl businessDayRepository) {
-      BusinessDay businessDay = businessDayRepository.createNew(true);
-      businessDay.addBusinessIncrement(new BusinessDayIncrementAddBuilder()
-            .withDescription(description)
-            .withServiceCode(113)
-            .withTicket(TicketFactory.INSTANCE.dummy("123"))
-            .withTimeSnippet(TimeSnippetBuilder.of()
-                  .withBeginTime(TimeBuilder.of()
-                        .withYear(year)
-                        .withMonth(month)
-                        .withDay(day)
-                        .withHour(12)
-                        .withMinute(45)
-                        .build())
-                  .withEndTime(TimeBuilder.of()
-                        .withYear(year)
-                        .withMonth(month)
-                        .withDay(day)
-                        .withHour(13)
-                        .withMinute(45)
-                        .build())
-                  .build())
-            .build());
-      businessDay.flagBusinessDayAsCharged();
-      businessDayRepository.save(businessDay);
    }
 
    @Test
@@ -158,8 +131,8 @@ class BusinessDayRepositoryImplIntegrationTest {
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
 
       // When
-      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
-      businessDay.startNewIncremental();
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew()
+            .startNewIncremental();
       BusinessDayIncrement currentBussinessDayIncremental = businessDay.getCurrentBussinessDayIncremental();
       TimeSnippet currentTimeSnippet = currentBussinessDayIncremental.getCurrentTimeSnippet();
 
@@ -184,8 +157,8 @@ class BusinessDayRepositoryImplIntegrationTest {
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
 
       // When
-      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
-      businessDay.stopCurrentIncremental();
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew()
+            .stopCurrentIncremental();
       BusinessDayIncrement currentBussinessDayIncremental = businessDay.getCurrentBussinessDayIncremental();
       TimeSnippet currentTimeSnippet = currentBussinessDayIncremental.getCurrentTimeSnippet();
 
@@ -214,22 +187,22 @@ class BusinessDayRepositoryImplIntegrationTest {
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
 
       // When
-      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
       String description = "test";
       int kindOfService = 113;
       String ticketNr = "SYRIUS-123";
       long beginTimeStampValue = System.currentTimeMillis() + 1000;
       long endTimeStampValue = beginTimeStampValue + 1000;
-      businessDay.addBusinessIncrement(new BusinessDayIncrementAddBuilder()
-            .withAmountOfHours("3")
-            .withDescription(description)
-            .withServiceCode(kindOfService)
-            .withTicket(mockTicket(ticketNr))
-            .withTimeSnippet(TimeSnippetBuilder.of()
-                  .withBeginTimeStamp(beginTimeStampValue)
-                  .withEndTimeStamp(endTimeStampValue)
-                  .build())
-            .build());
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew()
+            .addBusinessIncrement(new BusinessDayIncrementAddBuilder()
+                  .withAmountOfHours("3")
+                  .withDescription(description)
+                  .withServiceCode(kindOfService)
+                  .withTicket(mockTicket(ticketNr))
+                  .withTimeSnippet(TimeSnippetBuilder.of()
+                        .withBeginTimeStamp(beginTimeStampValue)
+                        .withEndTimeStamp(endTimeStampValue)
+                        .build())
+                  .build());
       businessDayRepository.save(businessDay);
       BusinessDay changedBusinessDay = businessDayRepository.findById(businessDay.getId());
       BusinessDayIncrement changedCurrentBussinessDayIncremental = changedBusinessDay.getCurrentBussinessDayIncremental();
@@ -260,33 +233,33 @@ class BusinessDayRepositoryImplIntegrationTest {
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
 
       // When
-      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
       String description = "test";
       int kindOfService = 113;
       String ticketNr = "SYRIUS-123";
       long beginTimeStampValue = System.currentTimeMillis() + 1000;
       long endTimeStampValue = beginTimeStampValue + 1000;
-      businessDay.addBusinessIncrement(new BusinessDayIncrementAddBuilder()
-            .withAmountOfHours("3")
-            .withDescription(description)
-            .withServiceCode(kindOfService)
-            .withTicket(mockTicket(ticketNr))
-            .withTimeSnippet(TimeSnippetBuilder.of()
-                  .withBeginTimeStamp(beginTimeStampValue)
-                  .withEndTimeStamp(endTimeStampValue)
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew()
+            .addBusinessIncrement(new BusinessDayIncrementAddBuilder()
+                  .withAmountOfHours("3")
+                  .withDescription(description)
+                  .withServiceCode(kindOfService)
+                  .withTicket(mockTicket(ticketNr))
+                  .withTimeSnippet(TimeSnippetBuilder.of()
+                        .withBeginTimeStamp(beginTimeStampValue)
+                        .withEndTimeStamp(endTimeStampValue)
+                        .build())
                   .build())
-            .build());
-      businessDay.addBusinessIncrement(new BusinessDayIncrementAddBuilder()
-            .withAmountOfHours("3")
-            .withDescription(description)
-            .withServiceCode(kindOfService)
-            .withTicket(mockTicket(ticketNr))
-            .withTimeSnippet(TimeSnippetBuilder.of()
-                  .withBeginTimeStamp(beginTimeStampValue)
-                  .withBeginTimeStamp(endTimeStampValue)
-                  .build())
-            .build());
-      businessDayRepository.save(businessDay);
+            .addBusinessIncrement(new BusinessDayIncrementAddBuilder()
+                  .withAmountOfHours("3")
+                  .withDescription(description)
+                  .withServiceCode(kindOfService)
+                  .withTicket(mockTicket(ticketNr))
+                  .withTimeSnippet(TimeSnippetBuilder.of()
+                        .withBeginTimeStamp(beginTimeStampValue)
+                        .withEndTimeStamp(endTimeStampValue)
+                        .build())
+                  .build());
+      businessDay = businessDayRepository.save(businessDay);
 
       BusinessDay changedBusinessDay = businessDayRepository.findById(businessDay.getId());
       BusinessDayIncrement changedCurrentBussinessDayIncremental = changedBusinessDay.getCurrentBussinessDayIncremental();
@@ -306,7 +279,7 @@ class BusinessDayRepositoryImplIntegrationTest {
       assertThat(changedLastBDIncTimeSnippet.getEndTimeStamp(), is(originLastBDIncTimeSnippet.getEndTimeStamp()));
 
       // When
-      changedBusinessDay.clearFinishedIncrements();
+      changedBusinessDay = changedBusinessDay.clearFinishedIncrements();
       BusinessDay clearedBusinessDay = businessDayRepository.save(changedBusinessDay);
 
       // Then
@@ -338,8 +311,8 @@ class BusinessDayRepositoryImplIntegrationTest {
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
 
       // When
-      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
-      businessDay.comeOrGo();
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew()
+            .comeOrGo();
       ComeAndGoes originComeAndGoes = businessDay.getComeAndGoes();
       ComeAndGo originComeAndGo = originComeAndGoes.getComeAndGoEntries().get(0);
 
@@ -362,8 +335,8 @@ class BusinessDayRepositoryImplIntegrationTest {
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
 
       // When
-      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
-      businessDay.comeOrGo();
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew()
+            .comeOrGo();
       ComeAndGoes originComeAndGoes = businessDay.getComeAndGoes();
       ComeAndGo originComeAndGo = originComeAndGoes.getComeAndGoEntries().get(0);
 
@@ -396,7 +369,7 @@ class BusinessDayRepositoryImplIntegrationTest {
       DateTime newComeValue = DateTimeFactory.createNew(originComeAndGo.getComeAndGoTimeStamp().getBeginTimeStamp().getTime() + 90);
       DateTime newGoValue = DateTimeFactory.createNew(originComeAndGo.getComeAndGoTimeStamp().getEndTimeStamp().getTime() + 1000);
       ChangedComeAndGoValue changedComeAndGoValue = new TestChangedComeAndGoValueImpl(originComeAndGo.getId(), newComeValue, newGoValue);
-      businessDay.changeComeAndGo(changedComeAndGoValue);
+      businessDay = businessDay.changeComeAndGo(changedComeAndGoValue);
 
       businessDayRepository.save(businessDay);
 
@@ -421,8 +394,8 @@ class BusinessDayRepositoryImplIntegrationTest {
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
 
       // When
-      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
-      businessDay.flagComeAndGoesAsRecorded();
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew()
+            .flagComeAndGoesAsRecorded();
 
       businessDayRepository.save(businessDay);
       BusinessDay changedBusinessDay = businessDayRepository.findById(businessDay.getId());
@@ -442,8 +415,8 @@ class BusinessDayRepositoryImplIntegrationTest {
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
 
       // When
-      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
-      businessDay.clearComeAndGoes();
+      BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew()
+            .clearComeAndGoes();
 
       businessDayRepository.save(businessDay);
 
@@ -460,6 +433,7 @@ class BusinessDayRepositoryImplIntegrationTest {
       // Given
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
       int day = 1;
+      int upperBoundsdDay = day + 1;
       int month = 2;
 
       DateTime lowerBounds = TimeBuilder.of()
@@ -469,15 +443,15 @@ class BusinessDayRepositoryImplIntegrationTest {
             .withHour(0)
             .build();
       DateTime upperBounds = TimeBuilder.of()
-            .withDay(day + 1)
+            .withDay(upperBoundsdDay)
             .withMonth(month)
             .withYear(2021)
             .withHour(23)
             .build();
 
-      createNewBookedBusinessDayAtDate(businessDayRepository, day, month).getId();
-      createNewBookedBusinessDayAtDate(businessDayRepository, day + 1, month).getId();
-      BusinessDay otherBusinessDay = createNewBookedBusinessDayAtDate(businessDayRepository, day + 2, month);
+      createNewBookedBusinessDayAtDate(2021, month, day, "test", businessDayRepository);
+      createNewBookedBusinessDayAtDate(2021, month, upperBoundsdDay, "test", businessDayRepository);
+      BusinessDay otherBusinessDay = createNewBookedBusinessDayAtDate(2021, month, day + 2, "test", businessDayRepository);
 
       // When
       // First make sure all BDays within the range exists 
@@ -495,32 +469,6 @@ class BusinessDayRepositoryImplIntegrationTest {
 
       // Finally
       deleteAll(businessDayRepository, true);
-   }
-
-   private static BusinessDay createNewBookedBusinessDayAtDate(BusinessDayRepositoryImpl businessDayRepository, int day, int month) {
-      BusinessDay businessDay = businessDayRepository.createNew(true);
-      businessDay.addBusinessIncrement(new BusinessDayIncrementAddBuilder()
-            .withAmountOfHours("3")
-            .withDescription("test")
-            .withServiceCode(113)
-            .withTicket(mockTicket("ABES-1"))
-            .withTimeSnippet(TimeSnippetBuilder.of()
-                  .withBeginTime(TimeBuilder.of()
-                        .withDay(day)
-                        .withMonth(month)
-                        .withYear(2021)
-                        .withHour(1)
-                        .build())
-                  .withEndTime(TimeBuilder.of()
-                        .withDay(day)
-                        .withMonth(month)
-                        .withYear(2021)
-                        .withHour(1)
-                        .build())
-                  .build())
-            .build());
-      businessDay.flagBusinessDayAsCharged();
-      return businessDayRepository.save(businessDay);
    }
 
    private static Ticket mockTicket(String ticketNr) {

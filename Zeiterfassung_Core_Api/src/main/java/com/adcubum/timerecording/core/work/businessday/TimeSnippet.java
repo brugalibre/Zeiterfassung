@@ -19,8 +19,9 @@ public interface TimeSnippet extends DomainModel {
     *        the amount of time to add as String
     * @throws NumberFormatException
     *         if there goes anything wrong while parsing
+    * @return a new, changed instance, copied from this {@link TimeSnippet}
     */
-   void addAdditionallyTime(String amountOfTime2Add);
+   TimeSnippet addAdditionallyTime(String amountOfTime2Add);
 
    /**
     * Tries to parse a new {@link Date} from the given timestamp value and sets this
@@ -30,8 +31,9 @@ public interface TimeSnippet extends DomainModel {
     *        the new begin-time-stamp as String
     * @param negativeDurationNOK
     *        <code>true</code> if a resulting negative duration is not okay and thus the begin time stamp is not changed
+    * @return a new, changed instance, copied from this {@link TimeSnippet}
     */
-   void updateAndSetBeginTimeStamp(String newTimeStampValue, boolean negativeDurationNOK);
+   TimeSnippet updateAndSetBeginTimeStamp(String newTimeStampValue, boolean negativeDurationNOK);
 
    /**
     * Tries to parse a new {@link Date} from the given timestamp value and sets this
@@ -41,8 +43,9 @@ public interface TimeSnippet extends DomainModel {
     *        the new begin-time-stamp as String
     * @param negativeDurationNOK
     *        <code>true</code> if a resulting negative duration is not okay and thus the end time stampt is not changed
+    * @return a new, changed instance, copied from this {@link TimeSnippet}
     */
-   void updateAndSetEndTimeStamp(String newTimeStampValue, boolean negativeDurationNOK);
+   TimeSnippet updateAndSetEndTimeStamp(String newTimeStampValue, boolean negativeDurationNOK);
 
    /**
     * Creates a new {@link TimeSnippet} with the given {@link DateTime} as a begin time
@@ -56,6 +59,33 @@ public interface TimeSnippet extends DomainModel {
     * @return a new created {@link TimeSnippet}
     */
    TimeSnippet createTimeStampForIncrement(DateTime beginTimeStamp, int divisor);
+
+   /**
+    * Sets a new value for its begin-timestamp
+    * 
+    * @param beginTimeStamp
+    *        the new begin timestamp
+    * @return a new, changed instance, copied from this {@link TimeSnippet}
+    */
+   TimeSnippet setBeginTimeStamp(DateTime beginTimeStamp);
+
+   /**
+    * Sets a new value for its begin-timestamp
+    * 
+    * @param beginTimeStamp
+    *        the new begin timestamp
+    * @return a new, changed instance, copied from this {@link TimeSnippet}
+    */
+   TimeSnippet setEndTimeStamp(DateTime endTimeStamp);
+
+   /**
+    * Sets a new {@link TimeSnippedChangedCallbackHandler}
+    * 
+    * @param callbackHandler
+    *        the new {@link TimeSnippedChangedCallbackHandler}
+    * @return a new, changed instance, copied from this {@link TimeSnippet}
+    */
+   TimeSnippet setCallbackHandler(TimeSnippedChangedCallbackHandler callbackHandler);
 
    /**
     * @return the amount of minutes between the start, and end-point
@@ -74,10 +104,6 @@ public interface TimeSnippet extends DomainModel {
     * @return the representation of the current duration
     */
    String getDurationRep();
-
-   void setBeginTimeStamp(DateTime beginTimeStamp);
-
-   void setEndTimeStamp(DateTime endTimeStamp);
 
    /**
     * Returns the {@link DateTime} when this {@link TimeSnippet} begins
@@ -100,8 +126,6 @@ public interface TimeSnippet extends DomainModel {
    String getEndTimeStampRep();
 
    String getBeginTimeStampRep();
-
-   void setCallbackHandler(TimeSnippedChangedCallbackHandler callbackHandler);
 
    TimeSnippedChangedCallbackHandler getCallbackHandler();
 

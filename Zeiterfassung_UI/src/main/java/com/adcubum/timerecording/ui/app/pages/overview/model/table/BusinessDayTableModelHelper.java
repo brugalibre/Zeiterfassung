@@ -11,10 +11,10 @@ import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.adcubum.timerecording.core.work.businessday.util.BusinessDayUtil;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.ui.core.view.table.EditableCell;
 
@@ -93,7 +93,7 @@ public class BusinessDayTableModelHelper {
     * @param tableView
     *        the TableView which displays the data
     */
-   public void init(BusinessDayVO bussinessDay, TableView<BusinessDayIncTableRowValue> tableView) {
+   public void init(BusinessDay bussinessDay, TableView<BusinessDayIncTableRowValue> tableView) {
       Objects.requireNonNull(bussinessDay);
       this.tableView = tableView;
       this.colmnValues = getBusinessDayCells(bussinessDay);
@@ -105,7 +105,7 @@ public class BusinessDayTableModelHelper {
       tableView.setItems(observableList);
    }
 
-   private List<TableColumn<BusinessDayIncTableRowValue, ?>> getTableHeaders(BusinessDayVO bussinessDay) {
+   private List<TableColumn<BusinessDayIncTableRowValue, ?>> getTableHeaders(BusinessDay bussinessDay) {
       List<TableColumn<BusinessDayIncTableRowValue, ?>> titleHeaders = new ArrayList<>();
       TableColumn<BusinessDayIncTableRowValue, String> numberTableColumn = new TableColumn<>(
             TextLabel.NUMMER_LABEL);
@@ -120,7 +120,7 @@ public class BusinessDayTableModelHelper {
       titleHeaders.add(ticketTableColumn);
       setEditableTicketCellValueFactory(ticketTableColumn);
 
-      boolean isDescriptionTitleNecessary = bussinessDay.hasIncrementWithDescription();
+      boolean isDescriptionTitleNecessary = bussinessDay.hasDescription();
       if (isDescriptionTitleNecessary) {
          TableColumn<BusinessDayIncTableRowValue, String> descriptionTableColumn = new TableColumn<>(TextLabel.DESCRIPTION_LABEL);
          setEditableCellValueFactory(descriptionTableColumn, TableConst.DESCRIPTION);
@@ -201,12 +201,12 @@ public class BusinessDayTableModelHelper {
       return EditableCell.createStringEditCell();
    }
 
-   private List<BusinessDayIncTableRowValue> getBusinessDayCells(BusinessDayVO businessDay) {
+   private List<BusinessDayIncTableRowValue> getBusinessDayCells(BusinessDay businessDay) {
       List<BusinessDayIncTableRowValue> businessDayCells = new ArrayList<>();
       int counter = 1;
-      for (BusinessDayIncrementVO bussinessDayIncremental : businessDay.getBusinessDayIncrements()) {
+      for (BusinessDayIncrement bussinessDayIncremental : businessDay.getIncrements()) {
          BusinessDayIncTableRowValue businessDayIncrementalCell = getBusinessDayIncrementalCell(
-               bussinessDayIncremental, businessDay.hasIncrementWithDescription(), counter);
+               bussinessDayIncremental, businessDay.hasDescription(), counter);
          businessDayCells.add(businessDayIncrementalCell);
          counter++;
       }
@@ -217,14 +217,14 @@ public class BusinessDayTableModelHelper {
     * Creates a list which contains all Cells that are required to paint a
     * BusinessDayIncremental
     */
-   private BusinessDayIncTableRowValue getBusinessDayIncrementalCell(BusinessDayIncrementVO bussinessDayIncremental,
+   private BusinessDayIncTableRowValue getBusinessDayIncrementalCell(BusinessDayIncrement bussinessDayIncremental,
          boolean isDescriptionTitleNecessary, int no) {
       // create Cells for the introduction of a BD-inc.
 
       BusinessDayIncTableRowValue businessDayIncTableCellValue = new BusinessDayIncTableRowValue(bussinessDayIncremental.getId());
 
       businessDayIncTableCellValue.setNumber(String.valueOf(no));
-      businessDayIncTableCellValue.setTotalDuration(bussinessDayIncremental.getTotalDurationRep());
+      businessDayIncTableCellValue.setTotalDuration(BusinessDayUtil.getTotalDurationRep(bussinessDayIncremental));
       businessDayIncTableCellValue.setTicket(bussinessDayIncremental.getTicket());
 
       if (isDescriptionTitleNecessary) {
@@ -241,7 +241,7 @@ public class BusinessDayTableModelHelper {
       return businessDayIncTableCellValue;
    }
 
-   private BeginAndEndCellValue getTimeSnippets(BusinessDayIncrementVO bussinessDayIncremental) {
+   private BeginAndEndCellValue getTimeSnippets(BusinessDayIncrement bussinessDayIncremental) {
       TimeSnippet snippet = bussinessDayIncremental.getCurrentTimeSnippet();
       String begin = String.valueOf(snippet.getBeginTimeStampRep());
       String end = String.valueOf(snippet.getEndTimeStamp());

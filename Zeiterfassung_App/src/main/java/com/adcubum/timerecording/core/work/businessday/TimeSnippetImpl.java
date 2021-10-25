@@ -38,9 +38,9 @@ public class TimeSnippetImpl implements TimeSnippet {
    protected TimeSnippetImpl(UUID id, Long beginTimeStampValue, Long endTimeStampValue) {
       this.id = id;
       requireNonNull(beginTimeStampValue, "A TimeSnippetImpl needs a begin time stamp!");
-      setBeginTimeStamp(DateTimeFactory.createNew(beginTimeStampValue));
+      this.beginTimeStamp = DateTimeFactory.createNew(beginTimeStampValue);
       if (nonNull(endTimeStampValue)) {
-         setEndTimeStamp(DateTimeFactory.createNew(endTimeStampValue));
+         this.endTimeStamp = DateTimeFactory.createNew(endTimeStampValue);
       }
    }
 
@@ -66,35 +66,38 @@ public class TimeSnippetImpl implements TimeSnippet {
    }
 
    @Override
-   public void addAdditionallyTime(String amountOfTime2Add) {
+   public TimeSnippet addAdditionallyTime(String amountOfTime2Add) {
       float additionallyTime = NumberFormat.parseFloat(amountOfTime2Add) - getDuration();
 
       long additionallyDuration = (long) (DateTime.getTimeRefactorValue(TimeType.DEFAULT) * additionallyTime);
-      setEndTimeStamp(DateTimeFactory.createNew(getEndTimeStamp().getTime() + additionallyDuration));
+      DateTime newEndTimeStampValue = DateTimeFactory.createNew(getEndTimeStamp().getTime() + additionallyDuration);
+      return setEndTimeStamp(newEndTimeStampValue);
    }
 
    @Override
-   public void updateAndSetBeginTimeStamp(String newTimeStampValue, boolean negativeDurationNOK) {
+   public TimeSnippet updateAndSetBeginTimeStamp(String newTimeStampValue, boolean negativeDurationNOK) {
       String convertedTimeStampValue = convertInput(newTimeStampValue);
       if (!StringUtil.isEqual(convertedTimeStampValue, getBeginTimeStampRep())) {
          DateTime time = DateParser.getTime(newTimeStampValue, getBeginTimeStamp());
          if (getEndTimeStamp().getTime() - time.getTime() < 0 && negativeDurationNOK) {
-            return;
+            return this;
          }
-         setBeginTimeStamp(DateTimeFactory.createNew(time));
+         return setBeginTimeStamp(DateTimeFactory.createNew(time));
       }
+      return this;
    }
 
    @Override
-   public void updateAndSetEndTimeStamp(String newTimeStampValue, boolean negativeDurationNOK) {
+   public TimeSnippet updateAndSetEndTimeStamp(String newTimeStampValue, boolean negativeDurationNOK) {
       String convertedTimeStampValue = convertInput(newTimeStampValue);
       if (!StringUtil.isEqual(convertedTimeStampValue, getEndTimeStampRep())) {
          DateTime time = DateParser.getTime(newTimeStampValue, getEndTimeStamp());
          if (time.getTime() - getBeginTimeStamp().getTime() < 0 && negativeDurationNOK) {
-            return;
+            return this;
          }
-         setEndTimeStamp(DateTimeFactory.createNew(time));
+         return setEndTimeStamp(DateTimeFactory.createNew(time));
       }
+      return this;
    }
 
    private String convertInput(String newTimeStampValue) {
@@ -139,15 +142,19 @@ public class TimeSnippetImpl implements TimeSnippet {
    }
 
    @Override
-   public void setBeginTimeStamp(DateTime beginTimeStamp) {
-      this.beginTimeStamp = beginTimeStamp;
-      notifyCallbackHandler(ChangedValue.of(getBeginTimeStampRep(), ValueTypes.BEGIN));
+   public TimeSnippet setBeginTimeStamp(DateTime beginTimeStamp) {
+      TimeSnippetImpl timeSnippetImplCopy = createCopy();
+      timeSnippetImplCopy.beginTimeStamp = beginTimeStamp;
+      notifyCallbackHandler(ChangedValue.of(timeSnippetImplCopy.getBeginTimeStampRep(), ValueTypes.BEGIN));
+      return timeSnippetImplCopy;
    }
 
    @Override
-   public void setEndTimeStamp(DateTime endTimeStamp) {
-      this.endTimeStamp = endTimeStamp;
-      notifyCallbackHandler(ChangedValue.of(getEndTimeStampRep(), ValueTypes.END));
+   public TimeSnippet setEndTimeStamp(DateTime endTimeStamp) {
+      TimeSnippetImpl timeSnippetImplCopy = createCopy();
+      timeSnippetImplCopy.endTimeStamp = endTimeStamp;
+      notifyCallbackHandler(ChangedValue.of(timeSnippetImplCopy.getEndTimeStampRep(), ValueTypes.END));
+      return timeSnippetImplCopy;
    }
 
    @Override
@@ -181,8 +188,9 @@ public class TimeSnippetImpl implements TimeSnippet {
    }
 
    @Override
-   public final void setCallbackHandler(TimeSnippedChangedCallbackHandler callbackHandler) {
+   public final TimeSnippet setCallbackHandler(TimeSnippedChangedCallbackHandler callbackHandler) {
       this.callbackHandler = callbackHandler;
+      return this;
    }
 
    @Override
@@ -226,17 +234,29 @@ public class TimeSnippetImpl implements TimeSnippet {
       return true;
    }
 
-
+   private TimeSnippetImpl createCopy() {
+      return TimeSnippetBuilder.of()
+            .withBeginTime(beginTimeStamp)
+            .withEndTime(endTimeStamp)
+            .withId(id)
+            .build();
+   }
 
    public static final class TimeSnippetBuilder {
 
-      private long beginTimeStampValue;
-      private long endTimeStampValue;
+      private Long beginTimeStampValue;
+      private Long endTimeStampValue;
       private DateTime beginTime;
       private DateTime endTime;
+      private UUID id;
 
       private TimeSnippetBuilder() {
          // private
+      }
+
+      public TimeSnippetBuilder withId(UUID id) {
+         this.id = id;
+         return this;
       }
 
       public static TimeSnippetBuilder of() {
@@ -265,16 +285,17 @@ public class TimeSnippetImpl implements TimeSnippet {
 
       public TimeSnippetImpl build() {
          TimeSnippetImpl timeSnippetImpl = new TimeSnippetImpl();
-         if (isNull(beginTime)) {
-            timeSnippetImpl.setBeginTimeStamp(DateTimeFactory.createNew(beginTimeStampValue));
+         if (isNull(beginTime) && nonNull(beginTimeStampValue)) {
+            timeSnippetImpl.beginTimeStamp = DateTimeFactory.createNew(beginTimeStampValue);
          } else {
-            timeSnippetImpl.setBeginTimeStamp(beginTime);
+            timeSnippetImpl.beginTimeStamp = beginTime;
          }
-         if (isNull(endTime)) {
-            timeSnippetImpl.setEndTimeStamp(DateTimeFactory.createNew(endTimeStampValue));
+         if (isNull(endTime) && nonNull(endTimeStampValue)) {
+            timeSnippetImpl.endTimeStamp = DateTimeFactory.createNew(endTimeStampValue);
          } else {
-            timeSnippetImpl.setEndTimeStamp(endTime);
+            timeSnippetImpl.endTimeStamp = endTime;
          }
+         timeSnippetImpl.id = id;
          return timeSnippetImpl;
       }
 

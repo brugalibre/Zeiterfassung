@@ -148,7 +148,7 @@ class TimeRecorderImplTest {
       }
 
       private TestCaseBuilder withComeAndGo() {
-         businessDay.comeOrGo();
+         businessDay = businessDay.comeOrGo();
          return this;
       }
 
@@ -158,7 +158,7 @@ class TimeRecorderImplTest {
       }
 
       private TestCaseBuilder withFlagComeAndGoAsRecorded() {
-         businessDay.flagComeAndGoesAsRecorded();
+         businessDay = businessDay.flagComeAndGoesAsRecorded();
          return this;
       }
 

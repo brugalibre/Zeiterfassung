@@ -171,7 +171,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
             getFinishButtonText().set(getNextButtonTextValue2Set());
             getFinishButtonToolTipTextProperty().getValue().setText(TextLabel.CONTINUE_COME_AND_GO_BUTTON_TOOLTIP_TEXT);
          } else if (!isEndTimeSmallerMaxValue) {
-            timeSnippet.setEndTimeStamp(maxEndTime);
+            timeSnippet = timeSnippet.setEndTimeStamp(maxEndTime);
          }
       }
    }

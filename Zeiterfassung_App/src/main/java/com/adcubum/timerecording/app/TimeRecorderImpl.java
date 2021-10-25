@@ -25,16 +25,13 @@ import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayEx
 import com.adcubum.timerecording.core.work.WorkStates;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrementImpl;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistoryOverview;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVOImpl;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVOImpl;
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.importexport.out.file.FileExportResult;
@@ -150,41 +147,41 @@ public class TimeRecorderImpl implements TimeRecorder {
     */
    private void stop() {
       currentState = WorkStates.NOT_WORKING;
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      businessDay.stopCurrentIncremental();
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .stopCurrentIncremental();
       saveBusinessDay(businessDay);
       callbackHandler.onStop();
    }
 
    private void go() {
       currentState = WorkStates.NOT_WORKING;
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      businessDay.comeOrGo();
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .comeOrGo();
       saveBusinessDay(businessDay);
       callbackHandler.onGo();
    }
 
    private void come() {
       currentState = WorkStates.COME_AND_GO;
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      businessDay.comeOrGo();
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .comeOrGo();
       saveBusinessDay(businessDay);
       callbackHandler.onCome();
    }
 
    private void start() {
       currentState = WorkStates.WORKING;
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      businessDay.startNewIncremental();
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .startNewIncremental();
       saveBusinessDay(businessDay);
       callbackHandler.onStart();
    }
 
    @Override
    public void resume() {
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
       currentState = WorkStates.WORKING;
-      businessDay.resumeLastIncremental();
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .resumeLastIncremental();
       saveBusinessDay(businessDay);
       callbackHandler.onResume();
    }
@@ -195,51 +192,51 @@ public class TimeRecorderImpl implements TimeRecorder {
 
    @Override
    public void clear() {
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      businessDay.clearFinishedIncrements();
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .clearFinishedIncrements();
       saveBusinessDay(businessDay);
    }
 
    @Override
    public void clearComeAndGoes() {
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      businessDay.clearComeAndGoes();
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .clearComeAndGoes();
       saveBusinessDay(businessDay);
    }
 
    @Override
    public void addBusinessIncrement(BusinessDayIncrementAdd businessDayIncrementAdd) {
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      businessDay.addBusinessIncrement(businessDayIncrementAdd);
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .addBusinessIncrement(businessDayIncrementAdd);
       saveBusinessDay(businessDay);
    }
 
    @Override
    public void removeIncrement4Id(UUID id) {
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      businessDay.removeIncrement4Id(id);
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .removeIncrement4Id(id);
       saveBusinessDay(businessDay);
    }
 
    @Override
    public void changeBusinesDayIncrement(ChangedValue changeValue) {
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      businessDay.changeBusinesDayIncrement(changeValue);
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .changeBusinesDayIncrement(changeValue);
       saveBusinessDay(businessDay);
    }
 
    @Override
    public ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue) {
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      ComeAndGoes changeComeAndGo = businessDay.changeComeAndGo(changedComeAndGoValue);
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .changeComeAndGo(changedComeAndGoValue);
       saveBusinessDay(businessDay);
-      return changeComeAndGo;
+      return businessDay.getComeAndGoes();
    }
 
    @Override
    public void flagBusinessDayComeAndGoesAsRecorded() {
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      businessDay.flagComeAndGoesAsRecorded();
+      BusinessDay businessDay = businessDayHelper.getBusinessDay()
+            .flagComeAndGoesAsRecorded();
       saveBusinessDay(businessDay);
    }
 
@@ -256,7 +253,7 @@ public class TimeRecorderImpl implements TimeRecorder {
          currentState = WorkStates.BOOKING;
          try {
             BookerResult bookResult = bookAdapter.book(businessDay);
-            businessDay = businessDayHelper.save(businessDay);
+            businessDay = businessDayHelper.save(bookResult.getBookedBusinessDay());
             if (bookResult.hasBooked()) {
                businessDayHelper.addBookedBusinessDayIncrements(businessDay.getIncrements());
                callbackHandler.displayMessage(MessageFactory.createNew(map2MessageType(bookResult), null, bookResult.getMessage()));
@@ -409,19 +406,9 @@ public class TimeRecorderImpl implements TimeRecorder {
    }
 
    @Override
-   public BusinessDayIncrementVO getCurrentBussinessDayIncrement() {
+   public BusinessDayIncrement getCurrentBussinessDayIncrement() {
       BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      return BusinessDayIncrementVOImpl.of(businessDay.getCurrentBussinessDayIncremental());
-   }
-
-   /**
-    * @return a {@link BusinessDayVO} for the current {@link BusinessDay}
-    */
-   @Override
-   public BusinessDayVO getBussinessDayVO() {
-      synchronized (businessDayHelper) {
-         return BusinessDayVOImpl.of(businessDayHelper.getBusinessDay());
-      }
+      return BusinessDayIncrementImpl.of(businessDay.getCurrentBussinessDayIncremental());
    }
 
    @Override

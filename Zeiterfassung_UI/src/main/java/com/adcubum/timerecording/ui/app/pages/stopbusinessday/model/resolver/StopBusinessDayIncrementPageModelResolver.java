@@ -6,9 +6,9 @@ package com.adcubum.timerecording.ui.app.pages.stopbusinessday.model.resolver;
 import static java.util.Objects.nonNull;
 
 import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.ComeAndGoOverviewPageModel;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.model.StopBusinessDayIncrementPageModel;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.model.StopBusinessDayIncrementPageModelConstructorInfo;
@@ -52,13 +52,13 @@ public class StopBusinessDayIncrementPageModelResolver extends AbstractPageModel
 
    private static StopBusinessDayIncrementPageModelConstructorInfo buildStopBDayIncPageModelConstructorInfoFromPageModel(
          StopBusinessDayIncrementPageModel inPageModel) {
-      BusinessDayIncrementVO currentBussinessDayIncremental = TimeRecorder.INSTANCE.getCurrentBussinessDayIncrement();
+      BusinessDayIncrement currentBussinessDayIncremental = TimeRecorder.INSTANCE.getCurrentBussinessDayIncrement();
       TimeSnippet actualTimeSnippet = evalCurrentTimeSnippet(inPageModel, currentBussinessDayIncremental);
       return StopBusinessDayIncrementPageModelConstructorInfo.of(inPageModel, actualTimeSnippet);
    }
 
    private static StopBusinessDayIncrementPageModelConstructorInfo buildNewStopBDayIncPageModelConstructorInfo() {
-      BusinessDayIncrementVO currentBussinessDayIncremental = TimeRecorder.INSTANCE.getCurrentBussinessDayIncrement();
+      BusinessDayIncrement currentBussinessDayIncremental = TimeRecorder.INSTANCE.getCurrentBussinessDayIncrement();
       return StopBusinessDayIncrementPageModelConstructorInfo.of(currentBussinessDayIncremental,
             currentBussinessDayIncremental.getCurrentTimeSnippet());
    }
@@ -66,10 +66,10 @@ public class StopBusinessDayIncrementPageModelResolver extends AbstractPageModel
    /*
     * This may seem a little bit fuzzy, but 
     * - if the StopBusinessDayIncrementPage has been shown as a subpage there may be already a TimeSnippet on the existing Page-Model we want to re-use.
-    * - and if the page is shown after stopping a recording, then we want to use the TimeSnippet on the given BusinessDayIncrementVO
+    * - and if the page is shown after stopping a recording, then we want to use the TimeSnippet on the given BusinessDayIncrement
     */
    private static TimeSnippet evalCurrentTimeSnippet(StopBusinessDayIncrementPageModel inPageModel,
-         BusinessDayIncrementVO currentBussinessDayIncremental) {
+         BusinessDayIncrement currentBussinessDayIncremental) {
       if (nonNull(inPageModel.getTimeSnippet())) {
          return inPageModel.getTimeSnippet();
       }

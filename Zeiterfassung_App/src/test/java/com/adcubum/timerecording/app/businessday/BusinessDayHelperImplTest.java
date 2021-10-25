@@ -10,7 +10,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,15 +18,17 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
+import com.adcubum.timerecording.core.repository.ObjectNotFoundException;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrementBuilder;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrementImpl;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
+import com.adcubum.timerecording.core.work.businessday.builder.BusinessDayIncrementBuilder;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
+import com.adcubum.timerecording.work.date.DateTime;
 
 class BusinessDayHelperImplTest {
 
@@ -36,7 +37,7 @@ class BusinessDayHelperImplTest {
 
       // Given
       TestCaseBuilder tcb = new TestCaseBuilder()
-            .withBusinessDayRepository(mock(BusinessDayRepository.class))
+            .withBusinessDayRepository(mock(TestBusinessDayRepository.class))
             .build();
 
       // When
@@ -47,12 +48,12 @@ class BusinessDayHelperImplTest {
    }
 
    @Test
-   void testAddBookedIncrements_NoBookedOnes() {
+   void testAddBookedIncrements_NoBookedBusinessDay() {
 
       // Given
       BookedBusinessDayDeleter bookedBusinessDayDeleter = mock(BookedBusinessDayDeleter.class);
       TestCaseBuilder tcb = new TestCaseBuilder()
-            .withBusinessDayRepository(mock(BusinessDayRepository.class))
+            .withBusinessDayRepository(spy(new TestBusinessDayRepository()))
             .withBookedBusinessDayDeleter(bookedBusinessDayDeleter)
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
                   .withDescription("Test")
@@ -64,21 +65,21 @@ class BusinessDayHelperImplTest {
             .build();
 
       // When
-      tcb.businessDayHelperImpl.addBookedBusinessDayIncrements(tcb.businessDayIncrements);
+      BusinessDay actualBookedBusinessDay = tcb.businessDayHelperImpl.addBookedBusinessDayIncrements(tcb.businessDayIncrements);
 
       // Then
       verify(tcb.businessDayRepository, never()).createNew(eq(false));
       verify(bookedBusinessDayDeleter).cleanUpBookedBusinessDays();
-      assertThat(tcb.bookedBusinessDay.getIncrements().isEmpty(), is(true));
+      assertThat(actualBookedBusinessDay, is(nullValue()));
    }
 
    @Test
-   void testAddBookedIncrements_OneBookedOne() {
+   void testAddBookedIncrements_OneBookedBusinessDay() {
 
       // Given
       BookedBusinessDayDeleter bookedBusinessDayDeleter = mock(BookedBusinessDayDeleter.class);
       TestCaseBuilder tcb = new TestCaseBuilder()
-            .withBusinessDayRepository(mock(BusinessDayRepository.class))
+            .withBusinessDayRepository(spy(new TestBusinessDayRepository()))
             .withBookedBusinessDayDeleter(bookedBusinessDayDeleter)
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
                   .withDescription("Test")
@@ -86,6 +87,8 @@ class BusinessDayHelperImplTest {
                   .withTicket(TicketFactory.INSTANCE.dummy("123"))
                   .withId(UUID.randomUUID())
                   .withTimeSnippet(TimeSnippetBuilder.of()
+                        .withBeginTimeStamp(10)
+                        .withEndTimeStamp(20)
                         .build())
                   .build())
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
@@ -95,20 +98,22 @@ class BusinessDayHelperImplTest {
                   .withId(UUID.randomUUID())
                   .withFlagAsBooked()
                   .withTimeSnippet(TimeSnippetBuilder.of()
+                        .withBeginTimeStamp(110)
+                        .withEndTimeStamp(120)
                         .build())
                   .build())
             .build();
 
       // When
-      tcb.businessDayHelperImpl.addBookedBusinessDayIncrements(tcb.businessDayIncrements);
+      BusinessDay actualBookedBusinessDay = tcb.businessDayHelperImpl.addBookedBusinessDayIncrements(tcb.businessDayIncrements);
 
       // Then
       verify(tcb.businessDayRepository).createNew(eq(true));
-      assertThat(tcb.bookedBusinessDay.getIncrements().size(), is(1));
-      BusinessDayIncrement firstBookedBDInc = tcb.bookedBusinessDay.getIncrements().get(0);
+      assertThat(actualBookedBusinessDay.getIncrements().size(), is(1));
+      BusinessDayIncrement firstBookedBDInc = actualBookedBusinessDay.getIncrements().get(0);
       assertThat(firstBookedBDInc.getDescription(), is(tcb.businessDayIncrements.get(1).getDescription()));
       assertThat(firstBookedBDInc.getId(), is(nullValue()));
-      verify(tcb.businessDayRepository).save(eq(tcb.bookedBusinessDay));
+      verify(tcb.businessDayRepository).save(eq(actualBookedBusinessDay));
       verify(bookedBusinessDayDeleter).cleanUpBookedBusinessDays();
    }
 
@@ -124,16 +129,20 @@ class BusinessDayHelperImplTest {
             .withId(UUID.randomUUID())
             .withFlagAsBooked()
             .withTimeSnippet(TimeSnippetBuilder.of()
+                  .withBeginTimeStamp(100)
+                  .withEndTimeStamp(200)
                   .build())
             .build();
       TestCaseBuilder tcb = new TestCaseBuilder()
-            .withBusinessDayRepository(mock(BusinessDayRepository.class))
+            .withBusinessDayRepository(spy(new TestBusinessDayRepository()))
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
                   .withDescription("Test")
                   .withServiceCode(113)
                   .withTicket(TicketFactory.INSTANCE.dummy("123"))
                   .withId(UUID.randomUUID())
                   .withTimeSnippet(TimeSnippetBuilder.of()
+                        .withBeginTimeStamp(100)
+                        .withEndTimeStamp(200)
                         .build())
                   .build())
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
@@ -143,20 +152,22 @@ class BusinessDayHelperImplTest {
                   .withId(UUID.randomUUID())
                   .withFlagAsBooked()
                   .withTimeSnippet(TimeSnippetBuilder.of()
+                        .withBeginTimeStamp(300)
+                        .withEndTimeStamp(400)
                         .build())
                   .build())
             .withBookedBusinessDayDeleter(bookedBusinessDayDeleter)
             .build();
 
       // When
-      tcb.businessDayHelperImpl.addBookedBusinessDayIncrements(tcb.businessDayIncrements);
+      BusinessDay actualBookedBusinessDay = tcb.businessDayHelperImpl.addBookedBusinessDayIncrements(tcb.businessDayIncrements);
       tcb.withExistingBookedBusinessDay();
-      tcb.businessDayHelperImpl.addBookedBusinessDayIncrements(Collections.singletonList(thirdBDIncrement));
+      actualBookedBusinessDay = tcb.businessDayHelperImpl.addBookedBusinessDayIncrements(Collections.singletonList(thirdBDIncrement));
 
       // Then
       verify(tcb.businessDayRepository).createNew(eq(true));
-      assertThat(tcb.bookedBusinessDay.getIncrements().size(), is(2));
-      verify(tcb.businessDayRepository, times(2)).save(eq(tcb.bookedBusinessDay));
+      assertThat(actualBookedBusinessDay.getIncrements().size(), is(2));
+      verify(tcb.businessDayRepository, times(2)).save(any());
       verify(bookedBusinessDayDeleter, times(2)).cleanUpBookedBusinessDays();
    }
 
@@ -165,7 +176,7 @@ class BusinessDayHelperImplTest {
 
       // Given
       TestCaseBuilder tcb = new TestCaseBuilder()
-            .withBusinessDayRepository(mock(BusinessDayRepository.class))
+            .withBusinessDayRepository(new TestBusinessDayRepository())
             .build();
 
       // When
@@ -175,23 +186,76 @@ class BusinessDayHelperImplTest {
       assertThat(actualBusinessDay, is(nullValue()));
    }
 
+   private static class TestBusinessDayRepository implements BusinessDayRepository {
+
+      private BusinessDay bookedBusinessDay;
+      private boolean withExistingBookedBusinessDay;
+
+      public TestBusinessDayRepository() {
+         bookedBusinessDay = new BusinessDayImpl(UUID.randomUUID(), true, new ArrayList<>(), new BusinessDayIncrementImpl(), ComeAndGoesImpl.of());
+      }
+
+      @Override
+      public BusinessDay findById(UUID objectId) throws ObjectNotFoundException {
+         return bookedBusinessDay;
+      }
+
+      @Override
+      public BusinessDay findFirstOrCreateNew() {
+         return bookedBusinessDay;
+      }
+
+      @Override
+      public BusinessDay createNew(boolean isBooked) {
+         return bookedBusinessDay;
+      }
+
+      @Override
+      public BusinessDay save(BusinessDay businessDay2Save) {
+         this.bookedBusinessDay = businessDay2Save;
+         return businessDay2Save;
+      }
+
+      @Override
+      public void deleteAll(boolean isBooked) {
+         this.bookedBusinessDay = null;
+      }
+
+      @Override
+      public void deleteBookedBusinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds) {
+
+      }
+
+      @Override
+      public BusinessDay findBookedBusinessDayByDate(DateTime time) {
+         return withExistingBookedBusinessDay ? bookedBusinessDay : null;
+      }
+
+      @Override
+      public List<BusinessDay> findBookedBussinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds) {
+         return Collections.emptyList();
+      }
+
+      public void setWithExistingBookedBusinessDay() {
+         withExistingBookedBusinessDay = true;
+      }
+
+   }
+
    private static class TestCaseBuilder {
 
       private List<BusinessDayIncrement> businessDayIncrements;
       private BusinessDayHelperImpl businessDayHelperImpl;
-      private BusinessDayRepository businessDayRepository;
-      private BusinessDayImpl bookedBusinessDay;
+      private TestBusinessDayRepository businessDayRepository;
       private BookedBusinessDayDeleter bookedBusinessDayDeleter;
 
       private TestCaseBuilder() {
          this.bookedBusinessDayDeleter = mock(BookedBusinessDayDeleter.class);
-         this.bookedBusinessDay =
-               spy(new BusinessDayImpl(UUID.randomUUID(), true, Collections.emptyList(), new BusinessDayIncrementImpl(), ComeAndGoesImpl.of()));
          this.businessDayIncrements = new ArrayList<>();
       }
 
       public TestCaseBuilder withExistingBookedBusinessDay() {
-         when(businessDayRepository.findBookedBusinessDayByDate(any())).thenReturn(bookedBusinessDay);
+         businessDayRepository.setWithExistingBookedBusinessDay();
          return this;
       }
 
@@ -200,7 +264,7 @@ class BusinessDayHelperImplTest {
          return this;
       }
 
-      private TestCaseBuilder withBusinessDayRepository(BusinessDayRepository businessDayRepository) {
+      private TestCaseBuilder withBusinessDayRepository(TestBusinessDayRepository businessDayRepository) {
          this.businessDayRepository = businessDayRepository;
          return this;
       }
@@ -212,7 +276,6 @@ class BusinessDayHelperImplTest {
 
       private TestCaseBuilder build() {
          this.businessDayHelperImpl = new BusinessDayHelperImpl(businessDayRepository, bookedBusinessDayDeleter);
-         when(businessDayRepository.createNew(eq(true))).thenReturn(bookedBusinessDay);
          return this;
       }
    }

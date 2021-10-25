@@ -5,6 +5,7 @@ package com.adcubum.timerecording.core.work.businessday;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
@@ -37,7 +39,6 @@ import com.adcubum.timerecording.work.date.DateTimeUtil;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.NumberFormat;
-import com.adcubum.util.utils.StringUtil;
 
 /**
  * The {@link BusinessDayImpl} defines an entire day full of work. Such a day may
@@ -97,25 +98,27 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
-   public void resumeLastIncremental() {
-      currentBussinessDayIncremental.resumeLastTimeSnippet();
+   public BusinessDay resumeLastIncremental() {
+      BusinessDayIncrement changedCurrentBusinessDayIncrement = currentBussinessDayIncremental.resumeLastTimeSnippet();
+      return createCopyWithCurrentBusinessDayIncrement(changedCurrentBusinessDayIncrement);
    }
 
    @Override
-   public void comeOrGo() {
-      comeAndGoes = comeAndGoes.comeOrGo();
+   public BusinessDay comeOrGo() {
+      return createCopy(comeAndGoes.comeOrGo());
    }
 
    @Override
-   public void flagComeAndGoesAsRecorded() {
-      comeAndGoes = comeAndGoes.flagComeAndGoesAsRecorded();
+   public BusinessDay flagComeAndGoesAsRecorded() {
+      return createCopy(comeAndGoes.flagComeAndGoesAsRecorded());
    }
 
    @Override
-   public void startNewIncremental() {
+   public BusinessDay startNewIncremental() {
       DateTime time = DateTimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
-      createNewIncremental();
-      currentBussinessDayIncremental.startCurrentTimeSnippet(time);
+      BusinessDayIncrement changedCurrentBusinessDayIncrement = BusinessDayIncrementImpl.of(currentBussinessDayIncremental)
+            .startCurrentTimeSnippet(time);
+      return createCopyWithCurrentBusinessDayIncrement(changedCurrentBusinessDayIncrement);
    }
 
    /**
@@ -124,21 +127,26 @@ public class BusinessDayImpl implements BusinessDay {
     * that, a new incremental is created
     */
    @Override
-   public void stopCurrentIncremental() {
+   public BusinessDay stopCurrentIncremental() {
       DateTime endTimeStamp = DateTimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
-      currentBussinessDayIncremental.stopCurrentTimeSnippet(endTimeStamp);
+      BusinessDayIncrement changedCurrentBussinessDayIncremental = currentBussinessDayIncremental.stopCurrentTimeSnippet(endTimeStamp);
+      return createCopyWithCurrentBusinessDayIncrement(changedCurrentBussinessDayIncremental);
    }
 
    @Override
-   public void flagBusinessDayAsCharged() {
-      increments.stream()//
-            .forEach(BusinessDayIncrement::flagAsCharged);
+   public BusinessDay flagBusinessDayAsCharged() {
+      List<BusinessDayIncrement> changedBusinessDayIncrements = increments.stream()
+            .map(BusinessDayIncrement::flagAsBooked)
+            .collect(Collectors.toList());
+      return createCopy(changedBusinessDayIncrements);
    }
 
    @Override
-   public void refreshDummyTickets() {
-      increments.stream()
-            .forEach(BusinessDayIncrement::refreshDummyTicket);
+   public BusinessDay refreshDummyTickets() {
+      List<BusinessDayIncrement> changedBusinessDayIncrements = increments.stream()
+            .map(BusinessDayIncrement::refreshDummyTicket)
+            .collect(Collectors.toList());
+      return createCopy(changedBusinessDayIncrements);
    }
 
    @Override
@@ -148,24 +156,24 @@ public class BusinessDayImpl implements BusinessDay {
       }
       return increments//
             .stream()//
-            .anyMatch(increment -> !increment.isCharged());
+            .anyMatch(increment -> !increment.isBooked());
    }
 
    @Override
    public boolean hasDescription() {
       return increments.stream()//
-            .anyMatch(bDayInc -> StringUtil.isNotEmptyOrNull(bDayInc.getDescription()));
+            .anyMatch(BusinessDayIncrement::hasDescription);
    }
 
    @Override
-   public void clearFinishedIncrements() {
-      increments.clear();
-      clearComeAndGoes();
+   public BusinessDay clearFinishedIncrements() {
+      return createCopy(Collections.emptyList())
+            .clearComeAndGoes();
    }
 
    @Override
-   public void clearComeAndGoes() {
-      comeAndGoes = comeAndGoes.clearDoneComeAndGoes();
+   public BusinessDay clearComeAndGoes() {
+      return createCopy(comeAndGoes.clearDoneComeAndGoes());
    }
 
    @Override
@@ -204,34 +212,44 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
-   public void removeIncrement4Id(UUID id) {
-      getBusinessIncrement(id)
-            .ifPresent(businessDayIncrement -> increments.remove(businessDayIncrement));
+   public BusinessDay removeIncrement4Id(UUID id) {
+      if (getBusinessIncrement(id).isPresent()) {
+         List<BusinessDayIncrement> remainingBusinessDayIncrements = collectBusinessDayIncrementsWithOtherId(id);
+         return createCopy(remainingBusinessDayIncrements);
+      }
+      return this;
    }
 
    @Override
-   public void addBusinessIncrement(BusinessDayIncrementAdd update) {
-      addBusinessIncrementInternal(BusinessDayIncrementImpl.of(update));
+   public BusinessDay addBusinessIncrement(BusinessDayIncrementAdd update) {
+      return addBusinessIncrementInternal(BusinessDayIncrementImpl.of(update));
    }
 
    @Override
-   public void addBusinessIncrement(BusinessDayIncrementImport businessDayIncrementImport) {
-      addBusinessIncrementInternal(BusinessDayIncrementImpl.of(businessDayIncrementImport));
+   public BusinessDay addBusinessIncrement(BusinessDayIncrementImport businessDayIncrementImport) {
+      return addBusinessIncrementInternal(BusinessDayIncrementImpl.of(businessDayIncrementImport));
    }
 
-   private void addBusinessIncrementInternal(BusinessDayIncrement businessDayIncrement) {
+   private BusinessDay addBusinessIncrementInternal(BusinessDayIncrement businessDayIncrement) {
       validateIfCanAdd(businessDayIncrement);
-      increments.add(businessDayIncrement);
       // recreate / reset the currentIncrement in 
-      createNewIncremental();
+      return createCopy(businessDayIncrement)
+            .createNewIncremental();
    }
 
    private void validateIfCanAdd(BusinessDayIncrement businessDayIncrement) {
       DateTime newBDIncTime = businessDayIncrement.getDateTime();
+      validateCurrentTimeSnippet(businessDayIncrement);
       increments.stream()
             .filter(newBusinessDayIncIsBeforeOrAfter(newBDIncTime))
             .findAny()
             .ifPresent(throwException());
+   }
+
+   private void validateCurrentTimeSnippet(BusinessDayIncrement businessDayIncrement) {
+      TimeSnippet currentTimeSnippet = businessDayIncrement.getCurrentTimeSnippet();
+      requireNonNull(currentTimeSnippet.getBeginTimeStamp(), "BeginTimeStamp must not be null");
+      requireNonNull(currentTimeSnippet.getEndTimeStamp(), "EndTimeStamp must not be null");
    }
 
    private static Predicate<BusinessDayIncrement> newBusinessDayIncIsBeforeOrAfter(DateTime newBDIncTime) {
@@ -246,15 +264,17 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
-   public void changeBusinesDayIncrement(ChangedValue changeValue) {
+   public BusinessDay changeBusinesDayIncrement(ChangedValue changeValue) {
       Optional<BusinessDayIncrement> businessDayIncOpt = getBusinessIncrement(changeValue.getId());
-      businessDayIncOpt.ifPresent(businessDayIncrement -> handleBusinessDayChangedInternal(businessDayIncrement, changeValue));
+      return businessDayIncOpt.map(businessDayIncrement -> {
+         BusinessDayIncrement changedBusinessDayIncrement = handleBusinessDayChangedInternal(businessDayIncrement, changeValue);
+         return createCopy(changedBusinessDayIncrement);
+      }).orElse(this);
    }
 
    @Override
-   public ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue) {
-      comeAndGoes = comeAndGoes.changeComeAndGo(changedComeAndGoValue);
-      return comeAndGoes;
+   public BusinessDay changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue) {
+      return createCopy(comeAndGoes.changeComeAndGo(changedComeAndGoValue));
    }
 
    @Override
@@ -332,43 +352,44 @@ public class BusinessDayImpl implements BusinessDay {
             .sorted(new TimeStampComparator().reversed()).findFirst().orElse(null);
    }
 
-   private void handleBusinessDayChangedInternal(BusinessDayIncrement businessDayIncremental,
+   private BusinessDayIncrement handleBusinessDayChangedInternal(BusinessDayIncrement businessDayIncremental,
          ChangedValue changedValue) {
       switch (changedValue.getValueTypes()) {
          case DESCRIPTION:
-            businessDayIncremental.setDescription(changedValue.getNewValue());
+            businessDayIncremental = businessDayIncremental.setDescription(changedValue.getNewValue());
             break;
          case BEGIN:
-            businessDayIncremental.updateBeginTimeSnippetAndCalculate(changedValue.getNewValue());
+            businessDayIncremental = businessDayIncremental.updateBeginTimeSnippetAndCalculate(changedValue.getNewValue());
             break;
          case END:
-            businessDayIncremental.updateEndTimeSnippetAndCalculate(changedValue.getNewValue());
+            businessDayIncremental = businessDayIncremental.updateEndTimeSnippetAndCalculate(changedValue.getNewValue());
             break;
          case TICKET:
-            businessDayIncremental.setTicket(changedValue.getNewTicket());
+            businessDayIncremental = businessDayIncremental.setTicket(changedValue.getNewTicket());
             break;
          case TICKET_NR:
             Ticket newTicket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(changedValue.getNewValue());
-            businessDayIncremental.setTicket(newTicket);
+            businessDayIncremental = businessDayIncremental.setTicket(newTicket);
             break;
          case SERVICE_CODE:
-            businessDayIncremental.setServiceCode(Integer.parseInt(changedValue.getNewValue()));
+            businessDayIncremental = businessDayIncremental.setServiceCode(Integer.parseInt(changedValue.getNewValue()));
             break;
          case SERVICE_CODE_DESCRIPTION:
             try {
-               businessDayIncremental.setServiceCode4Description(changedValue.getNewValue());
+               businessDayIncremental = businessDayIncremental.setServiceCode4Description(changedValue.getNewValue());
             } catch (InvalidChargeTypeRepresentationException e) {
                e.printStackTrace();
                // ignore failures
             }
             break;
          case AMOUNT_OF_TIME:
-            changeAmountOfTime4BDIncrement(businessDayIncremental, changedValue);
+            businessDayIncremental = changeAmountOfTime4BDIncrement(businessDayIncremental, changedValue);
             break;
          default:
             throw new UnsupportedOperationException(
                   "ChargeType '" + changedValue.getValueTypes() + "' not implemented!");
       }
+      return businessDayIncremental;
    }
 
    /*
@@ -378,19 +399,20 @@ public class BusinessDayImpl implements BusinessDay {
     * Therefore we first calculate the new duration of this last TimeSnipped. Then we calculate the difference between the new and current duration
     * This difference is than added to the last TimeSnippet
     */
-   private static void changeAmountOfTime4BDIncrement(BusinessDayIncrement businessDayIncremental, ChangedValue changedValue) {
+   private static BusinessDayIncrement changeAmountOfTime4BDIncrement(BusinessDayIncrement businessDayIncremental, ChangedValue changedValue) {
       float newTotalDurationOfBDInc = NumberFormat.parseFloatOrDefault(changedValue.getNewValue(), 0);
       float currentDuration = businessDayIncremental.getTotalDuration();
       float newDuration = newTotalDurationOfBDInc - businessDayIncremental.getTotalDuration() + currentDuration;
 
       if (newDuration > 0) {
-         TimeSnippet currentTimeSnippet = businessDayIncremental.getCurrentTimeSnippet();
-         currentTimeSnippet.addAdditionallyTime(String.valueOf(newDuration));
+         businessDayIncremental = businessDayIncremental.addAdditionallyTime(newDuration);
       }
+      return businessDayIncremental;
    }
 
-   private void createNewIncremental() {
-      currentBussinessDayIncremental = BusinessDayIncrementImpl.of(currentBussinessDayIncremental);
+   private BusinessDay createNewIncremental() {
+      currentBussinessDayIncremental = BusinessDayIncrementImpl.of(currentBussinessDayIncremental, false);
+      return this;
    }
 
    private float getTotalDuration(TIME_TYPE type) {
@@ -400,5 +422,33 @@ public class BusinessDayImpl implements BusinessDay {
          sum = sum + incremental.getTotalDuration(type);
       }
       return NumberFormat.parseFloat(NumberFormat.format(sum));
+   }
+
+   private BusinessDayImpl createCopy(List<BusinessDayIncrement> businessDayIncrements) {
+      return new BusinessDayImpl(this.id, this.isBooked, businessDayIncrements, this.currentBussinessDayIncremental, comeAndGoes);
+   }
+
+   private BusinessDayImpl createCopy(ComeAndGoes comeAndGoes) {
+      return new BusinessDayImpl(this.id, this.isBooked, this.increments, this.currentBussinessDayIncremental, comeAndGoes);
+   }
+
+   private BusinessDayImpl createCopy(BusinessDayIncrement changedBusinessDayIncrement) {
+      List<BusinessDayIncrement> unchangedBDayIncrements =
+            new ArrayList<>(collectBusinessDayIncrementsWithOtherId(changedBusinessDayIncrement.getId()));
+      unchangedBDayIncrements.add(changedBusinessDayIncrement);
+      return new BusinessDayImpl(this.id, this.isBooked, unchangedBDayIncrements, this.currentBussinessDayIncremental, this.comeAndGoes);
+   }
+
+   private BusinessDayImpl createCopyWithCurrentBusinessDayIncrement(BusinessDayIncrement changedCurrentBusinessDayIncrement) {
+      return new BusinessDayImpl(this.id, this.isBooked, this.increments, changedCurrentBusinessDayIncrement, this.comeAndGoes);
+   }
+
+   private List<BusinessDayIncrement> collectBusinessDayIncrementsWithOtherId(UUID changedBDIncrementId) {
+      if (isNull(changedBDIncrementId)) {
+         return increments;// no id, so we can't compare
+      }
+      return increments.stream()
+            .filter(bDayIncrement -> !changedBDIncrementId.equals(bDayIncrement.getId()))
+            .collect(Collectors.toList());
    }
 }

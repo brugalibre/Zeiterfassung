@@ -15,10 +15,10 @@ import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
+import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryIntegMockUtil;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.importexport.in.file.exception.FileImportException;
 
 class TimeRecorder_ImportBusinessDayTest {
@@ -41,10 +41,10 @@ class TimeRecorder_ImportBusinessDayTest {
       // Then
       ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       assertThat(actualImported, is(true));
-      BusinessDayVO bussinessDayVO = timeRecorder.getBussinessDayVO();
-      assertThat(bussinessDayVO.getBusinessDayIncrements().size(), is(2));
-      BusinessDayIncrementVO firstBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(firstTicketNr, bussinessDayVO);
-      BusinessDayIncrementVO secondBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(secondTicketNr, bussinessDayVO);
+      BusinessDay bussinessDay = timeRecorder.getBussinessDay();
+      assertThat(bussinessDay.getIncrements().size(), is(2));
+      BusinessDayIncrement firstBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(firstTicketNr, bussinessDay);
+      BusinessDayIncrement secondBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(secondTicketNr, bussinessDay);
       assertThat(firstBusinessDayInc4TicketNr, is(notNullValue()));
       assertThat(firstBusinessDayInc4TicketNr.getDescription(), is("Test"));
       assertThat(firstBusinessDayInc4TicketNr.getChargeType(), is(serviceCodeAdapter.getServiceCode4Description(firstTicketLeistungsartRep)));
@@ -123,10 +123,10 @@ class TimeRecorder_ImportBusinessDayTest {
       assertThrows(FileImportException.class, ex);
    }
 
-   private BusinessDayIncrementVO findBusinessDayInc4TicketNr(String firstTicketNr, BusinessDayVO bussinessDayVO) {
-      return bussinessDayVO.getBusinessDayIncrements()
+   private BusinessDayIncrement findBusinessDayInc4TicketNr(String firstTicketNr, BusinessDay bussinessDay) {
+      return bussinessDay.getIncrements()
             .stream()
-            .filter(bdIncrement -> bdIncrement.getTicketNumber().equals(firstTicketNr))
+            .filter(bdIncrement -> bdIncrement.getTicket().getNr().equals(firstTicketNr))
             .findFirst()
             .orElse(null);
    }

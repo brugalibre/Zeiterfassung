@@ -6,7 +6,7 @@ package com.adcubum.timerecording.ui.app.pages.overview.model.resolver;
 import static java.util.Objects.nonNull;
 
 import com.adcubum.timerecording.app.TimeRecorder;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
+import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.ui.app.pages.overview.model.OverviewPageModel;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.model.resolver.impl.AbstractPageModelResolver;
@@ -23,12 +23,12 @@ public class OverviewPageModelResolver extends AbstractPageModelResolver<PageMod
    }
 
    private OverviewPageModel resolvePageModelInternal(PageModel inPageModel) {
-      BusinessDayVO businessDayVO = TimeRecorder.INSTANCE.getBussinessDayVO();
+      BusinessDay businessDay = TimeRecorder.INSTANCE.getBussinessDay();
       if (inPageModel instanceof OverviewPageModel) {
-         return OverviewPageModel.of((OverviewPageModel) inPageModel, businessDayVO);
+         return OverviewPageModel.of((OverviewPageModel) inPageModel, businessDay);
       } else if (nonNull(currentPageModel)) {
-         return OverviewPageModel.of(currentPageModel, businessDayVO);
+         return OverviewPageModel.of(currentPageModel, businessDay);
       }
-      return new OverviewPageModel(businessDayVO);
+      return new OverviewPageModel(businessDay);
    }
 }

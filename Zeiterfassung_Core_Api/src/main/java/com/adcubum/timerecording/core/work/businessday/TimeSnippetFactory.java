@@ -59,10 +59,9 @@ public class TimeSnippetFactory extends AbstractFactory {
     *         could'nt be parsed
     */
    public static TimeSnippet createNew(Date date, String beginValue, String endValue) throws ParseException {
-      TimeSnippet timeSnippet = createNew();
-      timeSnippet.setBeginTimeStamp(DateParser.getTime(beginValue, date));
-      timeSnippet.setEndTimeStamp(DateParser.getTime(endValue, date));
-      return timeSnippet;
+      return createNew()
+            .setBeginTimeStamp(DateParser.getTime(beginValue, date))
+            .setEndTimeStamp(DateParser.getTime(endValue, date));
    }
 
    /**

@@ -16,10 +16,9 @@ class BusinessDayIncrementTest {
 
       // Given
       float expectedDurationOfLastIncrement = 1;
-      BusinessDayIncrement businessDayIncrement = new BusinessDayIncrementImpl();
       long startTimeStamp = System.currentTimeMillis();
       int timeBetweenStartAndStop = 3600 * 1000;
-      addTimeSnippet2BDIncrement(businessDayIncrement, startTimeStamp, timeBetweenStartAndStop);
+      BusinessDayIncrement businessDayIncrement = addTimeSnippet2BDIncrement(startTimeStamp, timeBetweenStartAndStop);
 
       // When
       float actualDurationOfLastIncrement = businessDayIncrement.getTotalDuration();
@@ -28,11 +27,12 @@ class BusinessDayIncrementTest {
       assertThat(actualDurationOfLastIncrement, is(expectedDurationOfLastIncrement));
    }
 
-   private static void addTimeSnippet2BDIncrement(BusinessDayIncrement businessDayIncrement, long startTimeStamp, int timeBetweenStartAndStop) {
+   private static BusinessDayIncrement addTimeSnippet2BDIncrement(long startTimeStamp, int timeBetweenStartAndStop) {
+      BusinessDayIncrement businessDayIncrement = new BusinessDayIncrementImpl();
       DateTime startTime = DateTimeFactory.createNew(startTimeStamp, RoundMode.ONE_MIN);
-      businessDayIncrement.startCurrentTimeSnippet(startTime);
+      businessDayIncrement = businessDayIncrement.startCurrentTimeSnippet(startTime);
       long endTimeStamp = startTimeStamp + timeBetweenStartAndStop;// 1h
       DateTime endTime = DateTimeFactory.createNew(endTimeStamp, RoundMode.ONE_MIN);
-      businessDayIncrement.stopCurrentTimeSnippet(endTime);
+      return businessDayIncrement.stopCurrentTimeSnippet(endTime);
    }
 }

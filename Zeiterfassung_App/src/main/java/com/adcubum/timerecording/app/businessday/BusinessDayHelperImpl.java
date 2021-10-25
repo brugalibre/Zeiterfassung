@@ -6,7 +6,9 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
@@ -54,15 +56,16 @@ public class BusinessDayHelperImpl implements BusinessDayHelper {
    }
 
    @Override
-   public void addBookedBusinessDayIncrements(List<BusinessDayIncrement> increments) {
+   public BusinessDay addBookedBusinessDayIncrements(List<BusinessDayIncrement> increments) {
       BusinessDay bookedBusinessDay = findBookedBusiness4BookedBusinessDayIncs(increments);
       if (needsANewBookedBusinessDayIncrement(bookedBusinessDay, increments)) {
          bookedBusinessDay = businessDayRepository.createNew(true);
       }
       if (nonNull(bookedBusinessDay)) {
-         addAllBusinessDayIncrements(bookedBusinessDay, increments);
+         bookedBusinessDay = addAllBusinessDayIncrements(bookedBusinessDay, increments);
       }
       bookedBusinessDayDeleter.cleanUpBookedBusinessDays();
+      return bookedBusinessDay;
    }
 
    /*
@@ -84,18 +87,27 @@ public class BusinessDayHelperImpl implements BusinessDayHelper {
 
    private static Optional<BusinessDayIncrement> findFirstBookedBusinessDayInc(List<BusinessDayIncrement> increments) {
       return increments.stream()
-            .filter(BusinessDayIncrement::isCharged)
+            .filter(BusinessDayIncrement::isBooked)
             .findFirst();
    }
 
-   private void addAllBusinessDayIncrements(BusinessDay bookedBusinessDay, List<BusinessDayIncrement> increments) {
-      increments.stream()
-            .filter(BusinessDayIncrement::isCharged)
+   private BusinessDay addAllBusinessDayIncrements(BusinessDay bookedBusinessDay, List<BusinessDayIncrement> increments) {
+      bookedBusinessDay = increments.stream()
+            .filter(BusinessDayIncrement::isBooked)
             .filter(isNotAlreadyContained(bookedBusinessDay))
             .map(BusinessDayHelperImpl::buildBusinessDayIncrementAdd)
-            .forEach(bookedBusinessDay::addBusinessIncrement);
-      bookedBusinessDay.flagBusinessDayAsCharged();
-      businessDayRepository.save(bookedBusinessDay);
+            .collect(Collectors.collectingAndThen(Collectors.toList(), addAll2BusinessDay(bookedBusinessDay)));
+      return businessDayRepository.save(bookedBusinessDay);
+   }
+
+   private static Function<List<BusinessDayIncrementAdd>, BusinessDay> addAll2BusinessDay(BusinessDay businessDayIn) {
+      return businessDayIncrementAdds -> {
+         BusinessDay changedBookedBusinessDay = businessDayIn;
+         for (BusinessDayIncrementAdd businessDayIncrementAdd : businessDayIncrementAdds) {
+            changedBookedBusinessDay = changedBookedBusinessDay.addBusinessIncrement(businessDayIncrementAdd);
+         }
+         return changedBookedBusinessDay.flagBusinessDayAsCharged();
+      };
    }
 
    /*

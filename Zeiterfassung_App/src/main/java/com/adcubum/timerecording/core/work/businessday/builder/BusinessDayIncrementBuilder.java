@@ -1,4 +1,4 @@
-package com.adcubum.timerecording.core.work.businessday.integtest;
+package com.adcubum.timerecording.core.work.businessday.builder;
 
 import java.util.UUID;
 
@@ -27,11 +27,6 @@ public class BusinessDayIncrementBuilder {
       return this;
    }
 
-   public BusinessDayIncrementBuilder withId(UUID id) {
-      businessDayIncrementAddBuilder.withId(id);
-      return this;
-   }
-
    public BusinessDayIncrementBuilder withTimeSnippet(TimeSnippet timeSnippet) {
       businessDayIncrementAddBuilder.withTimeSnippet(timeSnippet);
       return this;
@@ -39,6 +34,11 @@ public class BusinessDayIncrementBuilder {
 
    public BusinessDayIncrementBuilder withTicket(Ticket ticket) {
       businessDayIncrementAddBuilder.withTicket(ticket);
+      return this;
+   }
+
+   public BusinessDayIncrementBuilder withId(UUID id) {
+      businessDayIncrementAddBuilder.withId(id);
       return this;
    }
 
@@ -51,7 +51,7 @@ public class BusinessDayIncrementBuilder {
       BusinessDayIncrement businessDayIncrement = BusinessDayIncrementImpl.of(businessDayIncrementAddBuilder
             .build());
       if (doFlagAsBooked) {
-         businessDayIncrement.flagAsCharged();
+         return businessDayIncrement.flagAsBooked();
       }
       return businessDayIncrement;
    }

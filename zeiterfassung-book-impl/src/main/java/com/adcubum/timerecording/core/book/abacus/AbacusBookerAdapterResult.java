@@ -2,6 +2,7 @@ package com.adcubum.timerecording.core.book.abacus;
 
 import com.adcubum.timerecording.core.book.result.BookResultType;
 import com.adcubum.timerecording.core.book.result.BookerResult;
+import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 
 /**
  * The {@link AbacusBookerAdapterResult} contains a specific type of result, depending how worse or how good the booking went,
@@ -17,11 +18,18 @@ public class AbacusBookerAdapterResult implements BookerResult {
    private boolean hasBooked;
    private String message;
    private BookResultType bookResultType;
+   private BusinessDay bookedBusinessDay;
 
-   public AbacusBookerAdapterResult(boolean hasBooked, BookResultType bookResultType, String message) {
+   public AbacusBookerAdapterResult(boolean hasBooked, BookResultType bookResultType, String message, BusinessDay bookedBusinessDay) {
       this.hasBooked = hasBooked;
       this.bookResultType = bookResultType;
       this.message = message;
+      this.bookedBusinessDay = bookedBusinessDay;
+   }
+
+   @Override
+   public BusinessDay getBookedBusinessDay() {
+      return bookedBusinessDay;
    }
 
    @Override

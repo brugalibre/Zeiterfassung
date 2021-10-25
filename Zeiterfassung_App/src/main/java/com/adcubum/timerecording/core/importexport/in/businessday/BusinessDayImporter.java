@@ -19,6 +19,7 @@ import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.adcubum.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
+import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporterImpl;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
@@ -82,7 +83,7 @@ public class BusinessDayImporter {
    private BusinessDay createAndReturnBusinessDay(List<BusinessDayIncrementImport> businessDayIncImports) {
       BusinessDay businessDay = new BusinessDayImpl();
       for (BusinessDayIncrementImport businessDayIncrementImport : businessDayIncImports) {
-         businessDay.addBusinessIncrement(businessDayIncrementImport);
+         businessDay = businessDay.addBusinessIncrement(businessDayIncrementImport);
       }
       return businessDay;
    }
@@ -234,7 +235,7 @@ public class BusinessDayImporter {
    private Date parseDate(String readLine) {
       if (isNotEmptyOrNull(readLine)) {
          try {
-            return DateParser.parse2Date(readLine, BusinessDayExporterImpl.DATE_REP_PATTERN);
+            return DateParser.parse2Date(readLine, BusinessDayExporter.DATE_REP_PATTERN);
          } catch (ParseException e) {
             throw buildBusinessDayImportException(e.getLocalizedMessage() + "\n" +
                   "The first line should look like 'Dienstag, 25 Jul 2019 06:45:00'");

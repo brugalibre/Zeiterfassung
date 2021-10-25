@@ -12,15 +12,14 @@ import java.util.UUID;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.model.ticketbacklog.ServiceCodeDto;
 import com.adcubum.timerecording.model.ticketbacklog.TicketDto;
 import com.adcubum.util.utils.StringUtil;
 
 /**
- * The {@link BusinessDayIncrementVO} is used whenever a we need
- * {@link BusinessDayIncrement} for displaying or exporting. The {@link BusinessDayIncrementVO} is read only
+ * The {@link BusinessDayIncrement} is used whenever a we need
+ * {@link BusinessDayIncrement} for displaying or exporting. The {@link BusinessDayIncrement} is read only
  * 
  * @author Dominic
  *
@@ -55,7 +54,7 @@ public class BusinessDayIncrementDto {
       this.description = evalDescription(businessDayIncremental.getDescription());
       this.ticketDto = map2TicketDto(businessDayIncremental.getTicket());
       this.serviceCodeDto = new ServiceCodeDto(businessDayIncremental.getChargeType(), businessDayIncremental.getServiceCodeDescription());
-      this.isBooked = businessDayIncremental.isCharged();
+      this.isBooked = businessDayIncremental.isBooked();
    }
 
    private static String evalDescription(String givenDescription) {

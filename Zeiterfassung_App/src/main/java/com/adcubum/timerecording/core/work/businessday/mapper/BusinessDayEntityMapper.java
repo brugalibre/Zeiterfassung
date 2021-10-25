@@ -108,7 +108,7 @@ public class BusinessDayEntityMapper {
          BusinessDayEntity businessDayEntity) {
       Ticket ticket = businessDayIncrement.getTicket();
       return new BusinessDayIncrementEntity(businessDayIncrement.getId(), businessDayEntity, businessDayIncrement.getDescription(),
-            isNull(ticket) ? null : ticket.getNr(), businessDayIncrement.getChargeType(), businessDayIncrement.isCharged());
+            isNull(ticket) ? null : ticket.getNr(), businessDayIncrement.getChargeType(), businessDayIncrement.isBooked());
    }
 
    /**

@@ -1,5 +1,7 @@
 package com.adcubum.timerecording.core.book.result;
 
+import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+
 /**
  * Contains the result of a booking
  * 
@@ -22,4 +24,9 @@ public interface BookerResult {
     * @return the result message of the booking
     */
    String getMessage();
+
+   /**
+    * @return an instance to the booked {@link BusinessDay}
+    */
+   BusinessDay getBookedBusinessDay();
 }

@@ -20,7 +20,7 @@ import com.adcubum.timerecording.core.businessday.repository.impl.BusinessDayRep
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
-import com.adcubum.timerecording.core.work.businessday.integtest.BusinessDayIncrementBuilder;
+import com.adcubum.timerecording.core.work.businessday.builder.BusinessDayIncrementBuilder;
 import com.adcubum.timerecording.integtest.repo.TestBusinessDayRepoConfig;
 import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
@@ -38,19 +38,18 @@ class BusinessDayHelperImplIntegrationTest {
       long firstEndTimestamp = System.currentTimeMillis() + timeBetween;
       String descriptionOfFirst = "Test1";
       String descriptionOfSecond = "Test2";
-      BusinessDayIncrement firstBDayIncrement = BusinessDayIncrementBuilder.of()
-            .withDescription(descriptionOfFirst)
-            .withServiceCode(111)
-            .withTicket(TicketFactory.INSTANCE.dummy("321"))
-            .withId(UUID.randomUUID())
-            .withFlagAsBooked()
-            .withTimeSnippet(TimeSnippetBuilder.of()
-                  .withBeginTimeStamp(firstBeginTimestamp)
-                  .withEndTimeStamp(firstEndTimestamp)
-                  .build())
-            .build();
       TestCaseBuilder tcb = new TestCaseBuilder()
-            .addExistingBookedBusinessDayIncrement(firstBDayIncrement)
+            .addExistingBookedBusinessDayIncrement(BusinessDayIncrementBuilder.of()
+                  .withDescription(descriptionOfFirst)
+                  .withServiceCode(111)
+                  .withTicket(TicketFactory.INSTANCE.dummy("321"))
+                  .withId(UUID.randomUUID())
+                  .withFlagAsBooked()
+                  .withTimeSnippet(TimeSnippetBuilder.of()
+                        .withBeginTimeStamp(firstBeginTimestamp)
+                        .withEndTimeStamp(firstEndTimestamp)
+                        .build())
+                  .build())
             .build();
 
       // When

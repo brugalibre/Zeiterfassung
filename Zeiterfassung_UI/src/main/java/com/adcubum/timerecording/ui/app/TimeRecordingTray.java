@@ -34,7 +34,6 @@ import com.adcubum.timerecording.application.ApplicationLaunchException;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageType;
@@ -264,8 +263,8 @@ public class TimeRecordingTray implements LoginCallbackHandler {
     * Updates the states of the button & elements
     */
    public void updateUIStates() {
-      BusinessDayVO bussinessDayVO = TimeRecorder.INSTANCE.getBussinessDayVO();
-      ComeAndGoes comeAndGoes = bussinessDayVO.getComeAndGoes();
+      BusinessDay bussinessDay = TimeRecorder.INSTANCE.getBussinessDay();
+      ComeAndGoes comeAndGoes = bussinessDay.getComeAndGoes();
       boolean isNotBooking = !TimeRecorder.INSTANCE.isBooking();
       boolean isUserAuthenticated = AuthenticationService.INSTANCE.isUserAuthenticated();
       boolean hasNotChargedElements = TimeRecorder.INSTANCE.hasNotChargedElements();

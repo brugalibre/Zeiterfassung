@@ -22,7 +22,7 @@ import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
-import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryIntegMockUtil;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
@@ -128,10 +128,10 @@ class TimeRecorder_ExportBusinessDayTest {
       private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) throws ParseException {
          Date startDate = DateParser.parse2Date("01.01.2020 00:00", DateParser.DATE_PATTERN);
          DateTime beginTimeStamp = DateTimeFactory.createNew(startDate.getTime());
-         TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
-         timeSnippet.setBeginTimeStamp(beginTimeStamp);
-         timeSnippet.setEndTimeStamp(DateTimeFactory.createNew(startDate.getTime() + timeBetweenBeginAndEnd));
-         return timeSnippet;
+         return TimeSnippetBuilder.of()
+               .withBeginTime(beginTimeStamp)
+               .withEndTime(DateTimeFactory.createNew(startDate.getTime() + timeBetweenBeginAndEnd))
+               .build();
       }
    }
 

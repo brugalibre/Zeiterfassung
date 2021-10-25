@@ -17,46 +17,59 @@ public interface BusinessDay extends DomainModel {
 
    /**
     * Resumes the {@link #currentBussinessDayIncremental}
+    * 
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void resumeLastIncremental();
+   BusinessDay resumeLastIncremental();
 
    /**
     * triggers a manually come or go
+    * 
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void comeOrGo();
+   BusinessDay comeOrGo();
 
    /**
     * Updates a {@link ComeAndGo} for the given changed values
     * 
     * @param changedComeAndGoValue
     *        the {@link ChangedComeAndGoValue} define the changed values
-    * @return a new instance of the {@link ComeAndGoes} of this {@link BusinessDay}
+    * @return a new instance of the changed {@link BusinessDay} which contains the changed {@link ComeAndGoes}
     */
-   ComeAndGoes changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue);
+   BusinessDay changeComeAndGo(ChangedComeAndGoValue changedComeAndGoValue);
 
    /**
     * Deletes all {@link ComeAndGo}es which are done
+    * 
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void clearComeAndGoes();
+   BusinessDay clearComeAndGoes();
 
    /**
     * Flags all {@link ComeAndGo}es of the {@link BusinessDay} as recorded
+    * 
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void flagComeAndGoesAsRecorded();
+   BusinessDay flagComeAndGoesAsRecorded();
 
    /**
     * Starts a new {@link BusinessDayIncrement}. That means to create a new
     * instance of {@link DateTime} <br>
     * and forward that to the
+    * 
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void startNewIncremental();
+   BusinessDay startNewIncremental();
 
    /**
     * Stops the current incremental and add the
     * {@link #currentBussinessDayIncremental} to the list with increments. After
     * that, a new incremental is created
+    * 
+    * @return a new and changed instance of this {@link BusinessDay}
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void stopCurrentIncremental();
+   BusinessDay stopCurrentIncremental();
 
    /**
     * Removes the {@link BusinessDayIncrement} for the given id. If there is no
@@ -64,8 +77,9 @@ public interface BusinessDay extends DomainModel {
     * 
     * @param id
     *        the given id
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void removeIncrement4Id(UUID id);
+   BusinessDay removeIncrement4Id(UUID id);
 
    /**
     * Creates and adds a new {@link BusinessDayIncrement} for the given
@@ -74,8 +88,9 @@ public interface BusinessDay extends DomainModel {
     * @param update
     *        the {@link BusinessDayIncrementAdd} which defines the new
     *        {@link BusinessDayIncrement}
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void addBusinessIncrement(BusinessDayIncrementAdd update);
+   BusinessDay addBusinessIncrement(BusinessDayIncrementAdd update);
 
    /**
     * Creates and adds a new {@link BusinessDayIncrement} for the given
@@ -83,10 +98,10 @@ public interface BusinessDay extends DomainModel {
     * 
     * @param businessDayIncrementImport
     *        the {@link BusinessDayIncrementImport}
-    *        which defines the new
-    *        {@link BusinessDayIncrement}
+    *        which defines a new {@link BusinessDayIncrement} to add
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void addBusinessIncrement(BusinessDayIncrementImport businessDayIncrementImport);
+   BusinessDay addBusinessIncrement(BusinessDayIncrementImport businessDayIncrementImport);
 
    /**
     * According to the given {@link ChangedValue} the corresponding
@@ -96,26 +111,33 @@ public interface BusinessDay extends DomainModel {
     * @param changeValue
     *        the param which defines what value is changed
     * @see ValueTypes
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void changeBusinesDayIncrement(ChangedValue changeValue);
+   BusinessDay changeBusinesDayIncrement(ChangedValue changeValue);
 
    /**
     * Flags this {@link BusinessDay} as charged
+    * 
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void flagBusinessDayAsCharged();
+   BusinessDay flagBusinessDayAsCharged();
 
    /**
     * Deletes all {@link BusinessDayIncrement} which are already finished
     * Also this deletes al {@link ComeAndGo}es which are done
+    * 
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void clearFinishedIncrements();
+   BusinessDay clearFinishedIncrements();
 
    /**
     * All {@link BusinessDayIncrement}s are checked if they have a dummy-{@link Ticket} set
     * If so, this dummy-Ticket is tried to update. This can be necessary, if the jira-api was not reachable
     * during the creating of a {@link BusinessDayIncrement}
+    * 
+    * @return a new and changed instance of this {@link BusinessDay}
     */
-   void refreshDummyTickets();
+   BusinessDay refreshDummyTickets();
 
    /**
     * Returns <code>true</code> if this {@link BusinessDay} has at least one

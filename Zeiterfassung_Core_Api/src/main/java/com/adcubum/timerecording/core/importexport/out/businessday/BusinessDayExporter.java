@@ -3,7 +3,6 @@ package com.adcubum.timerecording.core.importexport.out.businessday;
 import java.util.List;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.util.parser.DateParser;
 
 /**

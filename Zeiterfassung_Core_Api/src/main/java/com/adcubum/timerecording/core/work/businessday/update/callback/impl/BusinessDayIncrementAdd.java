@@ -3,6 +3,8 @@
  */
 package com.adcubum.timerecording.core.work.businessday.update.callback.impl;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.UUID;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
@@ -83,7 +85,7 @@ public class BusinessDayIncrementAdd {
       private UUID id;
 
       public BusinessDayIncrementAddBuilder withTicket(Ticket ticket) {
-         this.ticket = ticket;
+         this.ticket = requireNonNull(ticket);
          return this;
       }
 

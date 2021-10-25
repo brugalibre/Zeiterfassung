@@ -6,13 +6,15 @@ package com.adcubum.timerecording.ui.app.pages.stopbusinessday.model;
 import static java.util.Objects.nonNull;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
+import com.adcubum.timerecording.core.work.businessday.util.BusinessDayUtil;
 import com.adcubum.timerecording.jira.constants.TicketConst;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.ComeAndGoOverviewPageModel;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.view.ComeAndGoOverviewPage;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
@@ -46,28 +48,37 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
    private BusinessDayChangedCallbackHandler businessDayChangedCallbackHandler;
 
    /**
-    * Creates a new {@link StopBusinessDayIncrementPageModelConstructorInfo} for the given {@link BusinessDayIncrementVO}
+    * Creates a new {@link StopBusinessDayIncrementPageModelConstructorInfo} for the given {@link BusinessDayIncrement}
     * This method is used from the {@link StopBusinessDayIncrementPage}
     * 
-    * @param businessDayIncrementVO
-    *        the given {@link BusinessDayIncrementVO}
+    * @param businessDayIncrement
+    *        the given {@link BusinessDayIncrement}
     * @param currentTimeSnippet
     * @return a new {@link StopBusinessDayIncrementPageModelConstructorInfo}
     */
-   public static StopBusinessDayIncrementPageModelConstructorInfo of(BusinessDayIncrementVO businessDayIncrementVO, TimeSnippet currentTimeSnippet) {
-      return new StopBusinessDayIncrementPageModelConstructorInfo(currentTimeSnippet, ZERO_MAX_TIME, businessDayIncrementVO.getTicketNumber(),
-            businessDayIncrementVO.getDescription(), businessDayIncrementVO.getTotalDurationRep(), true, true, true,
+   public static StopBusinessDayIncrementPageModelConstructorInfo of(BusinessDayIncrement businessDayIncrement, TimeSnippet currentTimeSnippet) {
+      String ticketNr = getTicketNr(businessDayIncrement);
+      return new StopBusinessDayIncrementPageModelConstructorInfo(currentTimeSnippet, ZERO_MAX_TIME, ticketNr,
+            businessDayIncrement.getDescription(), BusinessDayUtil.getTotalDurationRep(businessDayIncrement), true, true, true,
             BusinessDayChangedCallbackHandlerFactory.createNew(), TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT, TextLabel.FINISH_BUTTON_TOOLTIP_TEXT);
    }
 
+   private static String getTicketNr(BusinessDayIncrement businessDayIncrement) {
+      Ticket ticket = businessDayIncrement.getTicket();
+      if (nonNull(ticket)) {
+         return ticket.getNr();
+      }
+      return TicketConst.DEFAULT_TICKET_NAME;
+   }
+
    /**
-    * Creates a new {@link StopBusinessDayIncrementPageModelConstructorInfo} for the given {@link BusinessDayIncrementVO} and
+    * Creates a new {@link StopBusinessDayIncrementPageModelConstructorInfo} for the given {@link BusinessDayIncrement} and
     * {@link StopBusinessDayIncrementPageModel}
     * This method is used from the {@link ComeAndGoOverviewPage} if we refresh the current displayed {@link StopBusinessDayIncrementPage}.
     * In this case we have to re-use the existing values
     * 
-    * @param businessDayIncrementVO
-    *        the given {@link BusinessDayIncrementVO}
+    * @param businessDayIncrement
+    *        the given {@link BusinessDayIncrement}
     * @param existingStopBDIncPageModel
     *        the existing {@link StopBusinessDayIncrementPageModel}
     * @param currentTimeSnippet
@@ -116,8 +127,8 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
             : TicketConst.DEFAULT_TICKET_NAME;
    }
 
-   private StopBusinessDayIncrementPageModelConstructorInfo(TimeSnippet currentTimeSnippet, DateTime maxEndTime, String ticketNumber, String description,
-         String totalDurationRep, boolean isLastIncrementAmongOthers, boolean isAbortEnabled, boolean isBeginTextFieldEnabled,
+   private StopBusinessDayIncrementPageModelConstructorInfo(TimeSnippet currentTimeSnippet, DateTime maxEndTime, String ticketNumber,
+         String description, String totalDurationRep, boolean isLastIncrementAmongOthers, boolean isAbortEnabled, boolean isBeginTextFieldEnabled,
          BusinessDayChangedCallbackHandler businessDayChangedCallbackHandler, String abortButtonToolTipText, String finishContinueButtonToolTipText) {
       this.businessDayChangedCallbackHandler = businessDayChangedCallbackHandler;
       this.finishContinueButtonToolTipText = finishContinueButtonToolTipText;
@@ -160,10 +171,9 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
             end = comeAndGoTimeSnippet.getEndTimeStamp();
          }
       }
-      TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
-      timeSnippet.setBeginTimeStamp(begin);
-      timeSnippet.setEndTimeStamp(end);
-      return timeSnippet;
+      return TimeSnippetFactory.createNew()
+            .setBeginTimeStamp(begin)
+            .setEndTimeStamp(end);
    }
 
    public boolean isAbortEnabled() {

@@ -60,13 +60,10 @@ public class BookerHelper implements BookerAdapter, UserAuthenticatedObservable 
    public BookerResult book(BusinessDay businessDay) {
       List<String> content2Charge = createBookContent(businessDay);
       bookInternal(content2Charge);
-      flagBusinessDayAsCharged(businessDay);
-      return new BookerHelperResult();
+      BusinessDay bookedBusinessDay = businessDay.flagBusinessDayAsCharged();
+      return new BookerHelperResult(bookedBusinessDay);
    }
 
-   private void flagBusinessDayAsCharged(BusinessDay businessDay) {
-      businessDay.flagBusinessDayAsCharged();
-   }
 
    /*
     * Does the actual charging

@@ -1,6 +1,7 @@
 package com.adcubum.timerecording.api.businessday.history;
 
 
+import static com.adcubum.timerecording.api.businessday.history.BusinessDayIntegTestUtil.createNewBookedBusinessDayAtLocalDate;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -16,13 +17,8 @@ import org.springframework.test.context.TestPropertySource;
 import com.adcubum.timerecording.application.TimeRecordingApplication;
 import com.adcubum.timerecording.application.TimeRecordingRepositoryConfig;
 import com.adcubum.timerecording.core.businessday.repository.impl.BusinessDayRepositoryImpl;
-import com.adcubum.timerecording.core.work.businessday.BusinessDay;
-import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
-import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
-import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
 import com.adcubum.timerecording.model.businessday.history.BusinessDayHistoryDto;
 import com.adcubum.timerecording.model.businessday.history.BusinessDayHistoryOverviewDto;
-import com.adcubum.timerecording.work.date.TimeBuilder;
 
 @SpringBootTest(classes = TimeRecordingApplication.class)
 @Import(value = TimeRecordingRepositoryConfig.class)
@@ -40,8 +36,8 @@ class BusinessDayHistoryControllerIntegrationTest {
       int anotherDateTimeSnippetDuration = 3;
       LocalDate anotherDate = getAnotherDate(now);
       BusinessDayRepositoryImpl businessDayRepository = new BusinessDayRepositoryImpl();
-      createNewAnddAddNewBusinessIncrementAndSave(now, "test", businessDayRepository, nowTimeSnippetDuration);
-      createNewAnddAddNewBusinessIncrementAndSave(anotherDate, "test", businessDayRepository, anotherDateTimeSnippetDuration);
+      createNewBookedBusinessDayAtLocalDate(now, "test", businessDayRepository, nowTimeSnippetDuration);
+      createNewBookedBusinessDayAtLocalDate(anotherDate, "test", businessDayRepository, anotherDateTimeSnippetDuration);
 
       // When
       BusinessDayHistoryOverviewDto businessDayHistoryOverviewDto = businessDayHistoryController.getBusinessDayHistoryDto();
@@ -72,34 +68,5 @@ class BusinessDayHistoryControllerIntegrationTest {
          anothersDateDay--;
       }
       return LocalDate.of(now.getYear(), now.getMonthValue(), anothersDateDay);
-   }
-
-   private void createNewAnddAddNewBusinessIncrementAndSave(LocalDate date, String description, BusinessDayRepositoryImpl businessDayRepository,
-         int timeSnippetDurationInHours) {
-      BusinessDay businessDay = businessDayRepository.createNew(true);
-      int hour = 12;
-      businessDay.addBusinessIncrement(new BusinessDayIncrementAddBuilder()
-            .withDescription(description)
-            .withServiceCode(113)
-            .withTicket(TicketFactory.INSTANCE.dummy("123"))
-            .withTimeSnippet(TimeSnippetBuilder.of()
-                  .withBeginTime(TimeBuilder.of()
-                        .withYear(date.getYear())
-                        .withMonth(date.getMonthValue() - 1)
-                        .withDay(date.getDayOfMonth())
-                        .withHour(hour)
-                        .withMinute(45)
-                        .build())
-                  .withEndTime(TimeBuilder.of()
-                        .withYear(date.getYear())
-                        .withMonth(date.getMonthValue() - 1)
-                        .withDay(date.getDayOfMonth())
-                        .withHour(hour + timeSnippetDurationInHours)
-                        .withMinute(45)
-                        .build())
-                  .build())
-            .build());
-      businessDay.flagBusinessDayAsCharged();
-      businessDayRepository.save(businessDay);
    }
 }

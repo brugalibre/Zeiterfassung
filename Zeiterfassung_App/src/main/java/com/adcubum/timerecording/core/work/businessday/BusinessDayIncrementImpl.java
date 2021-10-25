@@ -5,6 +5,7 @@ package com.adcubum.timerecording.core.work.businessday;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +22,7 @@ import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.NumberFormat;
+import com.adcubum.util.utils.StringUtil;
 
 /**
  * A {@link BusinessDayImpl} consist of one or more {@link BusinessDayIncrement}.
@@ -37,7 +39,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    private String description;
    private Ticket ticket;
    private int chargeType;
-   private boolean isCharged;
+   private boolean isBooked;
 
    /**
     * Constructor used by the factory
@@ -49,7 +51,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
       this.description = description;
       this.ticket = ticket;
       this.chargeType = chargeType;
-      this.isCharged = isCharged;
+      this.isBooked = isCharged;
    }
 
    /**
@@ -64,22 +66,25 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     * @param beginTimeStamp
     */
    @Override
-   public void startCurrentTimeSnippet(DateTime beginTimeStamp) {
-      currentTimeSnippet = TimeSnippetFactory.createNew();
-      currentTimeSnippet.setBeginTimeStamp(beginTimeStamp);
+   public BusinessDayIncrement startCurrentTimeSnippet(DateTime beginTimeStamp) {
+      TimeSnippet newCurrentTimeSnippet = TimeSnippetFactory.createNew()
+            .setBeginTimeStamp(beginTimeStamp);
+      return createNewBusinessDayIncrement(newCurrentTimeSnippet);
    }
 
    /**
     * @param endTimeStamp
     */
    @Override
-   public void stopCurrentTimeSnippet(DateTime endTimeStamp) {
-      currentTimeSnippet.setEndTimeStamp(endTimeStamp);
+   public BusinessDayIncrement stopCurrentTimeSnippet(DateTime endTimeStamp) {
+      TimeSnippet changedCurrentTimeSnippet = currentTimeSnippet.setEndTimeStamp(endTimeStamp);
+      return createNewBusinessDayIncrement(changedCurrentTimeSnippet);
    }
 
    @Override
-   public void resumeLastTimeSnippet() {
-      currentTimeSnippet.setEndTimeStamp(null);
+   public BusinessDayIncrement resumeLastTimeSnippet() {
+      TimeSnippet changedCurrentTimeSnippet = currentTimeSnippet.setEndTimeStamp(null);
+      return createNewBusinessDayIncrement(changedCurrentTimeSnippet);
    }
 
    @Override
@@ -93,15 +98,20 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    }
 
    @Override
-   public void flagAsCharged() {
-      this.isCharged = true;
+   public BusinessDayIncrement flagAsBooked() {
+      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
+      businessDayIncrementImplCopy.isBooked = true;
+      return businessDayIncrementImplCopy;
    }
 
    @Override
-   public void refreshDummyTicket() {
-      if (nonNull(ticket) && ticket.isDummyTicket()) {
-         this.ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticket.getNr());
+   public BusinessDayIncrement refreshDummyTicket() {
+      if (ticket.isDummyTicket()) {
+         BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
+         businessDayIncrementImplCopy.ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticket.getNr());
+         return businessDayIncrementImplCopy;
       }
+      return this;
    }
 
    /**
@@ -131,8 +141,15 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    }
 
    @Override
-   public void setDescription(String description) {
-      this.description = description;
+   public BusinessDayIncrement setDescription(String description) {
+      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
+      businessDayIncrementImplCopy.description = description;
+      return businessDayIncrementImplCopy;
+   }
+
+   @Override
+   public boolean hasDescription() {
+      return StringUtil.isNotEmptyOrNull(getDescription());
    }
 
    /**
@@ -142,9 +159,12 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     *        the new representation of a charge type
     */
    @Override
-   public void setServiceCode4Description(String chargeTypeRep) {
+   public BusinessDayIncrement setServiceCode4Description(String chargeTypeRep) {
+      requireNonNull(chargeTypeRep);
       ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
-      this.chargeType = serviceCodeAdapter.getServiceCode4Description(chargeTypeRep);
+      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
+      businessDayIncrementImplCopy.chargeType = serviceCodeAdapter.getServiceCode4Description(chargeTypeRep);
+      return businessDayIncrementImplCopy;
    }
 
    @Override
@@ -154,8 +174,10 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    }
 
    @Override
-   public void setServiceCode(int chargeType) {
-      this.chargeType = chargeType;
+   public BusinessDayIncrement setServiceCode(int chargeType) {
+      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
+      businessDayIncrementImplCopy.chargeType = chargeType;
+      return businessDayIncrementImplCopy;
    }
 
    @Override
@@ -164,9 +186,12 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    }
 
    @Override
-   public void setTicket(Ticket ticket) {
-      this.ticket = ticket;
+   public BusinessDayIncrement setTicket(Ticket ticket) {
+      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
+      businessDayIncrementImplCopy.ticket = requireNonNull(ticket);
+      return businessDayIncrementImplCopy;
    }
+
 
    @Override
    public int getChargeType() {
@@ -174,8 +199,8 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    }
 
    @Override
-   public boolean isCharged() {
-      return isCharged;
+   public boolean isBooked() {
+      return isBooked;
    }
 
    @Override
@@ -184,13 +209,27 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    }
 
    @Override
-   public void updateBeginTimeSnippetAndCalculate(String newTimeStampValue) {
-      currentTimeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue, true);
+   public BusinessDayIncrement updateBeginTimeSnippetAndCalculate(String newTimeStampValue) {
+      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
+      TimeSnippet changedCurrentTimeSnippet = currentTimeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue, true);
+      businessDayIncrementImplCopy.currentTimeSnippet = changedCurrentTimeSnippet;
+      return businessDayIncrementImplCopy;
    }
 
    @Override
-   public void updateEndTimeSnippetAndCalculate(String newTimeStampValue) {
-      currentTimeSnippet.updateAndSetEndTimeStamp(newTimeStampValue, true);
+   public BusinessDayIncrement updateEndTimeSnippetAndCalculate(String newTimeStampValue) {
+      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
+      TimeSnippet changedCurrentTimeSnippet = currentTimeSnippet.updateAndSetEndTimeStamp(newTimeStampValue, true);
+      businessDayIncrementImplCopy.currentTimeSnippet = changedCurrentTimeSnippet;
+      return businessDayIncrementImplCopy;
+   }
+
+   @Override
+   public BusinessDayIncrement addAdditionallyTime(float time2Add) {
+      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
+      TimeSnippet changedCurrentTimeSnippet = currentTimeSnippet.addAdditionallyTime(String.valueOf(time2Add));
+      businessDayIncrementImplCopy.currentTimeSnippet = changedCurrentTimeSnippet;
+      return businessDayIncrementImplCopy;
    }
 
    @Override
@@ -205,7 +244,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
       result = prime * result + chargeType;
       result = prime * result + ((currentTimeSnippet == null) ? 0 : currentTimeSnippet.hashCode());
       result = prime * result + ((description == null) ? 0 : description.hashCode());
-      result = prime * result + (isCharged ? 1231 : 1237);
+      result = prime * result + (isBooked ? 1231 : 1237);
       result = prime * result + ((ticket == null) ? 0 : ticket.hashCode());
       return result;
    }
@@ -231,7 +270,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
             return false;
       } else if (!description.equals(other.description))
          return false;
-      if (isCharged != other.isCharged)
+      if (isBooked != other.isBooked)
          return false;
       if (ticket == null) {
          if (other.ticket != null)
@@ -239,6 +278,16 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
       } else if (!ticket.equals(other.ticket))
          return false;
       return true;
+   }
+
+   private BusinessDayIncrement createNewBusinessDayIncrement(TimeSnippet changedCurrentTimeSnippet) {
+      BusinessDayIncrementImpl copy = createCopy();
+      copy.currentTimeSnippet = changedCurrentTimeSnippet;
+      return copy;
+   }
+
+   private BusinessDayIncrementImpl createCopy() {
+      return (BusinessDayIncrementImpl) BusinessDayIncrementImpl.of(this);
    }
 
    /**
@@ -253,12 +302,11 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
 
       BusinessDayIncrementImpl businessDayIncremental = new BusinessDayIncrementImpl();
       businessDayIncremental.id = update.getId();
-      businessDayIncremental.setDescription(update.getDescription());
-      businessDayIncremental.setTicket(update.getTicket());
-      businessDayIncremental.setServiceCode(update.getKindOfService());
-      businessDayIncremental.startCurrentTimeSnippet(update.getTimeSnippet().getBeginTimeStamp());
-      businessDayIncremental.stopCurrentTimeSnippet(update.getTimeSnippet().getEndTimeStamp());
-      return businessDayIncremental;
+      return businessDayIncremental.setDescription(update.getDescription())
+            .setTicket(update.getTicket())
+            .setServiceCode(update.getKindOfService())
+            .startCurrentTimeSnippet(update.getTimeSnippet().getBeginTimeStamp())
+            .stopCurrentTimeSnippet(update.getTimeSnippet().getEndTimeStamp());
    }
 
    /**
@@ -271,24 +319,33 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    public static BusinessDayIncrement of(BusinessDayIncrementImport businessDayIncrementImport) {
 
       List<TimeSnippet> timeSnippets2Add = businessDayIncrementImport.getTimeSnippets();
-      BusinessDayIncrement businessDayIncremental = new BusinessDayIncrementImpl();
-      businessDayIncremental.setDescription(businessDayIncrementImport.getDescription());
       TicketBacklog ticketBacklog = TicketBacklogSPI.getTicketBacklog();
-      businessDayIncremental.setTicket(ticketBacklog.getTicket4Nr(businessDayIncrementImport.getTicketNo()));
-      businessDayIncremental.setServiceCode(businessDayIncrementImport.getKindOfService());
+      BusinessDayIncrement businessDayIncremental = new BusinessDayIncrementImpl()
+            .setDescription(businessDayIncrementImport.getDescription())
+            .setTicket(ticketBacklog.getTicket4Nr(businessDayIncrementImport.getTicketNo()))
+            .setServiceCode(businessDayIncrementImport.getKindOfService());
 
       for (TimeSnippet timeSnippet : timeSnippets2Add) {
-         businessDayIncremental.startCurrentTimeSnippet(timeSnippet.getBeginTimeStamp());
-         businessDayIncremental.stopCurrentTimeSnippet(timeSnippet.getEndTimeStamp());
+         businessDayIncremental = businessDayIncremental
+               .startCurrentTimeSnippet(timeSnippet.getBeginTimeStamp())
+               .stopCurrentTimeSnippet(timeSnippet.getEndTimeStamp());
       }
       return businessDayIncremental;
    }
 
-   public static BusinessDayIncrement of(BusinessDayIncrement otherBussinessDayIncremental) {
+   public static BusinessDayIncrement of(BusinessDayIncrement otherBussinessDayIncremental, boolean fullCopy) {
       BusinessDayIncrementImpl businessDayIncrementImpl = new BusinessDayIncrementImpl();
-      if (nonNull(otherBussinessDayIncremental)) {
+      if (nonNull(otherBussinessDayIncremental) && fullCopy) {
          businessDayIncrementImpl.id = otherBussinessDayIncremental.getId();
+         businessDayIncrementImpl.description = otherBussinessDayIncremental.getDescription();
+         businessDayIncrementImpl.ticket = otherBussinessDayIncremental.getTicket();
+         businessDayIncrementImpl.chargeType = otherBussinessDayIncremental.getChargeType();
+         businessDayIncrementImpl.currentTimeSnippet = otherBussinessDayIncremental.getCurrentTimeSnippet();
       }
       return businessDayIncrementImpl;
+   }
+
+   public static BusinessDayIncrement of(BusinessDayIncrement otherBussinessDayIncremental) {
+      return of(otherBussinessDayIncremental, true);
    }
 }

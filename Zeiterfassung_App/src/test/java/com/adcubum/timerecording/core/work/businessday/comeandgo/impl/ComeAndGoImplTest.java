@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
@@ -23,10 +22,10 @@ class ComeAndGoImplTest extends BaseTestWithSettings {
 
       // When
       Executable exe = () -> {
-         ComeAndGo comeAndGo = ComeAndGoImpl.of();
-         comeAndGo = comeAndGo.comeOrGo(DateTimeFactory.createNew());
-         comeAndGo = comeAndGo.comeOrGo(DateTimeFactory.createNew());// this comeAndGo is done by now
-         comeAndGo.comeOrGo(DateTimeFactory.createNew());
+         ComeAndGoImpl.of()
+               .comeOrGo(DateTimeFactory.createNew())
+               .comeOrGo(DateTimeFactory.createNew()) // this comeAndGo is done by now
+               .comeOrGo(DateTimeFactory.createNew());
       };
 
       // Then
@@ -36,16 +35,16 @@ class ComeAndGoImplTest extends BaseTestWithSettings {
    @Test
    void testRepresentationOfADoneComeOrGo() {
       // Given
-      ComeAndGo comeAndGo = ComeAndGoImpl.of();
       String expectedRepresentation = "00:10 / 00:11";
 
       DateTime beginTimeStamp = getTime(10);
       DateTime endTimeStamp = getTime(11);
 
       // When
-      comeAndGo = comeAndGo.comeOrGo(beginTimeStamp);
-      comeAndGo = comeAndGo.comeOrGo(endTimeStamp);
-      String actualRepresentation = comeAndGo.toString();
+      String actualRepresentation = ComeAndGoImpl.of()
+            .comeOrGo(beginTimeStamp)
+            .comeOrGo(endTimeStamp)
+            .toString();
 
       // Then
       assertThat(actualRepresentation, is(expectedRepresentation));
@@ -54,14 +53,14 @@ class ComeAndGoImplTest extends BaseTestWithSettings {
    @Test
    void testRepresentationOfAUnfinishedComeOrGo() {
       // Given
-      ComeAndGo comeAndGo = ComeAndGoImpl.of();
       String expectedRepresentation = "00:10 / -";
 
       DateTime beginTimeStamp = getTime(10);
 
       // When
-      comeAndGo = comeAndGo.comeOrGo(beginTimeStamp);
-      String actualRepresentation = comeAndGo.toString();
+      String actualRepresentation = ComeAndGoImpl.of()
+            .comeOrGo(beginTimeStamp)
+            .toString();
 
       // Then
       assertThat(actualRepresentation, is(expectedRepresentation));
@@ -70,17 +69,17 @@ class ComeAndGoImplTest extends BaseTestWithSettings {
    @Test
    void testRepresentationOfAFinishedRecordedComeOrGo() {
       // Given
-      ComeAndGo comeAndGo = ComeAndGoImpl.of();
       String expectedRepresentation = "00:10 / 00:11 " + TextLabel.EXISTS_RECORD_FOR_COME_AND_GO;
 
       DateTime beginTimeStamp = getTime(10);
       DateTime endTimeStamp = getTime(11);
 
       // When
-      comeAndGo = comeAndGo.comeOrGo(beginTimeStamp);
-      comeAndGo = comeAndGo.comeOrGo(endTimeStamp);
-      comeAndGo = comeAndGo.flagAsRecorded();
-      String actualRepresentation = comeAndGo.toString();
+      String actualRepresentation = ComeAndGoImpl.of()
+            .comeOrGo(beginTimeStamp)
+            .comeOrGo(endTimeStamp)
+            .flagAsRecorded()
+            .toString();
 
       // Then
       assertThat(actualRepresentation, is(expectedRepresentation));

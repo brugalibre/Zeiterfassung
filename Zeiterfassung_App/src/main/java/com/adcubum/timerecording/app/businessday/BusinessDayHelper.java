@@ -51,8 +51,9 @@ public interface BusinessDayHelper extends BusinessDayHistoryOverviewResolver {
     * 
     * @param increments
     *        the {@link BusinessDayIncrement} to check and add the booked ones
+    * @return the created or existing booked {@link BusinessDay} for the given booked {@link BusinessDayIncrement}s
     */
-   void addBookedBusinessDayIncrements(List<BusinessDayIncrement> increments);
+   BusinessDay addBookedBusinessDayIncrements(List<BusinessDayIncrement> increments);
 
    /**
     * Delete all {@link BusinessDay} which are either booked or not booked, depending on the given parameter

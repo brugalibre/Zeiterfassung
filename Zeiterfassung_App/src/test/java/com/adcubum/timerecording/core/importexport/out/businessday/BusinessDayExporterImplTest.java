@@ -10,9 +10,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
-import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
@@ -35,8 +36,8 @@ class BusinessDayExporterImplTest {
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
       BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, chargeType, getTicket4Nr(ticketNr), description);
 
-      BusinessDayImpl businessDay = new BusinessDayImpl();
-      businessDay.addBusinessIncrement(firstInc);
+      BusinessDay businessDay = new BusinessDayImpl()
+            .addBusinessIncrement(firstInc);
 
       // When
       List<String> content4TurboBucher = BusinessDayExporterImpl.INSTANCE.collectContent4Booking(businessDay);
@@ -64,9 +65,9 @@ class BusinessDayExporterImplTest {
    private TimeSnippet createTimeSnippet(long startTime, long stopTime) {
       DateTime beginTimeStamp = DateTimeFactory.createNew(startTime);
       DateTime endTimeStamp = DateTimeFactory.createNew(stopTime);
-      TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
-      timeSnippet.setBeginTimeStamp(beginTimeStamp);
-      timeSnippet.setEndTimeStamp(endTimeStamp);
-      return timeSnippet;
+      return TimeSnippetBuilder.of()
+            .withBeginTime(beginTimeStamp)
+            .withEndTime(endTimeStamp)
+            .build();
    }
 }

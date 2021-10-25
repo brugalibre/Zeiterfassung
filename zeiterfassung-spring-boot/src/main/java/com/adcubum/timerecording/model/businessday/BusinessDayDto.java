@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
 import com.adcubum.util.parser.DateParser;
 import com.adcubum.util.parser.NumberFormat;
 
@@ -59,11 +58,11 @@ public class BusinessDayDto {
    }
 
    /**
-    * Creates a new {@link BusinessDayVO} for the given {@link BusinessDay}
+    * Creates a new {@link BusinessDay} for the given {@link BusinessDay}
     * 
     * @param businessDay
     *        the given {@link BusinessDay}
-    * @return a new {@link BusinessDayVO}
+    * @return a new {@link BusinessDay}
     */
    public static BusinessDayDto of(BusinessDay businessDay) {
       return new BusinessDayDto(businessDay, DateParser.DD_MM_YYYY);

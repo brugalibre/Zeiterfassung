@@ -4,17 +4,20 @@
 package com.adcubum.timerecording.core.importexport.out.businessday;
 
 import static com.adcubum.util.parser.DateParser.DD_MM_YYYY;
+import static java.util.Objects.nonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
+import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVO;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayVOImpl;
+import com.adcubum.timerecording.core.work.businessday.util.BusinessDayUtil;
 import com.adcubum.util.parser.DateParser;
 
 public class BusinessDayExporterImpl implements BusinessDayExporter {
@@ -32,7 +35,6 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
    public List<String> exportBusinessDay(BusinessDay bussinessDay) {
       StringBuilder builder = new StringBuilder();
       List<String> content = new ArrayList<>();
-      BusinessDayVO bussinessDayVO = BusinessDayVOImpl.of(bussinessDay);
 
       // First line to mark the date, when the time was recorded
       builder.append(DateParser.parse2String(bussinessDay.getDateTime(), DATE_REP_PATTERN));
@@ -42,13 +44,13 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
       appendTitleHeaderCells(builder);
 
       // = For each 'Ticket' or Increment of an entire Day
-      for (BusinessDayIncrementVO inc : bussinessDayVO.getBusinessDayIncrements()) {
+      for (BusinessDayIncrement inc : bussinessDay.getIncrements()) {
          builder.append(TextLabel.TICKET + ": ");
-         builder.append(inc.getTicketNumber());
+         builder.append(inc.getTicket().getNr());
          builder.append(CONTENT_SEPPARATOR);
          builder.append(inc.getDescription());
          builder.append(CONTENT_SEPPARATOR);
-         builder.append(inc.getTotalDurationRep());
+         builder.append(BusinessDayUtil.getTotalDurationRep(inc));
          builder.append(CONTENT_SEPPARATOR);
 
          TimeSnippet snippet = inc.getCurrentTimeSnippet();
@@ -57,7 +59,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
          builder.append(CONTENT_SEPPARATOR);
          builder.append(snippet.getEndTimeStampRep());
          builder.append(CONTENT_SEPPARATOR);
-         builder.append(inc.getServiceCodeDescription4ServiceCode());
+         builder.append(getServiceCodeDescription4ServiceCode(inc));
          builder.append(CONTENT_SEPPARATOR);
          builder.append(inc.isBooked() ? TextLabel.YES : TextLabel.NO);
 
@@ -66,9 +68,18 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
          builder.delete(0, builder.capacity());
       }
       builder.append(System.getProperty(LINE_SEPARATOR));
-      builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + bussinessDayVO.getTotalDurationRep());
+      builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + BusinessDayUtil.getTotalDurationRep(bussinessDay));
       content.add(builder.toString());
       return content;
+   }
+
+   private String getServiceCodeDescription4ServiceCode(BusinessDayIncrement businessDayIncrement) {
+      return getServiceCodeDescProvider().apply(businessDayIncrement.getChargeType());
+   }
+
+   private static Function<Integer, String> getServiceCodeDescProvider() {
+      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
+      return serviceCodeAdapter::getServiceCodeDescription4ServiceCode;
    }
 
    private void appendTitleHeaderCells(StringBuilder builder) {
@@ -100,18 +111,17 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
 
       StringBuilder builder = new StringBuilder();
       List<String> content = new ArrayList<>();
-      BusinessDayVO bussinessDayVO = BusinessDayVOImpl.of(bussinessDay);
-      List<BusinessDayIncrementVO> notChargedIncrements = getNotChargedIncrements(bussinessDayVO);
-      for (BusinessDayIncrementVO inc : notChargedIncrements) {
-         builder.append(inc.getTicketNumber());
+      List<BusinessDayIncrement> notChargedIncrements = getNotChargedIncrements(bussinessDay);
+      for (BusinessDayIncrement inc : notChargedIncrements) {
+         builder.append(inc.getTicket().getNr());
          builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
          builder.append(inc.getChargeType());
          builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
-         builder.append(inc.getTotalDurationRep());
+         builder.append(BusinessDayUtil.getTotalDurationRep(inc));
          builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 
          builder.append(DateParser.parse2String(bussinessDay.getDateTime(), DD_MM_YYYY));
-         if (inc.hasDescription()) {
+         if (nonNull(inc.getDescription())) {
             builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
             builder.append(inc.getDescription());
          }
@@ -122,8 +132,8 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
       return content;
    }
 
-   private List<BusinessDayIncrementVO> getNotChargedIncrements(BusinessDayVO bussinessDay) {
-      return bussinessDay.getBusinessDayIncrements()//
+   private List<BusinessDayIncrement> getNotChargedIncrements(BusinessDay bussinessDay) {
+      return bussinessDay.getIncrements()//
             .stream()//
             .filter(bDayInc -> !bDayInc.isBooked())//
             .collect(Collectors.toList());

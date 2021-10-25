@@ -38,11 +38,11 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
                   .withTicket(mockTicket(true, "6848"))
                   .build())
             .build();
-      businessDay.comeOrGo();
 
       // When
-      ComeAndGoes comeAndGoes = businessDay.getComeAndGoes();
-      List<ComeAndGo> comeAndGoesEntries = comeAndGoes.getComeAndGoEntries();
+      List<ComeAndGo> comeAndGoesEntries = businessDay.comeOrGo()
+            .getComeAndGoes()
+            .getComeAndGoEntries();
 
       // Then
       assertThat(comeAndGoesEntries.size(), is(1));

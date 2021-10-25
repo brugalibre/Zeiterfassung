@@ -38,8 +38,8 @@ class TimeSnippetTest {
    @Test
    void testGetDurationRepTimeSnipptetWithoutEnd() {
       // Given
-      TimeSnippet timeSnippet = TimeSnippetFactory.createNew();
-      timeSnippet.setBeginTimeStamp(DateTimeFactory.createNew());
+      TimeSnippet timeSnippet = TimeSnippetFactory.createNew()
+            .setBeginTimeStamp(DateTimeFactory.createNew());
       String expectedDurationRep = "0";
 
       // When

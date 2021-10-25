@@ -7,11 +7,10 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.core.work.businessday.vo.BusinessDayIncrementVO;
 
 /**
- * The {@link BusinessDayIncrementVO} is used whenever a we need
- * {@link BusinessDayIncrement} for displaying or exporting. The {@link BusinessDayIncrementVO} is read only
+ * The {@link BusinessDayIncrement} is used whenever a we need
+ * {@link BusinessDayIncrement} for displaying or exporting. The {@link BusinessDayIncrement} is read only
  * 
  * @author Dominic
  *
