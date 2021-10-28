@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
-import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.integtest.BaseTestWithSettings;
 
@@ -23,8 +22,7 @@ class BusinessDayIntegrationTest extends BaseTestWithSettings {
             .startNewIncremental();
       TimeUnit.MINUTES.sleep(1);// hihihi sonar doesn't get it, that this will also call Thread.sleep
       businessDay = businessDay.stopCurrentIncremental();
-      BusinessDayIncrement currentBussinessDayIncremental = businessDay.getCurrentBussinessDayIncremental();
-      TimeSnippet currentTimeSnippet = currentBussinessDayIncremental.getCurrentTimeSnippet();
+      TimeSnippet currentTimeSnippet = businessDay.getCurrentTimeSnippet();
       String amountOfHours = " (0.02h)";
 
       // When

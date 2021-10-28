@@ -12,15 +12,14 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
-import com.adcubum.timerecording.core.work.businessday.util.BusinessDayUtil;
 import com.adcubum.timerecording.jira.constants.TicketConst;
-import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.ComeAndGoOverviewPageModel;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.view.ComeAndGoOverviewPage;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.timerecording.work.date.DateTimeUtil;
+import com.adcubum.util.parser.NumberFormat;
 
 /**
  * The {@link StopBusinessDayIncrementPageModelConstructorInfo} acts as a container for the {@link StopBusinessDayIncrementPageModel}
@@ -51,24 +50,14 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
     * Creates a new {@link StopBusinessDayIncrementPageModelConstructorInfo} for the given {@link BusinessDayIncrement}
     * This method is used from the {@link StopBusinessDayIncrementPage}
     * 
-    * @param businessDayIncrement
-    *        the given {@link BusinessDayIncrement}
     * @param currentTimeSnippet
     * @return a new {@link StopBusinessDayIncrementPageModelConstructorInfo}
     */
-   public static StopBusinessDayIncrementPageModelConstructorInfo of(BusinessDayIncrement businessDayIncrement, TimeSnippet currentTimeSnippet) {
-      String ticketNr = getTicketNr(businessDayIncrement);
+   public static StopBusinessDayIncrementPageModelConstructorInfo of(TimeSnippet currentTimeSnippet) {
+      String ticketNr = TicketConst.DEFAULT_TICKET_NAME;
       return new StopBusinessDayIncrementPageModelConstructorInfo(currentTimeSnippet, ZERO_MAX_TIME, ticketNr,
-            businessDayIncrement.getDescription(), BusinessDayUtil.getTotalDurationRep(businessDayIncrement), true, true, true,
+            "", NumberFormat.format(currentTimeSnippet.getDuration()), true, true, true,
             BusinessDayChangedCallbackHandlerFactory.createNew(), TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT, TextLabel.FINISH_BUTTON_TOOLTIP_TEXT);
-   }
-
-   private static String getTicketNr(BusinessDayIncrement businessDayIncrement) {
-      Ticket ticket = businessDayIncrement.getTicket();
-      if (nonNull(ticket)) {
-         return ticket.getNr();
-      }
-      return TicketConst.DEFAULT_TICKET_NAME;
    }
 
    /**

@@ -12,7 +12,7 @@ public class TimeRecorderHelper {
    }
 
    /**
-    * Evaluates the {@link WorkStates} of the {@link TimeRecorder} depending on the {@link BusinessDay#getCurrentBussinessDayIncremental()}
+    * Evaluates the {@link WorkStates} of the {@link TimeRecorder} depending on the {@link BusinessDay#getCurrentTimeSnippet()}
     * That means, if there is a non finished {@link TimeSnippet} on the current {@link BusinessDayIncrement}, {@link WorkStates#WORKING} is
     * returned.
     * 

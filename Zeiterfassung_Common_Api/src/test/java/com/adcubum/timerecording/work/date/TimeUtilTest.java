@@ -17,14 +17,14 @@ class TimeUtilTest {
       // Given
       int firstDayInPeriod = 3;
       int lastDayInPeriod = 15;
-      DateTime lowerBounds = TimeBuilder.of()
+      DateTime lowerBounds = DateTimeBuilder.of()
             .withDay(firstDayInPeriod)
             .withMonth(1)
             .withYear(2020)
             .withHour(15)
             .withMinute(0)
             .build();
-      DateTime upperBounds = TimeBuilder.of()
+      DateTime upperBounds = DateTimeBuilder.of()
             .withDay(lastDayInPeriod)
             .withMonth(1)
             .withYear(2020)
@@ -51,14 +51,14 @@ class TimeUtilTest {
       int firstDayInPeriod = 3;
       int lastDayInPeriod = 28;
       int expectedDaysBetween = 57;
-      DateTime lowerBounds = TimeBuilder.of()
+      DateTime lowerBounds = DateTimeBuilder.of()
             .withDay(firstDayInPeriod)
             .withMonth(2)
             .withYear(2020)
             .withHour(15)
             .withMinute(0)
             .build();
-      DateTime upperBounds = TimeBuilder.of()
+      DateTime upperBounds = DateTimeBuilder.of()
             .withDay(lastDayInPeriod)
             .withMonth(3)
             .withYear(2020)
@@ -83,7 +83,7 @@ class TimeUtilTest {
 
       // Given
       int year = 2021;
-      DateTime time = TimeBuilder.of()
+      DateTime time = DateTimeBuilder.of()
             .withDay(1)
             .withMonth(0)
             .withYear(year)
@@ -107,7 +107,7 @@ class TimeUtilTest {
       // Given
       int year = 2021;
       int month = 1;
-      DateTime time = TimeBuilder.of()
+      DateTime time = DateTimeBuilder.of()
             .withDay(1)
             .withMonth(month)
             .withYear(year)
@@ -129,7 +129,7 @@ class TimeUtilTest {
    void isBefore() {
 
       // Given
-      DateTime time2Check = TimeBuilder.of()
+      DateTime time2Check = DateTimeBuilder.of()
             .withDay(1)
             .withMonth(1)
             .withYear(2020)
@@ -148,14 +148,14 @@ class TimeUtilTest {
    void isAfter() {
 
       // Given
-      DateTime time2Check = TimeBuilder.of()
+      DateTime time2Check = DateTimeBuilder.of()
             .withDay(1)
             .withMonth(1)
             .withYear(2021)
             .withHour(15)
             .withMinute(0)
             .build();
-      DateTime referenceTime = TimeBuilder.of()
+      DateTime referenceTime = DateTimeBuilder.of()
             .withDay(1)
             .withMonth(1)
             .withYear(2020)
@@ -174,14 +174,14 @@ class TimeUtilTest {
    void isEqual() {
 
       // Given
-      DateTime time2Check = TimeBuilder.of()
+      DateTime time2Check = DateTimeBuilder.of()
             .withDay(1)
             .withMonth(1)
             .withYear(2020)
             .withHour(15)
             .withMinute(0)
             .build();
-      DateTime referenceTime = TimeBuilder.of()
+      DateTime referenceTime = DateTimeBuilder.of()
             .withDay(1)
             .withMonth(1)
             .withYear(2020)

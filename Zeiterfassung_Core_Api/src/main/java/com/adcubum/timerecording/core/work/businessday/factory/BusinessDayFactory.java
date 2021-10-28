@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.adcubum.timerecording.core.factory.AbstractFactory;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 
 /**
@@ -31,14 +32,14 @@ public class BusinessDayFactory extends AbstractFactory {
     *        <code>true</code> if this {@link BusinessDay} is already booked and therefore is read-only or <code>false</code> if not
     * @param increments
     *        the {@link BusinessDayIncrement}s of this {@link BusinessDay}
-    * @param currentBDIncrement
-    *        the current {@link BusinessDayIncrement}
+    * @param currentTimeSnippet
+    *        the current {@link TimeSnippet}
     * @param comeAndGoes
     *        the {@link ComeAndGoes}
     * @return a new {@link BusinessDay} instance
     */
-   public static BusinessDay createNew(UUID id, boolean isBooked, List<BusinessDayIncrement> increments, BusinessDayIncrement currentBDIncrement,
+   public static BusinessDay createNew(UUID id, boolean isBooked, List<BusinessDayIncrement> increments, TimeSnippet currentTimeSnippet,
          ComeAndGoes comeAndGoes) {
-      return INSTANCE.createNewWithAgruments(BEAN_NAME, id, isBooked, increments, currentBDIncrement, comeAndGoes);
+      return INSTANCE.createNewWithAgruments(BEAN_NAME, id, isBooked, increments, currentTimeSnippet, comeAndGoes);
    }
 }

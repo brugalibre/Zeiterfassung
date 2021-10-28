@@ -294,9 +294,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       boolean actualHasContent = timeRecorderImpl.hasContent();
       assertThat(bussinessDay.getIncrements().isEmpty(), is(true));
       assertThat(actualHasContent, is(false));
-      BusinessDayIncrement currentBussinessDayIncrement = timeRecorderImpl.getCurrentBussinessDayIncrement();
-      assertThat(currentBussinessDayIncrement.getCurrentTimeSnippet().getBeginTimeStamp(), is(notNullValue()));
-      assertThat(currentBussinessDayIncrement.getCurrentTimeSnippet().getEndTimeStamp(), is(notNullValue()));
+      TimeSnippet currentTimeSnippet = timeRecorderImpl.getCurrentBussinessDayIncrement();
+      assertThat(currentTimeSnippet.getBeginTimeStamp(), is(notNullValue()));
+      assertThat(currentTimeSnippet.getEndTimeStamp(), is(notNullValue()));
       verify(testUiCallbackHandler).onStart();
       verify(testUiCallbackHandler).onStop();
    }
@@ -314,9 +314,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       boolean actualIsBooking = timeRecorderImpl.isBooking();
 
       // Then
-      BusinessDayIncrement currentBussinessDayIncrement = timeRecorderImpl.getCurrentBussinessDayIncrement();
-      assertThat(currentBussinessDayIncrement.getCurrentTimeSnippet().getBeginTimeStamp(), is(notNullValue()));
-      assertThat(currentBussinessDayIncrement.getCurrentTimeSnippet().getEndTimeStamp(), is(nullValue()));
+      TimeSnippet currentTimeSnippet = timeRecorderImpl.getCurrentBussinessDayIncrement();
+      assertThat(currentTimeSnippet.getBeginTimeStamp(), is(notNullValue()));
+      assertThat(currentTimeSnippet.getEndTimeStamp(), is(nullValue()));
       assertThat(isRecordingAfterFirstHandle, is(true));
       assertThat(actualIsBooking, is(false));
       verify(testUiCallbackHandler).onStart();
@@ -337,14 +337,14 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       timeRecorderImpl.handleUserInteraction(false);
       boolean isRecordingAfterSecondHandle = timeRecorderImpl.isRecording();
-      BusinessDayIncrement currentBussinessDayIncrement = timeRecorderImpl.getCurrentBussinessDayIncrement();
-      assertThat(currentBussinessDayIncrement.getCurrentTimeSnippet().getBeginTimeStamp(), is(notNullValue()));
-      assertThat(currentBussinessDayIncrement.getCurrentTimeSnippet().getEndTimeStamp(), is(notNullValue()));
+      TimeSnippet currentTimeSnippet = timeRecorderImpl.getCurrentBussinessDayIncrement();
+      assertThat(currentTimeSnippet.getBeginTimeStamp(), is(notNullValue()));
+      assertThat(currentTimeSnippet.getEndTimeStamp(), is(notNullValue()));
 
       timeRecorderImpl.resume();
-      currentBussinessDayIncrement = timeRecorderImpl.getCurrentBussinessDayIncrement();
-      assertThat(currentBussinessDayIncrement.getCurrentTimeSnippet().getBeginTimeStamp(), is(notNullValue()));
-      assertThat(currentBussinessDayIncrement.getCurrentTimeSnippet().getEndTimeStamp(), is(nullValue()));
+      currentTimeSnippet = timeRecorderImpl.getCurrentBussinessDayIncrement();
+      assertThat(currentTimeSnippet.getBeginTimeStamp(), is(notNullValue()));
+      assertThat(currentTimeSnippet.getEndTimeStamp(), is(nullValue()));
 
       // Then
       BusinessDay bussinessDay = timeRecorderImpl.getBussinessDay();

@@ -25,7 +25,7 @@ import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayEx
 import com.adcubum.timerecording.core.work.WorkStates;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrementImpl;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistoryOverview;
@@ -406,9 +406,9 @@ public class TimeRecorderImpl implements TimeRecorder {
    }
 
    @Override
-   public BusinessDayIncrement getCurrentBussinessDayIncrement() {
+   public TimeSnippet getCurrentBussinessDayIncrement() {
       BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      return BusinessDayIncrementImpl.of(businessDay.getCurrentBussinessDayIncremental());
+      return businessDay.getCurrentTimeSnippet();
    }
 
    @Override

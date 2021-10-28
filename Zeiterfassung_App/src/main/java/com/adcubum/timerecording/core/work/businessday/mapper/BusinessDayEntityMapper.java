@@ -47,9 +47,9 @@ public class BusinessDayEntityMapper {
    public BusinessDay map2BusinessDay(BusinessDayEntity businessDayEntity) {
       requireNonNull(businessDayEntity);
       List<BusinessDayIncrement> increments = map2BusinessDayIncrements(businessDayEntity);
-      BusinessDayIncrement currentBDayIncrement = map2BusinessDayIncrement(businessDayEntity.getCurrentBusinessDayIncrementEntity());
+      TimeSnippet currentTimeSnippet = TimeSnippetEntityMapper.INSTANCE.map2TimeSnippet(businessDayEntity.getCurrentBusinessDayIncrementEntity());
       ComeAndGoes comeAndGoes = ComeAndGoesEntityMapper.INSTANCE.map2ComeAndGoes(businessDayEntity.getComeAndGoesEntity());
-      return BusinessDayFactory.createNew(businessDayEntity.getId(), businessDayEntity.isBooked(), increments, currentBDayIncrement,
+      return BusinessDayFactory.createNew(businessDayEntity.getId(), businessDayEntity.isBooked(), increments, currentTimeSnippet,
             comeAndGoes);
    }
 
@@ -63,13 +63,13 @@ public class BusinessDayEntityMapper {
    public BusinessDayEntity map2BusinessDayEntity(BusinessDay businessDay) {
       requireNonNull(businessDay);
       BusinessDayEntity businessDayEntity = new BusinessDayEntity(businessDay.getId(), businessDay.isBooked());
-      BusinessDayIncrementEntity currentBusinessDayIncrementEntity =
-            map2CompleteBusinessDayIncrementEntity(businessDay.getCurrentBussinessDayIncremental(), null);
+      TimeSnippetEntity currentTimeSnippetEntity =
+            TimeSnippetEntityMapper.INSTANCE.map2TimeSnippetEntity(businessDay.getCurrentTimeSnippet());
       List<BusinessDayIncrementEntity> businessDayIncrementEntities =
             map2BusinessDayIncrementEntities(businessDay.getIncrements(), businessDayEntity);
       ComeAndGoesEntity comeAndGoesEntity = ComeAndGoesEntityMapper.INSTANCE.map2ComeAndGoesEntity(businessDay.getComeAndGoes());
       businessDayEntity.setBusinessDayIncrementEntities(businessDayIncrementEntities);
-      businessDayEntity.setCurrentBusinessDayIncrementEntity(currentBusinessDayIncrementEntity);
+      businessDayEntity.setCurrentTimeSnippetEntity(currentTimeSnippetEntity);
       businessDayEntity.setComeAndGoesEntity(comeAndGoesEntity);
       return businessDayEntity;
    }

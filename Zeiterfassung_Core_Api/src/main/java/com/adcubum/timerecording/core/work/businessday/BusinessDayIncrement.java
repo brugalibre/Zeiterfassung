@@ -30,13 +30,6 @@ public interface BusinessDayIncrement extends DomainModel {
    BusinessDayIncrement updateBeginTimeSnippetAndCalculate(String newTimeStampValue);
 
    /**
-    * Resumes the {@link TimeSnippet} of this {@link BusinessDayIncrement}
-    * 
-    * @return a new {@link BusinessDayIncrement} with the changes
-    */
-   BusinessDayIncrement resumeLastTimeSnippet();
-
-   /**
     * @param endTimeStamp
     * @return a new {@link BusinessDayIncrement} with the changes
     */

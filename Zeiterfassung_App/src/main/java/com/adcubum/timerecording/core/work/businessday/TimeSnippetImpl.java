@@ -37,8 +37,9 @@ public class TimeSnippetImpl implements TimeSnippet {
 
    protected TimeSnippetImpl(UUID id, Long beginTimeStampValue, Long endTimeStampValue) {
       this.id = id;
-      requireNonNull(beginTimeStampValue, "A TimeSnippetImpl needs a begin time stamp!");
-      this.beginTimeStamp = DateTimeFactory.createNew(beginTimeStampValue);
+      if (nonNull(beginTimeStampValue)) {
+         this.beginTimeStamp = DateTimeFactory.createNew(beginTimeStampValue);
+      }
       if (nonNull(endTimeStampValue)) {
          this.endTimeStamp = DateTimeFactory.createNew(endTimeStampValue);
       }
@@ -52,17 +53,32 @@ public class TimeSnippetImpl implements TimeSnippet {
    }
 
    /**
-    * Creates a copy of the given {@link TimeSnippet}
+    * Creates a copy of the given {@link TimeSnippet} without the id
+    * 
+    * @param otherTimeSnippet
+    *        the other {@link TimeSnippet} to create a copy of, it's id is set to <code>null</code>
+    */
+   protected TimeSnippetImpl(TimeSnippet otherTimeSnippet) {
+      this(otherTimeSnippet, false);
+   }
+
+   /**
+    * Creates a copy of the given {@link TimeSnippet} 1:1
     * 
     * @param otherTimeSnippet
     *        the other {@link TimeSnippet} to create a copy of
+    * @param withId
+    *        <code>true</code> if the id is copied <code>false</code> if not
     */
-   protected TimeSnippetImpl(TimeSnippet otherTimeSnippet) {
+   private TimeSnippetImpl(TimeSnippet otherTimeSnippet, boolean withId) {
       requireNonNull(otherTimeSnippet);
       this.beginTimeStamp = otherTimeSnippet.getBeginTimeStamp();
       this.endTimeStamp = otherTimeSnippet.getEndTimeStamp();
       this.callbackHandler = otherTimeSnippet.getCallbackHandler();
       this.id = null;// since we create a new one, we need also a new id
+      if (withId) {
+         this.id = otherTimeSnippet.getId();
+      }
    }
 
    @Override
@@ -299,5 +315,16 @@ public class TimeSnippetImpl implements TimeSnippet {
          return timeSnippetImpl;
       }
 
+   }
+
+   /**
+    * Creates a 1:1 copy of the given {@link TimeSnippet}
+    * 
+    * @param timeSnippet
+    *        the given {@link TimeSnippet}
+    * @return a 1:1 copy of the given {@link TimeSnippet}
+    */
+   public static TimeSnippet of(TimeSnippet timeSnippet) {
+      return new TimeSnippetImpl(timeSnippet, true);
    }
 }

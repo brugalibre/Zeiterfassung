@@ -82,12 +82,6 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    }
 
    @Override
-   public BusinessDayIncrement resumeLastTimeSnippet() {
-      TimeSnippet changedCurrentTimeSnippet = currentTimeSnippet.setEndTimeStamp(null);
-      return createNewBusinessDayIncrement(changedCurrentTimeSnippet);
-   }
-
-   @Override
    public DateTime getDateTime() {
       return isNull(currentTimeSnippet) ? DateTimeFactory.createNew() : currentTimeSnippet.getDateTime();
    }

@@ -1,7 +1,5 @@
 package com.adcubum.timerecording.service.timerecorder;
 
-import static java.util.Objects.isNull;
-
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -12,7 +10,9 @@ import com.adcubum.timerecording.app.startstopresult.StartNotPossibleInfo;
 import com.adcubum.timerecording.app.startstopresult.UserInteractionResult;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.jira.constants.TicketConst;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.model.businessday.AddNewBusinessDayIncrementDto;
 import com.adcubum.timerecording.model.businessday.BusinessDayIncrementDto;
@@ -62,7 +62,7 @@ public class TimeRecorderService {
    public AddNewBusinessDayIncrementDto startStopRecording() {
       UserInteractionResult userInteractionResult = timeRecorder.handleUserInteraction(false);
       checkAndThrowStartRecordingNotPossibleException(userInteractionResult);
-      return buildAddNewBusinessDayIncrementDto(timeRecorder.getBussinessDay().getCurrentBussinessDayIncremental());
+      return buildAddNewBusinessDayIncrementDto(timeRecorder.getBussinessDay().getCurrentTimeSnippet());
    }
 
    private static void checkAndThrowStartRecordingNotPossibleException(UserInteractionResult userInteractionResult) {
@@ -73,11 +73,9 @@ public class TimeRecorderService {
       }
    }
 
-   private static AddNewBusinessDayIncrementDto buildAddNewBusinessDayIncrementDto(BusinessDayIncrement currentBussinessDayIncremental) {
-      if (isNull(currentBussinessDayIncremental.getTicket())) {
-         currentBussinessDayIncremental.setTicket(TicketBacklogSPI.getTicketBacklog().getTicket4Nr(TicketConst.DEFAULT_TICKET_NAME));
-      }
-      BusinessDayIncrementDto businessDayIncrementDto = BusinessDayIncrementDto.of(currentBussinessDayIncremental);
+   private static AddNewBusinessDayIncrementDto buildAddNewBusinessDayIncrementDto(TimeSnippet currentTimeSnippet) {
+      Ticket ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(TicketConst.DEFAULT_TICKET_NAME);
+      BusinessDayIncrementDto businessDayIncrementDto = BusinessDayIncrementDto.of(currentTimeSnippet, ticket);
       return new AddNewBusinessDayIncrementDto(businessDayIncrementDto);
    }
 

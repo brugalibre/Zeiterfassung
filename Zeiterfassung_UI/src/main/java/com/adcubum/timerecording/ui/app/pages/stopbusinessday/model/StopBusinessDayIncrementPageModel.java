@@ -136,7 +136,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     */
    public void updateAndSetBeginTimeStamp() {
       String newTimeStampValue = beginTextFieldProperty.getValue();
-      getTimeSnippet().updateAndSetBeginTimeStamp(newTimeStampValue, false);
+      this.timeSnippet = timeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue, false);
    }
 
    /**
@@ -145,7 +145,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     */
    public void updateAndSetEndTimeStamp() {
       String newTimeStampValue = endTextFieldProperty.getValue();
-      getTimeSnippet().updateAndSetEndTimeStamp(newTimeStampValue, false);
+      this.timeSnippet = timeSnippet.updateAndSetEndTimeStamp(newTimeStampValue, false);
    }
 
    /*

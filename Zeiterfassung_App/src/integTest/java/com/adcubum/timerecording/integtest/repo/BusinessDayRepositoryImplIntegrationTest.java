@@ -34,7 +34,7 @@ import com.adcubum.timerecording.integtest.TestChangedComeAndGoValueImpl;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
-import com.adcubum.timerecording.work.date.TimeBuilder;
+import com.adcubum.timerecording.work.date.DateTimeBuilder;
 
 @SpringBootTest(classes = {TestBusinessDayRepoConfig.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -48,7 +48,7 @@ class BusinessDayRepositoryImplIntegrationTest {
       int month = 11;
       int day = 1;
 
-      DateTime lowerBoundsTime = TimeBuilder.of()
+      DateTime lowerBoundsTime = DateTimeBuilder.of()
             .withYear(year)
             .withMonth(month)
             .withDay(day - 1)
@@ -77,7 +77,7 @@ class BusinessDayRepositoryImplIntegrationTest {
       String description = "Test";
       String otherBusinessDayIncDescDescription = "MichNIxFindenWollen";
 
-      DateTime lookAtTime = TimeBuilder.of()
+      DateTime lookAtTime = DateTimeBuilder.of()
             .withYear(year)
             .withMonth(month)
             .withDay(day)
@@ -115,13 +115,13 @@ class BusinessDayRepositoryImplIntegrationTest {
 
       // When
       BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew();
-      BusinessDayIncrement currentBussinessDayIncremental = businessDay.getCurrentBussinessDayIncremental();
+      TimeSnippet currentTimeSnippet = businessDay.getCurrentTimeSnippet();
 
       // Then
       assertThat(businessDay, is(notNullValue()));
       assertThat(businessDay.getIncrements().isEmpty(), is(true));
-      assertThat(currentBussinessDayIncremental, is(notNullValue()));
-      assertThat(currentBussinessDayIncremental.getCurrentTimeSnippet(), is(nullValue()));
+      assertThat(currentTimeSnippet, is(notNullValue()));
+      assertThat(currentTimeSnippet.getBeginTimeStamp(), is(nullValue()));
    }
 
    @Test
@@ -133,17 +133,14 @@ class BusinessDayRepositoryImplIntegrationTest {
       // When
       BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew()
             .startNewIncremental();
-      BusinessDayIncrement currentBussinessDayIncremental = businessDay.getCurrentBussinessDayIncremental();
-      TimeSnippet currentTimeSnippet = currentBussinessDayIncremental.getCurrentTimeSnippet();
+      TimeSnippet currentTimeSnippet = businessDay.getCurrentTimeSnippet();
 
       BusinessDay savedBusinessDay = businessDayRepository.save(businessDay);
-      BusinessDayIncrement savedCurrentBussinessDayIncremental = savedBusinessDay.getCurrentBussinessDayIncremental();
-      TimeSnippet savedCurrentTimeSnippet = savedCurrentBussinessDayIncremental.getCurrentTimeSnippet();
+      TimeSnippet savedCurrentTimeSnippet = savedBusinessDay.getCurrentTimeSnippet();
 
       // Then
       assertThat(savedBusinessDay, is(notNullValue()));
       assertThat(savedBusinessDay.getIncrements().isEmpty(), is(true));
-      assertThat(savedCurrentBussinessDayIncremental, is(notNullValue()));
       assertThat(savedCurrentTimeSnippet, is(notNullValue()));
       assertThat(savedCurrentTimeSnippet.getBeginTimeStamp(), is(currentTimeSnippet.getBeginTimeStamp()));
       assertThat(savedCurrentTimeSnippet.getEndTimeStamp(), is(nullValue()));
@@ -159,17 +156,14 @@ class BusinessDayRepositoryImplIntegrationTest {
       // When
       BusinessDay businessDay = businessDayRepository.findFirstOrCreateNew()
             .stopCurrentIncremental();
-      BusinessDayIncrement currentBussinessDayIncremental = businessDay.getCurrentBussinessDayIncremental();
-      TimeSnippet currentTimeSnippet = currentBussinessDayIncremental.getCurrentTimeSnippet();
+      TimeSnippet currentTimeSnippet = businessDay.getCurrentTimeSnippet();
 
       BusinessDay savedBusinessDay = businessDayRepository.save(businessDay);
-      BusinessDayIncrement savedCurrentBussinessDayIncremental = savedBusinessDay.getCurrentBussinessDayIncremental();
-      TimeSnippet savedCurrentTimeSnippet = savedCurrentBussinessDayIncremental.getCurrentTimeSnippet();
+      TimeSnippet savedCurrentTimeSnippet = savedBusinessDay.getCurrentTimeSnippet();
 
       // Then
       assertThat(savedBusinessDay, is(notNullValue()));
       assertThat(savedBusinessDay.getIncrements().isEmpty(), is(true));
-      assertThat(savedCurrentBussinessDayIncremental, is(notNullValue()));
       assertThat(savedCurrentTimeSnippet, is(notNullValue()));
       assertThat(savedCurrentTimeSnippet.getBeginTimeStamp(), is(notNullValue()));
       assertThat(savedCurrentTimeSnippet.getEndTimeStamp(), is(notNullValue()));
@@ -205,14 +199,13 @@ class BusinessDayRepositoryImplIntegrationTest {
                   .build());
       businessDayRepository.save(businessDay);
       BusinessDay changedBusinessDay = businessDayRepository.findById(businessDay.getId());
-      BusinessDayIncrement changedCurrentBussinessDayIncremental = changedBusinessDay.getCurrentBussinessDayIncremental();
-      TimeSnippet changedCurrentTimeSnippet = changedCurrentBussinessDayIncremental.getCurrentTimeSnippet();
+      TimeSnippet changedCurrentTimeSnippet = changedBusinessDay.getCurrentTimeSnippet();
 
       // Then
       assertThat(changedBusinessDay, is(notNullValue()));
       assertThat(changedBusinessDay.getIncrements().size(), is(1));
-      assertThat(changedCurrentBussinessDayIncremental, is(notNullValue()));
-      assertThat(changedCurrentTimeSnippet, is(nullValue()));
+      assertThat(changedCurrentTimeSnippet, is(notNullValue()));
+      assertThat(changedCurrentTimeSnippet.getBeginTimeStamp(), is(nullValue()));
 
       BusinessDayIncrement changedFirstBusinessDayIncrement = changedBusinessDay.getIncrements().get(0);
       TimeSnippet changedFirstBDIncTimeSnippet = changedFirstBusinessDayIncrement.getCurrentTimeSnippet();
@@ -262,13 +255,12 @@ class BusinessDayRepositoryImplIntegrationTest {
       businessDay = businessDayRepository.save(businessDay);
 
       BusinessDay changedBusinessDay = businessDayRepository.findById(businessDay.getId());
-      BusinessDayIncrement changedCurrentBussinessDayIncremental = changedBusinessDay.getCurrentBussinessDayIncremental();
-      TimeSnippet currentTimeSnippet = changedCurrentBussinessDayIncremental.getCurrentTimeSnippet();
+      TimeSnippet changedCurrentTimeSnippet = changedBusinessDay.getCurrentTimeSnippet();
 
       // Then
       assertThat(businessDay, is(notNullValue()));
-      assertThat(changedCurrentBussinessDayIncremental, is(notNullValue()));
-      assertThat(currentTimeSnippet, is(nullValue()));
+      assertThat(changedCurrentTimeSnippet, is(notNullValue()));
+      assertThat(changedCurrentTimeSnippet.getBeginTimeStamp(), is(nullValue()));
       assertThat(businessDay.getIncrements().size(), is(2));
 
       BusinessDayIncrement originLastBusinessDayIncrement = businessDay.getIncrements().get(1);
@@ -436,13 +428,13 @@ class BusinessDayRepositoryImplIntegrationTest {
       int upperBoundsdDay = day + 1;
       int month = 2;
 
-      DateTime lowerBounds = TimeBuilder.of()
+      DateTime lowerBounds = DateTimeBuilder.of()
             .withDay(day)
             .withMonth(month)
             .withYear(2021)
             .withHour(0)
             .build();
-      DateTime upperBounds = TimeBuilder.of()
+      DateTime upperBounds = DateTimeBuilder.of()
             .withDay(upperBoundsdDay)
             .withMonth(month)
             .withYear(2021)

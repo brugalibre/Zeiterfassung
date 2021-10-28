@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.model.ticketbacklog.ServiceCodeDto;
@@ -177,5 +178,14 @@ public class BusinessDayIncrementDto {
       requireNonNull(currentBussinessDayIncremental);
       requireNonNull(currentBussinessDayIncremental.getTicket());
       return new BusinessDayIncrementDto(currentBussinessDayIncremental);
+   }
+
+   public static BusinessDayIncrementDto of(TimeSnippet currentTimeSnippet, Ticket ticket) {
+      BusinessDayIncrementDto businessDayIncrementDto = new BusinessDayIncrementDto();
+      businessDayIncrementDto.ticketDto = map2TicketDto(ticket);
+      businessDayIncrementDto.timeSnippetDto = new TimeSnippetDto(currentTimeSnippet);
+      businessDayIncrementDto.serviceCodeDto = new ServiceCodeDto();
+      businessDayIncrementDto.description = "";
+      return businessDayIncrementDto;
    }
 }

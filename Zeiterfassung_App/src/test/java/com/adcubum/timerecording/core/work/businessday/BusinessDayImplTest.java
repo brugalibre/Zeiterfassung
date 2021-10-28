@@ -93,8 +93,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       // Given
       BusinessDay businessDay = new BusinessDayImpl()
             .startNewIncremental();
-      BusinessDayIncrement currentBussinessDayIncremental = businessDay.getCurrentBussinessDayIncremental();
-      TimeSnippet currentTimeSnippet = currentBussinessDayIncremental.getCurrentTimeSnippet();
+      TimeSnippet currentTimeSnippet = businessDay.getCurrentTimeSnippet();
 
       // When
       String actualCapturingInactiveSinceMsg = businessDay.getCapturingActiveSinceMsg();

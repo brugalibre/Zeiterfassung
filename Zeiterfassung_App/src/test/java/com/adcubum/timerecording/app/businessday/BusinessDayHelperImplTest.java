@@ -22,7 +22,7 @@ import com.adcubum.timerecording.core.repository.ObjectNotFoundException;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrementImpl;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
 import com.adcubum.timerecording.core.work.businessday.builder.BusinessDayIncrementBuilder;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
@@ -192,7 +192,9 @@ class BusinessDayHelperImplTest {
       private boolean withExistingBookedBusinessDay;
 
       public TestBusinessDayRepository() {
-         bookedBusinessDay = new BusinessDayImpl(UUID.randomUUID(), true, new ArrayList<>(), new BusinessDayIncrementImpl(), ComeAndGoesImpl.of());
+         TimeSnippet timeSnippet = TimeSnippetBuilder.of()
+               .build();
+         bookedBusinessDay = new BusinessDayImpl(UUID.randomUUID(), true, new ArrayList<>(), timeSnippet, ComeAndGoesImpl.of());
       }
 
       @Override

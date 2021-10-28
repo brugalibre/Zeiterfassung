@@ -176,7 +176,7 @@ public interface BusinessDay extends DomainModel {
    boolean hasElementsFromPrecedentDays();
 
    /**
-    * @return <code>true</code> if the {@link BusinessDay#getCurrentBussinessDayIncremental()} has started and yet unfinished
+    * @return <code>true</code> if the {@link BusinessDay#getCurrentTimeSnippet()} has started and yet unfinished
     *         {@link TimeSnippet}. Otherwise return <code>false</code>
     */
    boolean hasUnfinishedBusinessDayIncrement();
@@ -190,9 +190,9 @@ public interface BusinessDay extends DomainModel {
    float getTotalDuration();
 
    /**
-    * @return the current active {@link BusinessDayIncrement}
+    * @return the current active and not yet finished {@link TimeSnippet}
     */
-   BusinessDayIncrement getCurrentBussinessDayIncremental();
+   TimeSnippet getCurrentTimeSnippet();
 
    /**
     * Returns all {@link BusinessDayIncrement} of this {@link BusinessDay} ordered, so that the order of the {@link BusinessDayIncrement}s

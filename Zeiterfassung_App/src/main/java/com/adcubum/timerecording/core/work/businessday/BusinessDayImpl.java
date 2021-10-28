@@ -58,7 +58,7 @@ public class BusinessDayImpl implements BusinessDay {
    // all increments of this BusinessDayImpl (those are all finished!)
    private CopyOnWriteArrayList<BusinessDayIncrement> increments;
    // the current increment which has been started but not yet finished so far
-   private BusinessDayIncrement currentBussinessDayIncremental;
+   private TimeSnippet currentTimeSnippet;
    // the amount of times a user comes and goes during the day
    private ComeAndGoes comeAndGoes;
    // true if this BusinessDay is alreay booked
@@ -67,11 +67,11 @@ public class BusinessDayImpl implements BusinessDay {
    /**
     * Creates a new {@link BusinessDayImpl} from the {@link BusinessDayFactory}
     */
-   public BusinessDayImpl(UUID id, boolean isBooked, List<BusinessDayIncrement> businessDayIncrements, BusinessDayIncrement currentBDIncrement,
+   public BusinessDayImpl(UUID id, boolean isBooked, List<BusinessDayIncrement> businessDayIncrements, TimeSnippet currentTimeSnippet,
          ComeAndGoes comeAndGoes) {
       this.comeAndGoes = comeAndGoes;
       this.increments = new CopyOnWriteArrayList<>(businessDayIncrements);
-      this.currentBussinessDayIncremental = currentBDIncrement;
+      this.currentTimeSnippet = currentTimeSnippet;
       this.isBooked = isBooked;
       this.id = id;
    }
@@ -93,14 +93,14 @@ public class BusinessDayImpl implements BusinessDay {
 
    private void initialize(ComeAndGoes comeAndGoes) {
       increments = new CopyOnWriteArrayList<>();
-      currentBussinessDayIncremental = new BusinessDayIncrementImpl();
+      currentTimeSnippet = new TimeSnippetImpl();
       this.comeAndGoes = comeAndGoes;
    }
 
    @Override
    public BusinessDay resumeLastIncremental() {
-      BusinessDayIncrement changedCurrentBusinessDayIncrement = currentBussinessDayIncremental.resumeLastTimeSnippet();
-      return createCopyWithCurrentBusinessDayIncrement(changedCurrentBusinessDayIncrement);
+      TimeSnippet changedCurrentTimeSnippet = currentTimeSnippet.setEndTimeStamp(null);
+      return createCopyWithCurrentTimeSnippet(changedCurrentTimeSnippet);
    }
 
    @Override
@@ -116,21 +116,22 @@ public class BusinessDayImpl implements BusinessDay {
    @Override
    public BusinessDay startNewIncremental() {
       DateTime time = DateTimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
-      BusinessDayIncrement changedCurrentBusinessDayIncrement = BusinessDayIncrementImpl.of(currentBussinessDayIncremental)
-            .startCurrentTimeSnippet(time);
-      return createCopyWithCurrentBusinessDayIncrement(changedCurrentBusinessDayIncrement);
+      TimeSnippet changedCurrentTimeSnippet = TimeSnippetImpl.of(currentTimeSnippet)
+            .setBeginTimeStamp(time);
+      return createCopyWithCurrentTimeSnippet(changedCurrentTimeSnippet);
    }
 
    /**
     * Stops the current incremental and add the
-    * {@link #currentBussinessDayIncremental} to the list with increments. After
+    * {@link #currentTimeSnippet} to the list with increments. After
     * that, a new incremental is created
     */
    @Override
    public BusinessDay stopCurrentIncremental() {
       DateTime endTimeStamp = DateTimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
-      BusinessDayIncrement changedCurrentBussinessDayIncremental = currentBussinessDayIncremental.stopCurrentTimeSnippet(endTimeStamp);
-      return createCopyWithCurrentBusinessDayIncrement(changedCurrentBussinessDayIncremental);
+      TimeSnippet changedCurrentTimeSnippet = TimeSnippetImpl.of(currentTimeSnippet)
+            .setEndTimeStamp(endTimeStamp);
+      return createCopyWithCurrentTimeSnippet(changedCurrentTimeSnippet);
    }
 
    @Override
@@ -182,8 +183,8 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
-   public BusinessDayIncrement getCurrentBussinessDayIncremental() {
-      return currentBussinessDayIncremental;
+   public TimeSnippet getCurrentTimeSnippet() {
+      return currentTimeSnippet;
    }
 
    @Override
@@ -279,7 +280,6 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public boolean hasUnfinishedBusinessDayIncrement() {
-      TimeSnippet currentTimeSnippet = currentBussinessDayIncremental.getCurrentTimeSnippet();
       return nonNull(currentTimeSnippet) && nonNull(currentTimeSnippet.getBeginTimeStamp())
             && isNull(currentTimeSnippet.getEndTimeStamp());
    }
@@ -301,9 +301,8 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public String getCapturingActiveSinceMsg() {
-      TimeSnippet startPoint = currentBussinessDayIncremental.getCurrentTimeSnippet();
-      String time = startPoint.getDuration() > 0 ? " (" + startPoint.getDuration() + "h)" : "";
-      return TextLabel.CAPTURING_ACTIVE_SINCE + " " + startPoint.getBeginTimeStamp() + time;
+      String time = currentTimeSnippet.getDuration() > 0 ? " (" + currentTimeSnippet.getDuration() + "h)" : "";
+      return TextLabel.CAPTURING_ACTIVE_SINCE + " " + currentTimeSnippet.getBeginTimeStamp() + time;
    }
 
    @Override
@@ -411,7 +410,7 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    private BusinessDay createNewIncremental() {
-      currentBussinessDayIncremental = BusinessDayIncrementImpl.of(currentBussinessDayIncremental, false);
+      currentTimeSnippet = TimeSnippetImpl.of(currentTimeSnippet);
       return this;
    }
 
@@ -425,22 +424,22 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    private BusinessDayImpl createCopy(List<BusinessDayIncrement> businessDayIncrements) {
-      return new BusinessDayImpl(this.id, this.isBooked, businessDayIncrements, this.currentBussinessDayIncremental, comeAndGoes);
+      return new BusinessDayImpl(this.id, this.isBooked, businessDayIncrements, this.currentTimeSnippet, comeAndGoes);
    }
 
    private BusinessDayImpl createCopy(ComeAndGoes comeAndGoes) {
-      return new BusinessDayImpl(this.id, this.isBooked, this.increments, this.currentBussinessDayIncremental, comeAndGoes);
+      return new BusinessDayImpl(this.id, this.isBooked, this.increments, this.currentTimeSnippet, comeAndGoes);
    }
 
    private BusinessDayImpl createCopy(BusinessDayIncrement changedBusinessDayIncrement) {
       List<BusinessDayIncrement> unchangedBDayIncrements =
             new ArrayList<>(collectBusinessDayIncrementsWithOtherId(changedBusinessDayIncrement.getId()));
       unchangedBDayIncrements.add(changedBusinessDayIncrement);
-      return new BusinessDayImpl(this.id, this.isBooked, unchangedBDayIncrements, this.currentBussinessDayIncremental, this.comeAndGoes);
+      return new BusinessDayImpl(this.id, this.isBooked, unchangedBDayIncrements, this.currentTimeSnippet, this.comeAndGoes);
    }
 
-   private BusinessDayImpl createCopyWithCurrentBusinessDayIncrement(BusinessDayIncrement changedCurrentBusinessDayIncrement) {
-      return new BusinessDayImpl(this.id, this.isBooked, this.increments, changedCurrentBusinessDayIncrement, this.comeAndGoes);
+   private BusinessDayImpl createCopyWithCurrentTimeSnippet(TimeSnippet changedCurrentTimeSnippet) {
+      return new BusinessDayImpl(this.id, this.isBooked, this.increments, changedCurrentTimeSnippet, this.comeAndGoes);
    }
 
    private List<BusinessDayIncrement> collectBusinessDayIncrementsWithOtherId(UUID changedBDIncrementId) {
