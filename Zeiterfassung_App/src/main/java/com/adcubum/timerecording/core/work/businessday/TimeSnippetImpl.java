@@ -10,8 +10,6 @@ import static java.util.Objects.requireNonNull;
 import java.text.ParseException;
 import java.util.UUID;
 
-import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
-import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
@@ -33,7 +31,6 @@ public class TimeSnippetImpl implements TimeSnippet {
    private UUID id;
    private DateTime beginTimeStamp;
    private DateTime endTimeStamp;
-   private TimeSnippedChangedCallbackHandler callbackHandler;
 
    protected TimeSnippetImpl(UUID id, Long beginTimeStampValue, Long endTimeStampValue) {
       this.id = id;
@@ -74,7 +71,6 @@ public class TimeSnippetImpl implements TimeSnippet {
       requireNonNull(otherTimeSnippet);
       this.beginTimeStamp = otherTimeSnippet.getBeginTimeStamp();
       this.endTimeStamp = otherTimeSnippet.getEndTimeStamp();
-      this.callbackHandler = otherTimeSnippet.getCallbackHandler();
       this.id = null;// since we create a new one, we need also a new id
       if (withId) {
          this.id = otherTimeSnippet.getId();
@@ -146,12 +142,6 @@ public class TimeSnippetImpl implements TimeSnippet {
       return NumberFormat.parse(time, factor);
    }
 
-   private void notifyCallbackHandler(ChangedValue changedValue) {
-      if (callbackHandler != null) {
-         callbackHandler.handleTimeSnippedChanged(changedValue);
-      }
-   }
-
    @Override
    public DateTime getDateTime() {
       return nonNull(beginTimeStamp) ? beginTimeStamp : DateTimeFactory.createNew();
@@ -161,7 +151,6 @@ public class TimeSnippetImpl implements TimeSnippet {
    public TimeSnippet setBeginTimeStamp(DateTime beginTimeStamp) {
       TimeSnippetImpl timeSnippetImplCopy = createCopy();
       timeSnippetImplCopy.beginTimeStamp = beginTimeStamp;
-      notifyCallbackHandler(ChangedValue.of(timeSnippetImplCopy.getBeginTimeStampRep(), ValueTypes.BEGIN));
       return timeSnippetImplCopy;
    }
 
@@ -169,7 +158,6 @@ public class TimeSnippetImpl implements TimeSnippet {
    public TimeSnippet setEndTimeStamp(DateTime endTimeStamp) {
       TimeSnippetImpl timeSnippetImplCopy = createCopy();
       timeSnippetImplCopy.endTimeStamp = endTimeStamp;
-      notifyCallbackHandler(ChangedValue.of(timeSnippetImplCopy.getEndTimeStampRep(), ValueTypes.END));
       return timeSnippetImplCopy;
    }
 
@@ -194,19 +182,8 @@ public class TimeSnippetImpl implements TimeSnippet {
    }
 
    @Override
-   public TimeSnippedChangedCallbackHandler getCallbackHandler() {
-      return callbackHandler;
-   }
-
-   @Override
    public UUID getId() {
       return id;
-   }
-
-   @Override
-   public final TimeSnippet setCallbackHandler(TimeSnippedChangedCallbackHandler callbackHandler) {
-      this.callbackHandler = callbackHandler;
-      return this;
    }
 
    @Override

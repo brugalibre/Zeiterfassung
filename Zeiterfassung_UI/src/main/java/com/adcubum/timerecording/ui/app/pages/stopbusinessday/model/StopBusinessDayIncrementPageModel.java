@@ -20,10 +20,8 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
-import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
-import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.jira.data.TicketComparator;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
@@ -51,7 +49,7 @@ import javafx.scene.control.Tooltip;
  * @author Dominic
  *
  */
-public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnippedChangedCallbackHandler {
+public class StopBusinessDayIncrementPageModel implements PageModel {
 
    private static final String MNEMONIC_PREFIX = "_";
    private BusinessDayChangedCallbackHandler businessDayChangedCallbackHandler;
@@ -115,9 +113,6 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       serviceCodesSelectedModelProperty = new SimpleObjectProperty<>();
       ticketProperty = new SimpleObjectProperty<>();
       this.timeSnippet = TimeSnippetFactory.createNew(pageModelConstructorInfo.getTimeSnippet());
-      if (nonNull(this.timeSnippet)) {
-         timeSnippet.setCallbackHandler(this);
-      }
       beginTextFieldProperty = new SimpleStringProperty(
             getTimeSnippet() != null ? getTimeSnippet().getBeginTimeStampRep() : "");
       endTextFieldProperty = new SimpleStringProperty(getTimeSnippet() != null ? getTimeSnippet().getEndTimeStampRep() : "");
@@ -137,6 +132,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    public void updateAndSetBeginTimeStamp() {
       String newTimeStampValue = beginTextFieldProperty.getValue();
       this.timeSnippet = timeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue, false);
+      amountOfHoursTextFieldProperty.set(timeSnippet.getDurationRep());
+      beginTextFieldProperty.set(timeSnippet.getBeginTimeStampRep());
    }
 
    /**
@@ -146,6 +143,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
    public void updateAndSetEndTimeStamp() {
       String newTimeStampValue = endTextFieldProperty.getValue();
       this.timeSnippet = timeSnippet.updateAndSetEndTimeStamp(newTimeStampValue, false);
+      amountOfHoursTextFieldProperty.set(timeSnippet.getDurationRep());
+      endTextFieldProperty.set(timeSnippet.getEndTimeStampRep());
+      onEndTimeStampChanged();
    }
 
    /*
@@ -194,7 +194,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
     */
    public void addAdditionallyTime() {
       String newEndAsString = amountOfHoursTextFieldProperty.getValue();
-      getTimeSnippet().addAdditionallyTime(newEndAsString);
+      timeSnippet = timeSnippet.addAdditionallyTime(newEndAsString);
+      beginTextFieldProperty.set(timeSnippet.getBeginTimeStampRep());
+      endTextFieldProperty.set(timeSnippet.getEndTimeStampRep());
    }
 
    /**
@@ -234,9 +236,6 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       TimeSnippet timeSnippet = TimeSnippetFactory.createNew(pageModelConstructorInfo.getTimeSnippet());
       inPageModel.setTimeSnippet(timeSnippet);
       boolean isTimeSnippetNonNull = nonNull(inPageModel.getTimeSnippet());
-      if (isTimeSnippetNonNull) {
-         inPageModel.getTimeSnippet().setCallbackHandler(inPageModel);
-      }
       inPageModel.getBeginTextFieldProperty().set(isTimeSnippetNonNull ? inPageModel.getTimeSnippet().getBeginTimeStampRep() : "");
       inPageModel.getEndTextFieldProperty().set(isTimeSnippetNonNull ? inPageModel.getTimeSnippet().getEndTimeStampRep() : "");
       inPageModel.getIsAbortButtonDisabledProperty().set(!pageModelConstructorInfo.isAbortEnabled());
@@ -282,27 +281,6 @@ public class StopBusinessDayIncrementPageModel implements PageModel, TimeSnipped
       serviceCodesFieldProperty.setValue(FXCollections.observableList(fetchServiceCodesForProject));
       if (isNull(serviceCodesSelectedModelProperty.getValue().getSelectedItem())) {
          serviceCodesSelectedModelProperty.getValue().selectFirst();
-      }
-   }
-
-   @Override
-   public void handleTimeSnippedChanged(ChangedValue changeValue) {
-      switch (changeValue.getValueTypes()) {
-         case BEGIN:
-            amountOfHoursTextFieldProperty.set(getTimeSnippet().getDurationRep());
-            beginTextFieldProperty.set(getTimeSnippet().getBeginTimeStampRep());
-            break;
-         case END:
-            amountOfHoursTextFieldProperty.set(getTimeSnippet().getDurationRep());
-            endTextFieldProperty.set(getTimeSnippet().getEndTimeStampRep());
-            onEndTimeStampChanged();
-            break;
-         case AMOUNT_OF_TIME:
-            endTextFieldProperty.set(getTimeSnippet().getEndTimeStampRep());
-            break;
-         default:
-            // ignore
-            break;
       }
    }
 

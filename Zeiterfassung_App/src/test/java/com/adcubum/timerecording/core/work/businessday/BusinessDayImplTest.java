@@ -19,7 +19,6 @@ import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
 import com.adcubum.timerecording.core.work.businessday.exception.BusinessIncrementBevorOthersException;
-import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
@@ -317,8 +316,6 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       BusinessDay businessDay = new BusinessDayImpl()
             .addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
       UUID id = businessDay.getIncrements().get(0).getId();
-      TestTimeSnippedChangedCallbackHandler callbackHandler = new TestTimeSnippedChangedCallbackHandler();
-      businessDay.getIncrements().get(0).getCurrentTimeSnippet().setCallbackHandler(callbackHandler);
 
       ChangedValue changeValue = ChangedValue.of(id, newBegin, ValueTypes.BEGIN);
 
@@ -328,8 +325,6 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       // Then
       BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
       assertThat(businessDayIncrement.getTotalDuration(), is(expectedNewDuration));
-      assertThat(callbackHandler.changeValue.getValueTypes(), is(ValueTypes.BEGIN));
-      assertThat(callbackHandler.changeValue.getNewValue(), is(newBegin));
    }
 
    @Test
@@ -614,14 +609,5 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       when(currentTicket.isDummyTicket()).thenReturn(isDummy);
       when(currentTicket.getNr()).thenReturn("1234");
       return currentTicket;
-   }
-
-   private static class TestTimeSnippedChangedCallbackHandler implements TimeSnippedChangedCallbackHandler {
-      private ChangedValue changeValue;
-
-      @Override
-      public void handleTimeSnippedChanged(ChangedValue changeValue) {
-         this.changeValue = changeValue;
-      }
    }
 }

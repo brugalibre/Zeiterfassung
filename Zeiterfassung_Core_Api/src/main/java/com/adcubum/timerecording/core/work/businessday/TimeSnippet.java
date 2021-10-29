@@ -3,7 +3,6 @@ package com.adcubum.timerecording.core.work.businessday;
 import java.util.Date;
 
 import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
-import com.adcubum.timerecording.core.work.businessday.update.callback.TimeSnippedChangedCallbackHandler;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 
@@ -79,15 +78,6 @@ public interface TimeSnippet extends DomainModel {
    TimeSnippet setEndTimeStamp(DateTime endTimeStamp);
 
    /**
-    * Sets a new {@link TimeSnippedChangedCallbackHandler}
-    * 
-    * @param callbackHandler
-    *        the new {@link TimeSnippedChangedCallbackHandler}
-    * @return a new, changed instance, copied from this {@link TimeSnippet}
-    */
-   TimeSnippet setCallbackHandler(TimeSnippedChangedCallbackHandler callbackHandler);
-
-   /**
     * @return the amount of minutes between the start, and end-point
     */
    float getDuration();
@@ -126,7 +116,5 @@ public interface TimeSnippet extends DomainModel {
    String getEndTimeStampRep();
 
    String getBeginTimeStampRep();
-
-   TimeSnippedChangedCallbackHandler getCallbackHandler();
 
 }
