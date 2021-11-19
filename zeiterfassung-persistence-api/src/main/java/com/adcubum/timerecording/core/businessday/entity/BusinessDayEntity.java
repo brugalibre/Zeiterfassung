@@ -2,7 +2,7 @@ package com.adcubum.timerecording.core.businessday.entity;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,7 +63,7 @@ public class BusinessDayEntity extends BaseEntity {
       super(id);
       this.isBooked = isBooked;
       this.currentTimeSnippetEntity = new TimeSnippetEntity(id, null, null);
-      this.businessDayIncrementEntities = Collections.emptyList();
+      this.businessDayIncrementEntities = new ArrayList<>();
       this.comeAndGoesEntity = new ComeAndGoesEntity();
    }
 
