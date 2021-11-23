@@ -1,14 +1,10 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.BOARD_ID_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.GET_ACTIVE_SPRINT_ID_FOR_BOARD_URL;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.GET_ALL_BOARDS_URL;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.GET_FUTURE_SPRINT_IDS_FOR_BOARD_URL;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.GET_ISSUES_4_BOARD_URL;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.SPRINT_ID_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.START_AT_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.START_AT_PLACE_LITERAL;
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.BOARD_ID_PLACE_HOLDER;
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.SPRINT_ID_PLACE_HOLDER;
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.START_AT_PLACE_HOLDER;
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.START_AT_PLACE_LITERAL;
 import static java.util.Objects.nonNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -30,7 +26,9 @@ import org.junit.jupiter.api.Test;
 import com.adcubum.timerecording.jira.data.ticket.IssueType;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
-import com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationFactory;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraGenericValuesResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraGenericValuesResponse.GenericNameAttrs;
@@ -56,7 +54,8 @@ class JiraApiReaderImplTest {
       String username = "";
       AuthenticationContext atuhenticationContext = new AuthenticationContext(username, () -> pwd.toCharArray());
       HttpClient httpClient = mock(HttpClient.class);
-      JiraApiReaderImpl jiraApiReader = new JiraApiReaderImpl(httpClient);
+      JiraApiConfiguration jiraApiConfiguration = JiraApiConfigurationFactory.createDefault();
+      JiraApiReader jiraApiReader = new JiraApiReaderImpl(httpClient, jiraApiConfiguration);
 
       // When
       jiraApiReader.userAuthenticated(atuhenticationContext);
@@ -217,6 +216,7 @@ class JiraApiReaderImplTest {
 
    private static class TestCaseBuilder {
 
+      private JiraApiConfiguration jiraApiConfiguration;
       private HttpClient httpClient;
       private String ticketNr;
       private JiraIssueResponse jiraIssueResponse;
@@ -237,6 +237,7 @@ class JiraApiReaderImplTest {
          this.jiraGetFuturSprintResponse = new JiraGenericValuesResponse();
          this.issues = new ArrayList<>();
          this.futureIssues = new ArrayList<>();
+         this.jiraApiConfiguration = JiraApiConfigurationFactory.createDefault();
       }
 
       public TestCaseBuilder withBoardName(String boardName) {
@@ -301,7 +302,7 @@ class JiraApiReaderImplTest {
          String sprintId = "1";
          mockReadTicket4TicketNr();
          mockReadTicketsFromBoardName(boardId, sprintId, futurSprintId, futurSprintName);
-         return new JiraApiReaderImpl(httpClient);
+         return new JiraApiReaderImpl(httpClient, jiraApiConfiguration);
       }
 
       private void mockReadTicketsFromBoardName(String boardId, String sprintId, String futurSprintId, String futurSprintName) {
@@ -322,7 +323,7 @@ class JiraApiReaderImplTest {
       private void mockReadBoards() {
          int index = 0;
          do {
-            String getAllBoardsUrl = GET_ALL_BOARDS_URL.replace(START_AT_PLACE_HOLDER, String.valueOf(index));
+            String getAllBoardsUrl = jiraApiConfiguration.getGetAllBoardUrls().replace(START_AT_PLACE_HOLDER, String.valueOf(index));
             when(httpClient.callRequestAndParse(any(JiraGenericValuesResponseReader.class), eq(getAllBoardsUrl))).thenReturn(jiraGetBoardsResponse);
             index = index + JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
 
@@ -330,12 +331,12 @@ class JiraApiReaderImplTest {
       }
 
       private void mockReadSprint(String boardId) {
-         String getSprintIdUrl = GET_ACTIVE_SPRINT_ID_FOR_BOARD_URL.replace(BOARD_ID_PLACE_HOLDER, boardId);
+         String getSprintIdUrl = jiraApiConfiguration.getGetActiveSprintIdsForBoardUrl().replace(BOARD_ID_PLACE_HOLDER, boardId);
          when(httpClient.callRequestAndParse(any(JiraGenericValuesResponseReader.class), eq(getSprintIdUrl))).thenReturn(jiraGetSprintResponse);
       }
 
       private void mockReadFutureSprint(String boardId) {
-         String getFuturSprintIdUrl = GET_FUTURE_SPRINT_IDS_FOR_BOARD_URL.replace(BOARD_ID_PLACE_HOLDER, boardId);
+         String getFuturSprintIdUrl = jiraApiConfiguration.getGetFuturSprintIdsForBoardUrl().replace(BOARD_ID_PLACE_HOLDER, boardId);
          when(httpClient.callRequestAndParse(any(JiraGenericValuesResponseReader.class), eq(getFuturSprintIdUrl)))
                .thenReturn(jiraGetFuturSprintResponse);
       }
@@ -377,15 +378,15 @@ class JiraApiReaderImplTest {
          when(httpClient.callRequestAndParse(any(JiraIssuesResponseReader.class), eq(createGetIssues4BoardUrl))).thenReturn(jiraIssuesResponse);
       }
 
-      private static String createGetIssues4BoardUrl(String boardId, String sprintId) {
-         return GET_ISSUES_4_BOARD_URL
+      private String createGetIssues4BoardUrl(String boardId, String sprintId) {
+         return jiraApiConfiguration.getGetIssues4BoardIdUrl()
                .replace(BOARD_ID_PLACE_HOLDER, boardId)
                .replace(SPRINT_ID_PLACE_HOLDER, sprintId)
                .replace(START_AT_PLACE_HOLDER, "0"); // lets start at the begining
       }
 
       private void mockReadTicket4TicketNr() {
-         String url = JiraApiConstants.GET_ISSUE_URL + ticketNr;
+         String url = jiraApiConfiguration.getGetIssueUrl() + ticketNr;
          when(httpClient.callRequestAndParse(any(JiraIssueResponseReader.class), eq(url))).thenReturn(jiraIssueResponse);
       }
 

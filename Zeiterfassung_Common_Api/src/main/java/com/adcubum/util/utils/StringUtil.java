@@ -31,4 +31,11 @@ public class StringUtil {
       }
       return false;
    }
+
+   public static String requireNotEmptyAndNotNull(String stringValue) {
+      if (isEmptyOrNull(stringValue)) {
+         throw new IllegalArgumentException("Value must not be null nor empty!");
+      }
+      return stringValue;
+   }
 }

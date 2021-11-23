@@ -1,15 +1,11 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-
+import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraGenericValuesResponse;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraGenericValuesResponseReader;
 import org.junit.jupiter.api.Test;
 
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraGenericValuesResponse;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReaderImplIntegTest.HttpClientInterceptor;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraGenericValuesResponseReader;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 class HttpClientIntegTest {
 
@@ -29,18 +25,18 @@ class HttpClientIntegTest {
    @Test
    void test_Success() {
       // Given
-      int portNumber = 8081; // Anpassung port auf 8081, damit sich Springboot deser Test nicht stören
+      int portNumber = 8081; // Anpassung port auf 8081, damit sich Springboot & dieser Test nicht stören
       String host = "127.0.0.1";
       String path = "test";
       DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
-            .withHost(host + ":" + 8081)
+            .withHost(host + ":" + portNumber)
             .withHeaderAndResponse(path, JiraApiTestReadConst.READ_BOARD_SUCCESSFULL_RESPONSE)
-            .withHttpWrapper(new HttpClientInterceptor(host, host, portNumber))
+            .withHttpWrapper(new HttpClient())
             .build();
 
       // When
       JiraGenericValuesResponse jiraGetBoardsResponse =
-            tcb.httpWrapper.callRequestAndParse(new JiraGenericValuesResponseReader(), "http://" + host + "//" + path);
+              tcb.httpWrapper.callRequestAndParse(new JiraGenericValuesResponseReader(), "http://" + host + ":" + portNumber + "//" + path);
 
       // Then
       assertThat(jiraGetBoardsResponse.getException(), is(nullValue()));

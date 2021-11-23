@@ -1,15 +1,11 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.BOARD_ID_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.GET_ACTIVE_SPRINT_ID_FOR_BOARD_URL;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.GET_ALL_BOARDS_URL;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.GET_FUTURE_SPRINT_IDS_FOR_BOARD_URL;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.GET_ISSUES_4_BOARD_URL;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.MAX_RESULTS;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.SPRINT_ID_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.START_AT_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants.START_AT_PLACE_LITERAL;
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.BOARD_ID_PLACE_HOLDER;
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.MAX_RESULTS;
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.SPRINT_ID_PLACE_HOLDER;
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.START_AT_PLACE_HOLDER;
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.START_AT_PLACE_LITERAL;
 import static java.util.Objects.requireNonNull;
 
 import java.util.List;
@@ -21,7 +17,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
-import com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraResponseMapper;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraGenericValuesResponse;
@@ -34,25 +30,40 @@ import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responseread
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 
-
 public class JiraApiReaderImpl implements JiraApiReader {
 
    private static final Logger LOG = Logger.getLogger(JiraApiReaderImpl.class);
    private HttpClient httpClient;
+   private JiraApiConfiguration jiraApiConfiguration;
 
    /**
-    * Package private constructor used by spring
+    * Private constructor called by the {@link JiraApiReaderFactory}
+    * 
+    * @param jiraApiConfiguration
+    *        the {@link JiraApiConfiguration}
     */
-   JiraApiReaderImpl() {
-      this(new HttpClient());
+   private JiraApiReaderImpl(JiraApiConfiguration jiraApiConfiguration) {
+      this(new HttpClient(), jiraApiConfiguration);
    }
 
    /**
-    * Constructor for testing purpose only!
+    * Package private constructor for testing purpose only!
+    * 
+    * @param httpClient
+    *        the {@link HttpClient}
+    * @param jiraApiConfiguration
+    *        the {@link JiraApiConfiguration}
     */
-   JiraApiReaderImpl(HttpClient httpClient) {
+   JiraApiReaderImpl(HttpClient httpClient, JiraApiConfiguration jiraApiConfiguration) {
       this.httpClient = httpClient;
+      this.jiraApiConfiguration = requireNonNull(jiraApiConfiguration);
       AuthenticationService.INSTANCE.registerUserAuthenticatedObservable(this);
+   }
+
+   @Override
+   public void applyJiraApiConfiguration(JiraApiConfiguration jiraApiConfiguration) {
+      requireNonNull(jiraApiConfiguration);
+      this.jiraApiConfiguration.applyFromConfiguration(jiraApiConfiguration);
    }
 
    @Override
@@ -63,7 +74,7 @@ public class JiraApiReaderImpl implements JiraApiReader {
    @Override
    public Optional<Ticket> readTicket4Nr(String ticketNr) {
       LOG.info("Try to read ticket for ticket-nr '" + ticketNr + "'");
-      String url = JiraApiConstants.GET_ISSUE_URL + ticketNr;
+      String url = jiraApiConfiguration.getGetIssueUrl() + ticketNr;
       JiraIssueResponse jiraIssueResponse = httpClient.callRequestAndParse(new JiraIssueResponseReader(), url);
       LOG.info("Read successfully ? " + (jiraIssueResponse.isSuccess() ? "yes" : "no"));
       return JiraResponseMapper.INSTANCE.map2Ticket(jiraIssueResponse);
@@ -82,7 +93,7 @@ public class JiraApiReaderImpl implements JiraApiReader {
    }
 
    private void readAndApplyFutureSprintTickets(JiraIssuesResponse activeSprintIssues, String boardId, List<String> sprintNames) {
-      LOG.info("Try to read the tickets for the future sprints '" + (sprintNames.isEmpty() ? "all" : sprintNames.toString() + "'"));
+      LOG.info("Try to read the tickets for the future sprints '" + (sprintNames.isEmpty() ? "all" : sprintNames + "'"));
       getFutureSprintInfos(boardId)
             .stream()
             .filter(isRelevantSprint(sprintNames))
@@ -102,11 +113,11 @@ public class JiraApiReaderImpl implements JiraApiReader {
    }
 
    /*
-    * Da jira jeweils nur 50 Resultate auf einmal zurück liefert, kann es nötig sein zu fetchen. Der Parameter 'maxResults' wirkt nur einschränkend,
-    * kann aber die Grenze von 50 nicht umgehen. Ab dem 8 mal ist aber dann trotzdem schluss
+    * Da jira jeweils nur 50 Resultate auf einmal zurückliefert, kann es nötig sein zu fetchen. Der Parameter 'maxResults' wirkt nur einschränkend,
+    * kann aber die Grenze von 50 nicht umgehen. Ab dem 8-mal ist aber dann trotzdem schluss
     */
    private String getBoardId(String boardName) {
-      String boardId = "";
+      String boardId;
       int index = 0;
       do {
          LOG.info("Trying to get the board id from the search results within range " + index + " to " + (index + JIRA_MAX_RESULTS_RETURNED));
@@ -118,7 +129,7 @@ public class JiraApiReaderImpl implements JiraApiReader {
    }
 
    private List<SprintInfo> getFutureSprintInfos(String boardId) {
-      String getFutureSprintIdUrl = GET_FUTURE_SPRINT_IDS_FOR_BOARD_URL.replace(BOARD_ID_PLACE_HOLDER, boardId);
+      String getFutureSprintIdUrl = jiraApiConfiguration.getGetFuturSprintIdsForBoardUrl().replace(BOARD_ID_PLACE_HOLDER, boardId);
       JiraGenericValuesResponse jiraGetSprintIdResponse = httpClient.callRequestAndParse(new JiraGenericValuesResponseReader(), getFutureSprintIdUrl);
       return jiraGetSprintIdResponse.getValues()
             .stream()
@@ -127,7 +138,7 @@ public class JiraApiReaderImpl implements JiraApiReader {
    }
 
    private SprintInfos getActiveSprintInfos(String boardId) {
-      String getActiveSprintIdUrl = GET_ACTIVE_SPRINT_ID_FOR_BOARD_URL.replace(BOARD_ID_PLACE_HOLDER, boardId);
+      String getActiveSprintIdUrl = jiraApiConfiguration.getGetActiveSprintIdsForBoardUrl().replace(BOARD_ID_PLACE_HOLDER, boardId);
       JiraGenericValuesResponse jiraGetSprintIdResponse = httpClient.callRequestAndParse(new JiraGenericValuesResponseReader(), getActiveSprintIdUrl);
       return jiraGetSprintIdResponse.getValues()
             .stream()
@@ -140,9 +151,9 @@ public class JiraApiReaderImpl implements JiraApiReader {
    }
 
    private String getBoardId4Name(String boardName, String startAt) {
-      String getAllBoardsUrl = GET_ALL_BOARDS_URL.replace(START_AT_PLACE_HOLDER, startAt);
+      String allBoardsUrl = jiraApiConfiguration.getGetAllBoardUrls().replace(START_AT_PLACE_HOLDER, startAt);
       JiraGenericValuesResponse jiraGetBoardsResponse =
-            httpClient.callRequestAndParse(new JiraGenericValuesResponseReader(), getAllBoardsUrl);
+            httpClient.callRequestAndParse(new JiraGenericValuesResponseReader(), allBoardsUrl);
       return jiraGetBoardsResponse.getValues()
             .stream()
             .filter(jiraBoard -> boardName.equals(jiraBoard.getName()))
@@ -165,8 +176,7 @@ public class JiraApiReaderImpl implements JiraApiReader {
    private Function<List<JiraIssuesResponse>, JiraIssuesResponse> apply2InitialResponse() {
       return jiraIssuesResponses -> {
          JiraIssuesResponse initResponse = new JiraIssuesResponse();
-         jiraIssuesResponses.stream()
-               .forEach(initResponse::applyFromOther);
+         jiraIssuesResponses.forEach(initResponse::applyFromOther);
          return initResponse;
       };
    }
@@ -181,11 +191,11 @@ public class JiraApiReaderImpl implements JiraApiReader {
       return readIssuesFromJira(url);
    }
 
-   private static String createGetIssues4BoardUrl(SprintInfo sprintInfo) {
-      return GET_ISSUES_4_BOARD_URL
+   private String createGetIssues4BoardUrl(SprintInfo sprintInfo) {
+      return jiraApiConfiguration.getGetIssues4BoardIdUrl()
             .replace(BOARD_ID_PLACE_HOLDER, sprintInfo.boardId)
             .replace(SPRINT_ID_PLACE_HOLDER, sprintInfo.sprintId)
-            .replace(START_AT_PLACE_HOLDER, "0"); // lets start at the begining
+            .replace(START_AT_PLACE_HOLDER, "0"); // let's start at the beginning
    }
 
    private JiraIssuesResponse readIssuesFromJira(String url) {

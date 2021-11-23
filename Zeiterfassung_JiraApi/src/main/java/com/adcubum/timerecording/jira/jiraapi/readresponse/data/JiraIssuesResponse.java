@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.adcubum.timerecording.jira.jiraapi.constant.JiraApiConstants;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.error.JiraErrorResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

@@ -1,12 +1,14 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
-import static java.util.Objects.requireNonNull;
-
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationBuilder;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.Header;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 import org.mockserver.model.HttpStatusCode;
+
+import static java.util.Objects.requireNonNull;
 
 public class DummyHttpGetServerTestCaseBuilder {
 
@@ -14,9 +16,13 @@ public class DummyHttpGetServerTestCaseBuilder {
    HttpClient httpWrapper;
    JiraApiReaderImpl jiraApiReader;
    String host;
+   private JiraApiConfiguration jiraApiConfiguration;
 
    DummyHttpGetServerTestCaseBuilder(int port) {
       this.clientServer = ClientAndServer.startClientAndServer(port);
+      this.jiraApiConfiguration = JiraApiConfigurationBuilder.of()
+              .withDefaultJiraApiConfiguration()
+              .build();
    }
 
    DummyHttpGetServerTestCaseBuilder withHttpWrapper(HttpClient httpWrapper) {
@@ -25,7 +31,7 @@ public class DummyHttpGetServerTestCaseBuilder {
    }
 
    public DummyHttpGetServerTestCaseBuilder withJiraApiReader() {
-      this.jiraApiReader = new JiraApiReaderImpl(httpWrapper);
+      this.jiraApiReader = new JiraApiReaderImpl(httpWrapper, jiraApiConfiguration);
       return this;
    }
 

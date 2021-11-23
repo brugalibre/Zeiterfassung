@@ -13,6 +13,7 @@ import com.adcubum.timerecording.settings.key.ValueKey;
 import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 
 public class TicketBacklogHelper {
+   private static final ValueKey<String> JIRA_BASE_URL_VALUE_KEY = ValueKeyFactory.createNew("jiraUrl", String.class);
    private static final ValueKey<String> BOARD_NAME_VALUE_KEY = ValueKeyFactory.createNew("boardName", String.class);
    private static final ValueKey<String> SPRINT_NAMES_VALUE_KEY = ValueKeyFactory.createNew("sprintNames", String.class);
    private static final String SPRINT_NAMES_DELIMITER = ";";
@@ -42,5 +43,12 @@ public class TicketBacklogHelper {
     */
    public String getBoardName() {
       return Settings.INSTANCE.getSettingsValue(BOARD_NAME_VALUE_KEY);
+   }
+
+   /**
+    * @return the configured jira url
+    */
+   public String getJiraBaseUrl() {
+      return Settings.INSTANCE.getSettingsValue(JIRA_BASE_URL_VALUE_KEY);
    }
 }

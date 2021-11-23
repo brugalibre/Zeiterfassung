@@ -21,13 +21,14 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
 import com.adcubum.timerecording.core.work.businessday.builder.BusinessDayIncrementBuilder;
+import com.adcubum.timerecording.integtest.BaseTestWithSettings;
 import com.adcubum.timerecording.integtest.repo.TestBusinessDayRepoConfig;
 import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
 
 @SpringBootTest(classes = {TestBusinessDayRepoConfig.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class BusinessDayHelperImplIntegrationTest {
+class BusinessDayHelperImplIntegrationTest extends BaseTestWithSettings {
 
    @Test
    void test_AddBookedIncrements_Twice_FindDuplicateAndDontAddAlreadyExisting() {

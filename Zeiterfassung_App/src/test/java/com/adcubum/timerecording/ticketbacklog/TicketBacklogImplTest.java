@@ -33,7 +33,7 @@ import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
 import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
 
-class TicketBacklogTest extends BaseTestWithSettings {
+class TicketBacklogImplTest extends BaseTestWithSettings {
 
    private static final int AMOUNT_OF_DEFAULT_TICKETS = DefaultTicketConst.getDefaultScrumtTicketNrs().size();
 

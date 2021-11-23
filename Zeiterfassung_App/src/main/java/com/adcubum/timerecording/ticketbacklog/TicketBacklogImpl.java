@@ -1,7 +1,5 @@
 package com.adcubum.timerecording.ticketbacklog;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,8 +10,10 @@ import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationBuilder;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReaderBuilder;
 import com.adcubum.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
 import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
 import com.adcubum.timerecording.ticketbacklog.defaulttickets.DefaultTicketReader;
@@ -28,7 +28,11 @@ public class TicketBacklogImpl implements TicketBacklog {
    private FileImporter fileImporter;
 
    TicketBacklogImpl() {
-      this(JiraApiReader.INSTANCE, FileImporterFactory.createNew());
+      this(JiraApiReaderBuilder.of()
+            .withJiraApiConfiguration(JiraApiConfigurationBuilder.of()
+                  .withDefaultJiraApiConfiguration()
+                  .build())
+            .build(), FileImporterFactory.createNew());
    }
 
    /**
@@ -60,12 +64,13 @@ public class TicketBacklogImpl implements TicketBacklog {
    }
 
    /*
-    * We return always a Ticket. 
+    * We always return a Ticket.
     *    - First we're looking for an existing one.
     *    - If we don't find anything, we'll ask jira
     *    - If Jira don't find anything, we create an empty Ticket with the Ticket-Nr as the only set attribute
     */
    private Ticket findExistingReadNewOrBuildDummyTicket(String ticketNr) {
+      applyJiraApiConfiguration(backlogHelper.getJiraBaseUrl());
       return tickets.stream()
             .filter(existingTicket -> existingTicket.getNr().equals(ticketNr))
             .findFirst()
@@ -75,6 +80,7 @@ public class TicketBacklogImpl implements TicketBacklog {
 
    @Override
    public void initTicketBacklog(UiTicketBacklogCallbackHandler callbackHandler) {
+      applyJiraApiConfiguration(backlogHelper.getJiraBaseUrl());
       if (!backlogHelper.hasBordNameConfigured()) {
          readDefaultTickets();
          LOG.warn("Unable to read the tickets, no board name provided. Check your turbo-bucher.properties!");
@@ -93,6 +99,13 @@ public class TicketBacklogImpl implements TicketBacklog {
       });
    }
 
+   private void applyJiraApiConfiguration(String jiraBaseUrl) {
+      jiraApiReader.applyJiraApiConfiguration(JiraApiConfigurationBuilder.of()
+            .withDefaultJiraApiConfiguration()
+            .withNullableJiraAgileBasePath(jiraBaseUrl)
+            .build());
+   }
+
    private static UpdateStatus evalStatus(JiraApiReadTicketsResult jiraApiReadTicketsResult) {
       return jiraApiReadTicketsResult.isSuccess() ? UpdateStatus.SUCCESS : UpdateStatus.FAIL;
    }
@@ -109,6 +122,6 @@ public class TicketBacklogImpl implements TicketBacklog {
 
    @Override
    public List<Ticket> getTickets() {
-      return Collections.unmodifiableList(new ArrayList<>(tickets));
+      return List.copyOf(tickets);
    }
 }

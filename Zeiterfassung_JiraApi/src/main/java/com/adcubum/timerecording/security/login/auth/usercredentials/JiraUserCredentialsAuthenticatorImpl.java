@@ -1,7 +1,10 @@
 package com.adcubum.timerecording.security.login.auth.usercredentials;
 
+
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationBuilder;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReaderBuilder;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.settings.key.ValueKey;
@@ -14,7 +17,11 @@ public class JiraUserCredentialsAuthenticatorImpl implements UserCredentialsAuth
    private JiraApiReader jiraApiReader;
 
    public JiraUserCredentialsAuthenticatorImpl() {
-      this(JiraApiReader.INSTANCE, getTicketNr2TestConnection());
+      this(JiraApiReaderBuilder.of()
+            .withJiraApiConfiguration(JiraApiConfigurationBuilder.of()
+                  .withDefaultJiraApiConfiguration()
+                  .build())
+            .build(), getTicketNr2TestConnection());
    }
 
    JiraUserCredentialsAuthenticatorImpl(JiraApiReader jiraApiReader, String ticketNr2TestConnection) {
