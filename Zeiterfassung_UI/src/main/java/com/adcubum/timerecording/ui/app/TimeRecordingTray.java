@@ -48,7 +48,6 @@ import com.adcubum.timerecording.ui.app.pages.mainpage.view.MainWindowPage;
 import com.adcubum.timerecording.ui.app.settings.hotkey.HotKeyManager;
 import com.adcubum.timerecording.ui.app.tray.TrayIconDelegate;
 import com.adcubum.timerecording.ui.app.tray.TrayIconDelegateImpl;
-import com.adcubum.timerecording.ui.app.web.WebUiConst;
 import com.adcubum.timerecording.ui.app.web.WebUiHelper;
 import com.adcubum.timerecording.ui.security.login.auth.UiAuthenticationService;
 import com.adcubum.timerecording.ui.util.ExceptionUtil;
@@ -182,7 +181,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    private JMenuItem createShowWebUiMenueItem() {
       JMenuItem showWebUiItem = new JMenuItem(TextLabel.SHOW_WEB_UI);
       WebUiHelper webUiHelper = new WebUiHelper(getCallbackHandler());
-      showWebUiItem.addActionListener(actionEvent -> webUiHelper.openUrlInBrowser(WebUiConst.WEB_UI_ADRESS));
+      showWebUiItem.addActionListener(actionEvent -> webUiHelper.openUrlInBrowser());
       showWebUiItem.setEnabled(true);
       return showWebUiItem;
    }
