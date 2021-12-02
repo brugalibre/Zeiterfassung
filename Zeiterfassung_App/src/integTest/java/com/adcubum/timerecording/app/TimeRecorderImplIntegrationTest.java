@@ -162,7 +162,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       TimeRecorder timeRecorder = mockTimeRecorderImpl(businessDay);
 
       // When
-      timeRecorder.onSuccessfullyLogin();
+      timeRecorder.onTicketBacklogInitialized();
 
       // Then
       verify(businessDay).refreshDummyTickets();
@@ -780,6 +780,11 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       @Override
       public ServiceCodeAdapter getServiceCodeAdapter() {
          return mock(ServiceCodeAdapter.class);
+      }
+
+      @Override
+      public void init() {
+         // well, theres nothing to do
       }
 
       @Override

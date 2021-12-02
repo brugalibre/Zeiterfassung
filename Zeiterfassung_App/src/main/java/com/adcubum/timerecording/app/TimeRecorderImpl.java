@@ -3,10 +3,6 @@
  */
 package com.adcubum.timerecording.app;
 
-import java.io.File;
-import java.util.List;
-import java.util.UUID;
-
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.app.businessday.BusinessDayHelper;
 import com.adcubum.timerecording.app.businessday.BusinessDayHelperImpl;
@@ -44,6 +40,10 @@ import com.adcubum.timerecording.settings.key.ValueKey;
 import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.util.utils.FileSystemUtil;
+
+import java.io.File;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Responsible for recording the time. The {@link TimeRecorder} consist of one
@@ -85,7 +85,8 @@ public class TimeRecorderImpl implements TimeRecorder {
    public void init() {
       BusinessDay businessDay = businessDayHelper.loadExistingOrCreateNew();
       this.currentState = TimeRecorderHelper.evalWorkingState4BusinessDay(businessDay);
-      settings.init();
+      this.settings.init();
+      this.bookAdapter.init();
    }
 
    @Override
@@ -303,11 +304,10 @@ public class TimeRecorderImpl implements TimeRecorder {
    }
 
    @Override
-   public void onSuccessfullyLogin() {
+   public void onTicketBacklogInitialized() {
       // This is necessary if the user started the recording while he/she was offline
-
       BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      businessDay.refreshDummyTickets();
+      businessDayHelper.save(businessDay.refreshDummyTickets());
    }
 
    @Override

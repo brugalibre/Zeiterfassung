@@ -1,10 +1,13 @@
 package com.adcubum.timerecording.jira.data.ticket;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssue;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
+
+import java.util.Collections;
+import java.util.List;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 /**
  * {@link TicketImpl} implements the {@link Ticket}
@@ -49,6 +52,11 @@ public class TicketImpl implements Ticket{
    private boolean isCurrentUserAssigned(String assignee) {
       String currentUserName = AuthenticationService.INSTANCE.getUsername();
       return nonNull(currentUserName) && currentUserName.equalsIgnoreCase(assignee);
+   }
+
+   @Override
+   public List<TicketActivity> getTicketActivities() {
+      return Collections.emptyList();
    }
 
    @Override

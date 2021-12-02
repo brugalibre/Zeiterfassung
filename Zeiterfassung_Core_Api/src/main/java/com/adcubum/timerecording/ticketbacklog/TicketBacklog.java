@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
-import com.adcubum.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
+import com.adcubum.timerecording.ticketbacklog.callback.TicketBacklogCallbackHandler;
 
 /**
  * The {@link TicketBacklog} is responsible for managing and maintaining all the {@link Ticket}s available
@@ -16,11 +16,14 @@ public interface TicketBacklog {
 
    /**
     * Initialises this {@link TicketBacklog} and calls the given callback handler afterwards
-    * 
-    * @param callbackHandler
-    *        the {@link UiTicketBacklogCallbackHandler}
     */
-   void initTicketBacklog(UiTicketBacklogCallbackHandler callbackHandler);
+   void initTicketBacklog();
+
+   /**
+    * Defines the {@link TicketBacklogCallbackHandler} of this {@link TicketBacklog}
+    * @param callbackHandler the callbackhandler to register
+    */
+   void addTicketBacklogCallbackHandler(TicketBacklogCallbackHandler callbackHandler);
 
    /**
     * Evaluates a a {@link Ticket} for the given ticket-nr. If there is no ticket with the given nr, the {@link JiraApiReader} will be

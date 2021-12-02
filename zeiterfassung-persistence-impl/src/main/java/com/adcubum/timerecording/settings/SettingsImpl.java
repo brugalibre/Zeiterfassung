@@ -1,16 +1,13 @@
 package com.adcubum.timerecording.settings;
 
-import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import com.adcubum.timerecording.settings.common.Const;
 import com.adcubum.timerecording.settings.key.ValueKey;
+
+import java.io.*;
+import java.util.Properties;
+
+import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
+import static java.util.Objects.isNull;
 
 public class SettingsImpl implements Settings {
 
@@ -38,7 +35,7 @@ public class SettingsImpl implements Settings {
    }
 
    private static String getSettingsValue(String settingValueKey, String propFile) {
-      try (InputStream resourceStream = new FileInputStream(propFile)) {
+      try (InputStream resourceStream = getInputStream(propFile)) {
          return evalSettingValueForKey(resourceStream, settingValueKey);
       } catch (IOException e) {
          throw new IllegalStateException(e);
@@ -48,7 +45,7 @@ public class SettingsImpl implements Settings {
    @Override
    public <T> void saveValueToProperties(ValueKey<T> key, String value) {
       Properties prop = new Properties();
-      try (InputStream resourceStream = new FileInputStream(propertiesName)) {
+      try (InputStream resourceStream = getInputStream(propertiesName)) {
          prop.load(resourceStream);
          prop.put(key.getName(), value);
          try (FileOutputStream out = new FileOutputStream(propertiesName)) {
@@ -63,6 +60,14 @@ public class SettingsImpl implements Settings {
       Properties prop = new Properties();
       prop.load(resourceStream);
       return (String) prop.get(settingValueKey);
+   }
+
+   private static InputStream getInputStream(String propertiesName) throws FileNotFoundException {
+      InputStream resourceStreamFromResource = SettingsImpl.class.getClassLoader().getResourceAsStream(propertiesName);
+      if (isNull(resourceStreamFromResource)){
+         return new FileInputStream(propertiesName);
+      }
+      return resourceStreamFromResource;
    }
 
    @Override

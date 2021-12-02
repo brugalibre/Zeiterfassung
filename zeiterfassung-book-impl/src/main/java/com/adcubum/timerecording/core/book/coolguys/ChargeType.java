@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.adcubum.timerecording.core.book.coolguys;
 
 import java.io.FileInputStream;
@@ -16,10 +13,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
-
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Dominic
@@ -27,7 +24,7 @@ import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeR
  */
 public class ChargeType implements ServiceCodeAdapter {
 
-   private static final Logger LOG = Logger.getLogger(ChargeType.class);
+   private static final Logger LOG = LoggerFactory.getLogger(ChargeType.class);
 
    public ChargeType() {
       // private 

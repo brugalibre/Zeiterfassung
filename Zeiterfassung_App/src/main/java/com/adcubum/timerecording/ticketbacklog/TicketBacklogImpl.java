@@ -1,11 +1,5 @@
 package com.adcubum.timerecording.ticketbacklog;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
@@ -14,12 +8,16 @@ import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReaderBuilder;
-import com.adcubum.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
 import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
 import com.adcubum.timerecording.ticketbacklog.defaulttickets.DefaultTicketReader;
 import com.adcubum.timerecording.workerfactory.ThreadFactory;
+import org.apache.log4j.Logger;
 
-public class TicketBacklogImpl implements TicketBacklog {
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class TicketBacklogImpl extends AbstractTicketBacklog {
 
    private static final Logger LOG = Logger.getLogger(TicketBacklogImpl.class);
    private JiraApiReader jiraApiReader;
@@ -29,17 +27,16 @@ public class TicketBacklogImpl implements TicketBacklog {
 
    TicketBacklogImpl() {
       this(JiraApiReaderBuilder.of()
-            .withJiraApiConfiguration(JiraApiConfigurationBuilder.of()
-                  .withDefaultJiraApiConfiguration()
-                  .build())
-            .build(), FileImporterFactory.createNew());
+              .withJiraApiConfiguration(JiraApiConfigurationBuilder.of()
+                      .withDefaultJiraApiConfiguration()
+                      .build())
+              .build(), FileImporterFactory.createNew());
    }
 
    /**
     * Constructor for testing purpose only!
-    * 
-    * @param jiraApiReader
-    *        the {@link JiraApiReader}
+    *
+    * @param jiraApiReader the {@link JiraApiReader}
     */
    TicketBacklogImpl(JiraApiReader jiraApiReader, FileImporter fileImporter) {
       this.backlogHelper = new TicketBacklogHelper();
@@ -72,38 +69,38 @@ public class TicketBacklogImpl implements TicketBacklog {
    private Ticket findExistingReadNewOrBuildDummyTicket(String ticketNr) {
       applyJiraApiConfiguration(backlogHelper.getJiraBaseUrl());
       return tickets.stream()
-            .filter(existingTicket -> existingTicket.getNr().equals(ticketNr))
-            .findFirst()
-            .orElseGet(() -> jiraApiReader.readTicket4Nr(ticketNr)
-                  .orElseGet(() -> TicketFactory.INSTANCE.dummy(ticketNr)));
+              .filter(existingTicket -> existingTicket.getNr().equals(ticketNr))
+              .findFirst()
+              .orElseGet(() -> jiraApiReader.readTicket4Nr(ticketNr)
+                      .orElseGet(() -> TicketFactory.INSTANCE.dummy(ticketNr)));
    }
 
    @Override
-   public void initTicketBacklog(UiTicketBacklogCallbackHandler callbackHandler) {
+   public void initTicketBacklog() {
       applyJiraApiConfiguration(backlogHelper.getJiraBaseUrl());
       if (!backlogHelper.hasBordNameConfigured()) {
          readDefaultTickets();
          LOG.warn("Unable to read the tickets, no board name provided. Check your turbo-bucher.properties!");
-         callbackHandler.onTicketBacklogUpdated(UpdateStatus.NOT_CONFIGURED);
+         notifyCallbackHandlers(UpdateStatus.NOT_CONFIGURED);
          return;
       }
-      initTicketBacklogAsync(callbackHandler);
+      initTicketBacklogAsync();
    }
 
-   private void initTicketBacklogAsync(UiTicketBacklogCallbackHandler callbackHandler) {
+   private void initTicketBacklogAsync() {
       String boardName = backlogHelper.getBoardName();
       List<String> sprintNames = backlogHelper.getSprintNames();
       ThreadFactory.INSTANCE.execute(() -> {
          JiraApiReadTicketsResult jiraApiReadTicketsResult = initTicketBacklog(boardName, sprintNames);
-         callbackHandler.onTicketBacklogUpdated(evalStatus(jiraApiReadTicketsResult));
+         notifyCallbackHandlers(evalStatus(jiraApiReadTicketsResult));
       });
    }
 
    private void applyJiraApiConfiguration(String jiraBaseUrl) {
       jiraApiReader.applyJiraApiConfiguration(JiraApiConfigurationBuilder.of()
-            .withDefaultJiraApiConfiguration()
-            .withNullableJiraAgileBasePath(jiraBaseUrl)
-            .build());
+              .withDefaultJiraApiConfiguration()
+              .withNullableJiraAgileBasePath(jiraBaseUrl)
+              .build());
    }
 
    private static UpdateStatus evalStatus(JiraApiReadTicketsResult jiraApiReadTicketsResult) {

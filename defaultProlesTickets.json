@@ -1,0 +1,48 @@
+{
+  "prolesTicketJsonImports" :  [
+    {
+      "ticketNr" : "NAG-1",
+      "customer" : "nag",
+      "project" : "nxT",
+      "description" : "Für nag nxT Entwicklungen",
+      "ticketActivities" : [
+        {
+          "activityName" : "Entwicklung",
+          "activityCode" : "113"
+        },
+        {
+          "activityName" : "Planung",
+          "activityCode" : "111"
+       },
+        {
+          "activityName" : "Analyse & Konzeption",
+          "activityCode" : "112"
+        },
+        {
+          "activityName" : "Testing",
+          "activityCode" : "114"
+        }
+      ]
+    },
+    {
+      "ticketNr" : "NAG-2",
+      "customer" : "nag",
+      "project" : "Intern",
+      "description" : "Für LENA's",
+      "ticketActivities" : [{
+        "activityName" : "LENA",
+        "activityCode" : "111"
+      }]
+    },
+    {
+      "ticketNr" : "NAG-3",
+      "customer" : "nag",
+      "project" : "Ausbildung",
+      "description" : "Für interne Ausbildungen",
+      "ticketActivities" : [{
+        "activityName" : "Interne Ausbildung",
+        "activityCode" : "164"
+      }]
+    }
+  ]
+}

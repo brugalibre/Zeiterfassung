@@ -1,16 +1,17 @@
 package com.adcubum.timerecording.core.book.adapter;
 
 
+import com.adcubum.timerecording.core.book.adapter.type.BookerAdapterFactoryDelegate;
 import com.adcubum.timerecording.core.factory.AbstractFactory;
 
 public class BookerAdapterFactory extends AbstractFactory {
-   private static final String BEAN_NAME = "bookeradapter";
+   private static final String BEAN_NAME = "bookeradapterfactorydelegate";
    private static final BookerAdapterFactory INSTANCE = new BookerAdapterFactory();
 
    private static BookerAdapter bookerAdapter;
 
    private BookerAdapterFactory() {
-      super("modul-configration.xml");
+      super("book-modul-configration.xml");
    }
 
    /**
@@ -18,7 +19,8 @@ public class BookerAdapterFactory extends AbstractFactory {
     */
    public static synchronized BookerAdapter getAdapter() {
       if (bookerAdapter == null) {
-         bookerAdapter = INSTANCE.createNewWithAgruments(BEAN_NAME);
+         BookerAdapterFactoryDelegate bookerAdapterFactoryDelegate = INSTANCE.createNewWithAgruments(BEAN_NAME);
+         bookerAdapter = bookerAdapterFactoryDelegate.createBookerAdapter();
       }
       return bookerAdapter;
    }

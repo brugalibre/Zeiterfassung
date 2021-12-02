@@ -143,6 +143,16 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
+   public BusinessDay flagBusinessDayIncrementAsBooked(UUID id) {
+      Optional<BusinessDayIncrement> businessDayIncrementOpt4Id = findBusinessIncrementById(id);
+      if (businessDayIncrementOpt4Id.isPresent()) {
+         BusinessDayIncrement businessDayIncrement4Id = businessDayIncrementOpt4Id.get().flagAsBooked();
+         return createCopy(businessDayIncrement4Id);
+      }
+      return createCopy(increments);
+   }
+
+   @Override
    public BusinessDay refreshDummyTickets() {
       List<BusinessDayIncrement> changedBusinessDayIncrements = increments.stream()
             .map(BusinessDayIncrement::refreshDummyTicket)
@@ -214,7 +224,7 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public BusinessDay removeIncrement4Id(UUID id) {
-      if (getBusinessIncrement(id).isPresent()) {
+      if (findBusinessIncrementById(id).isPresent()) {
          List<BusinessDayIncrement> remainingBusinessDayIncrements = collectBusinessDayIncrementsWithOtherId(id);
          return createCopy(remainingBusinessDayIncrements);
       }
@@ -266,7 +276,7 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public BusinessDay changeBusinesDayIncrement(ChangedValue changeValue) {
-      Optional<BusinessDayIncrement> businessDayIncOpt = getBusinessIncrement(changeValue.getId());
+      Optional<BusinessDayIncrement> businessDayIncOpt = findBusinessIncrementById(changeValue.getId());
       return businessDayIncOpt.map(businessDayIncrement -> {
          BusinessDayIncrement changedBusinessDayIncrement = handleBusinessDayChangedInternal(businessDayIncrement, changeValue);
          return createCopy(changedBusinessDayIncrement);
@@ -336,7 +346,7 @@ public class BusinessDayImpl implements BusinessDay {
       return id;
    }
 
-   private Optional<BusinessDayIncrement> getBusinessIncrement(UUID id) {
+   private Optional<BusinessDayIncrement> findBusinessIncrementById(UUID id) {
       return increments.stream()
             .filter(businessDayIncrements -> businessDayIncrements.getId().equals(id))
             .findFirst();

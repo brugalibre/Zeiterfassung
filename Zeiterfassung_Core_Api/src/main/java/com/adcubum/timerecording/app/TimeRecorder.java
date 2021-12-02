@@ -139,9 +139,9 @@ public interface TimeRecorder extends BusinessDayHistoryOverviewResolver {
    FileExportResult exportSilently(String path2Export);
 
    /**
-    * Is called after the user was successfully loged-in
+    * Is called after the {@link com.adcubum.timerecording.ticketbacklog.TicketBacklog} was initialized sucessfully
     */
-   void onSuccessfullyLogin();
+   void onTicketBacklogInitialized();
 
    /**
     * First the {@link FileImporter} imports the given {@link File} and fills
@@ -240,5 +240,4 @@ public interface TimeRecorder extends BusinessDayHistoryOverviewResolver {
    BusinessDay getBussinessDay();
 
    void setCallbackHandler(UiCallbackHandler callbackHandler);
-
 }

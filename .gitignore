@@ -9,3 +9,8 @@
 /.idea/uiDesigner.xml
 /.idea/vcs.xml
 /.idea/Zeiterfassung.iml
+*.properties
+*.json
+zeiterfassung-web-bucher.properties
+zeiterfassung.properties
+defaultProlesTickets.json

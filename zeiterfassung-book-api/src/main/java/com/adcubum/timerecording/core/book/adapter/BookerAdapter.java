@@ -14,6 +14,11 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 public interface BookerAdapter {
 
    /**
+    * Initializes this {@link BookerAdapter} if necessary
+    */
+   void init();
+
+   /**
     * @return the {@link ServiceCodeAdapter}
     */
    public ServiceCodeAdapter getServiceCodeAdapter();

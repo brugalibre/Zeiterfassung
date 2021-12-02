@@ -1,8 +1,5 @@
 package com.adcubum.timerecording.core.work.businessday;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayIncrementImport;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
@@ -12,6 +9,9 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Busi
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.work.date.DateTime;
+
+import java.util.List;
+import java.util.UUID;
 
 public interface BusinessDay extends DomainModel {
 
@@ -121,6 +121,14 @@ public interface BusinessDay extends DomainModel {
     * @return a new and changed instance of this {@link BusinessDay}
     */
    BusinessDay flagBusinessDayAsCharged();
+
+   /**
+    * Flags a specific {@link BusinessDayIncrement} as charged
+    *
+    * @param id the Id of the {@link BusinessDayIncrement} to flag as charged
+    * @return a changed copy of this {@link BusinessDay}
+    */
+   BusinessDay flagBusinessDayIncrementAsBooked(UUID id);
 
    /**
     * Deletes all {@link BusinessDayIncrement} which are already finished

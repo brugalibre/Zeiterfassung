@@ -10,5 +10,7 @@ dependencies {
     
     implementation project(':zeiterfassung-core-api')
     implementation project(':zeiterfassung-common-api')
+
     testImplementation project(':zeiterfassung-book-impl')
+    testImplementation project(':zeiterfassung-persistence-impl')
 }

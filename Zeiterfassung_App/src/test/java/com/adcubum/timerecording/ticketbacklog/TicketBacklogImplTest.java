@@ -1,18 +1,14 @@
 package com.adcubum.timerecording.ticketbacklog;
 
-import static java.util.Objects.nonNull;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import com.adcubum.timerecording.importexport.in.file.FileImporter;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketConst;
+import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
+import com.adcubum.timerecording.test.BaseTestWithSettings;
+import com.adcubum.timerecording.ticketbacklog.callback.TicketBacklogCallbackHandler;
+import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -22,16 +18,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.junit.jupiter.api.Test;
-
-import com.adcubum.timerecording.importexport.in.file.FileImporter;
-import com.adcubum.timerecording.jira.data.ticket.Ticket;
-import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketConst;
-import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
-import com.adcubum.timerecording.test.BaseTestWithSettings;
-import com.adcubum.timerecording.ticketbacklog.callback.UiTicketBacklogCallbackHandler;
-import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
+import static java.util.Objects.nonNull;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 class TicketBacklogImplTest extends BaseTestWithSettings {
 
@@ -43,8 +35,7 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
       TestCaseBuilder tcb = new TestCaseBuilder()
             .buildTestCaseBuilder();
       // When
-      tcb.ticketBacklog.initTicketBacklog(res -> {
-      });
+      tcb.ticketBacklog.initTicketBacklog();
 
       // Then
       verify(tcb.jiraApiReader, times(AMOUNT_OF_DEFAULT_TICKETS)).readTicket4Nr(any());
@@ -96,8 +87,7 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
             .buildTestCaseBuilder();
 
       // When
-      tcb.ticketBacklog.initTicketBacklog(res -> {
-      });
+      tcb.ticketBacklog.initTicketBacklog();
       int amountOfTicketsBefore = tcb.ticketBacklog.getTickets().size();
       Ticket actualTicket = tcb.ticketBacklog.getTicket4Nr(defaultTicketNr);// this must not trigger the jiraApi
 
@@ -111,12 +101,13 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
    @Test
    void testInitTicketBacklog_NotConfigured() {
       // Given
-      UiTicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
+      TicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
       TicketBacklog ticketBacklog = new TestCaseBuilder()
+            .withCallbackHandler(callbackHandler)
             .build();
 
       // When
-      ticketBacklog.initTicketBacklog(callbackHandler);
+      ticketBacklog.initTicketBacklog();
 
       // Then
       verify(callbackHandler).onTicketBacklogUpdated(eq(UpdateStatus.NOT_CONFIGURED));
@@ -126,9 +117,10 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
    @Test
    void testInitTicketBacklog_ConfiguredAndSuccessfull() throws InterruptedException {
       // Given
-      UiTicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
+      TicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
       int expectedSize = 1 + AMOUNT_OF_DEFAULT_TICKETS;// 1 plus 4 default tickets
       TicketBacklog ticketBacklog = new TestCaseBuilder()
+            .withCallbackHandler(callbackHandler)
             .withBoardName("blubbl")
             .withOneReadTicket()
             .withRetrievedTicket("SYRIUS-984")
@@ -136,7 +128,7 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
             .build();
 
       // When
-      ticketBacklog.initTicketBacklog(callbackHandler);
+      ticketBacklog.initTicketBacklog();
       Thread.sleep(50);
 
       // Then
@@ -147,15 +139,16 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
    @Test
    void testInitTicketBacklog_ConfiguredAndFail() throws InterruptedException {
       // Given
-      UiTicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
+      TicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
       int expectedSize = AMOUNT_OF_DEFAULT_TICKETS;
       TicketBacklog ticketBacklog = new TestCaseBuilder()
+              .withCallbackHandler(callbackHandler)
             .withRetrievedTicket("SYRIUS-6354")
             .withBoardName("blubbl")
             .build();
 
       // When
-      ticketBacklog.initTicketBacklog(callbackHandler);
+      ticketBacklog.initTicketBacklog();
       Thread.sleep(50);
 
       // Then
@@ -171,10 +164,13 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
       private List<Ticket> readTickets;
       private TicketBacklog ticketBacklog;
       private String receivedTicketNr;
+      private TicketBacklogCallbackHandler callbackHandler;
 
       private TestCaseBuilder() {
          this.jiraApiReader = mock(JiraApiReader.class);
          this.readTickets = new ArrayList<>();
+         this.callbackHandler = updateStatus -> {
+         };
       }
 
       public TestCaseBuilder withOneReadTicket() {
@@ -221,7 +217,9 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
          if (nonNull(boardName)) {
             saveProperty2Settings("boardName", boardName);
          }
-         return new TicketBacklogImpl(jiraApiReader, createDefaultFileReader());
+         TicketBacklog ticketBacklog = new TicketBacklogImpl(jiraApiReader, createDefaultFileReader());
+         ticketBacklog.addTicketBacklogCallbackHandler(callbackHandler);
+         return ticketBacklog;
       }
 
       private FileImporter createDefaultFileReader() {
@@ -254,9 +252,14 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
          }
          when(jiraApiReader.readTicketsFromBoardAndSprints(any(), any())).thenReturn(JiraApiReadTicketsResult.of(readTickets, ex));
       }
+
+      public TestCaseBuilder withCallbackHandler(TicketBacklogCallbackHandler callbackHandler) {
+         this.callbackHandler = callbackHandler;
+         return this;
+      }
    }
 
-   private static class TestUiTicketBacklogCallbackHandler implements UiTicketBacklogCallbackHandler {
+   private static class TestUiTicketBacklogCallbackHandler implements TicketBacklogCallbackHandler {
       @Override
       public void onTicketBacklogUpdated(UpdateStatus updateStatus) {
          // empty

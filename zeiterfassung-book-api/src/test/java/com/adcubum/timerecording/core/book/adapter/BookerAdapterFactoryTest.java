@@ -1,10 +1,10 @@
 package com.adcubum.timerecording.core.book.adapter;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-
+import com.adcubum.timerecording.core.book.coolguys.ChargeType;
 import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 class BookerAdapterFactoryTest {
 
@@ -17,7 +17,6 @@ class BookerAdapterFactoryTest {
       ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
 
       // Then
-      assertThat(serviceCodeAdapter, is(notNullValue()));
+      assertThat(serviceCodeAdapter.getClass().isAssignableFrom(ChargeType.class), is(true));
    }
-
 }

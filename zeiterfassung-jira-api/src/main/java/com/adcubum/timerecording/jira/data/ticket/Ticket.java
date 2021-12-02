@@ -1,5 +1,7 @@
 package com.adcubum.timerecording.jira.data.ticket;
 
+import java.util.List;
+
 /**
  * The {@link Ticket} represents a agile ticket which may be assigned a sprint
  * or a user Additionally it has a lot of attributes (most of them are
@@ -11,12 +13,15 @@ package com.adcubum.timerecording.jira.data.ticket;
 public interface Ticket {
 
    /**
+    * @return all {@link TicketActivity} of this {@link Ticket}
+    */
+   List<TicketActivity> getTicketActivities();
+
+   /**
     * Returns a string starting with the ticket-nr and following by
     * ('description-of-this-ticket')
     * 
-    * @param ticket
-    *        the ticket
-    * @return a representation
+    * @return a representation of this ticket
     */
    String getTicketRep();
 
@@ -34,7 +39,7 @@ public interface Ticket {
    boolean isSprintTicket();
 
    /**
-    * @return <code>true</code> if this {@link TicketImpl} is a dummy Ticket
+    * @return <code>true</code> if this {@link Ticket} is a dummy Ticket
     *         since it does not exist in jira or <code>false</code> if not
     */
    boolean isDummyTicket();
@@ -46,12 +51,12 @@ public interface Ticket {
    boolean isBookable();
 
    /**
-    * @return the number of the {@link TicketImpl}
+    * @return the number of the {@link Ticket}
     */
    String getNr();
 
    /**
-    * @return the TicketAttrs of the {@link TicketImpl}
+    * @return the TicketAttrs of the {@link Ticket}
     */
    TicketAttrs getTicketAttrs();
 

@@ -1,31 +1,8 @@
 
 /**
- * 
+ *
  */
 package com.adcubum.timerecording.ui.app;
-
-import static com.adcubum.timerecording.ui.app.settings.hotkey.HotKeyManager.COME_OR_GO_HOT_KEY;
-import static com.adcubum.timerecording.ui.app.settings.hotkey.HotKeyManager.START_STOP_HOT_KEY;
-
-import java.awt.Color;
-import java.awt.Toolkit;
-import java.awt.TrayIcon;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.io.File;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Supplier;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.UIManager;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.app.TimeRecorder;
@@ -53,13 +30,27 @@ import com.adcubum.timerecording.ui.security.login.auth.UiAuthenticationService;
 import com.adcubum.timerecording.ui.util.ExceptionUtil;
 import com.adcubum.timerecording.workerfactory.ThreadFactory;
 import com.adcubum.util.exception.GlobalExceptionHandler;
-
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.io.File;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Supplier;
+
+import static com.adcubum.timerecording.ui.app.settings.hotkey.HotKeyManager.COME_OR_GO_HOT_KEY;
+import static com.adcubum.timerecording.ui.app.settings.hotkey.HotKeyManager.START_STOP_HOT_KEY;
+
 /**
  * @author Dominic
- * 
+ *
  */
 public class TimeRecordingTray implements LoginCallbackHandler {
    private JMenuItem showHoursItem;
@@ -134,13 +125,15 @@ public class TimeRecordingTray implements LoginCallbackHandler {
 
    private void initTicketBacklog() {
       refreshTicketBacklogMenuItem.setEnabled(false);
-      TicketBacklogSPI.getTicketBacklog().initTicketBacklog(this::handleTicketBacklogUpdated);
+      TicketBacklogSPI.getTicketBacklog().addTicketBacklogCallbackHandler(this::handleTicketBacklogUpdated);
+      TicketBacklogSPI.getTicketBacklog().initTicketBacklog();
    }
 
    private void handleTicketBacklogUpdated(UpdateStatus status) {
       runInFxThread(() -> {
          mainWindowPage.refresh();
          refreshTicketBacklogMenuItem.setEnabled(AuthenticationService.INSTANCE.isUserAuthenticated());
+         TimeRecorder.INSTANCE.onTicketBacklogInitialized();
          displayMessage(status);
       });
    }
@@ -219,7 +212,6 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    public void onLoginEnd(LoginEndState loginEndState) {
       if (loginEndState == LoginEndState.SUCCESSFULLY) {
          initTicketBacklog();
-         TimeRecorder.INSTANCE.onSuccessfullyLogin();
       }
       updateUIStates();
    }

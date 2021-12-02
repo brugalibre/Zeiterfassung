@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.adcubum.timerecording.core.book.coolguys;
 
 import java.util.List;
@@ -35,6 +32,10 @@ public class BookerHelper implements BookerAdapter, UserAuthenticatedObservable 
       this.username = "";
       this.userPwdSupplier = () -> new char[] {};
       this.lock = new Object[] {};
+      }
+
+   @Override
+   public void init() {
       AuthenticationService.INSTANCE.registerUserAuthenticatedObservable(this);
    }
 
@@ -53,7 +54,7 @@ public class BookerHelper implements BookerAdapter, UserAuthenticatedObservable 
     * Collects from each {@link BusinessDayIncrement} the content to book and calls
     * finally the {@link Booker#bookList(List)}. Additionally all booked
     * {@link BusinessDayIncrement} are flagged as charged
-    * 
+    *
     * @see Booker#bookList(List)
     */
    @Override
