@@ -11,8 +11,6 @@ dependencies {
     
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.1'
-	
-	// due to version conflicts with hibernate-core, mockito and or java 11
 }
 
 tasks.withType(Test) {
