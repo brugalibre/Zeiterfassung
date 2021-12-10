@@ -3,20 +3,22 @@
  */
 package com.adcubum.timerecording.model.businessday;
 
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.ValueTypes;
+import com.adcubum.timerecording.data.ticket.ticketactivity.factor.TicketActivityFactory;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
+import com.adcubum.timerecording.model.ticketbacklog.ServiceCodeDto;
+import com.adcubum.timerecording.model.ticketbacklog.TicketDto;
+import com.adcubum.util.utils.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
-import com.adcubum.timerecording.core.work.businessday.ValueTypes;
-import com.adcubum.timerecording.jira.data.ticket.Ticket;
-import com.adcubum.timerecording.model.ticketbacklog.ServiceCodeDto;
-import com.adcubum.timerecording.model.ticketbacklog.TicketDto;
-import com.adcubum.util.utils.StringUtil;
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * The {@link BusinessDayIncrement} is used whenever a we need
@@ -54,7 +56,8 @@ public class BusinessDayIncrementDto {
       this.timeSnippetDto = new TimeSnippetDto(businessDayIncremental.getCurrentTimeSnippet());
       this.description = evalDescription(businessDayIncremental.getDescription());
       this.ticketDto = map2TicketDto(businessDayIncremental.getTicket());
-      this.serviceCodeDto = new ServiceCodeDto(businessDayIncremental.getChargeType(), businessDayIncremental.getServiceCodeDescription());
+      TicketActivity ticketActivity = businessDayIncremental.getTicketActivity();
+      this.serviceCodeDto = new ServiceCodeDto(ticketActivity.getActivityCode(), ticketActivity.getActivityName());
       this.isBooked = businessDayIncremental.isBooked();
    }
 
@@ -134,8 +137,8 @@ public class BusinessDayIncrementDto {
     */
    public Object getChangedValue(ValueTypes valueType) {
       switch (valueType) {
-         case SERVICE_CODE:
-            return serviceCodeDto.getValue();
+         case TICKET_ACTIVITY:
+            return TicketActivityFactory.INSTANCE.createNew(serviceCodeDto.getRepresentation(), serviceCodeDto.getValue());
          case DESCRIPTION:
             return description;
          default:
@@ -151,12 +154,12 @@ public class BusinessDayIncrementDto {
    /**
     * Compares both {@link BusinessDayIncrementDto} and returns a list of {@link ValueTypes} which has changed
     * 
-    * @param changedBusinessDayIncrementDto
+    * @param otherBusinessDayIncrementDto
     */
    public List<ValueTypes> compareAndEvalChangedValues(BusinessDayIncrementDto otherBusinessDayIncrementDto) {
       List<ValueTypes> changedAttrs = new ArrayList<>();
       if (serviceCodeDto.getValue() != otherBusinessDayIncrementDto.serviceCodeDto.getValue()) {
-         changedAttrs.add(ValueTypes.SERVICE_CODE);
+         changedAttrs.add(ValueTypes.TICKET_ACTIVITY);
       }
       if (!description.equals(otherBusinessDayIncrementDto.description)) {
          changedAttrs.add(ValueTypes.DESCRIPTION);

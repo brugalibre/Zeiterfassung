@@ -1,11 +1,12 @@
 package com.adcubum.timerecording.core.work.businessday.factory;
 
-import java.util.UUID;
-
 import com.adcubum.timerecording.core.factory.AbstractFactory;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
+
+import java.util.UUID;
 
 /**
  * Factory in order to create {@link BusinessDayIncrement}s
@@ -30,16 +31,16 @@ public class BusinessDayIncrementFactory extends AbstractFactory {
     *        the (ticket) description of this {@link BusinessDayIncrement}
     * @param ticket
     *        the ticket itself
-    * @param chargeType
-    *        the charge type
+    * @param ticketActivity
+    *        the {@link TicketActivity}
     * @param isCharged
     *        <code>true</code> if this {@link BusinessDayIncrement} is charged or <code>false</code> if not
-    * @param the
-    *        id of the {@link BusinessDayIncrement}
+    * @param id
+    *        the id of the {@link BusinessDayIncrement}
     * @return a new {@link BusinessDayIncrement} instance
     */
-   public static BusinessDayIncrement createNew(TimeSnippet currentTimeSnippet, UUID id, String description, Ticket ticket, int chargeType,
+   public static BusinessDayIncrement createNew(TimeSnippet currentTimeSnippet, UUID id, String description, Ticket ticket, TicketActivity ticketActivity,
          boolean isCharged) {
-      return INSTANCE.createNewWithAgruments(BEAN_NAME, currentTimeSnippet, id, description, ticket, chargeType, isCharged);
+      return INSTANCE.createNewWithAgruments(BEAN_NAME, currentTimeSnippet, id, description, ticket, ticketActivity, isCharged);
    }
 }

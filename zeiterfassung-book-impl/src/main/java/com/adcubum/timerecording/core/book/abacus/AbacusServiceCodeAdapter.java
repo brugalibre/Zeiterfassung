@@ -1,18 +1,21 @@
 //package com.adcubum.timerecording.core.book.abacus;
 //
-//import java.util.ArrayList;
+//import com.adcubum.j2a.zeiterfassung.AbacusBookingConnector;
+//import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
+//import com.adcubum.timerecording.core.book.servicecode.ServiceCodeDto;
+//import com.adcubum.timerecording.core.book.servicecode.ServiceCodeDtoImpl;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//
 //import java.util.List;
 //import java.util.Map;
 //import java.util.Map.Entry;
-//
-//import org.apache.log4j.Logger;
-//
-//import com.adcubum.j2a.zeiterfassung.AbacusBookingConnector;
-//import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
+//import java.util.function.Function;
+//import java.util.stream.Collectors;
 //
 //public class AbacusServiceCodeAdapter implements ServiceCodeAdapter {
 //
-//   private static final Logger LOG = Logger.getLogger(AbacusServiceCodeAdapter.class);
+//   private static final Logger LOG = LoggerFactory.getLogger(AbacusServiceCodeAdapter.class);
 //   private AbacusBookingConnector abacusBookingConnector;
 //   private Map<Integer, String> allServiceCodes;
 //
@@ -30,28 +33,30 @@
 //   }
 //
 //   @Override
-//   public List<String> fetchServiceCodesForProjectNr(long projectNr) {
+//   public List<ServiceCodeDto> fetchServiceCodesForProjectNr(long projectNr) {
 //      Map<Integer, String> serviceCodesForProject = abacusBookingConnector.fetchServiceCodesForProject(projectNr);
-//      return new ArrayList<>(serviceCodesForProject.values());
+//      return serviceCodesForProject.keySet()
+//             .stream()
+//             .map(toServiceCodeDto(serviceCodesForProject))
+//             .collect(Collectors.toList());
 //   }
 //
-//   @Override
-//   public int getServiceCode4Description(String givenServiceCodeDesc) {
-//      for (Entry<Integer, String> serviceCode2Desc : allServiceCodes.entrySet()) {
-//         if (serviceCode2Desc.getValue().equals(givenServiceCodeDesc)) {
-//            return serviceCode2Desc.getKey();
-//         }
-//      }
-//      return -1;
-//   }
+//    @Override
+//    public List<ServiceCodeDto> getAllServiceCodeDescriptions() {
+//        return null;
+//    }
 //
-//   @Override
-//   public List<String> getAllServiceCodes() {
-//      return new ArrayList<>(allServiceCodes.values());
-//   }
+//    private static Function<Integer, ServiceCodeDtoImpl> toServiceCodeDto(Map<Integer, String> serviceCodesForProject) {
+//        return serviceCode -> new ServiceCodeDtoImpl(serviceCode, serviceCodesForProject.get(serviceCode));
+//    }
 //
-//   @Override
-//   public String getServiceCodeDescription4ServiceCode(int serviceCode) {
-//      return allServiceCodes.get(serviceCode);
-//   }
+//    @Override
+//    public ServiceCodeDto getServiceCode4Description(String givenServiceCodeDesc) {
+//        for (Entry<Integer, String> serviceCode2Desc : allServiceCodes.entrySet()) {
+//            if (serviceCode2Desc.getValue().equals(givenServiceCodeDesc)) {
+//                return new ServiceCodeDtoImpl(serviceCode2Desc.getKey(), givenServiceCodeDesc);
+//            }
+//        }
+//        return null;
+//    }
 //}

@@ -7,6 +7,9 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import com.adcubum.timerecording.data.ticket.ticketactivity.factor.TicketActivityFactory;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
+import com.adcubum.timerecording.model.ticketbacklog.ServiceCodeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
@@ -60,12 +63,14 @@ public class BusinessDayServiceHelperImpl implements BusinessDayServiceHelper {
    }
 
    private BusinessDayIncrementAdd createBusinessDayIncrementAddOf(@Valid BusinessDayIncrementDto businessDayIncrementDto) {
+      ServiceCodeDto serviceCodeDto = businessDayIncrementDto.getServiceCodeDto();
+      TicketActivity ticketActivity = TicketActivityFactory.INSTANCE.createNew(serviceCodeDto.getRepresentation(), serviceCodeDto.getValue());
       Ticket ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(businessDayIncrementDto.getTicketDto().getTicketNr());
       TimeSnippet timeSnippet = createTimeSnippet(businessDayIncrementDto);
       return new BusinessDayIncrementAddBuilder()
             .withAmountOfHours(businessDayIncrementDto.getTimeSnippetDto().getDurationRep())
             .withDescription(businessDayIncrementDto.getDescription())
-            .withServiceCode(businessDayIncrementDto.getServiceCodeDto().getValue())
+            .withTicketActivity(ticketActivity)
             .withTicket(ticket)
             .withTimeSnippet(timeSnippet)
             .build();

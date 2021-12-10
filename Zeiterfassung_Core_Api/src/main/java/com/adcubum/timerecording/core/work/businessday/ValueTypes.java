@@ -8,9 +8,9 @@ public enum ValueTypes {
    TICKET_NR,
    /** The additionally description of the charging */
    DESCRIPTION,
-   /** The Begin of a {@link BusinessDayIncremental} */
+   /** The Begin of a business-day-increment */
    BEGIN,
-   /** The end of a {@link BusinessDayIncremental} */
+   /** The end of a business-day-increment */
    END,
    /** The total amount of time of a {@link TimeSnippet} */
    AMOUNT_OF_TIME,
@@ -18,9 +18,7 @@ public enum ValueTypes {
     * The type of charge such as '113 - Programmieren', '122 - Testing' and so on. This is kind of deprecated since here we have to work
     * with the description of a service code, rather with the value itself
     **/
-   SERVICE_CODE_DESCRIPTION,
-   /** The service code such as 113, 122 and so on **/
-   SERVICE_CODE,
+   TICKET_ACTIVITY,
    /** no specific value */
    NONE;
 }

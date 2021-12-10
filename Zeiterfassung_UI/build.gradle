@@ -36,7 +36,6 @@ dependencies {
     
     implementation project(':zeiterfassung-persistence-api')
     implementation project(':zeiterfassung-core-api')
-    implementation project(':zeiterfassung-book-api')
     implementation project(':zeiterfassung-common-api')
     implementation project(':zeiterfassung-jira-api')
     implementation project(':zeiterfassung-auth-impl')

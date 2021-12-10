@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 
 import java.io.File;
 
+import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -27,31 +28,34 @@ class TimeRecorder_ImportBusinessDayTest {
    void testImportBusinessDayFromFile_Success() throws InvalidChargeTypeRepresentationException {
       // Given
       File testImportFile = new File("src\\integTest\\resources\\io\\testImportFile.csv");
-      String firstTicketNr = "SYRIUS-1234";
-      String firstTicketLeistungsartRep = "113 - Umsetzung/Dokumentation";
+      String ticketNr = "SYRIUS-1234";
+      String firstTicketLeistungsartRep = "Umsetzung/Dokumentation";
       float firstTicketDuration = 1.0f;
       String secondTicketNr = "INTA-556";
-      String secondTicketLeistungsartRep = "122 - Qualtitätssicherung";
+      String secondTicketLeistungsartRep = "Qualtitaetssicherung";
+      int serviceCodeTesting = 122;
       float secondTicketDuration = 4.25f;
       TimeRecorder timeRecorder = buildTimeRecorder();
+      TicketBacklogSPI.getTicketBacklog().initTicketBacklog();
 
       // When
       boolean actualImported = timeRecorder.importBusinessDayFromFile(testImportFile);
 
       // Then
-      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       assertThat(actualImported, is(true));
       BusinessDay bussinessDay = timeRecorder.getBussinessDay();
       assertThat(bussinessDay.getIncrements().size(), is(2));
-      BusinessDayIncrement firstBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(firstTicketNr, bussinessDay);
+      BusinessDayIncrement firstBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(ticketNr, bussinessDay);
       BusinessDayIncrement secondBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(secondTicketNr, bussinessDay);
       assertThat(firstBusinessDayInc4TicketNr, is(notNullValue()));
       assertThat(firstBusinessDayInc4TicketNr.getDescription(), is("Test"));
-      assertThat(firstBusinessDayInc4TicketNr.getChargeType(), is(serviceCodeAdapter.getServiceCode4Description(firstTicketLeistungsartRep)));
+      assertThat(firstBusinessDayInc4TicketNr.getTicketActivity().getActivityCode(), is(113));
+      assertThat(firstBusinessDayInc4TicketNr.getTicketActivity().getActivityName(), is(firstTicketLeistungsartRep));
       assertThat(firstBusinessDayInc4TicketNr.getCurrentTimeSnippet().getDuration(), is(firstTicketDuration));
       assertThat(secondBusinessDayInc4TicketNr, is(notNullValue()));
       assertThat(secondBusinessDayInc4TicketNr.getDescription(), is(""));
-      assertThat(secondBusinessDayInc4TicketNr.getChargeType(), is(serviceCodeAdapter.getServiceCode4Description(secondTicketLeistungsartRep)));
+      assertThat(secondBusinessDayInc4TicketNr.getTicketActivity().getActivityCode(), is(serviceCodeTesting));
+      assertThat(secondBusinessDayInc4TicketNr.getTicketActivity().getActivityName(), is(secondTicketLeistungsartRep));
       assertThat(secondBusinessDayInc4TicketNr.getCurrentTimeSnippet().getDuration(), is(secondTicketDuration));
    }
 

@@ -1,19 +1,18 @@
 package com.adcubum.timerecording.ui.app.pages.overview.model.table;
 
-import static java.util.Objects.nonNull;
-
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.timerecording.ui.core.view.table.EditableCell;
-
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.util.StringConverter;
+
+import static java.util.Objects.nonNull;
 
 /**
  * 

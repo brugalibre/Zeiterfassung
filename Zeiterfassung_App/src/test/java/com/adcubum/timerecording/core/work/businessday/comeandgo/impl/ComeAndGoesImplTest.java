@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.UUID;
 
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
@@ -36,6 +37,7 @@ class ComeAndGoesImplTest extends BaseTestWithSettings {
                         .build())
                   .withDescription("Default Description")
                   .withTicket(mockTicket(true, "6848"))
+                  .withTicketActivity(mock(TicketActivity.class))
                   .build())
             .build();
 

@@ -1,4 +1,4 @@
-package com.adcubum.timerecording.data.ticket;
+package com.adcubum.timerecording.data.ticket.ticketactivity;
 
 import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 
@@ -23,6 +23,6 @@ public class TicketActivityJsonImport {
     }
 
     public static TicketActivity mapToProlesActivity(TicketActivityJsonImport ticketActivityJsonImport) {
-        return new TicketActivityImpl(ticketActivityJsonImport.activityName, ticketActivityJsonImport.activityCode);
+        return new TicketActivityImpl(ticketActivityJsonImport.activityName, ticketActivityJsonImport.activityCode, false, ticketActivityJsonImport.activityName);
     }
 }

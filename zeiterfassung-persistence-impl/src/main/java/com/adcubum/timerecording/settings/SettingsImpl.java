@@ -2,6 +2,8 @@ package com.adcubum.timerecording.settings;
 
 import com.adcubum.timerecording.settings.common.Const;
 import com.adcubum.timerecording.settings.key.ValueKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Properties;
@@ -11,6 +13,7 @@ import static java.util.Objects.isNull;
 
 public class SettingsImpl implements Settings {
 
+   private static final Logger LOG = LoggerFactory.getLogger(SettingsImpl.class);
    private String propertiesName;
 
    /**
@@ -38,8 +41,9 @@ public class SettingsImpl implements Settings {
       try (InputStream resourceStream = getInputStream(propFile)) {
          return evalSettingValueForKey(resourceStream, settingValueKey);
       } catch (IOException e) {
-         throw new IllegalStateException(e);
+         LOG.error("Unable to read value for key '" + settingValueKey + "' in property file '" + propFile + "'", e);
       }
+      return null;
    }
 
    @Override

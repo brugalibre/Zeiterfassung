@@ -9,7 +9,6 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
-import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.util.parser.DateParser;
 import com.adcubum.util.parser.NumberFormat;
 import com.zeiterfassung.web.book.common.record.BookRecord;
@@ -28,20 +27,17 @@ import static com.zeiterfassung.web.proles.book.record.ProlesBookRecordEntry.Pro
 
 public class ProlesBookerHelper implements BookerAdapter, UserAuthenticatedObservable {
 
-    private ProlesServiceCodeAdapter prolesServiceCodeAdapter;
     private Supplier<char[]> userPwdSupplier;
     private String username;
 
     public ProlesBookerHelper() {
         this.username = "";
-        this.prolesServiceCodeAdapter = new ProlesServiceCodeAdapter();
         this.userPwdSupplier = () -> new char[]{};
     }
 
     @Override
     public void init() {
         AuthenticationService.INSTANCE.registerUserAuthenticatedObservable(this);
-        TicketBacklogSPI.getTicketBacklog().addTicketBacklogCallbackHandler(prolesServiceCodeAdapter);
     }
 
     @Override
@@ -52,7 +48,7 @@ public class ProlesBookerHelper implements BookerAdapter, UserAuthenticatedObser
 
     @Override
     public ServiceCodeAdapter getServiceCodeAdapter() {
-        return prolesServiceCodeAdapter;
+        return null;
     }
 
     /**
@@ -93,7 +89,7 @@ public class ProlesBookerHelper implements BookerAdapter, UserAuthenticatedObser
                 .filter(BusinessDayIncrement::isBookable)
                 .filter(businessDayIncrement -> !businessDayIncrement.isBooked())
                 .map(businessDayIncrement -> ProlesBookRecordEntryBuilder.of()
-                        .withActivity(businessDayIncrement.getServiceCodeDescription())
+                        .withActivity(businessDayIncrement.getTicketActivity().getActivityName())
                         .withCustomer(businessDayIncrement.getTicket().getTicketAttrs().getThema())
                         .withProject(businessDayIncrement.getTicket().getTicketAttrs().getProjectDesc())
                         .withDescription(businessDayIncrement.getDescription())

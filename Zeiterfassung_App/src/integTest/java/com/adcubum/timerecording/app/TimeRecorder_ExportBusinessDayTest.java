@@ -1,23 +1,5 @@
 package com.adcubum.timerecording.app;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
@@ -27,14 +9,31 @@ import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRep
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryIntegMockUtil;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
+import com.adcubum.timerecording.data.ticket.ticketactivity.factor.TicketActivityFactory;
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.util.parser.DateParser;
+import org.junit.jupiter.api.Test;
+
+import javax.swing.text.TabableView;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 class TimeRecorder_ExportBusinessDayTest {
 
@@ -44,11 +43,12 @@ class TimeRecorder_ExportBusinessDayTest {
       File expectedExportedFile = new File("src\\integTest\\resources\\io\\expectedExportedBusinessDay.csv");
       String ticketNr = "SYRIUS-1234";
       String description = "Test";
-      int kindOfService = 113;
+      int serviceCode = 113;
+      TicketActivity ticketActivity = TicketActivityFactory.INSTANCE.createNew("Umsetzung/Dokumentation", serviceCode);
       int timeSnippedDuration = 3600 * 1000;
       TestUiCallbackHandler uiCallbackHandler = spy(new TestUiCallbackHandler());
       TestCaseBuilder tcb = new TestCaseBuilder()
-            .withBusinessDayIncrement(ticketNr, description, kindOfService, timeSnippedDuration)
+            .withBusinessDayIncrement(ticketNr, description, ticketActivity, timeSnippedDuration)
             .withUiCallbackHandler(uiCallbackHandler)
             .build();
 
@@ -96,14 +96,14 @@ class TimeRecorder_ExportBusinessDayTest {
          return this;
       }
 
-      private TestCaseBuilder withBusinessDayIncrement(String ticketNr, String description, int kindOfService, int timeSnippedDuration)
+      private TestCaseBuilder withBusinessDayIncrement(String ticketNr, String description, TicketActivity ticketActivity, int timeSnippedDuration)
             throws ParseException {
          Ticket ticket = mockTicket(ticketNr);
          businessDayIncrementAdds.add(new BusinessDayIncrementAddBuilder()
                .withTimeSnippet(createTimeSnippet(timeSnippedDuration))
                .withDescription(description)
                .withTicket(ticket)
-               .withServiceCode(kindOfService)
+               .withTicketActivity(ticketActivity)
                .build());
          return this;
       }

@@ -3,13 +3,14 @@
  */
 package com.adcubum.timerecording.core.work.businessday.update.callback.impl;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.UUID;
-
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
+
+import java.util.UUID;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * 
@@ -24,7 +25,7 @@ public class BusinessDayIncrementAdd {
    private Ticket ticket;
    private String description;
    private String amountOfHours;
-   private int kindOfService;
+   private TicketActivity ticketActivity;
    private TimeSnippet timeSnippet;
    private UUID id;
 
@@ -48,8 +49,8 @@ public class BusinessDayIncrementAdd {
       return this.amountOfHours;
    }
 
-   public final int getKindOfService() {
-      return this.kindOfService;
+   public final TicketActivity getTicketActivity() {
+      return this.ticketActivity;
    }
 
    public final void setTicket(Ticket ticket) {
@@ -72,15 +73,15 @@ public class BusinessDayIncrementAdd {
       this.amountOfHours = amountOfHours;
    }
 
-   public final void setServiceCode(int kindOfService) {
-      this.kindOfService = kindOfService;
+   public final void setTicketActivity(TicketActivity ticketActivity) {
+      this.ticketActivity = ticketActivity;
    }
 
    public static final class BusinessDayIncrementAddBuilder {
       private Ticket ticket;
       private String description;
       private String amountOfHours;
-      private int kindOfService;
+      private TicketActivity ticketActivity;
       private TimeSnippet timeSnippet;
       private UUID id;
 
@@ -111,8 +112,8 @@ public class BusinessDayIncrementAdd {
          return this;
       }
 
-      public BusinessDayIncrementAddBuilder withServiceCode(int kindOfService) {
-         this.kindOfService = kindOfService;
+      public BusinessDayIncrementAddBuilder withTicketActivity(TicketActivity ticketActivity) {
+         this.ticketActivity = ticketActivity;
          return this;
       }
 
@@ -126,7 +127,7 @@ public class BusinessDayIncrementAdd {
        */
       public BusinessDayIncrementAddBuilder from(BusinessDayIncrement businessDayIncrement) {
          return withDescription(businessDayIncrement.getDescription())
-               .withServiceCode(businessDayIncrement.getChargeType())
+               .withTicketActivity(businessDayIncrement.getTicketActivity())
                .withTicket(businessDayIncrement.getTicket())
                .withTimeSnippet(businessDayIncrement.getCurrentTimeSnippet())
                .withId(null);
@@ -137,7 +138,7 @@ public class BusinessDayIncrementAdd {
          businessDayIncrementAdd.setTimeSnippet(timeSnippet);
          businessDayIncrementAdd.setDescription(description);
          businessDayIncrementAdd.setTicket(ticket);
-         businessDayIncrementAdd.setServiceCode(kindOfService);
+         businessDayIncrementAdd.setTicketActivity(ticketActivity);
          businessDayIncrementAdd.setAmountOfHours(amountOfHours);
          businessDayIncrementAdd.id = id;
          return businessDayIncrementAdd;

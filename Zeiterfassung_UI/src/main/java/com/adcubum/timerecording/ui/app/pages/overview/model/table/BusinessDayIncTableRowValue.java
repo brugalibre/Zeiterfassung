@@ -11,6 +11,7 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -31,7 +32,7 @@ public class BusinessDayIncTableRowValue {
    private StringProperty totalDurationProperty;
    private ObjectProperty<Ticket> ticketProperty;
    private StringProperty descriptionProperty;
-   private StringProperty chargeTypeProperty;
+   private ObjectProperty<TicketActivity> ticketActivityProperty;
    private StringProperty isBookedProperty;
 
    private BeginAndEndCellValue beginAndEndCellValue;
@@ -48,7 +49,7 @@ public class BusinessDayIncTableRowValue {
       ticketProperty = new SimpleObjectProperty<>();
       idProperty = new SimpleObjectProperty<>(id);
       descriptionProperty = new SimpleStringProperty();
-      chargeTypeProperty = new SimpleStringProperty();
+      ticketActivityProperty = new SimpleObjectProperty();
       isBookedProperty = new SimpleStringProperty();
       valueTypesForIndex = new HashMap<>();
    }
@@ -72,7 +73,7 @@ public class BusinessDayIncTableRowValue {
       index++;
       valueTypesForIndex.put(index, beginAndEndCellValue.getEndCellValue().getValueType());
       index++;
-      valueTypesForIndex.put(index, ValueTypes.SERVICE_CODE_DESCRIPTION);
+      valueTypesForIndex.put(index, ValueTypes.TICKET_ACTIVITY);
    }
 
    /**
@@ -103,7 +104,7 @@ public class BusinessDayIncTableRowValue {
    }
 
    /**
-    * @param timeSnippets
+    * @param beginAndEndCellValue
     */
    public void setTimeSnippets(BeginAndEndCellValue beginAndEndCellValue) {
       this.beginAndEndCellValue = beginAndEndCellValue;
@@ -121,12 +122,12 @@ public class BusinessDayIncTableRowValue {
       return this.descriptionProperty.get();
    }
 
-   public final String getChargeType() {
-      return this.chargeTypeProperty.get();
+   public final TicketActivity getTicketActivity() {
+      return this.ticketActivityProperty.get();
    }
 
-   public StringProperty chargeTypeProperty() {
-      return chargeTypeProperty;
+   public ObjectProperty<TicketActivity> ticketActivityProperty() {
+      return ticketActivityProperty;
    }
 
    public final String getIsBooked() {
@@ -149,8 +150,8 @@ public class BusinessDayIncTableRowValue {
       this.descriptionProperty.set(description);
    }
 
-   public final void setChargeType(String chargeType) {
-      this.chargeTypeProperty.set(chargeType);
+   public final void setTicketActivity(TicketActivity ticketActivity) {
+      this.ticketActivityProperty.set(ticketActivity);
    }
 
    public int getNumberAsInt() {

@@ -1,5 +1,6 @@
 package com.adcubum.timerecording.ticketbacklog;
 
+import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketConst;
@@ -217,7 +218,7 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
          if (nonNull(boardName)) {
             saveProperty2Settings("boardName", boardName);
          }
-         TicketBacklog ticketBacklog = new TicketBacklogImpl(jiraApiReader, createDefaultFileReader());
+         TicketBacklog ticketBacklog = new TicketBacklogImpl(jiraApiReader, createDefaultFileReader(), mock(ServiceCodeAdapter.class));
          ticketBacklog.addTicketBacklogCallbackHandler(callbackHandler);
          return ticketBacklog;
       }

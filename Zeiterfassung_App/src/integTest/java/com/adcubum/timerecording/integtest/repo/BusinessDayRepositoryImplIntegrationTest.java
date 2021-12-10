@@ -1,24 +1,5 @@
 package com.adcubum.timerecording.integtest.repo;
 
-import static com.adcubum.timerecording.integtest.BusinessDayIntegTestUtil.createNewBookedBusinessDayAtDate;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.UUID;
-
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.function.Executable;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import com.adcubum.timerecording.core.businessday.repository.impl.BusinessDayRepositoryImpl;
 import com.adcubum.timerecording.core.repository.ObjectNotFoundException;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
@@ -30,11 +11,29 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedComeAndGoValue;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
+import com.adcubum.timerecording.data.ticket.ticketactivity.factor.TicketActivityFactory;
 import com.adcubum.timerecording.integtest.TestChangedComeAndGoValueImpl;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.work.date.DateTime;
-import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.timerecording.work.date.DateTimeBuilder;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.function.Executable;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ImportResource;
+
+import java.util.List;
+import java.util.UUID;
+
+import static com.adcubum.timerecording.integtest.BusinessDayIntegTestUtil.createNewBookedBusinessDayAtDate;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {TestBusinessDayRepoConfig.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -182,7 +181,7 @@ class BusinessDayRepositoryImplIntegrationTest {
 
       // When
       String description = "test";
-      int kindOfService = 113;
+      int serviceCode = 113;
       String ticketNr = "SYRIUS-123";
       long beginTimeStampValue = System.currentTimeMillis() + 1000;
       long endTimeStampValue = beginTimeStampValue + 1000;
@@ -190,7 +189,7 @@ class BusinessDayRepositoryImplIntegrationTest {
             .addBusinessIncrement(new BusinessDayIncrementAddBuilder()
                   .withAmountOfHours("3")
                   .withDescription(description)
-                  .withServiceCode(kindOfService)
+                  .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test", serviceCode))
                   .withTicket(mockTicket(ticketNr))
                   .withTimeSnippet(TimeSnippetBuilder.of()
                         .withBeginTimeStamp(beginTimeStampValue)
@@ -213,7 +212,7 @@ class BusinessDayRepositoryImplIntegrationTest {
       TimeSnippet originFirstBDIncTimeSnippet = originFirstBusinessDayIncrement.getCurrentTimeSnippet();
       assertThat(changedFirstBusinessDayIncrement.getDescription(), is(description));
       assertThat(changedFirstBusinessDayIncrement.getTicket().getNr(), is(ticketNr));
-      assertThat(changedFirstBusinessDayIncrement.getChargeType(), is(kindOfService));
+      assertThat(changedFirstBusinessDayIncrement.getTicketActivity().getActivityCode(), is(serviceCode));
       assertThat(changedFirstBDIncTimeSnippet.getBeginTimeStamp(), is(originFirstBDIncTimeSnippet.getBeginTimeStamp()));
       assertThat(changedFirstBDIncTimeSnippet.getEndTimeStamp(), is(originFirstBDIncTimeSnippet.getEndTimeStamp()));
       deleteAll(businessDayRepository, false);
@@ -227,7 +226,7 @@ class BusinessDayRepositoryImplIntegrationTest {
 
       // When
       String description = "test";
-      int kindOfService = 113;
+      int serviceCode = 113;
       String ticketNr = "SYRIUS-123";
       long beginTimeStampValue = System.currentTimeMillis() + 1000;
       long endTimeStampValue = beginTimeStampValue + 1000;
@@ -235,7 +234,7 @@ class BusinessDayRepositoryImplIntegrationTest {
             .addBusinessIncrement(new BusinessDayIncrementAddBuilder()
                   .withAmountOfHours("3")
                   .withDescription(description)
-                  .withServiceCode(kindOfService)
+                  .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test", serviceCode))
                   .withTicket(mockTicket(ticketNr))
                   .withTimeSnippet(TimeSnippetBuilder.of()
                         .withBeginTimeStamp(beginTimeStampValue)
@@ -245,7 +244,7 @@ class BusinessDayRepositoryImplIntegrationTest {
             .addBusinessIncrement(new BusinessDayIncrementAddBuilder()
                   .withAmountOfHours("3")
                   .withDescription(description)
-                  .withServiceCode(kindOfService)
+                  .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test", serviceCode))
                   .withTicket(mockTicket(ticketNr))
                   .withTimeSnippet(TimeSnippetBuilder.of()
                         .withBeginTimeStamp(beginTimeStampValue)

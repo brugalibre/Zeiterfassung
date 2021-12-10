@@ -1,12 +1,5 @@
 package com.adcubum.timerecording.core.work.businessday.mapper;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.adcubum.timerecording.core.businessday.comeandgo.entity.ComeAndGoesEntity;
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayIncrementEntity;
@@ -19,7 +12,13 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.mapper.Com
 import com.adcubum.timerecording.core.work.businessday.factory.BusinessDayFactory;
 import com.adcubum.timerecording.core.work.businessday.factory.BusinessDayIncrementFactory;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.*;
 
 /**
  * The {@link BusinessDayEntityMapper} is used as a Mapper in order to map from a {@link BusinessDay} into a {@link BusinessDayEntity}
@@ -108,7 +107,7 @@ public class BusinessDayEntityMapper {
          BusinessDayEntity businessDayEntity) {
       Ticket ticket = businessDayIncrement.getTicket();
       return new BusinessDayIncrementEntity(businessDayIncrement.getId(), businessDayEntity, businessDayIncrement.getDescription(),
-            isNull(ticket) ? null : ticket.getNr(), businessDayIncrement.getChargeType(), businessDayIncrement.isBooked());
+            isNull(ticket) ? null : ticket.getNr(), businessDayIncrement.getTicketActivity().getActivityCode(), businessDayIncrement.isBooked());
    }
 
    /**
@@ -121,8 +120,9 @@ public class BusinessDayEntityMapper {
    private static BusinessDayIncrement map2BusinessDayIncrement(BusinessDayIncrementEntity businessDayIncrementEntity) {
       TimeSnippet timeSnippet = TimeSnippetEntityMapper.INSTANCE.map2TimeSnippet(businessDayIncrementEntity.getCurrentTimeSnippetEntity());
       Ticket ticket = map2Ticket(businessDayIncrementEntity);
+      TicketActivity ticketActivity = map2TicketActivity(businessDayIncrementEntity);
       return BusinessDayIncrementFactory.createNew(timeSnippet, businessDayIncrementEntity.getId(), businessDayIncrementEntity.getDescription(),
-            ticket, businessDayIncrementEntity.getChargeType(), businessDayIncrementEntity.isBooked());
+            ticket, ticketActivity, businessDayIncrementEntity.isBooked());
    }
 
    private static Ticket map2Ticket(BusinessDayIncrementEntity businessDayIncrementEntity) {
@@ -131,5 +131,13 @@ public class BusinessDayEntityMapper {
          return TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticketNr);
       }
       return null;
+   }
+
+   private static TicketActivity map2TicketActivity(BusinessDayIncrementEntity businessDayIncrementEntity) {
+      Integer serviceCode = businessDayIncrementEntity.getChargeType();
+      if (nonNull(serviceCode)) {
+         return TicketBacklogSPI.getTicketBacklog().getTicketActivity4ServiceCode(serviceCode);
+      }
+      throw new IllegalStateException("A BusinessDayIncrementEntity must have a service code set!");
    }
 }

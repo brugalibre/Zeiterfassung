@@ -1,30 +1,30 @@
 package com.adcubum.timerecording.app.businessday;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import com.adcubum.timerecording.core.businessday.repository.impl.BusinessDayRepositoryImpl;
+import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
+import com.adcubum.timerecording.core.work.businessday.builder.BusinessDayIncrementBuilder;
+import com.adcubum.timerecording.data.ticket.ticketactivity.factor.TicketActivityFactory;
+import com.adcubum.timerecording.integtest.BaseTestWithSettings;
+import com.adcubum.timerecording.integtest.repo.TestBusinessDayRepoConfig;
+import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
+import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
+import com.adcubum.timerecording.work.date.DateTimeFactory;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import com.adcubum.timerecording.core.businessday.repository.impl.BusinessDayRepositoryImpl;
-import com.adcubum.timerecording.core.work.businessday.BusinessDay;
-import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
-import com.adcubum.timerecording.core.work.businessday.builder.BusinessDayIncrementBuilder;
-import com.adcubum.timerecording.integtest.BaseTestWithSettings;
-import com.adcubum.timerecording.integtest.repo.TestBusinessDayRepoConfig;
-import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
-import com.adcubum.timerecording.work.date.DateTimeFactory;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {TestBusinessDayRepoConfig.class})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -42,7 +42,7 @@ class BusinessDayHelperImplIntegrationTest extends BaseTestWithSettings {
       TestCaseBuilder tcb = new TestCaseBuilder()
             .addExistingBookedBusinessDayIncrement(BusinessDayIncrementBuilder.of()
                   .withDescription(descriptionOfFirst)
-                  .withServiceCode(111)
+                  .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test",111))
                   .withTicket(TicketFactory.INSTANCE.dummy("321"))
                   .withId(UUID.randomUUID())
                   .withFlagAsBooked()
@@ -62,7 +62,7 @@ class BusinessDayHelperImplIntegrationTest extends BaseTestWithSettings {
       tcb.businessDayHelperImpl.addBookedBusinessDayIncrements(Arrays.asList(bookedBusinessDay.getIncrements().get(0),
             BusinessDayIncrementBuilder.of()
                   .withDescription(descriptionOfSecond)
-                  .withServiceCode(111)
+                  .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test",111))
                   .withId(UUID.randomUUID())
                   .withTicket(TicketFactory.INSTANCE.dummy("123"))
                   .withFlagAsBooked()

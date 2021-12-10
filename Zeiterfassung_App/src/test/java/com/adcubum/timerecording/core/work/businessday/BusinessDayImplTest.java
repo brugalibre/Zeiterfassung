@@ -1,20 +1,5 @@
 package com.adcubum.timerecording.core.work.businessday;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.text.ParseException;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.UUID;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
-
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
@@ -23,11 +8,26 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Busi
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.work.businessday.TimeSnippetBuilder;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.util.parser.DateParser;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import java.text.ParseException;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.UUID;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class BusinessDayImplTest extends BaseTestWithSettings {
 
@@ -107,7 +107,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       // Given
       String newTicketNr = "ABES-1324";
       BusinessDay businessDay = new BusinessDayImpl()
-            .addBusinessIncrement(createUpdate(createTimeSnippet(3600 * 1000, 10), 113, getTicket4Nr()));
+            .addBusinessIncrement(createUpdate(createTimeSnippet(3600 * 1000, 10), mockTicketActivity(113), getTicket4Nr()));
       UUID id = businessDay.getIncrements().get(0).getId();
 
 
@@ -125,7 +125,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       // Given
       BusinessDay businessDay = new BusinessDayImpl()
-            .addBusinessIncrement(createUpdate(createTimeSnippet(3600 * 1000, 10), 113, getTicket4Nr()));
+            .addBusinessIncrement(createUpdate(createTimeSnippet(3600 * 1000, 10), mockTicketActivity(113), getTicket4Nr()));
       UUID id = businessDay.getIncrements().get(0).getId();
 
       // When
@@ -143,7 +143,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       TimeSnippet firstSnippet = createTimeSnippet(3600 * 1000, 10);
 
       BusinessDay businessDay = new BusinessDayImpl()
-            .addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+            .addBusinessIncrement(createUpdate(firstSnippet, mockTicketActivity(113), getTicket4Nr()));
       UUID id = businessDay.getIncrements().get(0).getId();
 
       ChangedValue changeValue = ChangedValue.of(id, newTicket, ValueTypes.TICKET);
@@ -157,42 +157,14 @@ class BusinessDayImplTest extends BaseTestWithSettings {
    }
 
    @Test
-   public void testChangeDBServiceCode() {
-
-      // Given
-      TimeSnippet firstSnippet = TimeSnippetBuilder.of()
-            .withDay(1)
-            .withMonth(1)
-            .withYear(2021)
-            .withStartHourAndDuration(8, 9)
-            .build();
-      int oldServiceCode = 113;
-      String newServiceCode = "111";
-
-      BusinessDay businessDay = new BusinessDayImpl()
-            .addBusinessIncrement(createUpdate(firstSnippet, oldServiceCode, getTicket4Nr()));
-      UUID id = businessDay.getIncrements().get(0).getId();
-      String expectedServiceCodeDesc = "111 - Meeting";
-
-      ChangedValue changeValue = ChangedValue.of(id, newServiceCode, ValueTypes.SERVICE_CODE);
-
-      // When
-      businessDay = businessDay.changeBusinesDayIncrement(changeValue);
-
-      // Then
-      BusinessDayIncrement businessDayIncrement = businessDay.getIncrements().get(0);
-      assertThat(businessDayIncrement.getChargeType(), is(Integer.parseInt(newServiceCode)));
-      assertThat(businessDayIncrement.getServiceCodeDescription(), is(expectedServiceCodeDesc));
-   }
-
-   @Test
    public void testRefreshCurrentTicketIsDummyTickets() {
 
       // Given
       long firstTimeStampStart = System.currentTimeMillis();
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + 3600 * 1000);
       Ticket currentTicket = mockTicket(true);
-      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, currentTicket);
+      mockTicketActivity(113);
+      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, mockTicketActivity(113), currentTicket);
 
 
       // When
@@ -206,6 +178,12 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       assertThat(businessDayIncrement.getTicket().getNr(), is(currentTicket.getNr()));
    }
 
+   private static TicketActivity mockTicketActivity(int serviceCode) {
+      TicketActivity ticketActivity = mock(TicketActivity.class);
+      when(ticketActivity.getActivityCode()).thenReturn(serviceCode);
+      return ticketActivity;
+   }
+
    @Test
    public void testRefreshCurrentTicketIsNotDummyTickets() {
 
@@ -213,7 +191,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       long firstTimeStampStart = System.currentTimeMillis();
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + 3600 * 1000);
       Ticket currentTicket = mockTicket(false);
-      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, currentTicket);
+      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, mockTicketActivity(113), currentTicket);
 
 
       // When
@@ -235,7 +213,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       long firstTimeStampStart = System.currentTimeMillis();
       int firstTimeBetweenStartAndStop = 3600 * 1000;
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
-      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, getTicket4Nr());
+      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, mockTicketActivity(113), getTicket4Nr());
 
       BusinessDay businessDay = new BusinessDayImpl()
             .addBusinessIncrement(firstInc);
@@ -263,7 +241,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
 
       BusinessDay businessDay = new BusinessDayImpl()
-            .addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+            .addBusinessIncrement(createUpdate(firstSnippet, mockTicketActivity(113), getTicket4Nr()));
       UUID id = businessDay.getIncrements().get(0).getId();
 
       ChangedValue changeValue = ChangedValue.of(id, newDescription, ValueTypes.DESCRIPTION);
@@ -295,10 +273,10 @@ class BusinessDayImplTest extends BaseTestWithSettings {
             .build();
 
       BusinessDay businessDay = new BusinessDayImpl()
-            .addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+            .addBusinessIncrement(createUpdate(firstSnippet, mockTicketActivity(113), getTicket4Nr()));
 
       // When
-      Executable ex = () -> businessDay.addBusinessIncrement(createUpdate(secondSnippet, 113, getTicket4Nr()));
+      Executable ex = () -> businessDay.addBusinessIncrement(createUpdate(secondSnippet, mockTicketActivity(113), getTicket4Nr()));
 
       // Then
       assertThrows(BusinessIncrementBevorOthersException.class, ex);
@@ -314,7 +292,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeBetweenStartAndStop, 10);
 
       BusinessDay businessDay = new BusinessDayImpl()
-            .addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+            .addBusinessIncrement(createUpdate(firstSnippet, mockTicketActivity(113), getTicket4Nr()));
       UUID id = businessDay.getIncrements().get(0).getId();
 
       ChangedValue changeValue = ChangedValue.of(id, newBegin, ValueTypes.BEGIN);
@@ -337,7 +315,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeBetweenStartAndStop, 10);
 
       BusinessDay businessDay = new BusinessDayImpl()
-            .addBusinessIncrement(createUpdate(firstSnippet, 113, getTicket4Nr()));
+            .addBusinessIncrement(createUpdate(firstSnippet, mockTicketActivity(113), getTicket4Nr()));
       UUID id = businessDay.getIncrements().get(0).getId();
 
       ChangedValue changeValue = ChangedValue.of(id, newBegin, ValueTypes.END);
@@ -358,7 +336,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       long firstTimeStampStart = System.currentTimeMillis();
       int firstTimeBetweenStartAndStop = 3600 * 1000;
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
-      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, 113, getTicket4Nr());
+      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, mockTicketActivity(113), getTicket4Nr());
 
       BusinessDay businessDay = new BusinessDayImpl()
             .addBusinessIncrement(firstInc);
@@ -385,7 +363,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       int firstTimeBetweenStartAndStop = 3600 * 1000 * 2;
       long firstTimeStampStart = System.currentTimeMillis() + firstTimeBetweenStartAndStop;
       TimeSnippet secondSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
-      BusinessDayIncrementAdd secondInc = createUpdate(secondSnippet, 113, getTicket4Nr());
+      BusinessDayIncrementAdd secondInc = createUpdate(secondSnippet, mockTicketActivity(113), getTicket4Nr());
 
       BusinessDay businessDay = new BusinessDayImpl()
             .addBusinessIncrement(secondInc);
@@ -410,10 +388,10 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       boolean expectedHasNotChargedElements = true;
 
       TimeSnippet timeSnippet = createTimeSnippet(0);
-      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, getTicket4Nr());
+      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, mockTicketActivity(113), getTicket4Nr());
 
       TimeSnippet timeSnippetYesterday = createTimeSnippet(0);
-      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, getTicket4Nr());
+      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, mockTicketActivity(114), getTicket4Nr());
 
       BusinessDay businessDay = new BusinessDayImpl()
             .addBusinessIncrement(updateWithTimeSnippet)
@@ -434,10 +412,10 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       boolean expectedHasNotChargedElements = false;
 
       TimeSnippet timeSnippet = createTimeSnippet(0);
-      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, 113, getTicket4Nr());
+      BusinessDayIncrementAdd updateWithTimeSnippet = createUpdate(timeSnippet, mockTicketActivity(113), getTicket4Nr());
 
       TimeSnippet timeSnippetYesterday = createTimeSnippet(0);
-      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, 114, getTicket4Nr());
+      BusinessDayIncrementAdd updateWithTimeSnippetTomorrow = createUpdate(timeSnippetYesterday, mockTicketActivity(114), getTicket4Nr());
 
       BusinessDay businessDay = new BusinessDayImpl()
             .addBusinessIncrement(updateWithTimeSnippet)
@@ -463,7 +441,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
             .withDay(day)
             .withStartHourAndDuration(2, 1)
             .build();
-      BusinessDayIncrementAdd updateWithFirstTimeSnippet = createUpdate(firstTimeSnippet, 113, getTicket4Nr());
+      BusinessDayIncrementAdd updateWithFirstTimeSnippet = createUpdate(firstTimeSnippet, mockTicketActivity(113), getTicket4Nr());
 
       TimeSnippet timeSnippetADayLater = TimeSnippetBuilder.of()
             .withYear(2021)
@@ -471,7 +449,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
             .withDay(day + 1)
             .withStartHourAndDuration(2, 1)
             .build();
-      BusinessDayIncrementAdd updateWithTimeSnippetFromADayLater = createUpdate(timeSnippetADayLater, 114, getTicket4Nr());
+      BusinessDayIncrementAdd updateWithTimeSnippetFromADayLater = createUpdate(timeSnippetADayLater, mockTicketActivity(114), getTicket4Nr());
 
       // When
       Executable exe = () -> businessDay.addBusinessIncrement(updateWithFirstTimeSnippet)
@@ -493,7 +471,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
             .withDay(1)
             .withStartHourAndDuration(2, 1)
             .build();
-      BusinessDayIncrementAdd businessDayIncrementAddFromThePast = createUpdate(timeSnippet, 114, getTicket4Nr());
+      BusinessDayIncrementAdd businessDayIncrementAddFromThePast = createUpdate(timeSnippet, mockTicketActivity(114), getTicket4Nr());
       BusinessDay businessDay = new BusinessDayImpl()
             .addBusinessIncrement(businessDayIncrementAddFromThePast);
 
@@ -568,12 +546,12 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       assertThat(actualHasElementsFromPrecedentDays, is(expectedHasElementsFromPrecedentDays));
    }
 
-   private BusinessDayIncrementAdd createUpdate(TimeSnippet timeSnippet, int kindOfService, Ticket ticket) {
+   private BusinessDayIncrementAdd createUpdate(TimeSnippet timeSnippet, TicketActivity ticketActivity, Ticket ticket) {
       return new BusinessDayIncrementAddBuilder()
             .withTimeSnippet(timeSnippet)
             .withDescription("Default Description")
             .withTicket(ticket)
-            .withServiceCode(kindOfService)
+            .withTicketActivity(ticketActivity)
             .withId(UUID.randomUUID())
             .build();
    }

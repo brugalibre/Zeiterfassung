@@ -15,4 +15,10 @@ public interface TicketActivity {
      * @return the code of this activity
      */
     int getActivityCode();
+
+    /**
+     * @return <code>true</code> if this {@link TicketActivity} does not exist in a corresponding ticket and or
+     *          booking system or <code>false</code> it nof
+     */
+    boolean isDummy();
 }

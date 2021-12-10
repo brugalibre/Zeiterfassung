@@ -1,6 +1,5 @@
 package com.adcubum.timerecording.ui.app.pages.overview.book.service;
 
-import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -29,9 +28,8 @@ public class BookerService extends Service<Boolean> {
    }
 
    /**
-    * Creates the binding between the given ProgressIndicator, this {@link BookerService} and the actual
-    * {@link BookerAdapter}
-    * 
+    * Creates the binding between the given ProgressIndicator and this {@link BookerService}
+    *
     * @param progressIndicator
     */
    public void bind(ProgressIndicator progressIndicator) {

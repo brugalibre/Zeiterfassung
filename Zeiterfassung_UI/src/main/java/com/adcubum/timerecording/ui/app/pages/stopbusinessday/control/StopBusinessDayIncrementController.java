@@ -3,19 +3,8 @@
  */
 package com.adcubum.timerecording.ui.app.pages.stopbusinessday.control;
 
-import static com.adcubum.util.utils.StringUtil.isEmptyOrNull;
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
-
-import java.awt.Toolkit;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.function.Consumer;
-
-import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.ui.app.inputfield.AutoCompleteTextField;
 import com.adcubum.timerecording.ui.app.inputfield.InputFieldVerifier;
 import com.adcubum.timerecording.ui.app.pages.combobox.TicketComboboxItem;
@@ -26,20 +15,25 @@ import com.adcubum.timerecording.ui.app.styles.Styles;
 import com.adcubum.timerecording.ui.core.control.impl.BaseFXController;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.model.resolver.PageModelResolver;
-
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
+import java.awt.*;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.function.Consumer;
+
+import static com.adcubum.util.utils.StringUtil.isEmptyOrNull;
+import static java.util.Objects.*;
 
 /**
  * @author Dominic
@@ -86,7 +80,7 @@ public class StopBusinessDayIncrementController extends BaseFXController<PageMod
    @FXML
    private Label serviceCodesLabel;
    @FXML
-   private ComboBox<String> serviceCodesComboBox;
+   private ComboBox<TicketActivity> serviceCodesComboBox;
 
    @FXML
    private Button finishButton;
@@ -187,17 +181,11 @@ public class StopBusinessDayIncrementController extends BaseFXController<PageMod
 
    private void submit() {
       if (isInputValid()) {
-         dataModel.addIncrement2BusinessDay(getSelectedLeistungsart());
+         dataModel.addIncrement2BusinessDay(serviceCodesComboBox.getSelectionModel().getSelectedItem());
          dispose(FinishAction.FINISH);
       } else {
          Toolkit.getDefaultToolkit().beep();
       }
-   }
-
-   private int getSelectedLeistungsart() {
-      String selectedItem = serviceCodesComboBox.getSelectionModel().getSelectedItem();
-      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
-      return serviceCodeAdapter.getServiceCode4Description(selectedItem);
    }
 
    private boolean isInputValid() {
@@ -279,7 +267,7 @@ public class StopBusinessDayIncrementController extends BaseFXController<PageMod
       });
    }
 
-   private ChangeListener<ObservableList<String>> serviceCodeSelectionChangedListener() {
+   private ChangeListener<ObservableList<TicketActivity>> serviceCodeSelectionChangedListener() {
       return (observable, oldValue, newValue) -> {
          if (!oldValue.equals(newValue)) {
             serviceCodesComboBox.getSelectionModel().selectFirst();

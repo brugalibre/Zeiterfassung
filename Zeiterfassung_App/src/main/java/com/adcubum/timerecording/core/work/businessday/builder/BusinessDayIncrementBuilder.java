@@ -7,6 +7,7 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrementImpl;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 
 public class BusinessDayIncrementBuilder {
    private BusinessDayIncrementAddBuilder businessDayIncrementAddBuilder;
@@ -22,8 +23,8 @@ public class BusinessDayIncrementBuilder {
       return this;
    }
 
-   public BusinessDayIncrementBuilder withServiceCode(int serviceCode) {
-      businessDayIncrementAddBuilder.withServiceCode(serviceCode);
+   public BusinessDayIncrementBuilder withTicketActivity(TicketActivity ticketActivity) {
+      businessDayIncrementAddBuilder.withTicketActivity(ticketActivity);
       return this;
    }
 

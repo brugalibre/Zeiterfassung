@@ -1,23 +1,16 @@
 package com.adcubum.timerecording.ui.app.pages.overview.model.table;
 
-import static java.util.Objects.nonNull;
-import static javafx.collections.FXCollections.observableList;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.core.work.businessday.util.BusinessDayUtil;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
+import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
+import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.BusinessDayChangeHelperGrouper;
 import com.adcubum.timerecording.ui.core.view.table.EditableCell;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -32,6 +25,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
+import static javafx.collections.FXCollections.observableList;
 
 public class BusinessDayTableModelHelper {
 
@@ -40,14 +42,15 @@ public class BusinessDayTableModelHelper {
    private List<TableColumn<BusinessDayIncTableRowValue, ?>> columnNames;
    private EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener;
    private EventHandler<CellEditEvent<BusinessDayIncTableRowValue, Ticket>> ticketChangeListener;
+   private EventHandler<CellEditEvent<BusinessDayIncTableRowValue, TicketActivity>> ticketActivityChangeListener;
    private TableView<BusinessDayIncTableRowValue> tableView;
 
-   public BusinessDayTableModelHelper(EventHandler<CellEditEvent<BusinessDayIncTableRowValue, String>> changeListener,
-         EventHandler<CellEditEvent<BusinessDayIncTableRowValue, Ticket>> ticketChangeListener) {
+   public BusinessDayTableModelHelper(BusinessDayChangeHelperGrouper businessDayChangeHelperGrouper) {
       columnNames = new ArrayList<>();
       colmnValues = new ArrayList<>();
-      this.changeListener = changeListener;
-      this.ticketChangeListener = ticketChangeListener;
+      this.changeListener = businessDayChangeHelperGrouper.getChangeListener();
+      this.ticketChangeListener = businessDayChangeHelperGrouper.getTicketChangeListener();
+      this.ticketActivityChangeListener = businessDayChangeHelperGrouper.getTicketActivityChangeListener();
    }
 
    /**
@@ -139,9 +142,9 @@ public class BusinessDayTableModelHelper {
       titleHeaders.add(beginTableColumn);
       titleHeaders.add(endTableColumn);
 
-      TableColumn<BusinessDayIncTableRowValue, String> bookTypeTableColumn = new TableColumn<>(TextLabel.BOOK_TYPE_LABEL);
-      titleHeaders.add(bookTypeTableColumn);
-      setEditableColumBoxCellFactory(bookTypeTableColumn);
+      TableColumn<BusinessDayIncTableRowValue, TicketActivity> serviceCodeTableColumn = new TableColumn<>(TextLabel.SERVICE_CODE_LABEL);
+      titleHeaders.add(serviceCodeTableColumn);
+      setEditableColumBoxCellFactory(serviceCodeTableColumn);
       TableColumn<BusinessDayIncTableRowValue, String> isBookedTableColumn = new TableColumn<>(TextLabel.BOOKED);
       titleHeaders.add(isBookedTableColumn);
       setNonEditableCellValueFactory(isBookedTableColumn, TableConst.IS_BOOKED);
@@ -149,18 +152,48 @@ public class BusinessDayTableModelHelper {
    }
 
    private void setEditableColumBoxCellFactory(
-         TableColumn<BusinessDayIncTableRowValue, String> chargeTypeTableColumn) {
-      List<String> allServiceCodes = readAllServiceCodes();
-      chargeTypeTableColumn.setCellValueFactory(cellData -> cellData.getValue().chargeTypeProperty());
+         TableColumn<BusinessDayIncTableRowValue, TicketActivity> chargeTypeTableColumn) {
+      List<TicketActivity> allServiceCodes = readAllServiceCodes();
+      chargeTypeTableColumn.setCellValueFactory(cellData -> cellData.getValue().ticketActivityProperty());
       // We should probably write our own cell factory in order to dynamically evaluate the possible service codes for the given Ticket
-      chargeTypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(allServiceCodes.toArray(new String[] {})));
+      chargeTypeTableColumn.setCellFactory(ComboBoxTableCell.forTableColumn(new TicketActivity2StringConverter(), allServiceCodes.toArray(new TicketActivity[]{})));
       chargeTypeTableColumn.editableProperty().set(true);
-      chargeTypeTableColumn.setOnEditCommit(changeListener);
+      chargeTypeTableColumn.setOnEditCommit(ticketActivityChangeListener);
    }
+   private static class TicketActivity2StringConverter extends StringConverter<TicketActivity> {
 
-   private static List<String> readAllServiceCodes() {
-      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
-      return serviceCodeAdapter.getAllServiceCodes();
+      @Override
+      public String toString(TicketActivity ticketActivity) {
+         return ticketActivity.getActivityName();
+      }
+
+      @Override
+      public TicketActivity fromString(String newticketActivityName) {
+         return new TicketActivity() {
+            @Override
+            public String getActivityName() {
+               return newticketActivityName;
+            }
+
+            @Override
+            public int getActivityCode() {
+               // is never called since we can't add new items
+               return 0;
+            }
+
+            @Override
+            public boolean isDummy() {
+               return false;
+            }
+         };
+      }
+   }
+   private static List<TicketActivity> readAllServiceCodes() {
+      return TicketBacklogSPI.getTicketBacklog().getTickets()
+              .stream()
+              .map(Ticket::getTicketActivities)
+              .flatMap(List::stream)
+              .collect(Collectors.toList());
    }
 
    private Callback<CellDataFeatures<BusinessDayIncTableRowValue, String>, ObservableValue<String>> getTimeSnippetBeginCellValueFactory() {
@@ -187,7 +220,7 @@ public class BusinessDayTableModelHelper {
       tableColumn.setEditable(true);
       tableColumn.setOnEditCommit(changeListener);
       tableColumn.setCellFactory(column -> createEditableTableCell());
-      setNonEditableCellValueFactory(tableColumn, paramName);// For diplaying the value read only
+      setNonEditableCellValueFactory(tableColumn, paramName);// For displaying the value read only
    }
 
    private void setEditableTicketCellValueFactory(TableColumn<BusinessDayIncTableRowValue, Ticket> tableColumn) {
@@ -231,11 +264,9 @@ public class BusinessDayTableModelHelper {
          String cellValue = bussinessDayIncremental.hasDescription() ? bussinessDayIncremental.getDescription() : "";
          businessDayIncTableCellValue.setDescription(cellValue);
       }
-      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
       // create Cells for all TimeSnippet's
       businessDayIncTableCellValue.setTimeSnippets(getTimeSnippets(bussinessDayIncremental));
-      businessDayIncTableCellValue
-            .setChargeType(serviceCodeAdapter.getServiceCodeDescription4ServiceCode(bussinessDayIncremental.getChargeType()));
+      businessDayIncTableCellValue.setTicketActivity(bussinessDayIncremental.getTicketActivity());
       businessDayIncTableCellValue.setIsBooked(bussinessDayIncremental.isBooked() ? TextLabel.YES : TextLabel.NO);
       businessDayIncTableCellValue.setValueTypes(isDescriptionTitleNecessary);
       return businessDayIncTableCellValue;

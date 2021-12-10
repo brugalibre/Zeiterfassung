@@ -3,22 +3,20 @@
  */
 package com.adcubum.timerecording.core.importexport.out.businessday;
 
-import static com.adcubum.util.parser.DateParser.DD_MM_YYYY;
-import static java.util.Objects.nonNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.adcubum.timerecording.core.importexport.util.BusinessDayImportExportUtil;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.util.BusinessDayUtil;
 import com.adcubum.util.parser.DateParser;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.adcubum.util.parser.DateParser.DD_MM_YYYY;
+import static java.util.Objects.nonNull;
 
 public class BusinessDayExporterImpl implements BusinessDayExporter {
 
@@ -59,7 +57,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
          builder.append(CONTENT_SEPPARATOR);
          builder.append(snippet.getEndTimeStampRep());
          builder.append(CONTENT_SEPPARATOR);
-         builder.append(getServiceCodeDescription4ServiceCode(inc));
+         builder.append(BusinessDayImportExportUtil.getTicketActivityString(inc.getTicketActivity()));
          builder.append(CONTENT_SEPPARATOR);
          builder.append(inc.isBooked() ? TextLabel.YES : TextLabel.NO);
 
@@ -73,15 +71,6 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
       return content;
    }
 
-   private String getServiceCodeDescription4ServiceCode(BusinessDayIncrement businessDayIncrement) {
-      return getServiceCodeDescProvider().apply(businessDayIncrement.getChargeType());
-   }
-
-   private static Function<Integer, String> getServiceCodeDescProvider() {
-      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
-      return serviceCodeAdapter::getServiceCodeDescription4ServiceCode;
-   }
-
    private void appendTitleHeaderCells(StringBuilder builder) {
 
       builder.append(TextLabel.TICKET);
@@ -93,7 +82,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
 
       appendBeginEndHeader(builder);
 
-      builder.append(TextLabel.BOOK_TYPE_LABEL);
+      builder.append(TextLabel.SERVICE_CODE_LABEL);
       builder.append(CONTENT_SEPPARATOR);
       builder.append(TextLabel.BOOKED);
       builder.append(System.getProperty(LINE_SEPARATOR));
@@ -115,7 +104,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
       for (BusinessDayIncrement inc : notChargedIncrements) {
          builder.append(inc.getTicket().getNr());
          builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
-         builder.append(inc.getChargeType());
+         builder.append(inc.getTicketActivity().getActivityCode());
          builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
          builder.append(BusinessDayUtil.getTotalDurationRep(inc));
          builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);

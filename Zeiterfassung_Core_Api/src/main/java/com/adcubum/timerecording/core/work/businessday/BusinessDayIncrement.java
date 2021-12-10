@@ -2,6 +2,7 @@ package com.adcubum.timerecording.core.work.businessday;
 
 import com.adcubum.timerecording.core.work.businessday.model.common.DomainModel;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 
@@ -75,22 +76,13 @@ public interface BusinessDayIncrement extends DomainModel {
    BusinessDayIncrement setTicket(Ticket ticket);
 
    /**
-    * Sets the service code int from the given representation of
-    * a service code
+    * Sets a new {@link TicketActivity} with a different name and code
     * 
-    * @param serviceCodeRep
-    *        the new representation of a service-code
+    * @param ticketActivity
+    *        the new {@link TicketActivity}
     * @return a new {@link BusinessDayIncrement} with the changes
     */
-   BusinessDayIncrement setServiceCode4Description(String serviceCodeRep);
-
-   /**
-    * Defines the service code of this {@link BusinessDayIncrement}
-    * 
-    * @param serviceCode
-    * @return a new {@link BusinessDayIncrement} with the changes
-    */
-   BusinessDayIncrement setServiceCode(int serviceCode);
+   BusinessDayIncrement setTicketActivity(TicketActivity ticketActivity);
 
    BusinessDayIncrement setDescription(String description);
 
@@ -127,11 +119,9 @@ public interface BusinessDayIncrement extends DomainModel {
    Ticket getTicket();
 
    /**
-    * @return the charge type of this {@link BusinessDayIncrement}
+    * @return the {@link TicketActivity} of this {@link BusinessDayIncrement}
     */
-   int getChargeType();
-
-   String getServiceCodeDescription();
+   TicketActivity getTicketActivity();
 
    String getDescription();
 

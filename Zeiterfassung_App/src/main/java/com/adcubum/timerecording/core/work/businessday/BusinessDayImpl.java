@@ -3,22 +3,7 @@
  */
 package com.adcubum.timerecording.core.work.businessday;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayIncrementImport;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
@@ -39,6 +24,14 @@ import com.adcubum.timerecording.work.date.DateTimeUtil;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.NumberFormat;
+
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.*;
 
 /**
  * The {@link BusinessDayImpl} defines an entire day full of work. Such a day may
@@ -380,16 +373,8 @@ public class BusinessDayImpl implements BusinessDay {
             Ticket newTicket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(changedValue.getNewValue());
             businessDayIncremental = businessDayIncremental.setTicket(newTicket);
             break;
-         case SERVICE_CODE:
-            businessDayIncremental = businessDayIncremental.setServiceCode(Integer.parseInt(changedValue.getNewValue()));
-            break;
-         case SERVICE_CODE_DESCRIPTION:
-            try {
-               businessDayIncremental = businessDayIncremental.setServiceCode4Description(changedValue.getNewValue());
-            } catch (InvalidChargeTypeRepresentationException e) {
-               e.printStackTrace();
-               // ignore failures
-            }
+         case TICKET_ACTIVITY:
+            businessDayIncremental = businessDayIncremental.setTicketActivity(changedValue.getNewTicketActivity());
             break;
          case AMOUNT_OF_TIME:
             businessDayIncremental = changeAmountOfTime4BDIncrement(businessDayIncremental, changedValue);

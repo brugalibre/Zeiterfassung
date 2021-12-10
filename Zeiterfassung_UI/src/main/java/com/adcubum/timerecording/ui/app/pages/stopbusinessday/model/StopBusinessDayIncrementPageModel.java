@@ -3,19 +3,7 @@
  */
 package com.adcubum.timerecording.ui.app.pages.stopbusinessday.model;
 
-import static com.adcubum.timerecording.jira.constants.TicketConst.MULTI_TICKET_DELIMITER;
-import static com.adcubum.timerecording.jira.constants.TicketConst.MULTI_TICKET_NO_PATTERN;
-import static com.adcubum.timerecording.jira.constants.TicketConst.TICKET_NO_PATTERN;
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
@@ -24,26 +12,28 @@ import com.adcubum.timerecording.core.work.businessday.update.callback.impl.Busi
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.jira.data.TicketComparator;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.timerecording.ui.app.inputfield.InputFieldVerifier;
 import com.adcubum.timerecording.ui.app.pages.combobox.TicketComboboxItem;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.work.date.DateTime;
-
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.adcubum.timerecording.jira.constants.TicketConst.*;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 /**
  * @author Dominic
@@ -60,8 +50,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
    private StringProperty beginTextFieldProperty;
    private StringProperty endTextFieldProperty;
    private StringProperty amountOfHoursTextFieldProperty;
-   private Property<ObservableList<String>> serviceCodesFieldProperty;
-   private Property<SingleSelectionModel<String>> serviceCodesSelectedModelProperty;
+   private Property<ObservableList<TicketActivity>> serviceCodesFieldProperty;
+   private Property<SingleSelectionModel<TicketActivity>> serviceCodesSelectedModelProperty;
    private Property<ObservableList<TicketComboboxItem>> ticketComboboxItemsProperty;
    private Property<ObservableList<Ticket>> ticketsProperty;
 
@@ -96,7 +86,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
       beginLabelProperty = new SimpleStringProperty(TextLabel.VON_LABEL);
       endLabelProperty = new SimpleStringProperty(TextLabel.BIS_LABEL);
       amountOfHoursLabelProperty = new SimpleStringProperty(TextLabel.AMOUNT_OF_HOURS_LABEL);
-      serviceCodesLabelProperty = new SimpleStringProperty(TextLabel.BOOK_TYPE_LABEL);
+      serviceCodesLabelProperty = new SimpleStringProperty(TextLabel.SERVICE_CODE_LABEL);
       finishButtonText = new SimpleStringProperty(getFinishButtonTextValue2Set());
       abortButtonText = new SimpleStringProperty(TextLabel.ABORT_BUTTON_TEXT);
       cancelButtonText = new SimpleStringProperty(getCancelButtonTextValue2Set());
@@ -109,9 +99,9 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
       multipleTicketsNoFieldProperty = new SimpleStringProperty();
       descriptionProperty = new SimpleObjectProperty<>(pageModelConstructorInfo.getDescription());
 
-      serviceCodesFieldProperty = new SimpleListProperty<>(getAllServiceCodeDescriptions());
-      serviceCodesSelectedModelProperty = new SimpleObjectProperty<>();
       ticketProperty = new SimpleObjectProperty<>();
+      serviceCodesFieldProperty = new SimpleListProperty<>(getAllServiceCodeDtos(ticketProperty));
+      serviceCodesSelectedModelProperty = new SimpleObjectProperty<>();
       this.timeSnippet = TimeSnippetFactory.createNew(pageModelConstructorInfo.getTimeSnippet());
       beginTextFieldProperty = new SimpleStringProperty(
             getTimeSnippet() != null ? getTimeSnippet().getBeginTimeStampRep() : "");
@@ -215,7 +205,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
       inPageModel.getBeginLabelProperty().set(TextLabel.VON_LABEL);
       inPageModel.getEndLabelProperty().set(TextLabel.BIS_LABEL);
       inPageModel.getAmountOfHoursLabelProperty().set(TextLabel.AMOUNT_OF_HOURS_LABEL);
-      inPageModel.getServiceCodesLabelProperty().set(TextLabel.BOOK_TYPE_LABEL);
+      inPageModel.getServiceCodesLabelProperty().set(TextLabel.SERVICE_CODE_LABEL);
       inPageModel.getFinishButtonText().set(getFinishButtonTextValue2Set());
       inPageModel.getAbortButtonText().set(TextLabel.ABORT_BUTTON_TEXT);
       inPageModel.getCancelButtonText().set(getCancelButtonTextValue2Set());
@@ -229,7 +219,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
       inPageModel.getTicketProperty().setValue(null);
 
       inPageModel.getAmountOfHoursTextFieldProperty().set(pageModelConstructorInfo.getTotalDurationRep());
-      inPageModel.getServiceCodesFieldProperty().setValue(getAllServiceCodeDescriptions());
+      inPageModel.getServiceCodesFieldProperty().setValue(getAllServiceCodeDtos(inPageModel.getTicketProperty()));
       inPageModel.getTicketComboboxItemsProperty().setValue(getTicketComboboxItems());
       inPageModel.getTicketsProperty().setValue(getTickets());
 
@@ -255,10 +245,12 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
       return FXCollections.observableList(TicketBacklogSPI.getTicketBacklog().getTickets());
    }
 
-   private static ObservableList<String> getAllServiceCodeDescriptions() {
-      // Initial we'll show all and as soon as the ticket-nr is knonw we filter
-      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
-      return FXCollections.observableList(serviceCodeAdapter.getAllServiceCodes());
+   private static ObservableList<TicketActivity> getAllServiceCodeDtos(Property<Ticket> ticketPropertyIn) {
+      Ticket ticket = ticketPropertyIn.getValue();
+      if (nonNull(ticket)){
+         return FXCollections.observableList(ticket.getTicketActivities());
+      }
+      return FXCollections.observableList(new ArrayList<>());
    }
 
    private static List<TicketComboboxItem> getTicketsAndMap2ComboboxItems(List<Ticket> tickets) {
@@ -276,9 +268,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
 
    public void handleTicketChanged() {
       Ticket newTicket = ticketProperty.getValue();
-      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
-      List<String> fetchServiceCodesForProject = serviceCodeAdapter.fetchServiceCodesForProjectNr(newTicket.getTicketAttrs().getProjectNr());
-      serviceCodesFieldProperty.setValue(FXCollections.observableList(fetchServiceCodesForProject));
+      serviceCodesFieldProperty.setValue(FXCollections.observableList(newTicket.getTicketActivities()));
       if (isNull(serviceCodesSelectedModelProperty.getValue().getSelectedItem())) {
          serviceCodesSelectedModelProperty.getValue().selectFirst();
       }
@@ -329,34 +319,34 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
    /**
     * Adds the recorded informations as new {@link BusinessDayIncrement}
     * 
-    * @param kindOfService
-    *        the kind of service
+    * @param ticketActivity
+    *        the {@link TicketActivity}
     */
-   public void addIncrement2BusinessDay(int kindOfService) {
+   public void addIncrement2BusinessDay(TicketActivity ticketActivity) {
       if (nonNull(ticketProperty.getValue())) {
-         addIncrement2BusinessDayInternal(kindOfService, ticketProperty.getValue(), getTimeSnippet());
+         addIncrement2BusinessDayInternal(ticketActivity, ticketProperty.getValue(), getTimeSnippet());
       } else {
-         addMultipleaIncrement2BusinessDay(kindOfService, multipleTicketsNoFieldProperty.getValue());
+         addMultipleaIncrement2BusinessDay(ticketActivity, multipleTicketsNoFieldProperty.getValue());
       }
    }
 
-   private void addMultipleaIncrement2BusinessDay(int kindOfService, String ticketNoPropValue) {
+   private void addMultipleaIncrement2BusinessDay(TicketActivity ticketActivity, String ticketNoPropValue) {
       String[] ticketNrs = ticketNoPropValue.split(MULTI_TICKET_DELIMITER);
       DateTime currentBeginTimeStamp = getTimeSnippet().getBeginTimeStamp();
       for (String ticketNr : ticketNrs) {
          TimeSnippet currentTimeSnippet = getTimeSnippet().createTimeStampForIncrement(currentBeginTimeStamp, ticketNrs.length);
          Ticket ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticketNr);
-         addIncrement2BusinessDayInternal(kindOfService, ticket, currentTimeSnippet);
+         addIncrement2BusinessDayInternal(ticketActivity, ticket, currentTimeSnippet);
          currentBeginTimeStamp = currentTimeSnippet.getEndTimeStamp();
       }
    }
 
-   private void addIncrement2BusinessDayInternal(int kindOfService, Ticket ticket, TimeSnippet timeSnippet) {
+   private void addIncrement2BusinessDayInternal(TicketActivity ticketActivity, Ticket ticket, TimeSnippet timeSnippet) {
       BusinessDayIncrementAdd update = new BusinessDayIncrementAddBuilder()
             .withTimeSnippet(timeSnippet)
             .withDescription(descriptionProperty.getValue())
             .withTicket(ticket)
-            .withServiceCode(kindOfService)
+            .withTicketActivity(ticketActivity)
             .build();
       businessDayChangedCallbackHandler.handleBusinessDayIncrementAdd(update);
    }
@@ -381,7 +371,7 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
       return this.endTextFieldProperty;
    }
 
-   public final Property<ObservableList<String>> getServiceCodesFieldProperty() {
+   public final Property<ObservableList<TicketActivity>> getServiceCodesFieldProperty() {
       return this.serviceCodesFieldProperty;
    }
 
@@ -393,11 +383,11 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
       return this.multipleTicketsNoLabelProperty;
    }
 
-   public Property<SingleSelectionModel<String>> getServiceCodesSelectedModelProperty() {
+   public Property<SingleSelectionModel<TicketActivity>> getServiceCodesSelectedModelProperty() {
       return serviceCodesSelectedModelProperty;
    }
 
-   public void setServiceCodesSelectedModelProperty(ObjectProperty<SingleSelectionModel<String>> selectionModelProperty) {
+   public void setServiceCodesSelectedModelProperty(ObjectProperty<SingleSelectionModel<TicketActivity>> selectionModelProperty) {
       this.serviceCodesSelectedModelProperty = selectionModelProperty;
    }
 

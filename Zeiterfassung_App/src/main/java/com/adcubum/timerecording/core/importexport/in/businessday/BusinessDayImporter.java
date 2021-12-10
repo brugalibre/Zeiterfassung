@@ -3,10 +3,18 @@
  */
 package com.adcubum.timerecording.core.importexport.in.businessday;
 
-import static com.adcubum.timerecording.core.work.businessday.ValueTypes.BEGIN;
-import static com.adcubum.timerecording.core.work.businessday.ValueTypes.DESCRIPTION;
-import static com.adcubum.util.utils.StringUtil.isNotEmptyOrNull;
-import static java.util.Objects.requireNonNull;
+import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
+import com.adcubum.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
+import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporter;
+import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporterImpl;
+import com.adcubum.timerecording.core.importexport.util.BusinessDayImportExportUtil;
+import com.adcubum.timerecording.core.work.businessday.*;
+import com.adcubum.timerecording.importexport.out.file.FileExporter;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
+import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
+import com.adcubum.util.parser.DateParser;
+import com.adcubum.util.utils.StringUtil;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -14,21 +22,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
-import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
-import com.adcubum.timerecording.core.importexport.in.businessday.exception.BusinessDayImportException;
-import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporter;
-import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporterImpl;
-import com.adcubum.timerecording.core.work.businessday.BusinessDay;
-import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
-import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
-import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
-import com.adcubum.timerecording.core.work.businessday.ValueTypes;
-import com.adcubum.timerecording.importexport.out.file.FileExporter;
-import com.adcubum.util.parser.DateParser;
-import com.adcubum.util.utils.StringUtil;
+import static com.adcubum.timerecording.core.work.businessday.ValueTypes.BEGIN;
+import static com.adcubum.timerecording.core.work.businessday.ValueTypes.DESCRIPTION;
+import static com.adcubum.util.utils.StringUtil.isNotEmptyOrNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * The {@link BusinessDayImporter} is used to import a {@link BusinessDay} from
@@ -144,8 +141,8 @@ public class BusinessDayImporter {
                currentValueType = evalNextValue2Import(currentValueType);
                break;
 
-            case SERVICE_CODE_DESCRIPTION:
-               parseAndSetChargeType(importLine, businessDayIncrementImport, currentElementIndex);
+            case TICKET_ACTIVITY:
+               parseAndSetTicketActivity(importLine, businessDayIncrementImport, currentElementIndex);
                businessDayIncImported = true;
                break;
 
@@ -181,12 +178,11 @@ public class BusinessDayImporter {
       businessDayIncrementImport.getTimeSnippets().add(timeSnippet);
    }
 
-   private void parseAndSetChargeType(String importLine, BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex)
-         throws InvalidChargeTypeRepresentationException {
-      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
-      String chargeType = getElementFromLineAtIndex(importLine, currentElementIndex);
-      int leistungsartForRep = serviceCodeAdapter.getServiceCode4Description(chargeType);
-      businessDayIncrementImport.setKindOfService(leistungsartForRep);
+   private void parseAndSetTicketActivity(String importLine, BusinessDayIncrementImport businessDayIncrementImport, int currentElementIndex) {
+      String ticketActivityRep = getElementFromLineAtIndex(importLine, currentElementIndex);
+      String serviceCode = BusinessDayImportExportUtil.getTicketActivityCodeFromStringRep(ticketActivityRep);
+      TicketActivity ticketActivity = TicketBacklogSPI.getTicketBacklog().getTicketActivity4ServiceCode(Integer.valueOf(serviceCode));
+      businessDayIncrementImport.setTicketActivity(ticketActivity);
    }
 
    private String getElementFromLineAtIndex(String lineAtIndex, int index) {
@@ -226,7 +222,7 @@ public class BusinessDayImporter {
          case DESCRIPTION:
             return BEGIN;
          case BEGIN:
-            return ValueTypes.SERVICE_CODE_DESCRIPTION;
+            return ValueTypes.TICKET_ACTIVITY;
          default:
             throw new BusinessDayImportException("Unsupported ValueTypes '" + currentValueType + "'");
       }

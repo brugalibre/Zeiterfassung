@@ -13,5 +13,6 @@
 	<bean id="prolesticketreader" class="com.adcubum.timerecording.proles.ticketbacklog.read.ProlesTicketReaderImpl" scope="singleton" lazy-init="true"/>
 	<bean id="ticket" class="com.adcubum.timerecording.jira.data.TicketImpl" scope="prototype" lazy-init="true"/>
 	<bean id="ticketfactory" class="com.adcubum.timerecording.jira.data.ticket.factory.TicketFactoryImpl" scope="prototype" lazy-init="true"/>
+	<bean id="ticketactivityfactory" class="com.adcubum.timerecording.data.ticket.ticketactivity.factory.TicketActivityFactoryImpl" scope="prototype" lazy-init="true"/>
 
 </beans>

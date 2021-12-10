@@ -1,12 +1,12 @@
 package com.adcubum.timerecording.ticketbacklog.proles;
 
+import com.adcubum.timerecording.data.ticket.ticketactivity.factor.TicketActivityFactory;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
 import com.adcubum.timerecording.proles.ticketbacklog.read.ProlesTicketReader;
 import com.adcubum.timerecording.proles.ticketbacklog.read.ProlesTicketReaderFactory;
 import com.adcubum.timerecording.ticketbacklog.AbstractTicketBacklog;
-import com.adcubum.timerecording.ticketbacklog.TicketBacklog;
-import com.adcubum.timerecording.ticketbacklog.callback.TicketBacklogCallbackHandler;
 import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
 
 import java.util.ArrayList;
@@ -37,6 +37,24 @@ public class ProlesTicketBacklogImpl extends AbstractTicketBacklog {
             .filter(existingTicket -> existingTicket.getNr().equals(ticketNr))
             .findFirst()
             .orElseGet(() -> TicketFactory.INSTANCE.dummy(ticketNr));
+   }
+
+   @Override
+   public TicketActivity getTicketActivity4ServiceCode(int serviceCode) {
+      return findTicketActivityByFilter(serviceCode);
+   }
+
+   private TicketActivity findTicketActivityByFilter(int serviceCode) {
+      return tickets.stream()
+              .map(Ticket::getTicketActivities)
+              .flatMap(List::stream)
+              .filter(byServiceCode(serviceCode))
+              .findFirst()
+              .orElseGet(() -> TicketActivityFactory.INSTANCE.dummy("unknown", serviceCode));
+   }
+
+   private static Predicate<TicketActivity> byServiceCode(int serviceCode) {
+      return ticketActivity -> ticketActivity.getActivityCode() == serviceCode;
    }
 
    @Override

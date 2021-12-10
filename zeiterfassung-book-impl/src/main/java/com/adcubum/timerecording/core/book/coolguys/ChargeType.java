@@ -1,22 +1,18 @@
 package com.adcubum.timerecording.core.book.coolguys;
 
+import com.adcubum.timerecording.core.book.abacus.DefaultServiceCodes;
+import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
+import com.adcubum.timerecording.core.book.servicecode.ServiceCodeDto;
+import com.adcubum.timerecording.core.book.servicecode.ServiceCodeDtoImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
-
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
-import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.*;
 
 /**
  * @author Dominic
@@ -69,40 +65,30 @@ public class ChargeType implements ServiceCodeAdapter {
    }
 
    private static void addDefaultLeistungsarten() {
-      LEISTUNGSARTEN_MAP.put(100, "100 - Analyse");
-      LEISTUNGSARTEN_MAP.put(111, "111 - Meeting");
-      LEISTUNGSARTEN_MAP.put(113, "113 - Umsetzung/Dokumentation");
-      LEISTUNGSARTEN_MAP.put(122, "122 - Qualtitätssicherung");
-      LEISTUNGSARTEN_MAP.put(140, "140 - Allg. Verwaltungsarbeiten");
-      LEISTUNGSARTEN_MAP.put(164, "164 - bezahlte Abwesenheiten");
+      LEISTUNGSARTEN_MAP.putAll(DefaultServiceCodes.getDefaultServiceCodes());
    }
 
    @Override
-   public List<String> fetchServiceCodesForProjectNr(long projectNr) {
-      return getAllServiceCodes();// We can't distinguish here between different project-numbers
+   public List<ServiceCodeDto> fetchServiceCodesForProjectNr(long projectNr) {
+      return getAllServiceCodeDescriptions();// We can't distinguish here between different project-numbers
    }
 
    @Override
-   public List<String> getAllServiceCodes() {
-      return Arrays.asList(getLeistungsartenRepresentation());
+   public List<ServiceCodeDto> getAllServiceCodeDescriptions() {
+      return getServiceCodeDtos();
    }
 
    @Override
-   public int getServiceCode4Description(String serviceCodeDesc) {
-      return getLeistungsartForRep(serviceCodeDesc);
+   public ServiceCodeDto getServiceCode4Code(Integer serviceCode) {
+      return new ServiceCodeDtoImpl(serviceCode, LEISTUNGSARTEN_MAP.get(serviceCode));
    }
 
-   @Override
-   public String getServiceCodeDescription4ServiceCode(int serviceCode) {
-      return LEISTUNGSARTEN_MAP.get(serviceCode);
-   }
-
-   private static String[] getLeistungsartenRepresentation() {
-      List<Integer> leistungsartenIntList = new ArrayList<>(LEISTUNGSARTEN_MAP.keySet());
-      List<String> leistungsartenStrings = leistungsartenIntList.stream()//
-            .map(LEISTUNGSARTEN_MAP::get)//
-            .collect(Collectors.toList());
-      return leistungsartenStrings.toArray(new String[leistungsartenStrings.size()]);
+   private static List<ServiceCodeDto> getServiceCodeDtos() {
+      List<ServiceCodeDto> serviceCodeDtos = new ArrayList<>();
+      for (Integer code : LEISTUNGSARTEN_MAP.keySet()) {
+         serviceCodeDtos.add(new ServiceCodeDtoImpl(code, LEISTUNGSARTEN_MAP.get(code)));
+      }
+      return serviceCodeDtos;
    }
 
    private static int getLeistungsartForRep(String leistungsartRep) throws InvalidChargeTypeRepresentationException {

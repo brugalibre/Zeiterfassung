@@ -1,26 +1,5 @@
 package com.adcubum.timerecording.app;
 
-import static com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryIntegMockUtil.mockBusinessDayRepository;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
-import org.junit.jupiter.api.Test;
-
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.app.startstopresult.StartNotPossibleInfo;
 import com.adcubum.timerecording.app.startstopresult.UserInteractionResult;
@@ -29,12 +8,8 @@ import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.result.BookResultType;
 import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
-import com.adcubum.timerecording.core.work.businessday.BusinessDay;
-import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
-import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.core.work.businessday.*;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
-import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoesImpl;
@@ -42,13 +17,29 @@ import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRep
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
+import com.adcubum.timerecording.data.ticket.ticketactivity.factor.TicketActivityFactory;
 import com.adcubum.timerecording.integtest.BaseTestWithSettings;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageType;
 import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import static com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryIntegMockUtil.mockBusinessDayRepository;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
@@ -73,7 +64,6 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    private TimeRecorderImpl mockTimeRecorderImpl(Settings settings) {
       return mockTimeRecorderImpl(mock(BookerAdapter.class), settings, new BusinessDayImpl());
    }
-
 
    private TimeRecorder mockTimeRecorderImpl(BusinessDayImpl businessDay) {
       return mockTimeRecorderImpl(mock(BookerAdapter.class), mock(Settings.class), businessDay);
@@ -173,10 +163,10 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       // Given
       String ticketNr = "SYRIUS-4321";
       String description = "Test";
-      int kindOfService = 113;
+      int serviceCode = 113;
       int timeSnippedDuration = 3600 * 1000;
       TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement(ticketNr, description, kindOfService, timeSnippedDuration)
+            .withBusinessDayIncrement(ticketNr, description, serviceCode, timeSnippedDuration)
             .build();
 
       // When
@@ -410,9 +400,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       String ticketNr = "SYRIUS-11111";
       String description = "Test";
       String newDescription = "Test2";
-      int kindOfService = 113;
+      int serviceCode = 113;
       TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement(ticketNr, description, kindOfService, firstTimeBetweenStartAndStop)
+            .withBusinessDayIncrement(ticketNr, description, serviceCode, firstTimeBetweenStartAndStop)
             .build();
       BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
       ChangedValue changeValue = ChangedValue.of(BusinessDayIncrement.getId(), newDescription, ValueTypes.DESCRIPTION);
@@ -428,28 +418,29 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    }
 
    @Test
-   void testChangeDBIncChargeType() {
+   void testChangeDBIncTicketActivity() {
 
       // Given
-      int kindOfService = 113;
-      int expectedNewChargeType = 111;
+      int serviceCode = 113;
+      int expectedNewServiceCode = 111;
       TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement("SYRIUS-11111", "Test", kindOfService, 3600 * 1000)
+            .withBusinessDayIncrement("SYRIUS-11111", "Test", serviceCode, 3600 * 1000)
             .build();
       BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
 
-      ChangedValue changeValue = ChangedValue.of(BusinessDayIncrement.getId(), "111 - Meeting", ValueTypes.SERVICE_CODE_DESCRIPTION);
+      TicketActivity newTicketActivity = TicketActivityFactory.INSTANCE.createNew("Meeting", 111);
+      ChangedValue changeValue = ChangedValue.of(BusinessDayIncrement.getId(), newTicketActivity, ValueTypes.TICKET_ACTIVITY);
 
       // When
       tcb.timeRecorder.changeBusinesDayIncrement(changeValue);
 
       // Then
       BusinessDayIncrement businessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
-      assertThat(businessDayIncrement.getChargeType(), is(expectedNewChargeType));
+      assertThat(businessDayIncrement.getTicketActivity().getActivityCode(), is(expectedNewServiceCode));
    }
 
    @Test
-   void testChangeDBIncChargeType_Invalid() {
+   void testChangeDBIncServiceCode_Invalid() {
 
       // Given
       // Given
@@ -459,14 +450,15 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
             .build();
       BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
 
-      ChangedValue changeValue = ChangedValue.of(BusinessDayIncrement.getId(), "Schubedibuuu", ValueTypes.SERVICE_CODE_DESCRIPTION);
+      TicketActivity newTicketActivity = TicketActivityFactory.INSTANCE.dummy("Schubedibuuu", -1);
+      ChangedValue changeValue = ChangedValue.of(BusinessDayIncrement.getId(), newTicketActivity, ValueTypes.TICKET_ACTIVITY);
 
       // When
       tcb.timeRecorder.changeBusinesDayIncrement(changeValue);
 
       // Then
       BusinessDayIncrement businessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
-      assertThat(businessDayIncrement.getChargeType(), is(currentServiceCode));
+      assertThat(businessDayIncrement.getTicketActivity().getActivityCode(), is(currentServiceCode));
    }
 
    @Test
@@ -713,14 +705,14 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
          return this;
       }
 
-      private TestCaseBuilder withBusinessDayIncrement(String ticketNr, String description, int kindOfService, int timeSnippedDuration) {
+      private TestCaseBuilder withBusinessDayIncrement(String ticketNr, String description, int serviceCode, int timeSnippedDuration) {
          Ticket ticket = mockTicket(ticketNr);
          businessDayIncrementAdds.add(new BusinessDayIncrementAddBuilder()
                .withTimeSnippet(createTimeSnippet(timeSnippedDuration, false))
                .withDescription(description)
                .withTicket(ticket)
                .withId(UUID.randomUUID())
-               .withServiceCode(kindOfService)
+               .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test", serviceCode))
                .build());
          return this;
       }

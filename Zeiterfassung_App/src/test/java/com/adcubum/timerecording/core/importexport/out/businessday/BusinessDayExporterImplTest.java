@@ -1,15 +1,5 @@
 package com.adcubum.timerecording.core.importexport.out.businessday;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
@@ -17,8 +7,18 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnipp
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
+import org.junit.jupiter.api.Test;
+
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class BusinessDayExporterImplTest {
 
@@ -29,12 +29,14 @@ class BusinessDayExporterImplTest {
       GregorianCalendar startDate = new GregorianCalendar(2021, 2, 2);// year, month (starts at zero!), day, hours, min, second
       long firstTimeStampStart = startDate.getTimeInMillis();
       int firstTimeBetweenStartAndStop = 3600 * 1000;
-      int chargeType = 113;
+      int serviceCode = 113;
+      TicketActivity ticketActivity = mock(TicketActivity.class);
+      when(ticketActivity.getActivityCode()).thenReturn(serviceCode);
       String ticketNr = "SYRIUS-1324";
       String description = "Default Description";
-      String expectedContentLine = ticketNr + ";" + chargeType + ";1;02.03.2021;" + description + "\r\n";
+      String expectedContentLine = ticketNr + ";" + serviceCode + ";1;02.03.2021;" + description + "\r\n";
       TimeSnippet firstSnippet = createTimeSnippet(firstTimeStampStart, firstTimeStampStart + firstTimeBetweenStartAndStop);
-      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, chargeType, getTicket4Nr(ticketNr), description);
+      BusinessDayIncrementAdd firstInc = createUpdate(firstSnippet, ticketActivity, getTicket4Nr(ticketNr), description);
 
       BusinessDay businessDay = new BusinessDayImpl()
             .addBusinessIncrement(firstInc);
@@ -53,12 +55,12 @@ class BusinessDayExporterImplTest {
       return ticket;
    }
 
-   private BusinessDayIncrementAdd createUpdate(TimeSnippet timeSnippet, int kindOfService, Ticket ticket, String description) {
+   private BusinessDayIncrementAdd createUpdate(TimeSnippet timeSnippet, TicketActivity ticketActivity, Ticket ticket, String description) {
       return new BusinessDayIncrementAddBuilder()
             .withTimeSnippet(timeSnippet)
             .withDescription(description)
             .withTicket(ticket)
-            .withServiceCode(kindOfService)
+            .withTicketActivity(ticketActivity)
             .build();
    }
 

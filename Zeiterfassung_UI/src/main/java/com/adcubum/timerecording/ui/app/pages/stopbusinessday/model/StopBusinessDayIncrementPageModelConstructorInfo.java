@@ -3,8 +3,6 @@
  */
 package com.adcubum.timerecording.ui.app.pages.stopbusinessday.model;
 
-import static java.util.Objects.nonNull;
-
 import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
@@ -20,6 +18,8 @@ import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.timerecording.work.date.DateTimeUtil;
 import com.adcubum.util.parser.NumberFormat;
+
+import static java.util.Objects.nonNull;
 
 /**
  * The {@link StopBusinessDayIncrementPageModelConstructorInfo} acts as a container for the {@link StopBusinessDayIncrementPageModel}
@@ -66,8 +66,6 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
     * This method is used from the {@link ComeAndGoOverviewPage} if we refresh the current displayed {@link StopBusinessDayIncrementPage}.
     * In this case we have to re-use the existing values
     * 
-    * @param businessDayIncrement
-    *        the given {@link BusinessDayIncrement}
     * @param existingStopBDIncPageModel
     *        the existing {@link StopBusinessDayIncrementPageModel}
     * @param currentTimeSnippet

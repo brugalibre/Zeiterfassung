@@ -1,6 +1,6 @@
 package com.adcubum.timerecording.proles.ticketbacklog.read.data;
 
-import com.adcubum.timerecording.data.ticket.TicketActivityJsonImport;
+import com.adcubum.timerecording.data.ticket.ticketactivity.TicketActivityJsonImport;
 import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 
 import java.util.Arrays;

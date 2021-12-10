@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import com.adcubum.timerecording.data.ticket.ticketactivity.factor.TicketActivityFactory;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.core.repository.ObjectNotFoundException;
@@ -57,7 +58,7 @@ class BusinessDayHelperImplTest {
             .withBookedBusinessDayDeleter(bookedBusinessDayDeleter)
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
                   .withDescription("Test")
-                  .withServiceCode(113)
+                  .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test",113))
                   .withTicket(TicketFactory.INSTANCE.dummy("123"))
                   .withTimeSnippet(TimeSnippetBuilder.of()
                         .build())
@@ -83,7 +84,7 @@ class BusinessDayHelperImplTest {
             .withBookedBusinessDayDeleter(bookedBusinessDayDeleter)
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
                   .withDescription("Test")
-                  .withServiceCode(113)
+                  .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test",113))
                   .withTicket(TicketFactory.INSTANCE.dummy("123"))
                   .withId(UUID.randomUUID())
                   .withTimeSnippet(TimeSnippetBuilder.of()
@@ -93,7 +94,7 @@ class BusinessDayHelperImplTest {
                   .build())
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
                   .withDescription("Test3")
-                  .withServiceCode(111)
+                  .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test",111))
                   .withTicket(TicketFactory.INSTANCE.dummy("321"))
                   .withId(UUID.randomUUID())
                   .withFlagAsBooked()
@@ -124,7 +125,7 @@ class BusinessDayHelperImplTest {
       BookedBusinessDayDeleter bookedBusinessDayDeleter = mock(BookedBusinessDayDeleter.class);
       BusinessDayIncrement thirdBDIncrement = BusinessDayIncrementBuilder.of()
             .withDescription("ThirdIncrement")
-            .withServiceCode(111)
+            .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test",111))
             .withTicket(TicketFactory.INSTANCE.dummy("321"))
             .withId(UUID.randomUUID())
             .withFlagAsBooked()
@@ -137,7 +138,7 @@ class BusinessDayHelperImplTest {
             .withBusinessDayRepository(spy(new TestBusinessDayRepository()))
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
                   .withDescription("Test")
-                  .withServiceCode(113)
+                  .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test113",113))
                   .withTicket(TicketFactory.INSTANCE.dummy("123"))
                   .withId(UUID.randomUUID())
                   .withTimeSnippet(TimeSnippetBuilder.of()
@@ -147,7 +148,7 @@ class BusinessDayHelperImplTest {
                   .build())
             .addBusinessDayIncrement(BusinessDayIncrementBuilder.of()
                   .withDescription("Test2")
-                  .withServiceCode(111)
+                  .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test",111))
                   .withTicket(TicketFactory.INSTANCE.dummy("321"))
                   .withId(UUID.randomUUID())
                   .withFlagAsBooked()

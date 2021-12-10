@@ -9,6 +9,7 @@ import java.util.List;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 
 /**
  * 
@@ -22,7 +23,7 @@ public class BusinessDayIncrementImport {
 
    private String ticketNo;
    private String description;
-   private int kindOfService;
+   private TicketActivity ticketActivity;
    private List<TimeSnippet> timeSnippets;
 
    public BusinessDayIncrementImport() {
@@ -37,8 +38,8 @@ public class BusinessDayIncrementImport {
       return this.description;
    }
 
-   public final int getKindOfService() {
-      return this.kindOfService;
+   public final TicketActivity getTicketActivity() {
+      return this.ticketActivity;
    }
 
    public final void setTicketNo(String ticketNo) {
@@ -53,11 +54,7 @@ public class BusinessDayIncrementImport {
       return timeSnippets;
    }
 
-   public void setTimeSnippets(List<TimeSnippet> timeSnippets) {
-      this.timeSnippets = timeSnippets;
-   }
-
-   public final void setKindOfService(int kindOfService) {
-      this.kindOfService = kindOfService;
+   public final void setTicketActivity(TicketActivity ticketActivity) {
+      this.ticketActivity = ticketActivity;
    }
 }

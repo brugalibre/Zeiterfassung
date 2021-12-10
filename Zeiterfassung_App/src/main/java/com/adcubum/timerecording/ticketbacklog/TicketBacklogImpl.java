@@ -1,8 +1,13 @@
 package com.adcubum.timerecording.ticketbacklog;
 
+import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
+import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
+import com.adcubum.timerecording.core.book.servicecode.ServiceCodeDto;
+import com.adcubum.timerecording.data.ticket.ticketactivity.factor.TicketActivityFactory;
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationBuilder;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
@@ -20,6 +25,7 @@ import java.util.Set;
 public class TicketBacklogImpl extends AbstractTicketBacklog {
 
    private static final Logger LOG = Logger.getLogger(TicketBacklogImpl.class);
+   private final ServiceCodeAdapter serviceCodeAdapter;
    private JiraApiReader jiraApiReader;
    private TicketBacklogHelper backlogHelper;
    private Set<Ticket> tickets;
@@ -30,19 +36,25 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
               .withJiraApiConfiguration(JiraApiConfigurationBuilder.of()
                       .withDefaultJiraApiConfiguration()
                       .build())
-              .build(), FileImporterFactory.createNew());
+              .build(), FileImporterFactory.createNew(), BookerAdapterFactory.getServiceCodeAdapter());
    }
 
    /**
     * Constructor for testing purpose only!
     *
-    * @param jiraApiReader the {@link JiraApiReader}
+    * @param jiraApiReader
+    *        the {@link JiraApiReader}
+    * @param fileImporter
+    *        the {@link FileImporter}
+    * @param serviceCodeAdapter
+    *        the {@link ServiceCodeAdapter}
     */
-   TicketBacklogImpl(JiraApiReader jiraApiReader, FileImporter fileImporter) {
+   TicketBacklogImpl(JiraApiReader jiraApiReader, FileImporter fileImporter, ServiceCodeAdapter serviceCodeAdapter) {
       this.backlogHelper = new TicketBacklogHelper();
       this.jiraApiReader = jiraApiReader;
       this.tickets = new HashSet<>();
       this.fileImporter = fileImporter;
+      this.serviceCodeAdapter = serviceCodeAdapter;
    }
 
    private void readDefaultTickets() {
@@ -73,6 +85,12 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
               .findFirst()
               .orElseGet(() -> jiraApiReader.readTicket4Nr(ticketNr)
                       .orElseGet(() -> TicketFactory.INSTANCE.dummy(ticketNr)));
+   }
+
+   @Override
+   public TicketActivity getTicketActivity4ServiceCode(int serviceCode) {
+      ServiceCodeDto serviceCodeDto = serviceCodeAdapter.getServiceCode4Code(serviceCode);
+      return TicketActivityFactory.INSTANCE.createNew(serviceCodeDto.getServiceCodeName(), serviceCodeDto.getServiceCode());
    }
 
    @Override

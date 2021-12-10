@@ -3,15 +3,11 @@
  */
 package com.adcubum.timerecording.ui.app.pages.overview.control;
 
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
-
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import com.adcubum.timerecording.ui.app.pages.mainpage.control.callback.MainWindowCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.book.service.BookerService;
+import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.BusinessDayChangeHelperGrouper;
 import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.StringBusinessDayChangeHelper;
+import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.TicketActivityBusinessDayChangeHelper;
 import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.TicketBusinessDayChangeHelper;
 import com.adcubum.timerecording.ui.app.pages.overview.control.descriptionchange.DescriptionAddHelper;
 import com.adcubum.timerecording.ui.app.pages.overview.control.rowdeleter.RowDeleteHelper;
@@ -29,21 +25,21 @@ import com.adcubum.timerecording.ui.core.view.impl.region.DimensionImpl;
 import com.adcubum.timerecording.ui.core.view.region.Dimension;
 import com.adcubum.timerecording.ui.core.view.table.TableUtil;
 import com.adcubum.timerecording.ui.util.ExceptionUtil;
-
 import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * @author Dominic
@@ -88,8 +84,7 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
    public void initialize(Page<PageModel, OverviewPageModel> page) {
       createBookerService();
       super.initialize(page);
-      businessDayTableModel = new BusinessDayTableModelHelper(new StringBusinessDayChangeHelper(finishAction -> refreshUI()),
-            new TicketBusinessDayChangeHelper(finishAction -> refreshUI()));
+      businessDayTableModel = new BusinessDayTableModelHelper(new BusinessDayChangeHelperGrouper(finishAction -> refreshUI()));
       setBinding(dataModel);
       initContextMenu();
       initTable();

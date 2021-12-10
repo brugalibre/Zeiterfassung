@@ -1,10 +1,11 @@
 package com.adcubum.timerecording.ticketbacklog;
 
-import java.util.List;
-
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.ticketbacklog.callback.TicketBacklogCallbackHandler;
+
+import java.util.List;
 
 /**
  * The {@link TicketBacklog} is responsible for managing and maintaining all the {@link Ticket}s available
@@ -37,6 +38,19 @@ public interface TicketBacklog {
     * @return a {@link Ticket}
     */
    Ticket getTicket4Nr(String ticketNr);
+
+   /**
+    * Returns a found {@link TicketActivity} for the given unique service-code.
+    *
+    * Note that if no {@link TicketActivity} exists for the given code, than a dummy {@link TicketActivity} is returned
+    * So this method always returns an instance of a {@link TicketActivity}
+    *
+    * @param serviceCode
+    *        the unique service code
+    * @return a {@link TicketActivity} for the given service-code
+    * @see TicketActivity#isDummy()
+    */
+   TicketActivity getTicketActivity4ServiceCode(int serviceCode);
 
    /**
     * @return the {@link Ticket}s of this {@link TicketBacklog}

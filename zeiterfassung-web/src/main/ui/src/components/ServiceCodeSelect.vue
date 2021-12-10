@@ -1,8 +1,9 @@
 <template>
-  <select 
+  <select
     v-model="serviceCodeDto">
-    <option 
-      v-for="possibleServiceCode in possibleServiceCodes" :key="possibleServiceCode"
+    <option
+      v-for="(possibleServiceCode, index) in possibleServiceCodes" :key="possibleServiceCode"
+      v-bind:selected="index === 0"
       v-bind:value="possibleServiceCode"> {{ possibleServiceCode.representation }}
     </option>
   </select>
@@ -26,8 +27,8 @@ export default {
   watch: {
     ticketNr: {
       handler: function(newTicketNr, oldTicketNr) {
-        console.log("Changed ticket from  " + oldTicketNr + " to " + newTicketNr);
-        this.fetchServiceCodes(this.newTicketNr);
+        console.log("Changed ticket from " + oldTicketNr + " to " + newTicketNr);
+        this.fetchServiceCodes(newTicketNr);
       },
     },
   },

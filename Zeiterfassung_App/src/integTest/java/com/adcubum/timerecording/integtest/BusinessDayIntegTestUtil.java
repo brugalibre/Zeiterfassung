@@ -11,6 +11,7 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippetImpl.TimeSnippetBuilder;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;
+import com.adcubum.timerecording.data.ticket.ticketactivity.factor.TicketActivityFactory;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.work.date.DateTimeBuilder;
 
@@ -67,7 +68,7 @@ public class BusinessDayIntegTestUtil {
             .addBusinessIncrement(new BusinessDayIncrementAddBuilder()
                   .withAmountOfHours("3")
                   .withDescription(description)
-                  .withServiceCode(113)
+                  .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test", 113))
                   .withTicket(mockTicket("ABES-1"))
                   .withTimeSnippet(TimeSnippetBuilder.of()
                         .withBeginTime(DateTimeBuilder.of()

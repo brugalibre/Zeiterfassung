@@ -1,5 +1,8 @@
 package com.adcubum.timerecording.core.book.adapter;
 
+
+import com.adcubum.timerecording.core.book.servicecode.ServiceCodeDto;
+
 import java.util.List;
 
 /**
@@ -12,32 +15,25 @@ import java.util.List;
 public interface ServiceCodeAdapter {
 
    /**
-    * Returns all service codes description for the given project-Nr
+    * Returns all {@link ServiceCodeDto}s for the given project-Nr
     * 
     * @param projectNr
     *        the number of a project
-    * @return all service codes description for the given project-Nr
+    * @return  all {@link ServiceCodeDto}s for the given project-NrNr
     */
-   public List<String> fetchServiceCodesForProjectNr(long projectNr);
+   List<ServiceCodeDto> fetchServiceCodesForProjectNr(long projectNr);
 
    /**
-    * @return all previously fetched service codes descriptions
+    * @return all previously fetched {@link ServiceCodeDto}s
     */
-   public List<String> getAllServiceCodes();
+   List<ServiceCodeDto> getAllServiceCodeDescriptions();
 
    /**
-    * @param serviceCodeDesc
-    *        the description for a service code
-    * @return the actual service code for a description
-    */
-   public int getServiceCode4Description(String serviceCodeDesc);
-
-   /**
-    * Return the description for the given service code
-    * 
+    * Returns a {@link ServiceCodeDto} for the given unique code value
+    *
     * @param serviceCode
-    *        the service code
-    * @return the description for the given service code
+    *        the given unique code value
+    * @return a {@link ServiceCodeDto} for the given unique code value
     */
-   public String getServiceCodeDescription4ServiceCode(int serviceCode);
+   ServiceCodeDto getServiceCode4Code(Integer serviceCode);
 }

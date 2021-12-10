@@ -1,20 +1,16 @@
 package com.adcubum.timerecording.service.ticketbacklog;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.LongFunction;
-import java.util.function.ToIntFunction;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-
-import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.model.ticketbacklog.ServiceCodeDto;
 import com.adcubum.timerecording.model.ticketbacklog.TicketDto;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklog;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketBacklogService {
@@ -27,27 +23,15 @@ public class TicketBacklogService {
     * @return all possible services codes for the given Ticket-nr
     */
    public List<ServiceCodeDto> fetchServiceCodes(String ticketNr) {
-      ToIntFunction<String> serviceCodeDescMapper = getServiceCodeDescMapper();
-      LongFunction<List<String>> serviceCodesProvider = getServiceCodesProvider();
       Ticket ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticketNr);
-      return serviceCodesProvider.apply(ticket.getTicketAttrs().getProjectNr())
-            .stream()
-            .map(map2ServiceDescriptionDto(serviceCodeDescMapper))
-            .collect(Collectors.toList());
+      return ticket.getTicketActivities()
+              .stream()
+              .map(toServiceCodeDto())
+              .collect(Collectors.toList());
    }
 
-   private static Function<String, ServiceCodeDto> map2ServiceDescriptionDto(ToIntFunction<String> serviceCodeDescMapper) {
-      return serviceCode -> new ServiceCodeDto(serviceCodeDescMapper.applyAsInt(serviceCode), serviceCode);
-   }
-
-   private static LongFunction<List<String>> getServiceCodesProvider() {
-      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
-      return serviceCodeAdapter::fetchServiceCodesForProjectNr;
-   }
-
-   private static ToIntFunction<String> getServiceCodeDescMapper() {
-      ServiceCodeAdapter serviceCodeAdapter = BookerAdapterFactory.getServiceCodeAdapter();
-      return serviceCodeAdapter::getServiceCode4Description;
+   private static Function<TicketActivity, ServiceCodeDto> toServiceCodeDto() {
+      return ticketActivity -> new ServiceCodeDto(ticketActivity.getActivityCode(), ticketActivity.getActivityName());
    }
 
    /**
