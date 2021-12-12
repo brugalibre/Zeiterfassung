@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS businessday_increment (
   CONSTRAINT FK_BD_INCREMENT_CURRENT_TIMESNIPPET FOREIGN KEY (current_timesnippet_id) REFERENCES timesnippet(id),
   description VARCHAR(250),
   ticket_nr VARCHAR(250),
-  charge_type INT,
+  service_code INT,
   is_booked BOOLEAN DEFAULT FALSE
 );
 

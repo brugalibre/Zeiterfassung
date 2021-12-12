@@ -134,7 +134,7 @@ public class BusinessDayEntityMapper {
    }
 
    private static TicketActivity map2TicketActivity(BusinessDayIncrementEntity businessDayIncrementEntity) {
-      Integer serviceCode = businessDayIncrementEntity.getChargeType();
+      Integer serviceCode = businessDayIncrementEntity.getServiceCode();
       if (nonNull(serviceCode)) {
          return TicketBacklogSPI.getTicketBacklog().getTicketActivity4ServiceCode(serviceCode);
       }
