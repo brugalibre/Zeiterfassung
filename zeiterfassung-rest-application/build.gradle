@@ -1,0 +1,55 @@
+plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'application'
+	id 'org.springframework.boot' version '2.5.1'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+apply from: '..//Zeiterfassung-zeiterfassung/zeiterfassung.gradle'
+apply from: '..//Zeiterfassung-zeiterfassung/test.gradle'
+apply from: '..//Zeiterfassung-zeiterfassung/integtest.gradle'
+
+def timerecorderMainClass = 'com.adcubum.timerecording.application.TimeRecordingRestApplication'
+
+application {
+    mainClass = timerecorderMainClass
+}
+
+dependencies {
+	implementation ('org.springframework.boot:spring-boot-starter-web')
+	implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.2'
+	implementation ('org.springframework.boot:spring-boot-starter-data-jpa:2.5.2')
+	
+    implementation project(':zeiterfassung-persistence-api')
+    implementation project(':zeiterfassung-core-api')
+    implementation project(':zeiterfassung-book-api')
+    implementation project(':zeiterfassung-jira-api')
+    implementation project(':zeiterfassung-common-api')
+    implementation project(':zeiterfassung-ui')
+
+	// Test dependency bc of AbstractFactory calls
+	testImplementation ('org.springframework.boot:spring-boot-starter-test:2.5.3')
+	
+	// https://mvnrepository.com/artifact/org.springframework/spring-test
+	testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.9'
+	testImplementation project (':zeiterfassung-core-impl')
+}
+
+configurations {
+	compile.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+	compile.exclude group: 'ch.qos.logback', module: 'logback-classic'
+}
+
+javafx {
+    version = "11"
+    modules = [ 'javafx.controls']
+}
+
+shadowJar {
+	archiveBaseName = 'zeiterfassung'
+	mainClassName = timerecorderMainClass
+ }
