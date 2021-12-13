@@ -14,6 +14,7 @@ import com.adcubum.timerecording.jira.data.TicketComparator;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
+import com.adcubum.timerecording.ticketbacklog.config.TicketConfiguration;
 import com.adcubum.timerecording.ui.app.inputfield.InputFieldVerifier;
 import com.adcubum.timerecording.ui.app.pages.combobox.TicketComboboxItem;
 import com.adcubum.timerecording.ui.core.model.PageModel;
@@ -31,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.adcubum.timerecording.jira.constants.TicketConst.*;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -284,7 +284,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
     * @return <code>true</code> if the entered value is valid or <code>false</code> if not
     */
    public boolean isMultiTicketNoValid(TextField multiTicketNumberField, boolean addErrorStyle) {
-      return new InputFieldVerifier().isStringMatchingPattern(multiTicketNumberField, MULTI_TICKET_NO_PATTERN, addErrorStyle);
+      TicketConfiguration ticketConfiguration = TicketBacklogSPI.getTicketBacklog().getTicketConfiguration();
+      return new InputFieldVerifier().isStringMatchingPattern(multiTicketNumberField, ticketConfiguration.getMultiTicketNamePattern(), addErrorStyle);
    }
 
    /**
@@ -297,7 +298,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
     * @return <code>true</code> if the entered value is valid or <code>false</code> if not
     */
    public boolean isTicketNoValid(TextField ticketNumberField, boolean addErrorStyle) {
-      return new InputFieldVerifier().isStringMatchingPattern(ticketNumberField, TICKET_NO_PATTERN, addErrorStyle);
+      TicketConfiguration ticketConfiguration = TicketBacklogSPI.getTicketBacklog().getTicketConfiguration();
+      return new InputFieldVerifier().isStringMatchingPattern(ticketNumberField, ticketConfiguration.getTicketNamePattern(), addErrorStyle);
    }
 
    /**
@@ -331,7 +333,8 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
    }
 
    private void addMultipleaIncrement2BusinessDay(TicketActivity ticketActivity, String ticketNoPropValue) {
-      String[] ticketNrs = ticketNoPropValue.split(MULTI_TICKET_DELIMITER);
+      TicketConfiguration ticketConfiguration = TicketBacklogSPI.getTicketBacklog().getTicketConfiguration();
+      String[] ticketNrs = ticketNoPropValue.split(ticketConfiguration.getMultiTicketNamePattern());
       DateTime currentBeginTimeStamp = getTimeSnippet().getBeginTimeStamp();
       for (String ticketNr : ticketNrs) {
          TimeSnippet currentTimeSnippet = getTimeSnippet().createTimeStampForIncrement(currentBeginTimeStamp, ticketNrs.length);

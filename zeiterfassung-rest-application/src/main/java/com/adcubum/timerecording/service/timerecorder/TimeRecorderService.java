@@ -2,6 +2,7 @@ package com.adcubum.timerecording.service.timerecorder;
 
 import java.util.Optional;
 
+import com.adcubum.timerecording.ticketbacklog.config.TicketConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,6 @@ import com.adcubum.timerecording.app.startstopresult.UserInteractionResult;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
-import com.adcubum.timerecording.jira.constants.TicketConst;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.model.businessday.AddNewBusinessDayIncrementDto;
@@ -54,8 +54,7 @@ public class TimeRecorderService {
     * The {@link AddNewBusinessDayIncrementDto} is used on the client side to control the process of adding a new
     * {@link BusinessDayIncrement}
     * 
-    * @throws a
-    *         StartRecordingNotPossibleException if a start was not possible
+    * @throws StartRecordingNotPossibleException if a start was not possible
     * 
     * @return a {@link AddNewBusinessDayIncrementDto}
     */
@@ -74,7 +73,8 @@ public class TimeRecorderService {
    }
 
    private static AddNewBusinessDayIncrementDto buildAddNewBusinessDayIncrementDto(TimeSnippet currentTimeSnippet) {
-      Ticket ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(TicketConst.DEFAULT_TICKET_NAME);
+      TicketConfiguration ticketConfiguration = TicketBacklogSPI.getTicketBacklog().getTicketConfiguration();
+      Ticket ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticketConfiguration.getDefaultTicketName());
       BusinessDayIncrementDto businessDayIncrementDto = BusinessDayIncrementDto.of(currentTimeSnippet, ticket);
       return new AddNewBusinessDayIncrementDto(businessDayIncrementDto);
    }

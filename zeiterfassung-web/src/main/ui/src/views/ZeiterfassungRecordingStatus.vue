@@ -11,6 +11,7 @@
     <add-businessday-increment
       v-bind:initBeginTimeStampRepresentation="beginTimeStampRepresentation"
       v-bind:initEndTimeStampRepresentation="endTimeStampRepresentation"
+      v-bind:initTicketNr="ticketNr"
       v-if="isAddBusinessDayIncrementActive"
       @refreshUi="refreshUiState"
       @resumed="refreshUiState"
@@ -38,6 +39,7 @@
       return {
         title: 'Aktueller Status:',
         isAddBusinessDayIncrementActive: false,
+        ticketNr: '',
         beginTimeStampRepresentation: '',
         endTimeStampRepresentation: '',
       }
@@ -67,10 +69,6 @@
 }
 </script>
 <style scoped>
-  .deleteAllButton{
-    margin-right: 1em
-  }
-
   .isNotRecording{
     background-color: #ffcccb;
     margin-bottom: 3px;

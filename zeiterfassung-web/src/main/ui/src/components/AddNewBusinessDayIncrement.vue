@@ -95,12 +95,12 @@ export default {
     'ticket-nr-input-field': TicketNrInputField,
     'error-box': ErrorBox
   },
-  props: ['initBeginTimeStampRepresentation', 'initEndTimeStampRepresentation'],
-  data (){
+  props: ['initBeginTimeStampRepresentation', 'initEndTimeStampRepresentation', 'initTicketNr'],
+  data () {
     return {
       businessDayIncrement : {
         currentDuration: 0,
-        ticketNr: 'SYRIUS',
+        ticketNr: this.initTicketNr,
         description: '',
         serviceCodeDto: {
           value: '',

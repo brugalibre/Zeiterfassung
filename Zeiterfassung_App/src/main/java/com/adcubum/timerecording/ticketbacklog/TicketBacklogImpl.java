@@ -27,7 +27,6 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
    private static final Logger LOG = Logger.getLogger(TicketBacklogImpl.class);
    private final ServiceCodeAdapter serviceCodeAdapter;
    private JiraApiReader jiraApiReader;
-   private TicketBacklogHelper backlogHelper;
    private Set<Ticket> tickets;
    private FileImporter fileImporter;
 
@@ -50,7 +49,7 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
     *        the {@link ServiceCodeAdapter}
     */
    TicketBacklogImpl(JiraApiReader jiraApiReader, FileImporter fileImporter, ServiceCodeAdapter serviceCodeAdapter) {
-      this.backlogHelper = new TicketBacklogHelper();
+      super();
       this.jiraApiReader = jiraApiReader;
       this.tickets = new HashSet<>();
       this.fileImporter = fileImporter;
@@ -79,7 +78,7 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
     *    - If Jira don't find anything, we create an empty Ticket with the Ticket-Nr as the only set attribute
     */
    private Ticket findExistingReadNewOrBuildDummyTicket(String ticketNr) {
-      applyJiraApiConfiguration(backlogHelper.getJiraBaseUrl());
+      applyJiraApiConfiguration();
       return tickets.stream()
               .filter(existingTicket -> existingTicket.getNr().equals(ticketNr))
               .findFirst()
@@ -95,7 +94,7 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
 
    @Override
    public void initTicketBacklog() {
-      applyJiraApiConfiguration(backlogHelper.getJiraBaseUrl());
+      applyJiraApiConfiguration();
       if (!backlogHelper.hasBordNameConfigured()) {
          readDefaultTickets();
          LOG.warn("Unable to read the tickets, no board name provided. Check your turbo-bucher.properties!");
@@ -114,11 +113,8 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
       });
    }
 
-   private void applyJiraApiConfiguration(String jiraBaseUrl) {
-      jiraApiReader.applyJiraApiConfiguration(JiraApiConfigurationBuilder.of()
-              .withDefaultJiraApiConfiguration()
-              .withNullableJiraAgileBasePath(jiraBaseUrl)
-              .build());
+   private void applyJiraApiConfiguration() {
+      jiraApiReader.applyJiraApiConfiguration(buildJiraApiConfiguration());
    }
 
    private static UpdateStatus evalStatus(JiraApiReadTicketsResult jiraApiReadTicketsResult) {

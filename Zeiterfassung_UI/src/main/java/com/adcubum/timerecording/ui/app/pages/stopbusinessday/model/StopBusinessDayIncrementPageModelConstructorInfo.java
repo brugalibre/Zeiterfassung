@@ -10,7 +10,8 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippetFactory;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.update.callback.BusinessDayChangedCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayChangedCallbackHandlerFactory;
-import com.adcubum.timerecording.jira.constants.TicketConst;
+import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
+import com.adcubum.timerecording.ticketbacklog.config.TicketConfiguration;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.model.ComeAndGoOverviewPageModel;
 import com.adcubum.timerecording.ui.app.pages.comeandgo.view.ComeAndGoOverviewPage;
 import com.adcubum.timerecording.ui.app.pages.stopbusinessday.view.StopBusinessDayIncrementPage;
@@ -54,7 +55,8 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
     * @return a new {@link StopBusinessDayIncrementPageModelConstructorInfo}
     */
    public static StopBusinessDayIncrementPageModelConstructorInfo of(TimeSnippet currentTimeSnippet) {
-      String ticketNr = TicketConst.DEFAULT_TICKET_NAME;
+      TicketConfiguration ticketConfiguration = TicketBacklogSPI.getTicketBacklog().getTicketConfiguration();
+      String ticketNr = ticketConfiguration.getDefaultTicketName();
       return new StopBusinessDayIncrementPageModelConstructorInfo(currentTimeSnippet, ZERO_MAX_TIME, ticketNr,
             "", NumberFormat.format(currentTimeSnippet.getDuration()), true, true, true,
             BusinessDayChangedCallbackHandlerFactory.createNew(), TextLabel.CANCEL_BUTTON_TOOLTIP_TEXT, TextLabel.FINISH_BUTTON_TOOLTIP_TEXT);
@@ -110,8 +112,9 @@ public class StopBusinessDayIncrementPageModelConstructorInfo {
     * For the 2nd and nth time, we show the ticket-nr, the user has entered the last time
     */
    private static String getTicketNrPlaceHolder(ComeAndGoOverviewPageModel comeAndGoOverviewPageModel) {
+      TicketConfiguration ticketConfiguration = TicketBacklogSPI.getTicketBacklog().getTicketConfiguration();
       return nonNull(comeAndGoOverviewPageModel.getTicketNrFromPrevAddedBDInc()) ? comeAndGoOverviewPageModel.getTicketNrFromPrevAddedBDInc()
-            : TicketConst.DEFAULT_TICKET_NAME;
+            : ticketConfiguration.getDefaultTicketName();
    }
 
    private StopBusinessDayIncrementPageModelConstructorInfo(TimeSnippet currentTimeSnippet, DateTime maxEndTime, String ticketNumber,

@@ -6,6 +6,8 @@ import static java.util.Objects.nonNull;
 
 public class JiraApiConfiguration {
 
+    private static final String MULTI_TICKET_DELIMITER = ";";
+    // Jira-api / url stuff
     private String jiraUrl;
     private String jiraAgileBasePath;
     private String jiraBoardBaseUrl;
@@ -16,18 +18,26 @@ public class JiraApiConfiguration {
     private String getIssueUrl;
     private String jiraBaseUrl;
 
+    // Ticket stuff
+    private String defaultTicketName;
+    private String ticketNamePattern;
+    private String multiTicketNoPattern;
+
     // Placeholders
     private String boardIdPlaceholder;
     private String sprintIdPlaceHh;
     private String startAtPlaceholder;
 
     JiraApiConfiguration(String jiraUrl, String jiraAgileBasePath, String boardIdPlaceholder,
-                                String sprintIdPlaceHh, String startAtPlaceholder) {
+                                String sprintIdPlaceHh, String startAtPlaceholder, String ticketNamePattern, String defaultTicketName) {
         this.jiraUrl = jiraUrl;
         this.jiraAgileBasePath = jiraAgileBasePath;
         this.boardIdPlaceholder = boardIdPlaceholder;
         this.sprintIdPlaceHh = sprintIdPlaceHh;
         this.startAtPlaceholder = startAtPlaceholder;
+        this.defaultTicketName = defaultTicketName;
+        this.ticketNamePattern = ticketNamePattern;
+        this.multiTicketNoPattern = "(" + ticketNamePattern + "(" + MULTI_TICKET_DELIMITER + "?)){1,}";
     }
 
     /**
@@ -49,6 +59,13 @@ public class JiraApiConfiguration {
         if (isNull(this.startAtPlaceholder) || nonNull(jiraApiConfiguration2Apply.startAtPlaceholder)) {
             this.startAtPlaceholder = jiraApiConfiguration2Apply.startAtPlaceholder;
         }
+        if (isNull(this.defaultTicketName) || nonNull(jiraApiConfiguration2Apply.defaultTicketName)) {
+            this.defaultTicketName = jiraApiConfiguration2Apply.defaultTicketName;
+        }
+        if (isNull(this.ticketNamePattern) || nonNull(jiraApiConfiguration2Apply.ticketNamePattern)) {
+            this.ticketNamePattern = jiraApiConfiguration2Apply.ticketNamePattern;
+        }
+        this.multiTicketNoPattern = "(" + ticketNamePattern + "(" + MULTI_TICKET_DELIMITER + "?)){1,}";
         this.jiraBaseUrl = this.jiraUrl + "/" + jiraAgileBasePath;
         this.jiraBoardBaseUrl = this.jiraBaseUrl + "board";
         this.getIssues4BoardIdUrl = this.jiraBoardBaseUrl + "/" + boardIdPlaceholder + "/sprint/"
@@ -107,5 +124,26 @@ public class JiraApiConfiguration {
 
     public String getJiraUrl() {
         return jiraUrl;
+    }
+
+    /**
+     * @return the regex for a ticket-name
+     */
+    public String getTicketNamePattern() {
+        return ticketNamePattern;
+    }
+
+    /**
+     * @return the default ticket name
+     */
+    public String getDefaultTicketName() {
+        return defaultTicketName;
+    }
+
+    /**
+     * @return the regex for multiple ticket-names
+     */
+    public String getMultiTicketNoPattern() {
+        return multiTicketNoPattern;
     }
 }

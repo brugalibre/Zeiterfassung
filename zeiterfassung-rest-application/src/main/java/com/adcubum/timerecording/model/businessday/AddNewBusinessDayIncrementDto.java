@@ -21,9 +21,9 @@ public class AddNewBusinessDayIncrementDto {
    private boolean isSubmitButtonDisabled;
 
    /**
-    * Creates a new {@link AddNewBusinessDayIncrementDto} for the given {@link BusinessDayIncrementD}
+    * Creates a new {@link AddNewBusinessDayIncrementDto} for the given {@link BusinessDayIncrementDto}
     * 
-    * @param businessDayIncrement
+    * @param businessDayIncrementDto
     */
    public AddNewBusinessDayIncrementDto(BusinessDayIncrementDto businessDayIncrementDto) {
       this.businessDayIncrementDto = businessDayIncrementDto;

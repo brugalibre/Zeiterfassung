@@ -10,6 +10,8 @@ public final class JiraApiConfigurationBuilder {
    private String boardIdPlaceholder;
    private String sprintIdPlaceHh;
    private String startAtPlaceholder;
+   private String defaultTicketName;
+   private String ticketNamePattern;
 
    private JiraApiConfigurationBuilder() {
       // private
@@ -56,9 +58,19 @@ public final class JiraApiConfigurationBuilder {
       return this;
    }
 
+   public JiraApiConfigurationBuilder withNullableTicketNamePattern(String ticketNamePattern) {
+      this.ticketNamePattern = ticketNamePattern;
+      return this;
+   }
+
+   public JiraApiConfigurationBuilder withNullableDefaultTicketName(String defaultTicketName) {
+      this.defaultTicketName = defaultTicketName;
+      return this;
+   }
+
    public JiraApiConfiguration build() {
-      JiraApiConfiguration jiraApiConfiguration =
-            new JiraApiConfiguration(jiraUrl, jiraAgileBasePath, boardIdPlaceholder, sprintIdPlaceHh, startAtPlaceholder);
+      JiraApiConfiguration jiraApiConfiguration = new JiraApiConfiguration(jiraUrl, jiraAgileBasePath,
+              boardIdPlaceholder, sprintIdPlaceHh, startAtPlaceholder, ticketNamePattern, defaultTicketName);
       if (useDefaultConfiguration) {
          JiraApiConfiguration defaultJiraApiConfiguration = JiraApiConfigurationFactory.createDefault();
          defaultJiraApiConfiguration.applyFromConfiguration(jiraApiConfiguration);

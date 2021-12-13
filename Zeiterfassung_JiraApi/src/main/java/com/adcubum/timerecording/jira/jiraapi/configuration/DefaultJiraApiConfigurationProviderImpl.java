@@ -11,6 +11,8 @@ public class DefaultJiraApiConfigurationProviderImpl implements DefaultJiraApiCo
                 .withStartAtPlaceholder(JiraApiConstants.START_AT_PLACE_HOLDER)
                 .withBoardIdPlaceholder(JiraApiConstants.BOARD_ID_PLACE_HOLDER)
                 .withSprintIdPlaceholder(JiraApiConstants.SPRINT_ID_PLACE_HOLDER)
+                .withNullableTicketNamePattern(TicketConst.TICKET_NO_PATTERN)
+                .withNullableDefaultTicketName(TicketConst.DEFAULT_TICKET_NAME)
                 .build();
     }
 

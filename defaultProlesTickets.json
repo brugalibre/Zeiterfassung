@@ -1,7 +1,7 @@
 {
   "prolesTicketJsonImports" :  [
     {
-      "ticketNr" : "NAG-1",
+      "ticketNr" : "NAG-nxT",
       "customer" : "nag",
       "project" : "nxT",
       "description" : "Für nag nxT Entwicklungen",
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "ticketNr" : "NAG-2",
+      "ticketNr" : "NAG-Intern",
       "customer" : "nag",
       "project" : "Intern",
       "description" : "Für LENA's",
@@ -35,7 +35,7 @@
       }]
     },
     {
-      "ticketNr" : "NAG-3",
+      "ticketNr" : "NAG-Ausbildung",
       "customer" : "nag",
       "project" : "Ausbildung",
       "description" : "Für interne Ausbildungen",

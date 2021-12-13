@@ -2,8 +2,10 @@ package com.adcubum.timerecording.ticketbacklog;
 
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.ticketbacklog.callback.TicketBacklogCallbackHandler;
+import com.adcubum.timerecording.ticketbacklog.config.TicketConfiguration;
 
 import java.util.List;
 
@@ -56,4 +58,9 @@ public interface TicketBacklog {
     * @return the {@link Ticket}s of this {@link TicketBacklog}
     */
    List<Ticket> getTickets();
+
+   /**
+    * @return the {@link JiraApiConfiguration}
+    */
+   TicketConfiguration getTicketConfiguration();
 }

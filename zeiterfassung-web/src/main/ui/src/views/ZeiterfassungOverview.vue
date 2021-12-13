@@ -70,7 +70,7 @@
             <div v-show="!businessDayIncrement.isEndTimeStampEditable||businessDayIncrement.isBooked">
               <label @click="businessDayIncrement.isEndTimeStampEditable=true;">{{businessDayIncrement.timeSnippetDto.endTimeStampRepresentation}} </label>
             </div>
-            <input type="time" id="beginTimeStamp" name="beginTimeStamp"
+            <input type="time" id="timeInput" name="beginTimeStamp"
               v-show="businessDayIncrement.isEndTimeStampEditable&&!businessDayIncrement.isBooked"
               v-model="businessDayIncrement.timeSnippetDto.endTimeStampRepresentation"
               @keydown.esc="businessDayIncrement.isEndTimeStampEditable=false"

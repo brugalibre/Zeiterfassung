@@ -35,6 +35,7 @@ export default {
             return Promise.reject(error);
           }
           this.addNewBusinessDayIncrementDto = data;
+          this.ticketNr = this.addNewBusinessDayIncrementDto.businessDayIncrementDto.ticketDto.ticketNr;
           this.beginTimeStampRepresentation = this.addNewBusinessDayIncrementDto.businessDayIncrementDto.timeSnippetDto.beginTimeStampRepresentation;
           this.endTimeStampRepresentation = this.addNewBusinessDayIncrementDto.businessDayIncrementDto.timeSnippetDto.endTimeStampRepresentation;
           this.isAddBusinessDayIncrementActive = this.beginTimeStampRepresentation !== null && this.endTimeStampRepresentation !== null;
@@ -44,7 +45,7 @@ export default {
     resume: function () {
       fetch(timeRecorderApiUrl + "/resume", this.postRequestOptions)
         .then(response => response.json())
-        .then(data => (this.postId = data.id))     
+        .then(data => (this.postId = data.id))
         .catch(error => {
           console.error("Error occurred while resuming", error);
       });
@@ -53,7 +54,7 @@ export default {
     book: function(){
       fetch(timeRecorderApiUrl + "/book", this.postRequestOptions)
         .then(response => response.json())
-        .then(data => (this.postId = data.id))     
+        .then(data => (this.postId = data.id))
         .catch(error => {
           console.error("Error occurred while booking", error);
       });
