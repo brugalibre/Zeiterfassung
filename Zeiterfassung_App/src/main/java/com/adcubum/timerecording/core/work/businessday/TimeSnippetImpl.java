@@ -187,6 +187,15 @@ public class TimeSnippetImpl implements TimeSnippet {
    }
 
    @Override
+   public String toString() {
+      return "TimeSnippetImpl {" +
+              "\nid=" + id + "," +
+              "\nbeginTimeStamp=" + beginTimeStamp + "," +
+              "\nendTimeStamp=" + endTimeStamp + "," +
+              "\n}";
+   }
+
+   @Override
    public TimeSnippet createTimeStampForIncrement(DateTime beginTimeStamp, int divisor) {
       float totalDuration = getDuration(TIME_TYPE.MILI_SEC);
       long newDuration4Increment = (long) (totalDuration / divisor);

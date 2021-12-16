@@ -8,6 +8,10 @@ apply from: '..//Zeiterfassung-zeiterfassung/test.gradle'
 apply from: '..//Zeiterfassung-zeiterfassung/integtest.gradle'
 
 dependencies {
+
+	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32'
+
 	// https://mvnrepository.com/artifact/org.springframework/spring-context
 	implementation group: 'org.springframework', name: 'spring-context', version: '5.3.8'
 
@@ -16,9 +20,6 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/joda-time/joda-time
 	implementation group: 'joda-time', name: 'joda-time', version: '2.10.10'
-	
-	// https://mvnrepository.com/artifact/log4j/log4j
-	implementation group: 'log4j', name: 'log4j', version: '1.2.17'
-	
+
 	implementation project(':zeiterfassung-common-api')
 }

@@ -24,6 +24,7 @@ import com.adcubum.timerecording.work.date.DateTimeUtil;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.NumberFormat;
+import com.adcubum.util.utils.LogUtil;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -337,6 +338,17 @@ public class BusinessDayImpl implements BusinessDay {
    @Override
    public UUID getId() {
       return id;
+   }
+
+   @Override
+   public String toString() {
+      return "BusinessDayImpl {" +
+              "\n\tid=" + id + "," +
+              "\n\tincrements=" +  LogUtil.toLogString(increments) + "," +
+              "\n\tcurrentTimeSnippet=" + currentTimeSnippet + "," +
+              "\n\tcomeAndGoes=" +  comeAndGoes + "," +
+              "\n\tisBooked=" + isBooked + "," +
+              "\n}";
    }
 
    private Optional<BusinessDayIncrement> findBusinessIncrementById(UUID id) {

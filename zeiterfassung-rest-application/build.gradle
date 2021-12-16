@@ -34,14 +34,12 @@ dependencies {
 	// Test dependency bc of AbstractFactory calls
 	testImplementation ('org.springframework.boot:spring-boot-starter-test:2.5.3')
 	
-	// https://mvnrepository.com/artifact/org.springframework/spring-test
 	testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.9'
 	testImplementation project (':zeiterfassung-core-impl')
 }
 
 configurations {
 	compile.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
-	compile.exclude group: 'ch.qos.logback', module: 'logback-classic'
 }
 
 javafx {

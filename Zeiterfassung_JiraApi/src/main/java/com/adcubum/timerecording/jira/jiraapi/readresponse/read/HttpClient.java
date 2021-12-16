@@ -2,7 +2,6 @@ package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.JiraResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.ResponseReader;
@@ -12,6 +11,8 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link HttpClient} acts as a wrapper to an actual implementation of a http-client. So all http-calls are delegated to this
@@ -22,7 +23,7 @@ import okhttp3.Response;
  */
 public class HttpClient {
 
-   private static final Logger LOG = Logger.getLogger(HttpClient.class);
+   private static final Logger LOG = LoggerFactory.getLogger(HttpClient.class);
    private String credentials;
    private OkHttpClient okHttpClient;
 

@@ -3,6 +3,8 @@
  */
 package com.adcubum.util.utils;
 
+import java.util.List;
+
 /**
  * @author Dominic
  * 
@@ -37,5 +39,21 @@ public class StringUtil {
          throw new IllegalArgumentException("Value must not be null nor empty!");
       }
       return stringValue;
+   }
+
+   /**
+    * Concat all String in the given List into one single String
+    *
+    * @param stringLines
+    *       the {@link String}s to concat
+    * @return a String representing the given List of Strings
+    */
+   public static String concat2StringNl(List<String> stringLines) {
+      return stringLines.stream()
+              .reduce("", (prevLine, nextLine) -> appendStrings(prevLine, nextLine));
+   }
+
+   private static String appendStrings(String prevLine, String nextLine) {
+      return isEmptyOrNull(nextLine) ? prevLine : prevLine + "\\n" + nextLine;
    }
 }

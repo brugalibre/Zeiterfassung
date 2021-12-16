@@ -7,7 +7,8 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +23,7 @@ import com.adcubum.timerecording.work.date.DateTime;
 @Repository("business-day-entity-repository")
 public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityRepository {
 
-   private static final Logger LOG = Logger.getLogger(BusinessDayEntityRepositoryImpl.class);
+   private static final Logger LOG = LoggerFactory.getLogger(BusinessDayEntityRepositoryImpl.class);
 
    private BusinessDayDao businessDayDao;
    private ComeAndGoesDao comeAndGoesDao;

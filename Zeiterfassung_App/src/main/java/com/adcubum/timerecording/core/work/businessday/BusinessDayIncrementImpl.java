@@ -246,6 +246,18 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
       return (BusinessDayIncrementImpl) BusinessDayIncrementImpl.of(this);
    }
 
+   @Override
+   public String toString() {
+      return "BusinessDayIncrementImpl {" +
+              "\n\tcurrentTimeSnippet=" + currentTimeSnippet + "," +
+              "\n\tid=" + id + "," +
+              "\n\tdescription='" + description + "'," +
+              "\n\tticket=" + ticket + "," +
+              "\n\tisBooked=" + isBooked + "," +
+              "\n\tticketActivity=" + ticketActivity + "," +
+              "\n}";
+   }
+
    /**
     * Creates a new {@link BusinessDayIncrement} for the given
     * {@link BusinessDayIncrementAdd}

@@ -15,6 +15,8 @@ import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import com.adcubum.util.parser.DateParser;
 import com.adcubum.util.utils.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ public class BusinessDayImporter {
    public static final BusinessDayImporter INTANCE = new BusinessDayImporter();
    private static final String CONTENT_LINE_BEGIN = TextLabel.TICKET + ":";
    private static final String CONTENT_SEPARATOR = ";";
+   private static final Logger LOG = LoggerFactory.getLogger(BusinessDayImporter.class);
 
    private BusinessDayImporter() {
       // private Constructor
@@ -63,6 +66,7 @@ public class BusinessDayImporter {
     */
    public BusinessDay importBusinessDay(List<String> importedLines) {
 
+      LOG.info("Import BusinessDay from lines '" + StringUtil.concat2StringNl(importedLines) + "'");
       try {
          checkInput(importedLines);
          return importBusinessDayInternal(new ArrayList<>(importedLines));
@@ -82,6 +86,7 @@ public class BusinessDayImporter {
       for (BusinessDayIncrementImport businessDayIncrementImport : businessDayIncImports) {
          businessDay = businessDay.addBusinessIncrement(businessDayIncrementImport);
       }
+      LOG.info("Successfully imported BusinessDay \n'" + businessDay + "'");
       return businessDay;
    }
 
@@ -92,9 +97,11 @@ public class BusinessDayImporter {
       List<String> filteredLines = filterLines(importedLines);
       while (has2ContinueParsing(filteredLines)) {
          String importLine = filteredLines.remove(0);
+         LOG.info("Create BusinessDayIncrementImport from line '" + importLine + "'");
          BusinessDayIncrementImport businessDayIncrementImport = parseLine2BusinessDayIncImport(importLine, date);
          businessDayInc2Import.add(businessDayIncrementImport);
       }
+      LOG.info("Created successfully int total " + businessDayInc2Import.size() + " BusinessDayIncrementImports");
       return businessDayInc2Import;
    }
 

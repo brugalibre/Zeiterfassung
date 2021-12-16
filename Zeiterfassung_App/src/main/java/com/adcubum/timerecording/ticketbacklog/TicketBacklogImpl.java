@@ -16,7 +16,8 @@ import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReaderBui
 import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
 import com.adcubum.timerecording.ticketbacklog.defaulttickets.DefaultTicketReader;
 import com.adcubum.timerecording.workerfactory.ThreadFactory;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.Set;
 
 public class TicketBacklogImpl extends AbstractTicketBacklog {
 
-   private static final Logger LOG = Logger.getLogger(TicketBacklogImpl.class);
+   private static final Logger LOG = LoggerFactory.getLogger(TicketBacklogImpl.class);
    private final ServiceCodeAdapter serviceCodeAdapter;
    private JiraApiReader jiraApiReader;
    private Set<Ticket> tickets;

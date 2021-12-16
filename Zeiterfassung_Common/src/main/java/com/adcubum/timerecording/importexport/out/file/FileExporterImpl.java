@@ -3,16 +3,16 @@
  */
 package com.adcubum.timerecording.importexport.out.file;
 
+import com.adcubum.timerecording.importexport.out.file.exception.FileExportException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.log4j.Logger;
-
-import com.adcubum.timerecording.importexport.out.file.exception.FileExportException;
 
 /**
  * @author Dominic
@@ -24,7 +24,7 @@ public class FileExporterImpl implements FileExporter {
     * The file extension of files to export
     */
    public static final String FILE_EXTENSION = "csv";
-   private static final Logger LOG = Logger.getLogger(FileExporterImpl.class);
+   private static final Logger LOG = LoggerFactory.getLogger(FileExporterImpl.class);
 
    private FileExporterImpl() {
       // private Constructor

@@ -7,7 +7,10 @@ import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
 import com.adcubum.timerecording.proles.ticketbacklog.read.ProlesTicketReader;
 import com.adcubum.timerecording.proles.ticketbacklog.read.ProlesTicketReaderFactory;
 import com.adcubum.timerecording.ticketbacklog.AbstractTicketBacklog;
+import com.adcubum.timerecording.ticketbacklog.TicketBacklogImpl;
 import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.function.Predicate;
 
 public class ProlesTicketBacklogImpl extends AbstractTicketBacklog {
 
+   private static final Logger LOG = LoggerFactory.getLogger(ProlesTicketBacklogImpl.class);
    private static final String DEFAULT_PROLES_TICKETS_FILE = "defaultProlesTickets.json";
    private List<Ticket> tickets;
 
@@ -26,8 +30,10 @@ public class ProlesTicketBacklogImpl extends AbstractTicketBacklog {
 
    @Override
    public void initTicketBacklog() {
+      LOG.info("Initialize ticket backlog...");
       ProlesTicketReader prolesTicketReader = ProlesTicketReaderFactory.createNew();
       this.tickets = prolesTicketReader.readProlesTicketFromPath(DEFAULT_PROLES_TICKETS_FILE);
+      LOG.info("Initialized ticket backlog successfully, read " + tickets.size() + " tickets");
       notifyCallbackHandlers(UpdateStatus.SUCCESS);
    }
 

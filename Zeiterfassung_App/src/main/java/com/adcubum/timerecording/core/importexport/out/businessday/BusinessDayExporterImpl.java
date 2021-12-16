@@ -10,6 +10,8 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.util.BusinessDayUtil;
 import com.adcubum.util.parser.DateParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ import static java.util.Objects.nonNull;
 public class BusinessDayExporterImpl implements BusinessDayExporter {
 
    private static final String LINE_SEPARATOR = "line.separator";
+   private static final Logger LOG = LoggerFactory.getLogger(BusinessDayExporterImpl.class);
 
    private BusinessDayExporterImpl() {
       // private constructor
@@ -31,6 +34,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
 
    @Override
    public List<String> exportBusinessDay(BusinessDay bussinessDay) {
+      LOG.info("Export businessDay \n'" + bussinessDay + "'");
       StringBuilder builder = new StringBuilder();
       List<String> content = new ArrayList<>();
 
@@ -43,6 +47,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
 
       // = For each 'Ticket' or Increment of an entire Day
       for (BusinessDayIncrement inc : bussinessDay.getIncrements()) {
+         LOG.info("Export BusinessDayIncrement '" + inc + "'");
          builder.append(TextLabel.TICKET + ": ");
          builder.append(inc.getTicket().getNr());
          builder.append(CONTENT_SEPPARATOR);
@@ -63,11 +68,14 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
 
          builder.append(System.getProperty(LINE_SEPARATOR));
          content.add(builder.toString());
+         LOG.info("Export BusinessDayIncrement '" + builder.toString() + "'");
          builder.delete(0, builder.capacity());
       }
       builder.append(System.getProperty(LINE_SEPARATOR));
       builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + BusinessDayUtil.getTotalDurationRep(bussinessDay));
       content.add(builder.toString());
+      LOG.info("Created last line '" + builder.toString() + "'");
+      LOG.info("Successfully exported BusinessDay");
       return content;
    }
 

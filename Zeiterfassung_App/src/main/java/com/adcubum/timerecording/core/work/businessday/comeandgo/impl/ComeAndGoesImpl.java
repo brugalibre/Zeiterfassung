@@ -1,14 +1,5 @@
 package com.adcubum.timerecording.core.work.businessday.comeandgo.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
@@ -16,6 +7,11 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.change.ChangedC
 import com.adcubum.timerecording.settings.round.TimeRounder;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
+import com.adcubum.util.utils.LogUtil;
+
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * The class {@link ComeAndGoesImpl} keeps track of each time a user comes and goes during the business day.
@@ -38,9 +34,6 @@ public class ComeAndGoesImpl implements ComeAndGoes {
       this.id = id;
    }
 
-   /**
-    * Either triggers a manually come or a go for this {@link ComeAndGoDto}
-    */
    @Override
    public ComeAndGoes comeOrGo() {
       DateTime newTime = DateTimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
@@ -79,9 +72,6 @@ public class ComeAndGoesImpl implements ComeAndGoes {
       return comeAndGo.getId().equals(changedComeAndGoValue.getId());
    }
 
-   /**
-    * Either triggers a manually come or a go for this {@link ComeAndGoDto}
-    */
    @Override
    public ComeAndGoes comeOrGo(DateTime time) {
       List<ComeAndGo> changedComeAndGoEntries = comeOrGoInternal(time, new LinkedList<>(comeAndGoEntries));
@@ -168,12 +158,6 @@ public class ComeAndGoesImpl implements ComeAndGoes {
             .findFirst();
    }
 
-   /**
-    * Removes all {@link ComeAndGoDto} of this {@link ComeAndGoesDto} which are done and returns a
-    * new instance in which the done elements are removed
-    * 
-    * @return a new instance in which the done elements are removed
-    */
    @Override
    public ComeAndGoes clearDoneComeAndGoes() {
       List<ComeAndGo> doneComeAndGoes = evalAllDoneComeAndGoes();
@@ -212,9 +196,6 @@ public class ComeAndGoesImpl implements ComeAndGoes {
             .anyMatch(ComeAndGo::isNotRecorded);
    }
 
-   /**
-    * @return a unmodifiable list of it's come's and goes
-    */
    @Override
    public List<ComeAndGo> getComeAndGoEntries() {
       return Collections.unmodifiableList(comeAndGoEntries);
@@ -225,23 +206,31 @@ public class ComeAndGoesImpl implements ComeAndGoes {
       return id;
    }
 
+   @Override
+   public String toString() {
+      return "ComeAndGoesImpl{" +
+              "\n\tid=" + id + "," +
+              "\n\tcomeAndGoEntries=" + LogUtil.toLogString(comeAndGoEntries) + "," +
+              "\n}";
+   }
+
    /**
-    * Creates a new {@link ComeAndGoesDto} with no entries
+    * Creates a new {@link ComeAndGoesImpl} with no entries
     * 
-    * @return a new {@link ComeAndGoesDto} with no entries
+    * @return a new {@link ComeAndGoesImpl} with no entries
     */
    public static ComeAndGoesImpl of() {
       return new ComeAndGoesImpl();
    }
 
    /**
-    * Creates a new {@link ComeAndGoesDto} with no entries
+    * Creates a new {@link ComeAndGoesImpl} with no entries
     * 
     * @param id
     *        the id of this {@link ComeAndGoesImpl}
     * @param comeAndGoEntries
     *        the list of {@link ComeAndGo} entries
-    * @return a new {@link ComeAndGoesDto} with the given id and {@link ComeAndGo} entries
+    * @return a new {@link ComeAndGoesImpl} with the given id and {@link ComeAndGo} entries
     */
    public static ComeAndGoesImpl of(UUID id, List<ComeAndGo> comeAndGoEntries) {
       return new ComeAndGoesImpl(id, comeAndGoEntries);

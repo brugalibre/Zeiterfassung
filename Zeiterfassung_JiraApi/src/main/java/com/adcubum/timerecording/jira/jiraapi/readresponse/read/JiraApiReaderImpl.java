@@ -14,8 +14,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
-
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
@@ -29,10 +27,12 @@ import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responseread
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssuesResponseReader;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JiraApiReaderImpl implements JiraApiReader {
 
-   private static final Logger LOG = Logger.getLogger(JiraApiReaderImpl.class);
+   private static final Logger LOG = LoggerFactory.getLogger(JiraApiReaderImpl.class);
    private HttpClient httpClient;
    private JiraApiConfiguration jiraApiConfiguration;
 
