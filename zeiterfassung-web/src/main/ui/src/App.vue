@@ -36,9 +36,11 @@ import ZeiterfassungRecordingStatus from './views/ZeiterfassungRecordingStatus.v
 import ZeiterfassungOverview from './views/ZeiterfassungOverview.vue';
 import SetActualHoursComparison from './views/SetActualHoursComparison.vue';
 import ZeiterfassungHistoryOverview from './views/ZeiterfassungHistoryOverview.vue';
+import appApi from "./mixins/AppApi";
 
 export default {
   name: 'App',
+  mixins: [appApi],
   components: {
     ZeiterfassungDashboard,
     ZeiterfassungRecordingStatus,
@@ -48,12 +50,21 @@ export default {
   },
   data () {
    return {
+     applicationTitle: '',
      overviewKey: 0,
      zeiterfassungStatusKey: 0,
      setActualHoursComparisonKey: 0,
      zeiterfassungHistoryOverviewKey: 0,
    };
  },
+  watch: {
+    applicationTitle: {
+      immediate: true,
+      handler() {
+        document.title = this.applicationTitle;
+      }
+    }
+  },
   methods: {
     refreshUis: function(){
       this.setActualHoursComparisonKey += 1;
@@ -67,8 +78,11 @@ export default {
       this.zeiterfassungStatusKey += 1;
       this.zeiterfassungHistoryOverviewKey += 1;
       console.log("App.vue: Refresh requested incl. history!");
-    },
+    }
   },
+  created() {
+    this.applicationTitle = this.fetchApplicationTitle();
+  }
 }
 </script>
 
