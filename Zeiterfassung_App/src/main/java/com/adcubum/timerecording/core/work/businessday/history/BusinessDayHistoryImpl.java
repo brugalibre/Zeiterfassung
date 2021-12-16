@@ -1,4 +1,4 @@
-package com.adcubum.timerecording.core.work.businessday.history.compare;
+package com.adcubum.timerecording.core.work.businessday.history;
 
 import static java.util.Objects.requireNonNull;
 

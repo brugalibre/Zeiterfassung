@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistoryOverview;
-import com.adcubum.timerecording.core.work.businessday.history.compare.BusinessDayHistoryOverviewImpl;
+import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistoryOverviewImpl;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepository;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd.BusinessDayIncrementAddBuilder;

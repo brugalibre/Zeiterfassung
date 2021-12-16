@@ -1,6 +1,9 @@
-package com.adcubum.timerecording.core.work.businessday.history.compare;
+package com.adcubum.timerecording.core.work.businessday.history;
 
-import static java.util.Objects.requireNonNull;
+import com.adcubum.timerecording.core.work.businessday.BusinessDay;
+import com.adcubum.timerecording.core.work.businessday.history.compare.BusinessDayHistoryComparator;
+import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.timerecording.work.date.DateTimeUtil;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -9,11 +12,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.adcubum.timerecording.core.work.businessday.BusinessDay;
-import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistory;
-import com.adcubum.timerecording.core.work.businessday.history.BusinessDayHistoryOverview;
-import com.adcubum.timerecording.work.date.DateTime;
-import com.adcubum.timerecording.work.date.DateTimeUtil;
+import static java.util.Objects.requireNonNull;
 
 public class BusinessDayHistoryOverviewImpl implements BusinessDayHistoryOverview {
 
