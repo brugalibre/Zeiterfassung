@@ -193,8 +193,10 @@ public class StopBusinessDayIncrementController extends BaseFXController<PageMod
       boolean isValidSelectedServiceCode = validateSelectedServiceCode();
       boolean isTicketNoInputValid = isTicketNoInputValid();
       boolean isMultiTicketNoInputValid = isMultiTicketNoInputValid();
+      boolean isDescriptionValid = dataModel.isDescriptionValid(descriptionTextField);
       return new InputFieldVerifier().verify(amountOfHoursTextField, true)
             && isValidSelectedServiceCode
+            && isDescriptionValid
             && isTicketNoInputValid
             && isMultiTicketNoInputValid;
    }

@@ -31,7 +31,14 @@ public abstract class AbstractTicketBacklog implements TicketBacklog {
     public TicketConfiguration getTicketConfiguration() {
         JiraApiConfiguration jiraApiConfiguration = buildJiraApiConfiguration();
         return new TicketConfigurationImpl(jiraApiConfiguration.getTicketNamePattern(),
-                jiraApiConfiguration.getDefaultTicketName(), jiraApiConfiguration.getMultiTicketNoPattern());
+                jiraApiConfiguration.getDefaultTicketName(), jiraApiConfiguration.getMultiTicketNoPattern(), getIsTicketDescriptionRequired());
+    }
+
+    /**
+     * @return by default a {@link com.adcubum.timerecording.jira.data.ticket.Ticket} needs a description
+     */
+    protected boolean getIsTicketDescriptionRequired(){
+        return true;
     }
 
     protected void notifyCallbackHandlers(UpdateStatus updateStatus) {

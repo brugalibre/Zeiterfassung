@@ -9,6 +9,8 @@ import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.ticketbacklog.callback.TicketBacklogCallbackHandler;
 import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
+import com.adcubum.timerecording.ticketbacklog.config.TicketConfiguration;
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -40,6 +42,22 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
 
       // Then
       verify(tcb.jiraApiReader, times(AMOUNT_OF_DEFAULT_TICKETS)).readTicket4Nr(any());
+   }
+
+   @Test
+   void testGetTicketConfiguration() {
+      // Given
+      TestCaseBuilder tcb = new TestCaseBuilder()
+            .buildTestCaseBuilder();
+
+      // When
+      TicketConfiguration ticketConfiguration = tcb.ticketBacklog.getTicketConfiguration();
+
+      // Then
+      // assuming we have a TicketBacklogImpl here!
+      assertThat(ticketConfiguration.getIsDescriptionRequired(), is(false));
+      assertThat(ticketConfiguration.getDefaultTicketName(), is("SYRIUS"));
+      assertThat(ticketConfiguration.getTicketNamePattern(), is("(([a-zA-Z0-9-?]+)[-][0-9]+)"));
    }
 
    @Test

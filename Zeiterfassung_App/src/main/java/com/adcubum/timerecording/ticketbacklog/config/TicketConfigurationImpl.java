@@ -4,10 +4,12 @@ public class TicketConfigurationImpl implements TicketConfiguration {
    private String ticketNamePattern;
    private String defaultTicketName;
    private String multiTicketNamePattern;
+   private boolean isDescriptionRequired;
 
-   public TicketConfigurationImpl(String ticketNamePattern, String defaultTicketName, String multiTicketNamePattern) {
+   public TicketConfigurationImpl(String ticketNamePattern, String defaultTicketName, String multiTicketNamePattern, boolean isDescriptionRequired) {
       this.ticketNamePattern = ticketNamePattern;
       this.defaultTicketName = defaultTicketName;
+      this.isDescriptionRequired = isDescriptionRequired;
       this.multiTicketNamePattern = multiTicketNamePattern;
    }
 
@@ -24,5 +26,10 @@ public class TicketConfigurationImpl implements TicketConfiguration {
    @Override
    public String getMultiTicketNamePattern() {
       return multiTicketNamePattern;
+   }
+
+   @Override
+   public boolean getIsDescriptionRequired() {
+      return isDescriptionRequired;
    }
 }

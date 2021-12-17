@@ -132,6 +132,11 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
    }
 
    @Override
+   protected boolean getIsTicketDescriptionRequired() {
+      return false;// jira tickets don't need a description
+   }
+
+   @Override
    public List<Ticket> getTickets() {
       return List.copyOf(tickets);
    }

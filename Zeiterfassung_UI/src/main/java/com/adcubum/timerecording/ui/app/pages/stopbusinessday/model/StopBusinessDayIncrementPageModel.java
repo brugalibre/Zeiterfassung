@@ -19,6 +19,7 @@ import com.adcubum.timerecording.ui.app.inputfield.InputFieldVerifier;
 import com.adcubum.timerecording.ui.app.pages.combobox.TicketComboboxItem;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.work.date.DateTime;
+import com.adcubum.util.utils.StringUtil;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -286,6 +287,22 @@ public class StopBusinessDayIncrementPageModel implements PageModel {
    public boolean isMultiTicketNoValid(TextField multiTicketNumberField, boolean addErrorStyle) {
       TicketConfiguration ticketConfiguration = TicketBacklogSPI.getTicketBacklog().getTicketConfiguration();
       return new InputFieldVerifier().isStringMatchingPattern(multiTicketNumberField, ticketConfiguration.getMultiTicketNamePattern(), addErrorStyle);
+   }
+
+   /**
+    * Verifies if the description of this {@link StopBusinessDayIncrementPageModel} is valid or not.
+    * If it's not valid, the {@link TextField} holding the description is marked accordingly
+    *
+    * @param descriptionField the {@link TextField} which contains the entered description
+    * @return <code>true</code> if the description is valid or <code>false</code> if not
+    */
+   public boolean isDescriptionValid(TextField descriptionField) {
+      TicketConfiguration ticketConfiguration = TicketBacklogSPI.getTicketBacklog().getTicketConfiguration();
+      if (ticketConfiguration.getIsDescriptionRequired()) {
+         boolean isValid = StringUtil.isNotEmptyOrNull(descriptionProperty.getValue());
+         return InputFieldVerifier.addOrRemoveErrorStyleAndReturnValidationRes(descriptionField, isValid);
+      }
+      return true; // no description is required -> no validation
    }
 
    /**

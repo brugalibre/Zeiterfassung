@@ -19,4 +19,9 @@ public interface TicketConfiguration {
     * @return the regex for multiple ticket-names
     */
    String getMultiTicketNamePattern();
+
+   /**
+    * @return <code>true</code> if a {@link com.adcubum.timerecording.jira.data.ticket.Ticket} needs a description or <code>false</code> if the description can be empty or <code>null</code>
+    */
+   boolean getIsDescriptionRequired();
 }
