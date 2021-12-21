@@ -1,19 +1,5 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
-import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.BOARD_ID_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
-import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.MAX_RESULTS;
-import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.SPRINT_ID_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.START_AT_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.START_AT_PLACE_LITERAL;
-import static java.util.Objects.requireNonNull;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
@@ -29,6 +15,15 @@ import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.*;
+import static java.util.Objects.requireNonNull;
 
 public class JiraApiReaderImpl implements JiraApiReader {
 
@@ -73,16 +68,16 @@ public class JiraApiReaderImpl implements JiraApiReader {
 
    @Override
    public Optional<Ticket> readTicket4Nr(String ticketNr) {
-      LOG.info("Try to read ticket for ticket-nr '" + ticketNr + "'");
+      LOG.info("Try to read ticket for ticket-nr '{}'", ticketNr);
       String url = jiraApiConfiguration.getGetIssueUrl() + ticketNr;
       JiraIssueResponse jiraIssueResponse = httpClient.callRequestAndParse(new JiraIssueResponseReader(), url);
-      LOG.info("Read successfully ? " + (jiraIssueResponse.isSuccess() ? "yes" : "no"));
+      LOG.info("Read was successfully: {}", (jiraIssueResponse.isSuccess() ? "yes" : "no"));
       return JiraResponseMapper.INSTANCE.map2Ticket(jiraIssueResponse);
    }
 
    @Override
    public JiraApiReadTicketsResult readTicketsFromBoardAndSprints(String boardName, List<String> sprintNames) {
-      LOG.info("Try to read the tickets from the current sprint from board '" + boardName + "'");
+      LOG.info("Try to read the tickets from the current sprint from board '{}'", boardName);
       SprintInfos sprintInfos = evalActiveSprints4BoardName(boardName);
       if (sprintInfos.isEmpty()) {
          return failedResult(sprintInfos);
@@ -93,7 +88,7 @@ public class JiraApiReaderImpl implements JiraApiReader {
    }
 
    private void readAndApplyFutureSprintTickets(JiraIssuesResponse activeSprintIssues, String boardId, List<String> sprintNames) {
-      LOG.info("Try to read the tickets for the future sprints '" + (sprintNames.isEmpty() ? "all" : sprintNames + "'"));
+      LOG.info("Try to read the tickets for the future sprints '{}'", (sprintNames.isEmpty() ? "all" : sprintNames));
       getFutureSprintInfos(boardId)
             .stream()
             .filter(isRelevantSprint(sprintNames))
@@ -120,11 +115,11 @@ public class JiraApiReaderImpl implements JiraApiReader {
       String boardId;
       int index = 0;
       do {
-         LOG.info("Trying to get the board id from the search results within range " + index + " to " + (index + JIRA_MAX_RESULTS_RETURNED));
+         LOG.info("Trying to get the board id from the search results from start index {} to end index {}", index, (index + JIRA_MAX_RESULTS_RETURNED));
          boardId = getBoardId4Name(boardName, String.valueOf(index));
          index = index + JIRA_MAX_RESULTS_RETURNED;
       } while (SprintInfo.isUnknown(boardId) && index < MAX_RESULTS);
-      LOG.info("Got board id " + boardId + " for board name '" + boardName + "'");
+      LOG.info("Got board id {} for board name '{}'",  boardId, boardName);
       return boardId;
    }
 
@@ -187,7 +182,7 @@ public class JiraApiReaderImpl implements JiraApiReader {
     */
    private JiraIssuesResponse createUrlAndReadIssuesFromJira(SprintInfo sprintInfo) {
       String url = createGetIssues4BoardUrl(sprintInfo);
-      LOG.info("Trying to get issues for sprint '" + sprintInfo.sprintId + "' (" + sprintInfo.sprintName + ")");
+      LOG.info("Trying to get issues for sprint '{}' ('{}')" , sprintInfo.sprintId, sprintInfo.sprintName);
       return readIssuesFromJira(url);
    }
 
@@ -212,22 +207,20 @@ public class JiraApiReaderImpl implements JiraApiReader {
    private static void logResult(JiraIssuesResponse parsedIssuesFromJira) {
       int amountOfNotSubtasks = parsedIssuesFromJira.getIssuesNotSubtask().size();
       int totalAmount = parsedIssuesFromJira.getIssues().size();
-      LOG.info("Read " + totalAmount + " jira issues (" + amountOfNotSubtasks + " issues and " + (totalAmount - amountOfNotSubtasks)
-            + " subtasks)");
+      LOG.info("Read {} jira issues ({} issues and {} subtasks)", totalAmount, amountOfNotSubtasks, (totalAmount - amountOfNotSubtasks));
    }
 
    private void logResult(SprintInfos sprintInfos, String boardName) {
       if (sprintInfos.isEmpty()) {
-         LOG.warn("No active sprints found for board name '" + boardName + "'");
+         LOG.warn("No active sprints found for board name '{}'", boardName);
       }
       for (SprintInfo sprintInfo : sprintInfos.getSprintInfoEntries()) {
-         LOG.info("Got sprint id " + sprintInfo.sprintId + " (" + sprintInfo.sprintName + ") for board name '" + boardName + "'");
+         LOG.info("Got sprint id '{}' ('{}') for board name '{}'", sprintInfo.sprintId, sprintInfo.sprintName, boardName);
       }
    }
 
    private JiraApiReadTicketsResult failedResult(SprintInfos sprintInfos) {
-      LOG.warn("Unable to read tickets from board '" + sprintInfos.getBoardName() +
-            "' (id=" + sprintInfos.getBoardId() + ", sprint-ids=" + SprintInfo.UNKNOWN + ")");
+      LOG.warn("Unable to read tickets from board '{}'" + " (id='{}', sprint-ids={})", sprintInfos.getBoardName(), sprintInfos.getBoardId(), SprintInfo.UNKNOWN);
       return JiraApiReadTicketsResult.failed();
    }
 

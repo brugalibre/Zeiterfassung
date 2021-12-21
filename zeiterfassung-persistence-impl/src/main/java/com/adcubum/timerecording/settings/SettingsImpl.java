@@ -41,7 +41,7 @@ public class SettingsImpl implements Settings {
       try (InputStream resourceStream = getInputStream(propFile)) {
          return evalSettingValueForKey(resourceStream, settingValueKey);
       } catch (IOException e) {
-         LOG.error("Unable to read value for key '" + settingValueKey + "' in property file '" + propFile + "'", e);
+         LOG.error("Unable to read value for key '{}' in property file '{}'", settingValueKey, propFile, e);
       }
       return null;
    }

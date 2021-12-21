@@ -64,7 +64,7 @@ public class HttpClient {
       try (Response response = okHttpClient.newCall(request).execute()) {
          return reader.readResponse(response);
       } catch (Exception e) {
-         LOG.error("Unable to read from url '" + url + "'!");
+         LOG.error("Unable to read from url '{}'!", url);
          return reader.createErrorResponse(e, url);
       }
    }

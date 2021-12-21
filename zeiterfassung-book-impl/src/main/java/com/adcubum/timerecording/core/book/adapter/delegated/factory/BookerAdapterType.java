@@ -50,7 +50,7 @@ public enum BookerAdapterType {
             return bookerAdapterType;
          }
       }
-      LOG.warn("No BookerAdapterType found for name '" + bookerName + "'. Fallback to thefault '" + BookerAdapterType.JIRA_WEB.name + "'");
+      LOG.warn("No BookerAdapterType found for name '{}'. Fallback to the default '{}'", bookerName, BookerAdapterType.JIRA_WEB.name);
       // Fallback due to backwards compatibility
       return BookerAdapterType.JIRA_WEB;
    }

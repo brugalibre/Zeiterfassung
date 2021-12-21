@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.adcubum.timerecording.core.importexport.out.businessday;
 
 import com.adcubum.librarys.text.res.TextLabel;
@@ -34,7 +31,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
 
    @Override
    public List<String> exportBusinessDay(BusinessDay bussinessDay) {
-      LOG.info("Export businessDay \n'" + bussinessDay + "'");
+      LOG.info("Export businessDay \n'{}'", bussinessDay);
       StringBuilder builder = new StringBuilder();
       List<String> content = new ArrayList<>();
 
@@ -47,7 +44,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
 
       // = For each 'Ticket' or Increment of an entire Day
       for (BusinessDayIncrement inc : bussinessDay.getIncrements()) {
-         LOG.info("Export BusinessDayIncrement '" + inc + "'");
+         LOG.info("Export BusinessDayIncrement '{}'", inc);
          builder.append(TextLabel.TICKET + ": ");
          builder.append(inc.getTicket().getNr());
          builder.append(CONTENT_SEPPARATOR);
@@ -68,13 +65,13 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
 
          builder.append(System.getProperty(LINE_SEPARATOR));
          content.add(builder.toString());
-         LOG.info("Export BusinessDayIncrement '" + builder.toString() + "'");
+         LOG.info("Export BusinessDayIncrement '{}'", builder);
          builder.delete(0, builder.capacity());
       }
       builder.append(System.getProperty(LINE_SEPARATOR));
       builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + BusinessDayUtil.getTotalDurationRep(bussinessDay));
       content.add(builder.toString());
-      LOG.info("Created last line '" + builder.toString() + "'");
+      LOG.info("Created last line '{}'", builder);
       LOG.info("Successfully exported BusinessDay");
       return content;
    }

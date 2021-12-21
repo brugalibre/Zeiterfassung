@@ -59,7 +59,7 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
 
    private void readDefaultTickets() {
       List<Ticket> defaultTickets = new DefaultTicketReader(jiraApiReader, fileImporter).readDefaultTickets();
-      LOG.info("Read " + defaultTickets.size() + " default tickets from outside the sprint");
+      LOG.info("Read {} default tickets from outside the sprint", defaultTickets.size());
       this.tickets.addAll(defaultTickets);
    }
 

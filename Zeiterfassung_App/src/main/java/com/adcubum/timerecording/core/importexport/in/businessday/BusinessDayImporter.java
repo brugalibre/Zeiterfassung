@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.adcubum.timerecording.core.importexport.in.businessday;
 
 import com.adcubum.librarys.text.res.TextLabel;
@@ -66,7 +63,7 @@ public class BusinessDayImporter {
     */
    public BusinessDay importBusinessDay(List<String> importedLines) {
 
-      LOG.info("Import BusinessDay from lines '" + StringUtil.concat2StringNl(importedLines) + "'");
+      LOG.info("Import BusinessDay from lines '{}'", StringUtil.concat2StringNl(importedLines));
       try {
          checkInput(importedLines);
          return importBusinessDayInternal(new ArrayList<>(importedLines));
@@ -86,7 +83,7 @@ public class BusinessDayImporter {
       for (BusinessDayIncrementImport businessDayIncrementImport : businessDayIncImports) {
          businessDay = businessDay.addBusinessIncrement(businessDayIncrementImport);
       }
-      LOG.info("Successfully imported BusinessDay \n'" + businessDay + "'");
+      LOG.info("Successfully imported BusinessDay \n'{}'", businessDay);
       return businessDay;
    }
 
@@ -97,11 +94,11 @@ public class BusinessDayImporter {
       List<String> filteredLines = filterLines(importedLines);
       while (has2ContinueParsing(filteredLines)) {
          String importLine = filteredLines.remove(0);
-         LOG.info("Create BusinessDayIncrementImport from line '" + importLine + "'");
+         LOG.info("Create BusinessDayIncrementImport from line '{}'", importLine);
          BusinessDayIncrementImport businessDayIncrementImport = parseLine2BusinessDayIncImport(importLine, date);
          businessDayInc2Import.add(businessDayIncrementImport);
       }
-      LOG.info("Created successfully int total " + businessDayInc2Import.size() + " BusinessDayIncrementImports");
+      LOG.info("Created successfully int total {} BusinessDayIncrementImports", businessDayInc2Import.size());
       return businessDayInc2Import;
    }
 
