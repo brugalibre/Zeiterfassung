@@ -1,8 +1,8 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.response.error;
 
-import com.adcubum.timerecording.jira.jiraapi.readresponse.response.JiraResponse;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.response.BaseJiraResponse;
 
-public class JiraErrorResponse implements JiraResponse {
+public class JiraErrorResponse extends BaseJiraResponse {
 
    private String url;
    private Exception exception;

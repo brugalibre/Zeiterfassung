@@ -50,7 +50,7 @@ public abstract class AbstractTicketBacklog implements TicketBacklog {
                 .withDefaultJiraApiConfiguration()
                 .withNullableBoardType(backlogHelper.getBoardType())
                 .withNullableFetchBoardsBeginIndex(backlogHelper.getFetchBoardsBeginIndex())
-                .withNullableJiraAgileBasePath(backlogHelper.getJiraBaseUrl())
+                .withNullableJiraUrl(backlogHelper.getJiraBaseUrl())
                 .withNullableTicketNamePattern(backlogHelper.getTicketNamePattern())
                 .withNullableDefaultTicketName(backlogHelper.getDefaultTicketName())
                 .build();

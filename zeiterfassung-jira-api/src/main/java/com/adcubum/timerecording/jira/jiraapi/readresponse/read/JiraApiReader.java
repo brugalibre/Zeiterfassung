@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraConfigurationAware;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
 
@@ -19,15 +20,7 @@ import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObser
  * @author Dominic
  *
  */
-public interface JiraApiReader extends UserAuthenticatedObservable {
-
-   /**
-    * Applies the given {@link JiraApiConfiguration}
-    * 
-    * @param jiraApiConfiguration
-    *        the configuration to apply
-    */
-   void applyJiraApiConfiguration(JiraApiConfiguration jiraApiConfiguration);
+public interface JiraApiReader extends UserAuthenticatedObservable, JiraConfigurationAware {
 
    /**
     * Reads a single {@link Ticket} for the given Ticket-Nr

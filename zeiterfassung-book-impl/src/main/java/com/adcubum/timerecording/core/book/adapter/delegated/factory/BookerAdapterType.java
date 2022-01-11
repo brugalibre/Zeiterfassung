@@ -1,9 +1,9 @@
 package com.adcubum.timerecording.core.book.adapter.delegated.factory;
 
-//import com.adcubum.timerecording.core.book.abacus.AbacusBookerAdapter;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.book.coolguys.BookerHelper;
-import com.adcubum.timerecording.core.book.proles.ProlesBookerHelper;
+import com.adcubum.timerecording.core.book.jira.JiraBookerAdapter;
+import com.adcubum.timerecording.core.book.proles.ProlesBookerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,14 +13,17 @@ import static java.util.Objects.requireNonNull;
 
 public enum BookerAdapterType {
 
-   /** A web based booker which books directly via a jira-ticket */
-   JIRA_WEB("jira-web", BookerHelper.class),
+   /** A web based booker which books directly via a jira-ticket, using a proprietary plugin from adc */
+   ADC_JIRA_WEB("adc_jira-web", BookerHelper.class),
+
+   /** Uses jira's work-log api to book*/
+   JIRA_WORK_LOG_API("jira-web", JiraBookerAdapter.class),
 
    /** A booker which books directly via the abacus api */
    // ABACUS_API("abacus-api", AbacusBookerAdapter.class),
 
    /** A web based booker which books directly via the proles-website */
-   PROLES_WEB("proles-web", ProlesBookerHelper.class);
+   PROLES_WEB("proles-web", ProlesBookerAdapter.class);
 
    private String name;
    private Class<? extends BookerAdapter> bookerAdapterClass;
@@ -50,8 +53,8 @@ public enum BookerAdapterType {
             return bookerAdapterType;
          }
       }
-      LOG.warn("No BookerAdapterType found for name '{}'. Fallback to the default '{}'", bookerName, BookerAdapterType.JIRA_WEB.name);
+      LOG.warn("No BookerAdapterType found for name '{}'. Fallback to the default '{}'", bookerName, BookerAdapterType.ADC_JIRA_WEB.name);
       // Fallback due to backwards compatibility
-      return BookerAdapterType.JIRA_WEB;
+      return BookerAdapterType.ADC_JIRA_WEB;
    }
 }

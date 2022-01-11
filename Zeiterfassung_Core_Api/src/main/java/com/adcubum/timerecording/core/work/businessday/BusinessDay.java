@@ -203,6 +203,15 @@ public interface BusinessDay extends DomainModel {
    TimeSnippet getCurrentTimeSnippet();
 
    /**
+    * Evaluates a {@link BusinessDayIncrement} for the given id
+    *
+    * @param id the id to search
+    * @return a found {@link BusinessDayIncrement} or throws a {@link com.adcubum.timerecording.core.work.businessday.exception.NoSuchBusinessDayIncrementException}
+    * throws {@link com.adcubum.timerecording.core.work.businessday.exception.NoSuchBusinessDayIncrementException}
+    */
+   BusinessDayIncrement getBusinessDayIncrementById(UUID id);
+
+   /**
     * Returns all {@link BusinessDayIncrement} of this {@link BusinessDay} ordered, so that the order of the {@link BusinessDayIncrement}s
     * depends on the {@link TimeSnippet} respectively depends on the time stamp of their {@link TimeSnippet}s
     * 

@@ -10,6 +10,7 @@ public class DefaultJiraApiConfigurationProviderImpl implements DefaultJiraApiCo
                 .withNullableBoardType(JiraApiConstants.SCRUM)
                 .withJiraUrl(JiraApiConstants.JIRA_BASE_URL_KEY)
                 .withJiraAgileBasePath(JiraApiConstants.JIRA_AGILE_BASE_PATH)
+                .withNullableJiraWorklogBasePath(JiraApiConstants.JIRA_WORKLOG_V2_BASE_PATH)
                 .withFetchResultSize(JiraApiConstants.JIRA_MAX_RESULTS_RETURNED)
                 .withStartAtPlaceholder(JiraApiConstants.START_AT_PLACE_HOLDER)
                 .withBoardIdPlaceholder(JiraApiConstants.BOARD_ID_PLACE_HOLDER)

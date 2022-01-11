@@ -12,6 +12,7 @@ import com.adcubum.timerecording.core.work.businessday.comeandgo.impl.ComeAndGoe
 import com.adcubum.timerecording.core.work.businessday.compare.BusinessDayIncrementComparator;
 import com.adcubum.timerecording.core.work.businessday.compare.TimeStampComparator;
 import com.adcubum.timerecording.core.work.businessday.exception.BusinessIncrementBevorOthersException;
+import com.adcubum.timerecording.core.work.businessday.exception.NoSuchBusinessDayIncrementException;
 import com.adcubum.timerecording.core.work.businessday.factory.BusinessDayFactory;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.ChangedValue;
@@ -196,6 +197,14 @@ public class BusinessDayImpl implements BusinessDay {
       List<BusinessDayIncrement> incrementsCopy = new ArrayList<>(increments);
       Collections.sort(incrementsCopy, new BusinessDayIncrementComparator());
       return incrementsCopy;
+   }
+
+   @Override
+   public BusinessDayIncrement getBusinessDayIncrementById(UUID id) {
+      return increments.stream()
+              .filter(businessDayIncrement -> nonNull(businessDayIncrement.getId()) && businessDayIncrement.getId().equals(id))
+              .findFirst()
+              .orElseThrow(() -> new NoSuchBusinessDayIncrementException("No BusinessDayIncrement found for id '" + id + "'"));
    }
 
    @Override

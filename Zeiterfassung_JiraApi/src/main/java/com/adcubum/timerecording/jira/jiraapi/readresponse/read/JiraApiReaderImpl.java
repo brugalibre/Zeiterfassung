@@ -2,6 +2,7 @@ package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
+import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraResponseMapper;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraBoardsResponse;

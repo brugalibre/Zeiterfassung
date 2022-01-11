@@ -19,6 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.Collections;
 import java.util.List;
 
+import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +33,7 @@ class JiraApiReaderImplIntegTest {
    private static final String LOCALHOST = "127.0.0.1";
    private static int portNumber = 8181;
    private static JiraApiConfiguration jiraApiConfiguration;
-   private static String REST_AGILE_API_PATH;
+   private static String restAgileApiPath;
 
    @BeforeAll
    public static void setUp() {
@@ -41,7 +42,7 @@ class JiraApiReaderImplIntegTest {
             .withJiraUrl("http://" + LOCALHOST + ":" + portNumber)
             .build();
       // Path with which the request is registered on the mock-webserver. It's without the url and parameters!
-      REST_AGILE_API_PATH = jiraApiConfiguration.getJiraBoardBaseUrl()
+      restAgileApiPath = jiraApiConfiguration.getJiraBoardBaseUrl()
             .replace(jiraApiConfiguration.getJiraUrl(), "");
    }
 
@@ -50,9 +51,9 @@ class JiraApiReaderImplIntegTest {
       // Given
       DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
             .withHost(LOCALHOST + ":" + portNumber)
-            .withHeaderAndResponse(REST_AGILE_API_PATH, READ_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
-            .withHeaderAndResponse(REST_AGILE_API_PATH + "/" + BOARD_ID_FOR_NAME + "/sprint", READ_SPRINT_ID_RESPONSE) // Request & Response for reading the sprint id
-            .withHeaderAndResponse(REST_AGILE_API_PATH + "/" + BOARD_ID_FOR_NAME + "/sprint/" + SPRINT_ID_FOR_BOARD + "/issue", // Request & Response for reading the tickets for sprint
+            .withHeaderAndResponse(restAgileApiPath, READ_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
+            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + "/sprint", READ_SPRINT_ID_RESPONSE) // Request & Response for reading the sprint id
+            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + "/sprint/" + SPRINT_ID_FOR_BOARD + "/issue", // Request & Response for reading the tickets for sprint
                   READ_SPRINT_ISSUES_RESPONSE)
             .withHttpWrapper(new HttpClient())
             .withJiraApiReader()
@@ -74,14 +75,14 @@ class JiraApiReaderImplIntegTest {
       // Given
       DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
             .withHost(LOCALHOST + ":" + portNumber)
-            .withHeaderAndResponse(REST_AGILE_API_PATH, READ_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
+            .withHeaderAndResponse(restAgileApiPath, READ_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
             // Request & Response for reading the sprint id
-            .withHeaderAndResponse(REST_AGILE_API_PATH + "/" + BOARD_ID_FOR_NAME + "/sprint", READ_SPRINT_ID_RESPONSE_TWO_ACTIVE_SPRINTS)
+            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + "/sprint", READ_SPRINT_ID_RESPONSE_TWO_ACTIVE_SPRINTS)
             // Request & Response for reading the tickets for the first active sprint
-            .withHeaderAndResponse(REST_AGILE_API_PATH + "/" + BOARD_ID_FOR_NAME + "/sprint/" + ACTIVE_SPRINT_ID_1_FOR_BOARD + "/issue",
+            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + "/sprint/" + ACTIVE_SPRINT_ID_1_FOR_BOARD + "/issue",
                   READ_SPRINT_ISSUES_FOR_ACTIVE_SPRINT_1_RESPONSE)
             // Request & Response for reading the tickets for 2nd active sprint
-            .withHeaderAndResponse(REST_AGILE_API_PATH + "/" + BOARD_ID_FOR_NAME + "/sprint/" + ACTIVE_SPRINT_ID_2_FOR_BOARD + "/issue",
+            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + "/sprint/" + ACTIVE_SPRINT_ID_2_FOR_BOARD + "/issue",
                   READ_SPRINT_ISSUES_FOR_ACTIVE_SPRINT_2_RESPONSE)
             .withHttpWrapper(new HttpClient())
             .withJiraApiReader()

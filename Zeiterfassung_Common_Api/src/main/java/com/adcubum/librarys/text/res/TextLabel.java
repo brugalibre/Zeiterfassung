@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.adcubum.librarys.text.res;
 
 /**
@@ -29,7 +26,6 @@ public class TextLabel {
    public static final String TICKET_NUMBER_LABEL = "Ticket-Nr.";
    public static final String MULTIPLE_TICKETS_NUMBER_LABEL = "Mehrere Ticket-Nr.";
    public static final String SERVICE_CODE_LABEL = "Leistungsart";
-   public static final String IS_CHARGED_LABEL = "Abgebucht";
    public static final String DESCRIPTION_LABEL = "Beschreibung";
    public static final String VON_LABEL = "Von";
    public static final String BIS_LABEL = "Bis";
@@ -61,10 +57,11 @@ public class TextLabel {
    // Ticket Stuff
    public static final String TICKET = "Ticket";
    public static final String SUCCESSFULLY_BOOKED_TEXT = "Erfolgreich abgebucht";
+   public static final String NOT_BOOKED = "Nicht abgebucht, keine buchbaren Elemente vorhanden!";
    public static final Object BOOKING_FAILED_TEXT = "Abbuchen fehlgeschlagen, logs prüfen!";
    public static final String PARTIAL_SUCCESSFULLY_BOOKED_TEXT = "Abbuchung nur teilweise erfolgreich!";
 
-   public static final String NOT_BOOKABLE_TICKETS_FOUND_TEXT = "Projektnummern und Leistungsart von Ticket '%s1' prüfen";
+   public static final String NOT_BOOKABLE_TICKETS_FOUND_TEXT = "Ticket '%s1' prüfen";
    public static final String NOT_BOOKABLE_TICKET_TOOLTIP = "Ticket nicht abbuchbar, Projektnummer und Leistungsart prüfen";
    public static final String TICKET_DOES_NOT_EXIST_TOOLTIP = "Ticket existiert in Jira nicht";
 

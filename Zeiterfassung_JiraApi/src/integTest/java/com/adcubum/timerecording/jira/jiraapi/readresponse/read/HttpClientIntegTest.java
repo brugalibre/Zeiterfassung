@@ -1,5 +1,6 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
+import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.generic.JiraGenericValuesResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraGenericValuesResponseReader;
 import org.junit.jupiter.api.Test;

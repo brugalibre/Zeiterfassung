@@ -10,4 +10,7 @@ public enum BookResultType {
    PARTIAL_SUCCESS_WITH_NON_BOOKABLE,
    /** Nothing went smoothly, it was a total disaster */
    FAILURE,
+
+   /** There was nothing to book at all*/
+   NOT_BOOKED,
 }

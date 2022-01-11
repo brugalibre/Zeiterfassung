@@ -24,6 +24,7 @@ public class DateParser {
    private static final String HOUR_MIN_PATTERN = "HH:mm";
    public static final String HOUR_MIN_SEC_PATTERN = "HH:mm:ss";
    public static final String DD_MM_YYYY = "dd.MM.yyyy";
+   public static final String YYYY_MM_DD_T_HH_MINMIN_SS_SSSZ = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
    private static final String DATE_WITH_SEC_PATTERN = "dd-MM-yyyy " + HOUR_MIN_SEC_PATTERN;
    public static final String DATE_PATTERN = "dd.MM.yyyy HH:mm";
 

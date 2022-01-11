@@ -2,6 +2,7 @@ package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationBuilder;
+import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.Header;
 import org.mockserver.model.HttpRequest;

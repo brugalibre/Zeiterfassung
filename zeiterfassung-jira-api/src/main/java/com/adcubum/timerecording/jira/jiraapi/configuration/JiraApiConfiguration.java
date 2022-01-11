@@ -19,6 +19,10 @@ public class JiraApiConfiguration {
     private Integer fetchBoardsBeginIndex;
     private Integer fetchResultSize;
 
+    // Jira log-time api
+    private String jiraWorklogBasePath;
+    private String jiraCreateWorklogUrl;
+
     // Ticket stuff
     private String defaultTicketName;
     private String ticketNamePattern;
@@ -31,11 +35,12 @@ public class JiraApiConfiguration {
     private String getIssues4SprintBoardIdUrl;
     private String getIssues4KanbanBoardIdUrl;
 
-    JiraApiConfiguration(String jiraUrl, String jiraAgileBasePath, String boardIdPlaceholder, String sprintIdPlaceholder,
+    JiraApiConfiguration(String jiraUrl, String jiraAgileBasePath, String jiraWorklogBasePath, String boardIdPlaceholder, String sprintIdPlaceholder,
                          String startAtPlaceholder, String ticketNamePattern, String defaultTicketName, String boardType, Integer fetchBoardsBeginIndex, int fetchResultSize) {
         this.jiraUrl = jiraUrl;
         this.boardType = boardType;
         this.jiraAgileBasePath = jiraAgileBasePath;
+        this.jiraWorklogBasePath = jiraWorklogBasePath;
         this.boardIdPlaceholder = boardIdPlaceholder;
         this.sprintIdPlaceholder = sprintIdPlaceholder;
         this.startAtPlaceholder = startAtPlaceholder;
@@ -77,6 +82,10 @@ public class JiraApiConfiguration {
         if (isNull(this.fetchBoardsBeginIndex) || nonNull(jiraApiConfiguration2Apply.fetchBoardsBeginIndex)) {
             this.fetchBoardsBeginIndex = jiraApiConfiguration2Apply.fetchBoardsBeginIndex;
         }
+        if (isNull(this.jiraWorklogBasePath) || nonNull(jiraApiConfiguration2Apply.jiraWorklogBasePath)) {
+            this.jiraWorklogBasePath = jiraApiConfiguration2Apply.jiraWorklogBasePath;
+        }
+        this.jiraCreateWorklogUrl = this.jiraUrl  + "/" + this.jiraWorklogBasePath + "?notifyUsers=false";
         this.multiTicketNoPattern = "(" + ticketNamePattern + "(" + MULTI_TICKET_DELIMITER + "?)){1,}";
         String jiraBaseUrl = this.jiraUrl + "/" + jiraAgileBasePath;
         this.jiraBoardBaseUrl = jiraBaseUrl + "board";
@@ -94,6 +103,13 @@ public class JiraApiConfiguration {
      */
     public String getJiraBoardBaseUrl() {
         return jiraBoardBaseUrl;
+    }
+
+    /**
+     * @return the  plain URL which is used to create a jira-api {@link com.adcubum.timerecording.jira.jiraapi.postrequest.post.worklog.data.Worklog}
+     */
+    public String getJiraCreateWorkUrl() {
+        return jiraCreateWorklogUrl;
     }
 
     /**

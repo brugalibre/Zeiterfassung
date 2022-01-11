@@ -93,8 +93,8 @@ public class BusinessDayEntity extends BaseEntity {
             .map(bDIncEntity -> String.format("BusinessDayIncrementEntity='%s'", bDIncEntity))
             .reduce("", (a, b) -> a + "," + b);
       return String.format(
-            "BusinessDayEntity[id=%s, isBooked=%s, bdIncEntitiesRep='%s']",
-            id, isBooked, bdIncEntitiesRep);
+            "BusinessDayEntity[id=%s, isBooked=%s, currentTimeSnippetEntity=%s, bdIncEntitiesRep='%s']",
+            id, isBooked, currentTimeSnippetEntity, bdIncEntitiesRep);
    }
 
    public void setBusinessDayIncrementEntities(List<BusinessDayIncrementEntity> businessDayIncrementEntities) {

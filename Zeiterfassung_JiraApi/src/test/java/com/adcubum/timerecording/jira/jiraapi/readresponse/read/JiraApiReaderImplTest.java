@@ -6,6 +6,7 @@ import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationFactory;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants;
+import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.*;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraBoardsResponse.JiraBoardResponse;
@@ -25,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.*;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.BoardInfo.SprintInfo;
 import static java.util.Objects.nonNull;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -1,14 +1,9 @@
 package com.adcubum.timerecording.core.book.proles;
 
-import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
-import com.adcubum.timerecording.core.book.coolguys.BookerHelperResult;
+import com.adcubum.timerecording.core.book.common.CommonBookerAdapter;
 import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
-import com.adcubum.timerecording.security.login.auth.AuthenticationService;
-import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
 import com.adcubum.util.parser.DateParser;
 import com.adcubum.util.parser.NumberFormat;
 import com.zeiterfassung.web.book.common.record.BookRecord;
@@ -19,36 +14,15 @@ import com.zeiterfassung.web.proles.book.record.ProlesBookRecordEntry;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.adcubum.util.parser.DateParser.DD_MM_YYYY;
 import static com.zeiterfassung.web.proles.book.record.ProlesBookRecordEntry.ProlesBookRecordEntryBuilder;
 
-public class ProlesBookerHelper implements BookerAdapter, UserAuthenticatedObservable {
+public class ProlesBookerAdapter extends CommonBookerAdapter<ProlesServiceCodeAdapter> {
 
-    private Supplier<char[]> userPwdSupplier;
-    private String username;
-
-    public ProlesBookerHelper() {
-        this.username = "";
-        this.userPwdSupplier = () -> new char[]{};
-    }
-
-    @Override
-    public void init() {
-        AuthenticationService.INSTANCE.registerUserAuthenticatedObservable(this);
-    }
-
-    @Override
-    public void userAuthenticated(AuthenticationContext authenticationContext) {
-        this.username = authenticationContext.getUsername();
-        this.userPwdSupplier = authenticationContext::getUserPw; // still evil but on the other hand still better than saving it plain text..
-    }
-
-    @Override
-    public ServiceCodeAdapter getServiceCodeAdapter() {
-        return null;
+    public ProlesBookerAdapter() {
+        super(ProlesServiceCodeAdapter.class);
     }
 
     /**
@@ -64,7 +38,7 @@ public class ProlesBookerHelper implements BookerAdapter, UserAuthenticatedObser
         ProlesBooker prolesBooker = ProlesBooker.createProlesBooker(username, String.valueOf(userPwdSupplier.get()));
         BookRecord bookedBookRecord = prolesBooker.bookRecords(bookRecord);
         BusinessDay bookedBusinessDay = flagBookedBDIncrements(businessDay, bookedBookRecord);
-        return new BookerHelperResult(bookedBusinessDay);
+        return createAndReturnBookResult(bookedBusinessDay, businessDay);
     }
 
     private static BusinessDay flagBookedBDIncrements(BusinessDay businessDay, BookRecord bookedBookRecord) {
@@ -98,5 +72,4 @@ public class ProlesBookerHelper implements BookerAdapter, UserAuthenticatedObser
                         .build())
                 .collect(Collectors.toList());
     }
-
 }

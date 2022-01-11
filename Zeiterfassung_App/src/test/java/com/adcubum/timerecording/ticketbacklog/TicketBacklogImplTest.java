@@ -3,14 +3,12 @@ package com.adcubum.timerecording.ticketbacklog;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
-import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketConst;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.test.BaseTestWithSettings;
 import com.adcubum.timerecording.ticketbacklog.callback.TicketBacklogCallbackHandler;
 import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
 import com.adcubum.timerecording.ticketbacklog.config.TicketConfiguration;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
@@ -29,20 +27,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class TicketBacklogImplTest extends BaseTestWithSettings {
-
-   private static final int AMOUNT_OF_DEFAULT_TICKETS = DefaultTicketConst.getDefaultScrumtTicketNrs().size();
-
-   @Test
-   void testInitTicketBacklog() {
-      // Given
-      TestCaseBuilder tcb = new TestCaseBuilder()
-            .buildTestCaseBuilder();
-      // When
-      tcb.ticketBacklog.initTicketBacklog();
-
-      // Then
-      verify(tcb.jiraApiReader, times(AMOUNT_OF_DEFAULT_TICKETS)).readTicket4Nr(any());
-   }
 
    @Test
    void testGetTicketConfiguration() {
@@ -130,14 +114,14 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
 
       // Then
       verify(callbackHandler).onTicketBacklogUpdated(eq(UpdateStatus.NOT_CONFIGURED));
-      assertThat(ticketBacklog.getTickets().size(), is(AMOUNT_OF_DEFAULT_TICKETS));
+      assertThat(ticketBacklog.getTickets().size(), is(0));
    }
 
    @Test
    void testInitTicketBacklog_ConfiguredAndSuccessfull() throws InterruptedException {
       // Given
       TicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
-      int expectedSize = 1 + AMOUNT_OF_DEFAULT_TICKETS;// 1 plus 4 default tickets
+      int expectedSize = 1 ;
       TicketBacklog ticketBacklog = new TestCaseBuilder()
             .withCallbackHandler(callbackHandler)
             .withBoardName("blubbl")
@@ -159,7 +143,7 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
    void testInitTicketBacklog_ConfiguredAndFail() throws InterruptedException {
       // Given
       TicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
-      int expectedSize = AMOUNT_OF_DEFAULT_TICKETS;
+      int expectedSize = 0;
       TicketBacklog ticketBacklog = new TestCaseBuilder()
               .withCallbackHandler(callbackHandler)
             .withRetrievedTicket("SYRIUS-6354")
@@ -223,10 +207,6 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
          Ticket defaultTicket = mock(Ticket.class);
          when(defaultTicket.getNr()).thenReturn("13254548");
          when(jiraApiReader.readTicket4Nr(any())).thenReturn(Optional.of(defaultTicket));
-         for (String ticketNr : DefaultTicketConst.getDefaultScrumtTicketNrs()) {
-            Ticket ticket = mockTicket(ticketNr);
-            doReturn(Optional.of(ticket)).when(jiraApiReader).readTicket4Nr(eq(ticketNr));
-         }
          doReturn(Optional.empty()).when(jiraApiReader).readTicket4Nr(eq(null));
          if (nonNull(receivedTicketNr)) {
             Ticket receivedTicket = mockTicket(receivedTicketNr);

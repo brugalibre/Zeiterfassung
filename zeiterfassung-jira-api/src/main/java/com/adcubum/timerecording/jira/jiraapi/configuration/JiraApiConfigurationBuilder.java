@@ -8,6 +8,7 @@ public final class JiraApiConfigurationBuilder {
    private boolean useDefaultConfiguration;
    private String jiraUrl;
    private String jiraAgileBasePath;
+   private String jiraWorklogBasePath;
    private String boardIdPlaceholder;
    private String sprintIdPlaceHh;
    private String startAtPlaceholder;
@@ -37,6 +38,11 @@ public final class JiraApiConfigurationBuilder {
       return this;
    }
 
+   public JiraApiConfigurationBuilder withNullableJiraUrl(String jiraUrl) {
+      this.jiraUrl = jiraUrl;
+      return this;
+   }
+
    public JiraApiConfigurationBuilder withJiraAgileBasePath(String jiraAgileBasePath) {
       this.jiraAgileBasePath = requireNotEmptyAndNotNull(jiraAgileBasePath);
       return this;
@@ -54,6 +60,11 @@ public final class JiraApiConfigurationBuilder {
 
    public JiraApiConfigurationBuilder withBoardIdPlaceholder(String boardIdPlaceHolder) {
       this.boardIdPlaceholder = requireNotEmptyAndNotNull(boardIdPlaceHolder);
+      return this;
+   }
+
+   public JiraApiConfigurationBuilder withNullableJiraWorklogBasePath(String jiraWorklogBasePath) {
+      this.jiraWorklogBasePath = jiraWorklogBasePath;
       return this;
    }
 
@@ -88,7 +99,7 @@ public final class JiraApiConfigurationBuilder {
    }
 
    public JiraApiConfiguration build() {
-      JiraApiConfiguration jiraApiConfiguration = new JiraApiConfiguration(jiraUrl, jiraAgileBasePath,
+      JiraApiConfiguration jiraApiConfiguration = new JiraApiConfiguration(jiraUrl, jiraAgileBasePath, jiraWorklogBasePath,
               boardIdPlaceholder, sprintIdPlaceHh, startAtPlaceholder, ticketNamePattern, defaultTicketName, boardType, fetchBoardsBeginIndex, fetchResultSize);
       if (useDefaultConfiguration) {
          JiraApiConfiguration defaultJiraApiConfiguration = JiraApiConfigurationFactory.createDefault();
