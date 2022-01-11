@@ -1,6 +1,7 @@
 package com.adcubum.timerecording.jira.jiraapi.configuration;
 
 import static com.adcubum.util.utils.StringUtil.requireNotEmptyAndNotNull;
+import static java.util.Objects.requireNonNull;
 
 public final class JiraApiConfigurationBuilder {
 
@@ -12,9 +13,12 @@ public final class JiraApiConfigurationBuilder {
    private String startAtPlaceholder;
    private String defaultTicketName;
    private String ticketNamePattern;
+   private String boardType;
+   private Integer fetchBoardsBeginIndex;
+   private Integer fetchResultSize;
 
    private JiraApiConfigurationBuilder() {
-      // private
+      this.fetchResultSize = 10;
    }
 
    /**
@@ -35,6 +39,11 @@ public final class JiraApiConfigurationBuilder {
 
    public JiraApiConfigurationBuilder withJiraAgileBasePath(String jiraAgileBasePath) {
       this.jiraAgileBasePath = requireNotEmptyAndNotNull(jiraAgileBasePath);
+      return this;
+   }
+
+   public JiraApiConfigurationBuilder withFetchResultSize(Integer fetchResultSize) {
+      this.fetchResultSize = requireNonNull(fetchResultSize);
       return this;
    }
 
@@ -63,6 +72,16 @@ public final class JiraApiConfigurationBuilder {
       return this;
    }
 
+   public JiraApiConfigurationBuilder withNullableBoardType(String boardType) {
+      this.boardType = boardType;
+      return this;
+   }
+
+   public JiraApiConfigurationBuilder withNullableFetchBoardsBeginIndex(Integer fetchBoardsBeginIndex) {
+      this.fetchBoardsBeginIndex = fetchBoardsBeginIndex;
+      return this;
+   }
+
    public JiraApiConfigurationBuilder withNullableDefaultTicketName(String defaultTicketName) {
       this.defaultTicketName = defaultTicketName;
       return this;
@@ -70,7 +89,7 @@ public final class JiraApiConfigurationBuilder {
 
    public JiraApiConfiguration build() {
       JiraApiConfiguration jiraApiConfiguration = new JiraApiConfiguration(jiraUrl, jiraAgileBasePath,
-              boardIdPlaceholder, sprintIdPlaceHh, startAtPlaceholder, ticketNamePattern, defaultTicketName);
+              boardIdPlaceholder, sprintIdPlaceHh, startAtPlaceholder, ticketNamePattern, defaultTicketName, boardType, fetchBoardsBeginIndex, fetchResultSize);
       if (useDefaultConfiguration) {
          JiraApiConfiguration defaultJiraApiConfiguration = JiraApiConfigurationFactory.createDefault();
          defaultJiraApiConfiguration.applyFromConfiguration(jiraApiConfiguration);

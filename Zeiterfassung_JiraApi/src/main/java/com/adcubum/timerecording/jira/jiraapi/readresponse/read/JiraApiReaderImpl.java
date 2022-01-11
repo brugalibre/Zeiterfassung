@@ -4,10 +4,13 @@ import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraResponseMapper;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraGenericValuesResponse;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraGenericValuesResponse.GenericNameAttrs;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraBoardsResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssuesResponse;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.data.generic.JiraGenericValuesResponse;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.data.generic.JiraGenericValuesResponse.GenericNameAttrs;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.read.BoardInfo.SprintInfo;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraBoardResponseReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraGenericValuesResponseReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssueResponseReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssuesResponseReader;
@@ -78,18 +81,21 @@ public class JiraApiReaderImpl implements JiraApiReader {
    @Override
    public JiraApiReadTicketsResult readTicketsFromBoardAndSprints(String boardName, List<String> sprintNames) {
       LOG.info("Try to read the tickets from the current sprint from board '{}'", boardName);
-      SprintInfos sprintInfos = evalActiveSprints4BoardName(boardName);
-      if (sprintInfos.isEmpty()) {
-         return failedResult(sprintInfos);
+      BoardInfo boardInfo = evalActiveSprints4BoardName(boardName);
+      if (boardInfo.getSprintInfos().isEmpty() && boardInfo.isScrumBoard()) {
+         return failedResult(boardInfo); // A scrum-board without any active nor futur sprints -> error
       }
-      JiraIssuesResponse activeSprintIssues = createUrlAndReadIssuesFromJira(sprintInfos);
-      readAndApplyFutureSprintTickets(activeSprintIssues, sprintInfos.getBoardId(), sprintNames);
+      JiraIssuesResponse activeSprintIssues = createUrlAndReadScrumIssuesFromJira(boardInfo);
+      readAndApplyFutureSprintTickets(activeSprintIssues, boardInfo, sprintNames);
       return JiraResponseMapper.INSTANCE.map2TicketResult(activeSprintIssues);
    }
 
-   private void readAndApplyFutureSprintTickets(JiraIssuesResponse activeSprintIssues, String boardId, List<String> sprintNames) {
+   private void readAndApplyFutureSprintTickets(JiraIssuesResponse activeSprintIssues, BoardInfo boardInfo, List<String> sprintNames) {
+      if (boardInfo.isKanbanBoard()) {
+         return;
+      }
       LOG.info("Try to read the tickets for the future sprints '{}'", (sprintNames.isEmpty() ? "all" : sprintNames));
-      getFutureSprintInfos(boardId)
+      getFutureSprintInfos(boardInfo.getBoardId())
             .stream()
             .filter(isRelevantSprint(sprintNames))
             .map(this::createUrlAndReadIssuesFromJira)
@@ -100,27 +106,31 @@ public class JiraApiReaderImpl implements JiraApiReader {
       return sprintInfo -> sprintNames.contains(sprintInfo.sprintName);
    }
 
-   private SprintInfos evalActiveSprints4BoardName(String boardName) {
-      String boardId = getBoardId(boardName);
-      SprintInfos sprintInfos = getActiveSprintInfos(boardId);
+   private BoardInfo evalActiveSprints4BoardName(String boardName) {
+      BoardInfo boardInfo = getBoardInfo(boardName);
+      if (boardInfo.isKanbanBoard()) {
+         return boardInfo;
+      }
+      List<SprintInfo> sprintInfos = getActiveSprintInfos(boardInfo.getBoardId());
       logResult(sprintInfos, boardName);
-      return sprintInfos;
+      boardInfo.setSprintInfos(sprintInfos);
+      return boardInfo;
    }
 
    /*
     * Da jira jeweils nur 50 Resultate auf einmal zurückliefert, kann es nötig sein zu fetchen. Der Parameter 'maxResults' wirkt nur einschränkend,
     * kann aber die Grenze von 50 nicht umgehen. Ab dem 8-mal ist aber dann trotzdem schluss
     */
-   private String getBoardId(String boardName) {
-      String boardId;
-      int index = 0;
+   private BoardInfo getBoardInfo(String boardName) {
+      BoardInfo boardInfo;
+      int index = jiraApiConfiguration.getFetchBoardsBeginIndex();
       do {
          LOG.info("Trying to get the board id from the search results from start index {} to end index {}", index, (index + JIRA_MAX_RESULTS_RETURNED));
-         boardId = getBoardId4Name(boardName, String.valueOf(index));
+         boardInfo = getBoardInfo4Name(boardName, String.valueOf(index));
          index = index + JIRA_MAX_RESULTS_RETURNED;
-      } while (SprintInfo.isUnknown(boardId) && index < MAX_RESULTS);
-      LOG.info("Got board id {} for board name '{}'",  boardId, boardName);
-      return boardId;
+      } while (BoardInfo.isUnknown(boardInfo.getBoardId()) && index < MAX_RESULTS);
+      LOG.info("Got board id {} for board name '{}'",  boardInfo.getBoardId(), boardName);
+      return boardInfo;
    }
 
    private List<SprintInfo> getFutureSprintInfos(String boardId) {
@@ -132,38 +142,42 @@ public class JiraApiReaderImpl implements JiraApiReader {
             .collect(Collectors.toList());
    }
 
-   private SprintInfos getActiveSprintInfos(String boardId) {
+   private List<SprintInfo> getActiveSprintInfos(String boardId) {
       String getActiveSprintIdUrl = jiraApiConfiguration.getGetActiveSprintIdsForBoardUrl().replace(BOARD_ID_PLACE_HOLDER, boardId);
       JiraGenericValuesResponse jiraGetSprintIdResponse = httpClient.callRequestAndParse(new JiraGenericValuesResponseReader(), getActiveSprintIdUrl);
       return jiraGetSprintIdResponse.getValues()
             .stream()
             .map(buildSprintInfo(boardId))
-            .collect(Collectors.collectingAndThen(Collectors.toList(), buildSprintInfos(boardId)));
+            .collect(Collectors.toList());
    }
 
-   private Function<List<SprintInfo>, SprintInfos> buildSprintInfos(String boardId) {
-      return sprintInfoEntries -> SprintInfos.of(sprintInfoEntries, boardId, boardId);
-   }
-
-   private String getBoardId4Name(String boardName, String startAt) {
+   private BoardInfo getBoardInfo4Name(String boardName, String startAt) {
       String allBoardsUrl = jiraApiConfiguration.getGetAllBoardUrls().replace(START_AT_PLACE_HOLDER, startAt);
-      JiraGenericValuesResponse jiraGetBoardsResponse =
-            httpClient.callRequestAndParse(new JiraGenericValuesResponseReader(), allBoardsUrl);
+      JiraBoardsResponse jiraGetBoardsResponse =
+            httpClient.callRequestAndParse(new JiraBoardResponseReader(), allBoardsUrl);
       return jiraGetBoardsResponse.getValues()
             .stream()
-            .filter(jiraBoard -> boardName.equals(jiraBoard.getName()))
-            .map(GenericNameAttrs::getId)
+            .filter(jiraBoard ->  boardName.equals(jiraBoard.getName()))
             .findFirst()
-            .orElse(SprintInfo.UNKNOWN);
+            .map(BoardInfo::of)
+            .orElse(BoardInfo.ofUnknown(boardName));
+   }
+
+   private JiraIssuesResponse createUrlAndReadKanbanIssuesFromJira(BoardInfo boardInfo) {
+      String url = createGetKanbanIssues4BoardUrl(boardInfo.getBoardId());
+      return readIssuesFromJira(url, 0, null);
    }
 
    /*
-    * Reads all the issues from the given board and sprint. Because we have to filter all subtask it's possible that we recieve more than 50 issues.
-    * So we have to fetch a second time to get the other issues
+    * Reads all the issues from the given board and sprint, if it is a scrum-board.
+    * So we have to fetch multiple times to get all issues
     */
-   private JiraIssuesResponse createUrlAndReadIssuesFromJira(SprintInfos sprintInfos) {
-      return sprintInfos.getSprintInfoEntries()
-            .stream()
+   private JiraIssuesResponse createUrlAndReadScrumIssuesFromJira(BoardInfo boardInfo) {
+      if (boardInfo.isKanbanBoard()) {
+         return createUrlAndReadKanbanIssuesFromJira(boardInfo);
+      }
+      List<SprintInfo> sprintInfos = boardInfo.getSprintInfos();
+      return sprintInfos.stream()
             .map(this::createUrlAndReadIssuesFromJira)
             .collect(Collectors.collectingAndThen(Collectors.toList(), apply2InitialResponse()));
    }
@@ -181,25 +195,32 @@ public class JiraApiReaderImpl implements JiraApiReader {
     * So we have to fetch a second time to get the other issues
     */
    private JiraIssuesResponse createUrlAndReadIssuesFromJira(SprintInfo sprintInfo) {
-      String url = createGetIssues4BoardUrl(sprintInfo);
+      String url = createGetScrumIssues4BoardUrl(sprintInfo.boardId, sprintInfo.sprintId);
       LOG.info("Trying to get issues for sprint '{}' ('{}')" , sprintInfo.sprintId, sprintInfo.sprintName);
-      return readIssuesFromJira(url);
+      return readIssuesFromJira(url, 0, null);
    }
 
-   private String createGetIssues4BoardUrl(SprintInfo sprintInfo) {
-      return jiraApiConfiguration.getGetIssues4BoardIdUrl()
-            .replace(BOARD_ID_PLACE_HOLDER, sprintInfo.boardId)
-            .replace(SPRINT_ID_PLACE_HOLDER, sprintInfo.sprintId)
-            .replace(START_AT_PLACE_HOLDER, "0"); // let's start at the beginning
+   private String createGetScrumIssues4BoardUrl(String boardId, String sprintId) {
+      return jiraApiConfiguration.getGetIssues4SprintBoardIdUrl()
+              .replace(BOARD_ID_PLACE_HOLDER, boardId)
+              .replace(SPRINT_ID_PLACE_HOLDER, sprintId);
    }
 
-   private JiraIssuesResponse readIssuesFromJira(String url) {
+   private String createGetKanbanIssues4BoardUrl(String boardId) {
+      return jiraApiConfiguration.getGetIssues4KanbanBoardIdUrl()
+              .replace(BOARD_ID_PLACE_HOLDER, boardId);
+   }
+
+   private JiraIssuesResponse readIssuesFromJira(String urlWithPlaceholder, int startIndex, JiraIssuesResponse otherParsedIssuesFromJira) {
+      String url = urlWithPlaceholder.replace(START_AT_PLACE_HOLDER, String.valueOf(startIndex));
       JiraIssuesResponse parsedIssuesFromJira = httpClient.callRequestAndParse(new JiraIssuesResponseReader(), url);
-      if (parsedIssuesFromJira.hasMaxResults()) {
-         url = url.replace(START_AT_PLACE_LITERAL + "=0", START_AT_PLACE_LITERAL + "=" + JIRA_MAX_RESULTS_RETURNED);// Das isch wie nöd eso schöö...
-         JiraIssuesResponse otherParsedIssuesFromJira = httpClient.callRequestAndParse(new JiraIssuesResponseReader(), url);
+      int endIndex = startIndex + JIRA_MAX_RESULTS_RETURNED;
+      LOG.info("Read {} jira issues from start index {} to end index {}", parsedIssuesFromJira.getIssues().size(), startIndex, endIndex);
+      if (parsedIssuesFromJira.getTotal() > endIndex) {
          parsedIssuesFromJira.applyFromOther(otherParsedIssuesFromJira);
+         return readIssuesFromJira(urlWithPlaceholder, endIndex + 1, parsedIssuesFromJira);
       }
+      parsedIssuesFromJira.applyFromOther(otherParsedIssuesFromJira);
       logResult(parsedIssuesFromJira);
       return parsedIssuesFromJira;
    }
@@ -210,75 +231,21 @@ public class JiraApiReaderImpl implements JiraApiReader {
       LOG.info("Read {} jira issues ({} issues and {} subtasks)", totalAmount, amountOfNotSubtasks, (totalAmount - amountOfNotSubtasks));
    }
 
-   private void logResult(SprintInfos sprintInfos, String boardName) {
+   private void logResult(List<SprintInfo> sprintInfos, String boardName) {
       if (sprintInfos.isEmpty()) {
          LOG.warn("No active sprints found for board name '{}'", boardName);
       }
-      for (SprintInfo sprintInfo : sprintInfos.getSprintInfoEntries()) {
+      for (SprintInfo sprintInfo : sprintInfos) {
          LOG.info("Got sprint id '{}' ('{}') for board name '{}'", sprintInfo.sprintId, sprintInfo.sprintName, boardName);
       }
    }
 
-   private JiraApiReadTicketsResult failedResult(SprintInfos sprintInfos) {
-      LOG.warn("Unable to read tickets from board '{}'" + " (id='{}', sprint-ids={})", sprintInfos.getBoardName(), sprintInfos.getBoardId(), SprintInfo.UNKNOWN);
+   private JiraApiReadTicketsResult failedResult(BoardInfo boardInfo) {
+      LOG.warn("Unable to read tickets from board '{}'" + " (id='{}', sprint-ids={})", boardInfo.getBoardName(), boardInfo.getBoardId(), BoardInfo.UNKNOWN);
       return JiraApiReadTicketsResult.failed();
    }
 
    private Function<GenericNameAttrs, SprintInfo> buildSprintInfo(String boardId) {
       return genericNameAttrs -> new SprintInfo(boardId, genericNameAttrs);
-   }
-
-   private static class SprintInfos {
-
-      private List<SprintInfo> sprintInfoEntries;
-      private String boardName;
-      private String boardId;
-
-      private SprintInfos(List<SprintInfo> sprintInfoEntries, String boardName, String boardId) {
-         this.sprintInfoEntries = requireNonNull(sprintInfoEntries);
-         this.boardName = requireNonNull(boardName);
-         this.boardId = requireNonNull(boardId);
-      }
-
-      public String getBoardId() {
-         return boardId;
-      }
-
-      public String getBoardName() {
-         return boardName;
-      }
-
-      public List<SprintInfo> getSprintInfoEntries() {
-         return sprintInfoEntries;
-      }
-
-      public boolean isEmpty() {
-         return sprintInfoEntries.isEmpty();
-      }
-
-      public static SprintInfos of(List<SprintInfo> sprintInfoEntries, String boardName, String boardId) {
-         return new SprintInfos(sprintInfoEntries, boardName, boardId);
-      }
-   }
-
-   static class SprintInfo {
-      static final String UNKNOWN = "'unknown'";
-      private String boardId;
-      private String sprintId;
-      private String sprintName;
-
-      private SprintInfo(String boardId, GenericNameAttrs genericNameAttrs) {
-         this(boardId, genericNameAttrs.getId(), genericNameAttrs.getName());
-      }
-
-      private static boolean isUnknown(String boardId) {
-         return UNKNOWN.equals(boardId);
-      }
-
-      private SprintInfo(String boardId, String sprintId, String sprintName) {
-         this.boardId = boardId;
-         this.sprintId = sprintId;
-         this.sprintName = sprintName;
-      }
    }
 }

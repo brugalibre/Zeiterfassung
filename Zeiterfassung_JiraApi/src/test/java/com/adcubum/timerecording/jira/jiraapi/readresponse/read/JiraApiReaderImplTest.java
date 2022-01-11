@@ -1,28 +1,5 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
-import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.BOARD_ID_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
-import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.SPRINT_ID_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.START_AT_PLACE_HOLDER;
-import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.START_AT_PLACE_LITERAL;
-import static java.util.Objects.nonNull;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
-
 import com.adcubum.timerecording.jira.data.ticket.IssueType;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
@@ -30,20 +7,31 @@ import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationFactory;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraGenericValuesResponse;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraGenericValuesResponse.GenericNameAttrs;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssue;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueFields;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.data.*;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraBoardsResponse.JiraBoardResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueFields.JiraIssueType;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueGenericValueObject;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueResponse;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueThemaInfos;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssuesResponse;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReaderImpl.SprintInfo;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.data.generic.JiraGenericValuesResponse;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.data.generic.JiraGenericValuesResponse.GenericNameAttrs;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraBoardResponseReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraGenericValuesResponseReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssueResponseReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssuesResponseReader;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants.*;
+import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.BoardInfo.SprintInfo;
+import static java.util.Objects.nonNull;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 class JiraApiReaderImplTest {
 
@@ -220,7 +208,7 @@ class JiraApiReaderImplTest {
       private HttpClient httpClient;
       private String ticketNr;
       private JiraIssueResponse jiraIssueResponse;
-      private JiraGenericValuesResponse jiraGetBoardsResponse;
+      private JiraBoardsResponse jiraGetBoardsResponse;
       private JiraGenericValuesResponse jiraGetSprintResponse;
       private JiraGenericValuesResponse jiraGetFuturSprintResponse;
       private List<JiraIssue> issues;
@@ -232,7 +220,7 @@ class JiraApiReaderImplTest {
       private TestCaseBuilder() {
          this.httpClient = mock(HttpClient.class);
          this.jiraIssueResponse = new JiraIssueResponse();
-         this.jiraGetBoardsResponse = new JiraGenericValuesResponse();
+         this.jiraGetBoardsResponse = new JiraBoardsResponse();
          this.jiraGetSprintResponse = new JiraGenericValuesResponse();
          this.jiraGetFuturSprintResponse = new JiraGenericValuesResponse();
          this.issues = new ArrayList<>();
@@ -298,7 +286,7 @@ class JiraApiReaderImplTest {
       }
 
       private JiraApiReaderImpl build() {
-         String boardId = issues.isEmpty() ? SprintInfo.UNKNOWN : "boardId25";
+         String boardId = issues.isEmpty() ? BoardInfo.UNKNOWN : "boardId25";
          String sprintId = "1";
          mockReadTicket4TicketNr();
          mockReadTicketsFromBoardName(boardId, sprintId, futurSprintId, futurSprintName);
@@ -324,7 +312,7 @@ class JiraApiReaderImplTest {
          int index = 0;
          do {
             String getAllBoardsUrl = jiraApiConfiguration.getGetAllBoardUrls().replace(START_AT_PLACE_HOLDER, String.valueOf(index));
-            when(httpClient.callRequestAndParse(any(JiraGenericValuesResponseReader.class), eq(getAllBoardsUrl))).thenReturn(jiraGetBoardsResponse);
+            when(httpClient.callRequestAndParse(any(JiraBoardResponseReader.class), eq(getAllBoardsUrl))).thenReturn(jiraGetBoardsResponse);
             index = index + JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
 
          } while (index < JiraApiConstants.MAX_RESULTS);
@@ -345,7 +333,7 @@ class JiraApiReaderImplTest {
             JiraGenericValuesResponse jiraGetSprintResponse) {
          // If we except to receive any tickets from the sprint, we have to set the 'values' in the sprint result -> we found a sprint -> go ahead for the tickets
          if (!sprintIssues.isEmpty()) {
-            GenericNameAttrs genericBoardNameAttrs = new GenericNameAttrs();
+            JiraBoardResponse genericBoardNameAttrs = new JiraBoardResponse();
             genericBoardNameAttrs.setId(boardId);
             genericBoardNameAttrs.setName(boardName);
             jiraGetBoardsResponse.setValues(Collections.singletonList(genericBoardNameAttrs));
@@ -359,10 +347,12 @@ class JiraApiReaderImplTest {
 
       private void mockReadSprintTicketsFromMaxResults(String boardId, String sprintId) {
          if (issues.size() >= JIRA_MAX_RESULTS_RETURNED) {
+            String maxPlus1 = String.valueOf(JIRA_MAX_RESULTS_RETURNED + 1);
             String url = createGetIssues4BoardUrl(boardId, sprintId)
-                  .replace(START_AT_PLACE_LITERAL + "=0", START_AT_PLACE_LITERAL + "=" + JIRA_MAX_RESULTS_RETURNED);// Das isch wie nöd eso schöö...
+                  .replace(START_AT_PLACE_LITERAL + "=0", START_AT_PLACE_LITERAL + "=" + maxPlus1);// Das isch wie nöd eso schöö...
             JiraIssuesResponse jiraIssuesResponse = new JiraIssuesResponse();
             jiraIssuesResponse.setIssues(issues.subList(JIRA_MAX_RESULTS_RETURNED, issues.size()));
+            jiraIssuesResponse.setTotal(issues.size());
             when(httpClient.callRequestAndParse(any(JiraIssuesResponseReader.class), eq(url))).thenReturn(jiraIssuesResponse);
          }
       }
@@ -371,6 +361,7 @@ class JiraApiReaderImplTest {
          String createGetIssues4BoardUrl = createGetIssues4BoardUrl(boardId, sprintId);
          JiraIssuesResponse jiraIssuesResponse = new JiraIssuesResponse();
          if (!issues.isEmpty()) {
+            jiraIssuesResponse.setTotal(issues.size());
             jiraIssuesResponse.setIssues(issues.subList(0, Math.min(JIRA_MAX_RESULTS_RETURNED, issues.size())));
          } else {
             jiraIssuesResponse.setIssues(Collections.emptyList());
@@ -379,7 +370,7 @@ class JiraApiReaderImplTest {
       }
 
       private String createGetIssues4BoardUrl(String boardId, String sprintId) {
-         return jiraApiConfiguration.getGetIssues4BoardIdUrl()
+         return jiraApiConfiguration.getGetIssues4SprintBoardIdUrl()
                .replace(BOARD_ID_PLACE_HOLDER, boardId)
                .replace(SPRINT_ID_PLACE_HOLDER, sprintId)
                .replace(START_AT_PLACE_HOLDER, "0"); // lets start at the begining

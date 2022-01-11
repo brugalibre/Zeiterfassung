@@ -17,7 +17,7 @@ public abstract class AbstractTicketBacklog implements TicketBacklog {
     protected List<TicketBacklogCallbackHandler> callbackHandlers;
     protected TicketBacklogHelper backlogHelper;
 
-    public AbstractTicketBacklog () {
+    protected AbstractTicketBacklog () {
         this.callbackHandlers = new ArrayList<>();
         this.backlogHelper = new TicketBacklogHelper();
     }
@@ -48,6 +48,8 @@ public abstract class AbstractTicketBacklog implements TicketBacklog {
     protected JiraApiConfiguration buildJiraApiConfiguration() {
         return JiraApiConfigurationBuilder.of()
                 .withDefaultJiraApiConfiguration()
+                .withNullableBoardType(backlogHelper.getBoardType())
+                .withNullableFetchBoardsBeginIndex(backlogHelper.getFetchBoardsBeginIndex())
                 .withNullableJiraAgileBasePath(backlogHelper.getJiraBaseUrl())
                 .withNullableTicketNamePattern(backlogHelper.getTicketNamePattern())
                 .withNullableDefaultTicketName(backlogHelper.getDefaultTicketName())

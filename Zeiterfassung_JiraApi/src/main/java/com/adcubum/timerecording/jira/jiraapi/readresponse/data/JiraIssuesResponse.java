@@ -1,12 +1,13 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.data;
 
+import com.adcubum.timerecording.jira.jiraapi.readresponse.response.error.JiraErrorResponse;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.response.error.JiraErrorResponse;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import static java.util.Objects.isNull;
 
 /**
  * Contains the json return element with all the jira issues
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class JiraIssuesResponse extends JiraErrorResponse {
 
    private List<JiraIssue> issues;
+   private int total;
 
    /**
     * Default constructor needed by jackson
@@ -58,12 +60,12 @@ public class JiraIssuesResponse extends JiraErrorResponse {
       this.issues = filterDoneTasks(issues);
    }
 
-   /**
-    * @return <code>true</code> if this {@link JiraIssuesResponse} contains more or equal than JiraApiConstants.JIRA_MAX_RESULTS_RETURNED
-    *         entries
-    */
-   public boolean hasMaxResults() {
-      return issues.size() >= JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
+   public int getTotal() {
+      return total;
+   }
+
+   public void setTotal(int total) {
+      this.total = total;
    }
 
    /**
@@ -75,6 +77,9 @@ public class JiraIssuesResponse extends JiraErrorResponse {
     *        the other {@link JiraIssuesResponse}
     */
    public JiraIssuesResponse applyFromOther(JiraIssuesResponse otherParseIssuesFromJira) {
+      if (isNull(otherParseIssuesFromJira)) {
+         return this;
+      }
       List<JiraIssue> allIssues = new ArrayList<>(issues);
       allIssues.addAll(otherParseIssuesFromJira.getIssues());
       setIssues(allIssues);

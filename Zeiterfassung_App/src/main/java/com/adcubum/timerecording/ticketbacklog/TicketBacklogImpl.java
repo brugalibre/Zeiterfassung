@@ -98,7 +98,7 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
       applyJiraApiConfiguration();
       if (!backlogHelper.hasBordNameConfigured()) {
          readDefaultTickets();
-         LOG.warn("Unable to read the tickets, no board name provided. Check your turbo-bucher.properties!");
+         LOG.warn("Unable to read the tickets, no board name provided. Check your configuration!");
          notifyCallbackHandlers(UpdateStatus.NOT_CONFIGURED);
          return;
       }

@@ -1,6 +1,6 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader;
 
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraGenericValuesResponse;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.data.generic.JiraGenericValuesResponse;
 
 public class JiraGenericValuesResponseReader extends AbstractJiraResponseReader<JiraGenericValuesResponse> {
 

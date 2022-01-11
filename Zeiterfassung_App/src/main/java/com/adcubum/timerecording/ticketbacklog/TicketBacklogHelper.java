@@ -1,21 +1,23 @@
 package com.adcubum.timerecording.ticketbacklog;
 
-import static java.util.Objects.nonNull;
+import com.adcubum.timerecording.settings.Settings;
+import com.adcubum.timerecording.settings.key.ValueKey;
+import com.adcubum.timerecording.settings.key.ValueKeyFactory;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
-import com.adcubum.timerecording.settings.Settings;
-import com.adcubum.timerecording.settings.key.ValueKey;
-import com.adcubum.timerecording.settings.key.ValueKeyFactory;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 public class TicketBacklogHelper {
    private static final ValueKey<String> JIRA_BASE_URL_VALUE_KEY = ValueKeyFactory.createNew("jiraUrl", String.class);
    private static final ValueKey<String> DEFAULT_TICKET_NAME_KEY = ValueKeyFactory.createNew("defaultticketname", String.class);
    private static final ValueKey<String> TICKET_NAME_PATTERN_KEY = ValueKeyFactory.createNew("ticketnamepattern", String.class);
+   private static final ValueKey<String> BOARD_TYPE_VALUE_KEY = ValueKeyFactory.createNew("boardType", String.class);
+   private static final ValueKey<String> FETCH_BOARD_BEGIN_INDEX_KEY = ValueKeyFactory.createNew("fetchBoardsBeginIndex", String.class);
    private static final ValueKey<String> BOARD_NAME_VALUE_KEY = ValueKeyFactory.createNew("boardName", String.class);
    private static final ValueKey<String> SPRINT_NAMES_VALUE_KEY = ValueKeyFactory.createNew("sprintNames", String.class);
    private static final String SPRINT_NAMES_DELIMITER = ";";
@@ -45,6 +47,20 @@ public class TicketBacklogHelper {
     */
    public String getBoardName() {
       return Settings.INSTANCE.getSettingsValue(BOARD_NAME_VALUE_KEY);
+   }
+
+   /**
+    * @return the configured board type
+    */
+   public String getBoardType() {
+      return Settings.INSTANCE.getSettingsValue(BOARD_TYPE_VALUE_KEY);
+   }
+   /**
+    * @return the configured fetchBoardsBeginIndex
+    */
+   public Integer getFetchBoardsBeginIndex() {
+      String fetchBoardsBeginIndexAsString = Settings.INSTANCE.getSettingsValue(FETCH_BOARD_BEGIN_INDEX_KEY);
+      return isNull(fetchBoardsBeginIndexAsString) ? 0 : Integer.valueOf(fetchBoardsBeginIndexAsString);
    }
 
    /**

@@ -11,12 +11,13 @@ public class JiraApiConfiguration {
     private String jiraUrl;
     private String jiraAgileBasePath;
     private String jiraBoardBaseUrl;
-    private String getIssues4BoardIdUrl;
     private String getActiveSprintIdsForBoardUrl;
     private String getFuturSprintIdsForBoardUrl;
     private String getAllBoardUrls;
     private String getIssueUrl;
-    private String jiraBaseUrl;
+    private String boardType;
+    private Integer fetchBoardsBeginIndex;
+    private Integer fetchResultSize;
 
     // Ticket stuff
     private String defaultTicketName;
@@ -25,18 +26,23 @@ public class JiraApiConfiguration {
 
     // Placeholders
     private String boardIdPlaceholder;
-    private String sprintIdPlaceHh;
+    private String sprintIdPlaceholder;
     private String startAtPlaceholder;
+    private String getIssues4SprintBoardIdUrl;
+    private String getIssues4KanbanBoardIdUrl;
 
-    JiraApiConfiguration(String jiraUrl, String jiraAgileBasePath, String boardIdPlaceholder,
-                                String sprintIdPlaceHh, String startAtPlaceholder, String ticketNamePattern, String defaultTicketName) {
+    JiraApiConfiguration(String jiraUrl, String jiraAgileBasePath, String boardIdPlaceholder, String sprintIdPlaceholder,
+                         String startAtPlaceholder, String ticketNamePattern, String defaultTicketName, String boardType, Integer fetchBoardsBeginIndex, int fetchResultSize) {
         this.jiraUrl = jiraUrl;
+        this.boardType = boardType;
         this.jiraAgileBasePath = jiraAgileBasePath;
         this.boardIdPlaceholder = boardIdPlaceholder;
-        this.sprintIdPlaceHh = sprintIdPlaceHh;
+        this.sprintIdPlaceholder = sprintIdPlaceholder;
         this.startAtPlaceholder = startAtPlaceholder;
         this.defaultTicketName = defaultTicketName;
         this.ticketNamePattern = ticketNamePattern;
+        this.fetchResultSize = fetchResultSize;
+        this.fetchBoardsBeginIndex = fetchBoardsBeginIndex;
         this.multiTicketNoPattern = "(" + ticketNamePattern + "(" + MULTI_TICKET_DELIMITER + "?)){1,}";
     }
 
@@ -44,7 +50,7 @@ public class JiraApiConfiguration {
      * Applays present values from the other {@link JiraApiConfiguration}
      * Note that non-existing values of the new configuration does not override any values of the existing configuration
      *
-     * @param jiraApiConfiguration2Apply
+     * @param jiraApiConfiguration2Apply the config to apply from
      */
     public void applyFromConfiguration(JiraApiConfiguration jiraApiConfiguration2Apply) {
         if (isNull(this.jiraUrl) || nonNull(jiraApiConfiguration2Apply.jiraUrl)) {
@@ -53,8 +59,8 @@ public class JiraApiConfiguration {
         if (isNull(this.jiraAgileBasePath) || nonNull(jiraApiConfiguration2Apply.jiraAgileBasePath)) {
             this.jiraAgileBasePath = jiraApiConfiguration2Apply.jiraAgileBasePath;
         }
-        if (isNull(this.sprintIdPlaceHh) || nonNull(jiraApiConfiguration2Apply.sprintIdPlaceHh)) {
-            this.sprintIdPlaceHh = jiraApiConfiguration2Apply.sprintIdPlaceHh;
+        if (isNull(this.sprintIdPlaceholder) || nonNull(jiraApiConfiguration2Apply.sprintIdPlaceholder)) {
+            this.sprintIdPlaceholder = jiraApiConfiguration2Apply.sprintIdPlaceholder;
         }
         if (isNull(this.startAtPlaceholder) || nonNull(jiraApiConfiguration2Apply.startAtPlaceholder)) {
             this.startAtPlaceholder = jiraApiConfiguration2Apply.startAtPlaceholder;
@@ -65,19 +71,22 @@ public class JiraApiConfiguration {
         if (isNull(this.ticketNamePattern) || nonNull(jiraApiConfiguration2Apply.ticketNamePattern)) {
             this.ticketNamePattern = jiraApiConfiguration2Apply.ticketNamePattern;
         }
+        if (isNull(this.boardType) || nonNull(jiraApiConfiguration2Apply.boardType)) {
+            this.boardType = jiraApiConfiguration2Apply.boardType;
+        }
+        if (isNull(this.fetchBoardsBeginIndex) || nonNull(jiraApiConfiguration2Apply.fetchBoardsBeginIndex)) {
+            this.fetchBoardsBeginIndex = jiraApiConfiguration2Apply.fetchBoardsBeginIndex;
+        }
         this.multiTicketNoPattern = "(" + ticketNamePattern + "(" + MULTI_TICKET_DELIMITER + "?)){1,}";
-        this.jiraBaseUrl = this.jiraUrl + "/" + jiraAgileBasePath;
-        this.jiraBoardBaseUrl = this.jiraBaseUrl + "board";
-        this.getIssues4BoardIdUrl = this.jiraBoardBaseUrl + "/" + boardIdPlaceholder + "/sprint/"
-                + sprintIdPlaceHh + "/issue?startAt=" + startAtPlaceholder;
+        String jiraBaseUrl = this.jiraUrl + "/" + jiraAgileBasePath;
+        this.jiraBoardBaseUrl = jiraBaseUrl + "board";
+        this.getIssues4SprintBoardIdUrl = this.jiraBoardBaseUrl + "/" + boardIdPlaceholder + "/sprint/"
+                + sprintIdPlaceholder + "/issue?startAt=" + startAtPlaceholder + "&maxResults=" + fetchResultSize;
+        this.getIssues4KanbanBoardIdUrl = getIssues4SprintBoardIdUrl.replace("/sprint/" + sprintIdPlaceholder, "");
         this.getActiveSprintIdsForBoardUrl = jiraBoardBaseUrl + "/" + boardIdPlaceholder + "/sprint?state=active";
         this.getFuturSprintIdsForBoardUrl = jiraBoardBaseUrl + "/" + boardIdPlaceholder + "/sprint?state=future";
-        this.getAllBoardUrls = jiraBaseUrl + "board?type=scrum&startAt=" + startAtPlaceholder;
+        this.getAllBoardUrls = jiraBaseUrl + "board?type=" + boardType + "&startAt=" + startAtPlaceholder;
         this.getIssueUrl = jiraBaseUrl + "issue/";
-    }
-
-    public String getJiraBaseUrl() {
-        return jiraUrl + "/" + jiraAgileBasePath;
     }
 
     /**
@@ -90,8 +99,19 @@ public class JiraApiConfiguration {
     /**
      * @return the URL for retrieving all issues for a specific board id
      */
-    public String getGetIssues4BoardIdUrl() {
-        return getIssues4BoardIdUrl;
+    public String getGetIssues4SprintBoardIdUrl() {
+        return getIssues4SprintBoardIdUrl;
+    }
+
+    /**
+     * @return the URL for retrieving all issues for a specific (kanban) board id
+     */
+    public String getGetIssues4KanbanBoardIdUrl() {
+        return getIssues4KanbanBoardIdUrl;
+    }
+
+    public int getFetchBoardsBeginIndex() {
+        return fetchBoardsBeginIndex;
     }
 
     /**

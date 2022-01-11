@@ -1,20 +1,15 @@
 package com.adcubum.timerecording.ticketbacklog.defaulttickets;
 
-import static java.util.Objects.requireNonNull;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
-
 import com.adcubum.timerecording.importexport.in.file.FileImporter;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.defaulttickets.DefaultTicketConst;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
+
+import java.io.File;
+import java.util.*;
+import java.util.function.Function;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * The {@link DefaultTicketReader} reads the default {@link Ticket}s which are always available even if the scrum tickets could not be read
@@ -57,8 +52,8 @@ public class DefaultTicketReader {
    }
 
    /**
-    * Reads the default {@link Ticket}s which are defined in the {@link DefaultTicketConst} and in a optional file which
-    * contains additionally default {@link Ticket}s
+    * Reads the default {@link Ticket}s which are defined in an optional file which
+    * contains default {@link Ticket}s
     * 
     * @return a List with default {@link Ticket}s
     */
@@ -66,19 +61,14 @@ public class DefaultTicketReader {
       List<Ticket> defaultTickets = new ArrayList<>();
       List<String> defaultTicketNrs = getAllDefaultTicketNrs();
       for (String ticketNr : defaultTicketNrs) {
-         Optional<Ticket> readTicket4Nr = jiraApiReader.readTicket4Nr(ticketNr.trim().toUpperCase());
-         if (readTicket4Nr.isPresent()) {
-            defaultTickets.add(readTicket4Nr.get());
-         }
+         jiraApiReader.readTicket4Nr(ticketNr.toUpperCase())
+                 .ifPresent(defaultTickets::add);
       }
       return defaultTickets;
    }
 
    private List<String> getAllDefaultTicketNrs() {
-      Set<String> defaultTicketNrs = new HashSet<>();
-      List<String> userDefinedDefaultTicketNrs = evalUserDefinedDefaultTickets();
-      defaultTicketNrs.addAll(DefaultTicketConst.getDefaultScrumtTicketNrs());
-      defaultTicketNrs.addAll(userDefinedDefaultTicketNrs);
+      Set<String> defaultTicketNrs = new HashSet<>(evalUserDefinedDefaultTickets());
       return new ArrayList<>(defaultTicketNrs);
    }
 
