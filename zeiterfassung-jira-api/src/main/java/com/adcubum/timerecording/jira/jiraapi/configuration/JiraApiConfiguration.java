@@ -49,6 +49,7 @@ public class JiraApiConfiguration {
         this.fetchResultSize = fetchResultSize;
         this.fetchBoardsBeginIndex = fetchBoardsBeginIndex;
         this.multiTicketNoPattern = "(" + ticketNamePattern + "(" + MULTI_TICKET_DELIMITER + "?)){1,}";
+        applyFromConfiguration(this);
     }
 
     /**

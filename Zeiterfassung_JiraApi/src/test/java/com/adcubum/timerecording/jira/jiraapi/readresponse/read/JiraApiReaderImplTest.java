@@ -4,7 +4,7 @@ import com.adcubum.timerecording.jira.data.ticket.IssueType;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
-import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationFactory;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationProvider;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants;
 import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
@@ -42,7 +42,7 @@ class JiraApiReaderImplTest {
       String username = "";
       AuthenticationContext atuhenticationContext = new AuthenticationContext(username, () -> pwd.toCharArray());
       HttpClient httpClient = mock(HttpClient.class);
-      JiraApiConfiguration jiraApiConfiguration = JiraApiConfigurationFactory.createDefault();
+      JiraApiConfiguration jiraApiConfiguration = JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration();
       JiraApiReader jiraApiReader = new JiraApiReaderImpl(httpClient, jiraApiConfiguration);
 
       // When
@@ -225,7 +225,7 @@ class JiraApiReaderImplTest {
          this.jiraGetFuturSprintResponse = new JiraGenericValuesResponse();
          this.issues = new ArrayList<>();
          this.futureIssues = new ArrayList<>();
-         this.jiraApiConfiguration = JiraApiConfigurationFactory.createDefault();
+         this.jiraApiConfiguration = JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration();;
       }
 
       public TestCaseBuilder withBoardName(String boardName) {

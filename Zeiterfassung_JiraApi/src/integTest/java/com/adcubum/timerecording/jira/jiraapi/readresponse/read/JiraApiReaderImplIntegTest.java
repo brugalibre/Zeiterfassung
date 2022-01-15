@@ -1,53 +1,37 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.ACTIVE_SPRINT_ID_1_FOR_BOARD;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.ACTIVE_SPRINT_ID_2_FOR_BOARD;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.BOARD_ID_FOR_NAME;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.ISSUE_NR;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.ISSUE_NR_FROM_ACTIVE_SPRINT_2;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.READ_BOARD_SUCCESSFULL_RESPONSE;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.READ_SPRINT_ID_RESPONSE;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.READ_SPRINT_ID_RESPONSE_TWO_ACTIVE_SPRINTS;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.READ_SPRINT_ISSUES_FOR_ACTIVE_SPRINT_1_RESPONSE;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.READ_SPRINT_ISSUES_FOR_ACTIVE_SPRINT_2_RESPONSE;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.READ_SPRINT_ISSUES_RESPONSE;
-import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.SPRINT_ID_FOR_BOARD;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationProvider;
+import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
+import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
 
-import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import com.adcubum.timerecording.jira.data.ticket.Ticket;
-import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
-import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationBuilder;
-import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
+import static com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiTestReadConst.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 class JiraApiReaderImplIntegTest {
 
    private static final String LOCALHOST = "127.0.0.1";
    private static int portNumber = 8181;
-   private static JiraApiConfiguration jiraApiConfiguration;
    private static String restAgileApiPath;
 
    @BeforeAll
    public static void setUp() {
-      jiraApiConfiguration = JiraApiConfigurationBuilder.of()
-            .withDefaultJiraApiConfiguration()
-            .withJiraUrl("http://" + LOCALHOST + ":" + portNumber)
-            .build();
       // Path with which the request is registered on the mock-webserver. It's without the url and parameters!
+      JiraApiConfiguration jiraApiConfiguration = JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration();
       restAgileApiPath = jiraApiConfiguration.getJiraBoardBaseUrl()
             .replace(jiraApiConfiguration.getJiraUrl(), "");
    }
 
    @Test
-   void testReadTicketsFromBoard_WithTickets() {
+   void testReadTicketsFromBoardWithTickets() {
       // Given
       DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
             .withHost(LOCALHOST + ":" + portNumber)

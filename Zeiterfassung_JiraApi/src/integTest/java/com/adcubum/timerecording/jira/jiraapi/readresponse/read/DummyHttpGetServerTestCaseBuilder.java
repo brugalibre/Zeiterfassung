@@ -1,7 +1,7 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
-import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationBuilder;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationProvider;
 import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.Header;
@@ -21,9 +21,7 @@ public class DummyHttpGetServerTestCaseBuilder {
 
    DummyHttpGetServerTestCaseBuilder(int port) {
       this.clientServer = ClientAndServer.startClientAndServer(port);
-      this.jiraApiConfiguration = JiraApiConfigurationBuilder.of()
-              .withDefaultJiraApiConfiguration()
-              .build();
+      this.jiraApiConfiguration = JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration();
    }
 
    DummyHttpGetServerTestCaseBuilder withHttpWrapper(HttpClient httpWrapper) {

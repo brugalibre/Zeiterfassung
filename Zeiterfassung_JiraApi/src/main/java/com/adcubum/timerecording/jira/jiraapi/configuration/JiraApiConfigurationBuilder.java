@@ -1,11 +1,11 @@
 package com.adcubum.timerecording.jira.jiraapi.configuration;
 
 import static com.adcubum.util.utils.StringUtil.requireNotEmptyAndNotNull;
+import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 public final class JiraApiConfigurationBuilder {
 
-   private boolean useDefaultConfiguration;
    private String jiraUrl;
    private String jiraAgileBasePath;
    private String jiraWorklogBasePath;
@@ -22,24 +22,15 @@ public final class JiraApiConfigurationBuilder {
       this.fetchResultSize = 10;
    }
 
-   /**
-    * When calling this, for all properties are default values provided
-    * Anyway you can override those defaults by providing any other value using these builders methods
-    *
-    * @return the {@link JiraApiConfigurationBuilder}
-    */
-   public JiraApiConfigurationBuilder withDefaultJiraApiConfiguration() {
-      this.useDefaultConfiguration = true;
-      return this;
-   }
-
    public JiraApiConfigurationBuilder withJiraUrl(String jiraUrl) {
       this.jiraUrl = requireNotEmptyAndNotNull(jiraUrl);
       return this;
    }
 
    public JiraApiConfigurationBuilder withNullableJiraUrl(String jiraUrl) {
-      this.jiraUrl = jiraUrl;
+      if (nonNull(jiraUrl)) {
+         this.jiraUrl = jiraUrl;
+      }
       return this;
    }
 
@@ -53,8 +44,16 @@ public final class JiraApiConfigurationBuilder {
       return this;
    }
 
+   /**
+    * Sets the given value only if it is not null
+    *
+    * @param jiraAgileBasePath the base url for the jira agil api
+    * @return this {@link JiraApiConfigurationBuilder}
+    */
    public JiraApiConfigurationBuilder withNullableJiraAgileBasePath(String jiraAgileBasePath) {
-      this.jiraAgileBasePath = jiraAgileBasePath;
+      if (nonNull(jiraAgileBasePath)) {
+         this.jiraAgileBasePath = jiraAgileBasePath;
+      }
       return this;
    }
 
@@ -63,8 +62,16 @@ public final class JiraApiConfigurationBuilder {
       return this;
    }
 
+   /**
+    * Sets the given value only if it is not null
+    *
+    * @param jiraWorklogBasePath the base path for the jira worklog api
+    * @return this {@link JiraApiConfigurationBuilder}
+    */
    public JiraApiConfigurationBuilder withNullableJiraWorklogBasePath(String jiraWorklogBasePath) {
-      this.jiraWorklogBasePath = jiraWorklogBasePath;
+      if (nonNull(jiraWorklogBasePath)) {
+         this.jiraWorklogBasePath = jiraWorklogBasePath;
+      }
       return this;
    }
 
@@ -78,35 +85,61 @@ public final class JiraApiConfigurationBuilder {
       return this;
    }
 
+   /**
+    * Sets the given value only if it is not null
+    *
+    * @param ticketNamePattern the ticket-name-pattern to set
+    * @return this {@link JiraApiConfigurationBuilder}
+    */
    public JiraApiConfigurationBuilder withNullableTicketNamePattern(String ticketNamePattern) {
-      this.ticketNamePattern = ticketNamePattern;
+      if (nonNull(ticketNamePattern)) {
+         this.ticketNamePattern = ticketNamePattern;
+      }
       return this;
    }
 
+   /**
+    * Sets the given value only if it is not null
+    *
+    * @param boardType the board-type to set
+    * @return this {@link JiraApiConfigurationBuilder}
+    */
    public JiraApiConfigurationBuilder withNullableBoardType(String boardType) {
-      this.boardType = boardType;
+      if (nonNull(boardType)) {
+         this.boardType = boardType;
+      }
       return this;
    }
 
+   /**
+    * Sets the given value only if it is not null
+    *
+    * @param fetchBoardsBeginIndex the index to begin to fetch boards
+    * @return this {@link JiraApiConfigurationBuilder}
+    */
    public JiraApiConfigurationBuilder withNullableFetchBoardsBeginIndex(Integer fetchBoardsBeginIndex) {
-      this.fetchBoardsBeginIndex = fetchBoardsBeginIndex;
+      if (nonNull(fetchBoardsBeginIndex)) {
+         this.fetchBoardsBeginIndex = fetchBoardsBeginIndex;
+      }
       return this;
    }
 
+   /**
+    * Sets the given value only if it is not null
+    *
+    * @param defaultTicketName the default name pattern for tickets
+    * @return this {@link JiraApiConfigurationBuilder}
+    */
    public JiraApiConfigurationBuilder withNullableDefaultTicketName(String defaultTicketName) {
-      this.defaultTicketName = defaultTicketName;
+      if (nonNull(defaultTicketName)) {
+         this.defaultTicketName = defaultTicketName;
+      }
       return this;
    }
 
    public JiraApiConfiguration build() {
-      JiraApiConfiguration jiraApiConfiguration = new JiraApiConfiguration(jiraUrl, jiraAgileBasePath, jiraWorklogBasePath,
+      return new JiraApiConfiguration(jiraUrl, jiraAgileBasePath, jiraWorklogBasePath,
               boardIdPlaceholder, sprintIdPlaceHh, startAtPlaceholder, ticketNamePattern, defaultTicketName, boardType, fetchBoardsBeginIndex, fetchResultSize);
-      if (useDefaultConfiguration) {
-         JiraApiConfiguration defaultJiraApiConfiguration = JiraApiConfigurationFactory.createDefault();
-         defaultJiraApiConfiguration.applyFromConfiguration(jiraApiConfiguration);
-         return defaultJiraApiConfiguration;
-      }
-      return jiraApiConfiguration;
    }
 
    public static JiraApiConfigurationBuilder of() {

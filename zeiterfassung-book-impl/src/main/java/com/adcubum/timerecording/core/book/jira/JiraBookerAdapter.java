@@ -5,7 +5,7 @@ import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
-import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationBuilder;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationProvider;
 import com.adcubum.timerecording.jira.jiraapi.postrequest.post.data.JiraPostResponse;
 import com.adcubum.timerecording.jira.jiraapi.postrequest.post.worklog.JiraApiWorklogCreator;
 import com.adcubum.timerecording.jira.jiraapi.postrequest.post.worklog.data.Worklog;
@@ -25,9 +25,7 @@ public class JiraBookerAdapter extends CommonBookerAdapter<JiraServiceCodeAdapte
    private JiraApiWorklogCreatorFactory jiraApiWorklogCreatorFactory;
 
    public JiraBookerAdapter() {
-      this(new JiraServiceCodeAdapter(), () -> JiraApiConfigurationBuilder.of()
-                      .withDefaultJiraApiConfiguration()
-                      .build(),
+      this(new JiraServiceCodeAdapter(), JiraApiConfigurationProvider.INSTANCE::getJiraApiConfiguration,
               com.adcubum.timerecording.jira.jiraapi.postrequest.post.worklog.JiraApiWorklogCreatorFactory::createNew);
    }
 

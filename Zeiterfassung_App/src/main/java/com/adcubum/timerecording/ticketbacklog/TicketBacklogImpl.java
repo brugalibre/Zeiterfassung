@@ -9,7 +9,7 @@ import com.adcubum.timerecording.importexport.in.file.FileImporterFactory;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.jira.data.ticket.factory.TicketFactory;
-import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationBuilder;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationProvider;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.read.JiraApiReaderBuilder;
@@ -33,9 +33,7 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
 
    TicketBacklogImpl() {
       this(JiraApiReaderBuilder.of()
-              .withJiraApiConfiguration(JiraApiConfigurationBuilder.of()
-                      .withDefaultJiraApiConfiguration()
-                      .build())
+              .withJiraApiConfiguration(JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration())
               .build(), FileImporterFactory.createNew(), BookerAdapterFactory.getServiceCodeAdapter());
    }
 
@@ -115,7 +113,7 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
    }
 
    private void applyJiraApiConfiguration() {
-      jiraApiReader.applyJiraApiConfiguration(buildJiraApiConfiguration());
+      jiraApiReader.applyJiraApiConfiguration(JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration());
    }
 
    private static UpdateStatus evalStatus(JiraApiReadTicketsResult jiraApiReadTicketsResult) {

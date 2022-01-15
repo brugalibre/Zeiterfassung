@@ -1,7 +1,7 @@
 package com.adcubum.timerecording.ticketbacklog;
 
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
-import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationBuilder;
+import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationProvider;
 import com.adcubum.timerecording.ticketbacklog.callback.TicketBacklogCallbackHandler;
 import com.adcubum.timerecording.ticketbacklog.callback.UpdateStatus;
 import com.adcubum.timerecording.ticketbacklog.config.TicketConfiguration;
@@ -29,7 +29,7 @@ public abstract class AbstractTicketBacklog implements TicketBacklog {
 
     @Override
     public TicketConfiguration getTicketConfiguration() {
-        JiraApiConfiguration jiraApiConfiguration = buildJiraApiConfiguration();
+        JiraApiConfiguration jiraApiConfiguration = JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration();
         return new TicketConfigurationImpl(jiraApiConfiguration.getTicketNamePattern(),
                 jiraApiConfiguration.getDefaultTicketName(), jiraApiConfiguration.getMultiTicketNoPattern(), getIsTicketDescriptionRequired());
     }
@@ -43,16 +43,5 @@ public abstract class AbstractTicketBacklog implements TicketBacklog {
 
     protected void notifyCallbackHandlers(UpdateStatus updateStatus) {
         callbackHandlers.forEach(callbackHandler -> callbackHandler.onTicketBacklogUpdated(updateStatus));
-    }
-
-    protected JiraApiConfiguration buildJiraApiConfiguration() {
-        return JiraApiConfigurationBuilder.of()
-                .withDefaultJiraApiConfiguration()
-                .withNullableBoardType(backlogHelper.getBoardType())
-                .withNullableFetchBoardsBeginIndex(backlogHelper.getFetchBoardsBeginIndex())
-                .withNullableJiraUrl(backlogHelper.getJiraBaseUrl())
-                .withNullableTicketNamePattern(backlogHelper.getTicketNamePattern())
-                .withNullableDefaultTicketName(backlogHelper.getDefaultTicketName())
-                .build();
     }
 }
