@@ -11,6 +11,8 @@ import com.adcubum.timerecording.settings.key.ValueKey;
 import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 import com.adcubum.util.utils.StringUtil;
 
+import static com.adcubum.timerecording.settings.common.Const.TICKET_SYSTEM_PROPERTIES;
+
 @Authenticator(authenticatorNames = {"JIRA_API", "ADC_JIRA_WEB"})
 public class JiraUserCredentialsAuthenticatorImpl implements UserCredentialsAuthenticator {
 
@@ -19,8 +21,8 @@ public class JiraUserCredentialsAuthenticatorImpl implements UserCredentialsAuth
 
    public JiraUserCredentialsAuthenticatorImpl() {
       this(JiraApiReaderBuilder.of()
-            .withJiraApiConfiguration(JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration())
-            .build(), getTicketNr2TestConnection());
+              .withJiraApiConfiguration(JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration())
+              .build(), getTicketNr2TestConnection());
    }
 
    JiraUserCredentialsAuthenticatorImpl(JiraApiReader jiraApiReader, String ticketNr2TestConnection) {
@@ -32,13 +34,13 @@ public class JiraUserCredentialsAuthenticatorImpl implements UserCredentialsAuth
    public boolean doUserAuthentication(String username, char[] userPwd) {
       jiraApiReader.userAuthenticated(new AuthenticationContext(username, () -> userPwd));
       return jiraApiReader.readTicket4Nr(ticketNr2TestConnection)
-            .map(Ticket::isDummyTicket)
-            .map(isDummyTicket -> !isDummyTicket)
-            .orElse(false);
+              .map(Ticket::isDummyTicket)
+              .map(isDummyTicket -> !isDummyTicket)
+              .orElse(false);
    }
 
    private static String getTicketNr2TestConnection() {
-      ValueKey<String> key = ValueKeyFactory.createNew("TicketNr2TestConnection", String.class);
+      ValueKey<String> key = ValueKeyFactory.createNew("TicketNr2TestConnection", TICKET_SYSTEM_PROPERTIES, String.class);
       String ticketNr2TestConnectionFromSettings = Settings.INSTANCE.getSettingsValue(key);
       return StringUtil.isEmptyOrNull(ticketNr2TestConnectionFromSettings) ? "INTA-147" : ticketNr2TestConnectionFromSettings;
    }

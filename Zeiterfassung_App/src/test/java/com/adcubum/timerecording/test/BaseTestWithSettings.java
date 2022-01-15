@@ -31,9 +31,9 @@ public class BaseTestWithSettings {
       Files.delete(file.toPath());
    }
 
-   protected static void saveProperty2Settings(String propertyName, String propertyValue) {
+   protected static void saveProperty2Settings(String propertyName, String propertyValue, String propertiesName) {
       try {
-         ValueKey<String> key = ValueKeyFactory.createNew(propertyName, String.class);
+         ValueKey<String> key = ValueKeyFactory.createNew(propertyName, propertiesName, String.class);
          Settings.INSTANCE.saveValueToProperties(key, propertyValue);
       } catch (IllegalStateException e) {
          fail(e);

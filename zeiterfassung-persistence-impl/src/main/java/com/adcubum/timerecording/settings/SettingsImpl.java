@@ -1,6 +1,5 @@
 package com.adcubum.timerecording.settings;
 
-import com.adcubum.timerecording.settings.common.Const;
 import com.adcubum.timerecording.settings.key.ValueKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,33 +7,24 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.Properties;
 
-import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
+import static com.adcubum.timerecording.settings.common.Const.*;
 import static java.util.Objects.isNull;
 
 public class SettingsImpl implements Settings {
 
    private static final Logger LOG = LoggerFactory.getLogger(SettingsImpl.class);
-   private String propertiesName;
-
-   /**
-    * Default Constructor used by the {@link SettingsFactory}
-    */
-   @SuppressWarnings("unused")
-   private SettingsImpl() {
-      this(ZEITERFASSUNG_PROPERTIES);
-   }
 
    /**
     * Constructor used only for testing purpose!
     */
-   SettingsImpl(String propertiesName) {
-      this.propertiesName = propertiesName;
+   SettingsImpl() {
+      // empty
    }
 
    @SuppressWarnings("unchecked")
    @Override
    public <T> T getSettingsValue(ValueKey<T> settingValueKey) {
-      return (T) getSettingsValue(settingValueKey.getName(), propertiesName);
+      return (T) getSettingsValue(settingValueKey.getName(), settingValueKey.getResourceName());
    }
 
    private static String getSettingsValue(String settingValueKey, String propFile) {
@@ -49,10 +39,10 @@ public class SettingsImpl implements Settings {
    @Override
    public <T> void saveValueToProperties(ValueKey<T> key, String value) {
       Properties prop = new Properties();
-      try (InputStream resourceStream = getInputStream(propertiesName)) {
+      try (InputStream resourceStream = getInputStream(key.getResourceName())) {
          prop.load(resourceStream);
          prop.put(key.getName(), value);
-         try (FileOutputStream out = new FileOutputStream(propertiesName)) {
+         try (FileOutputStream out = new FileOutputStream(key.getResourceName())) {
             prop.store(out, null);
          }
       } catch (Exception e) {
@@ -77,7 +67,7 @@ public class SettingsImpl implements Settings {
    @Override
    public void init() {
       createPropertieFileIfNotExists(ZEITERFASSUNG_PROPERTIES);
-      createPropertieFileIfNotExists(Const.TURBO_BUCHER_PROPERTIES);
+      createPropertieFileIfNotExists(TICKET_SYSTEM_PROPERTIES);
    }
 
    private void createPropertieFileIfNotExists(String propertiesFileName) {

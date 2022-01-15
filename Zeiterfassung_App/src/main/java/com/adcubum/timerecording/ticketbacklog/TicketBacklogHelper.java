@@ -9,11 +9,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.adcubum.timerecording.settings.common.Const.TICKET_SYSTEM_PROPERTIES;
 import static java.util.Objects.nonNull;
 
 public class TicketBacklogHelper {
-   private static final ValueKey<String> BOARD_NAME_VALUE_KEY = ValueKeyFactory.createNew("boardName", String.class);
-   private static final ValueKey<String> SPRINT_NAMES_VALUE_KEY = ValueKeyFactory.createNew("sprintNames", String.class);
+   private static final ValueKey<String> BOARD_NAME_VALUE_KEY = ValueKeyFactory.createNew("boardName", TICKET_SYSTEM_PROPERTIES, String.class);
+   private static final ValueKey<String> SPRINT_NAMES_VALUE_KEY = ValueKeyFactory.createNew("sprintNames", TICKET_SYSTEM_PROPERTIES, String.class);
    private static final String SPRINT_NAMES_DELIMITER = ";";
 
    /**

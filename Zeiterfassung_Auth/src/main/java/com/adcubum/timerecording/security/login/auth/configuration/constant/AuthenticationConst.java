@@ -8,6 +8,8 @@ public class AuthenticationConst {
 
    /** The properties file for all the security-stuff */
    public static final String AUTH_CONFIGURATION_PROPERTIES = "zeiterfassung.properties";
+   /** The properties file for the ticket and booking-system  */
+   public static final String TICKET_SYSTEM_PROPERTIES = "ticketSystem.properties";
 
    public static final String AUTHENTICATION_VAULT_URL_KEY = "authenticationVaultUrl";
    public static final String AUTHORITY_HOST_KEY = "authorityHostKey";

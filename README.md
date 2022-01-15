@@ -1,15 +1,23 @@
 Konfiguration & Set-up:
-- Eine Kopie vom zeiterfassung.properties & turbo-bucher.properties in einem Ordner deines Vertrauens anlegen.
-- Im turbo-bucher.properties braucht es drei Einträge: 'loginPage', 'baseURL' & 'browserName'. 
-  - Für die ersten Einträge sind die gesetzten Werte so zu belassen. Letzterer Eintrag ist optional und definiert den Browser fürs abbuchen
-- Die übrige Konfiguration wird im zeiterfassung.properties eingetragen
-- Mit dem key 'boardName' kann ein Scrum-Board angegeben werden. Anhand diesem Boardnamen werden alle Tickets des aktuellen Sprints ermittelt
-- Falls Tickets von weiteren Sprints angezeigt werden sollen kann mit dem key 'sprintNames' eine Liste von Semikolon separierten Sprint-Namen angegeben werden (z.B. sprintNames=sprintName1;sprintName2)
+- Abhängig davon, welches Ticket- und Verbuchungssystem eingesetzt wird, müssen unterschiedliche Konfigurations-Files erstellt werden.
+- Alle Konfig-Files müssen im selben Ordner liegen, wie das Jar bzw. die exe-Datei
+- Zuerst brauchts eine Kopie vom zeiterfassung.properties. Wird via adcubum-jira-plugin die Zeiten verbucht, brauchts ein turbo-bucher.properties.
+- Zur definition vom internen Ticketbacklog brauchts ein ticketSystem.properties
+  - Zum einen sind im ticketSystem.properties die Einträge 'defaultticketname', 'TicketSystem' (='proles-web', 'jira-web', oder 'adc-jira-web') sowie ein 'ticketnamepattern' 
+  - Erstes propertie definiert das Ticket-Nr Präfix gefolgt. Das zweite das eingesetzte Ticketsystem. Letzterer Eintrag definiert wie die Ticket-Nr
+    aussehen müssen
+  - Wird Proles eingesetzt, muss zusätzlich die URL der Login- und der Stundenerfassungsseite angegeben werden. Der untere Punkt ist für Proles nicht relevant
+  - Für Jira (native oder adc. proprietär) muss zudem der Name vom Scrum bzw. Kanban-Board, die jira-url, der boardTyp (scrum bzw. kanban) sowie optional der Index, bei welchem begonnen wird nach jira-boards zu fetchen, Das kann hilfreich sein, wenn es extrem viele Boards gibt
+  - Falls Tickets von weiteren Sprints angezeigt werden sollen kann mit dem key 'sprintNames' eine Liste von Semikolon separierten Sprint-Namen angegeben werden (z.B. sprintNames=sprintName1;sprintName2)
 - Zusätzlich kann in einem optionalen 'default-tickets.txt' weitere Ticket-Nr angegeben werden, welche dann beim Erfassen der Zeit zur verfügung stehen. 
   Die Ticket-Nr in dieser Datei sind nicht Semikolon separiert, sondern können einfach untereinander eingetragen werden 
 - Anhand aller konfigurierten bzw. definierten Ticket-Nr wird versucht diese Tickets via Jira-api zu ermitteln um beim Stoppen einer Aufzeichnung davon auswählen zu können
-- Starten der Anwendung direkt via .jar (Mac) bzw. exe-File (Windows)
+- Wird via adcubum proprietärem Jira-Plugin gebucht, muss im turbo-bucher.properties die Einträge: 'loginPage', 'baseURL' & 'browserName' definiert werden. 
+  - Für die ersten Einträge sind die gesetzten Werte so zu belassen. Letzterer Eintrag ist optional und definiert den Browser fürs abbuchen
+- Die übrige Konfiguration wird im zeiterfassung.properties eingetragen
+- Mit dem key 'boardName' kann ein Scrum-Board angegeben werden. Anhand diesem Boardnamen werden alle Tickets des aktuellen Sprints ermittelt
 
+- Starten der Anwendung direkt via .jar (Mac) bzw. jar und oder exe-File (Windows)
 
 Konfigurieren von Erinnerungen:
 - Wenn z.B. morgens um 07:15 eine Erinnerung zum Starten der Aufzeichnung gewünscht ist, genügt ein Eintrag 'beginWork=07:15' im zeiterfassung.properties

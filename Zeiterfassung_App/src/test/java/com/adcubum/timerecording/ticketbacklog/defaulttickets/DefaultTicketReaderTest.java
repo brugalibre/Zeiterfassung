@@ -21,7 +21,7 @@ class DefaultTicketReaderTest {
    void testInitDefaultScrumAndMeetingTickets_WithUserDefined() {
 
       // Given
-      int expectedAmountOfTickets = 2;
+      int expectedAmountOfTickets = 3;
       JiraApiReader jiraApiReader = mockJiraApiReader(mock(Ticket.class));
       FileImporter fileImporter = FileImporterFactory.createNew();
       DefaultTicketReader defaultTicketReader = new DefaultTicketReader(jiraApiReader, "src\\test\\resources\\testTickets.txt", fileImporter);

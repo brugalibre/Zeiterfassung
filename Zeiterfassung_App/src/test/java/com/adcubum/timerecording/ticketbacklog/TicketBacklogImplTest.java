@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.adcubum.timerecording.settings.common.Const.TICKET_SYSTEM_PROPERTIES;
 import static java.util.Objects.nonNull;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -82,7 +83,7 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
    }
 
    @Test
-   void testGetTicket4Nr_ExistingTicket() {
+   void testGetTicket4Nr_ExistingTicket() throws InterruptedException {
       // Given
       String defaultTicketNr = "INTA-147";
       TestCaseBuilder tcb = new TestCaseBuilder()
@@ -91,6 +92,8 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
 
       // When
       tcb.ticketBacklog.initTicketBacklog();
+      Thread.sleep(400);
+
       int amountOfTicketsBefore = tcb.ticketBacklog.getTickets().size();
       Ticket actualTicket = tcb.ticketBacklog.getTicket4Nr(defaultTicketNr);// this must not trigger the jiraApi
 
@@ -104,6 +107,7 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
    @Test
    void testInitTicketBacklog_NotConfigured() {
       // Given
+      int expectedSize = 1; // since we have one default Ticket configured in the 'defaulTickets.txt'
       TicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
       TicketBacklog ticketBacklog = new TestCaseBuilder()
             .withCallbackHandler(callbackHandler)
@@ -114,14 +118,15 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
 
       // Then
       verify(callbackHandler).onTicketBacklogUpdated(eq(UpdateStatus.NOT_CONFIGURED));
-      assertThat(ticketBacklog.getTickets().size(), is(0));
+      assertThat(ticketBacklog.getTickets().size(), is(expectedSize));
    }
 
    @Test
    void testInitTicketBacklog_ConfiguredAndSuccessfull() throws InterruptedException {
       // Given
       TicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
-      int expectedSize = 1 ;
+      int expectedSize = 2; // since we have one default Ticket configured in the 'defaulTickets.txt'
+
       TicketBacklog ticketBacklog = new TestCaseBuilder()
             .withCallbackHandler(callbackHandler)
             .withBoardName("blubbl")
@@ -143,7 +148,7 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
    void testInitTicketBacklog_ConfiguredAndFail() throws InterruptedException {
       // Given
       TicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
-      int expectedSize = 0;
+      int expectedSize = 1; // since we have one default Ticket configured in the 'defaultTickets.txt'
       TicketBacklog ticketBacklog = new TestCaseBuilder()
               .withCallbackHandler(callbackHandler)
             .withRetrievedTicket("SYRIUS-6354")
@@ -172,6 +177,7 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
       private TestCaseBuilder() {
          this.jiraApiReader = mock(JiraApiReader.class);
          this.readTickets = new ArrayList<>();
+         this.boardName = "";
          this.callbackHandler = updateStatus -> {
          };
       }
@@ -213,9 +219,7 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
             doReturn(Optional.of(receivedTicket)).when(jiraApiReader).readTicket4Nr(eq(receivedTicketNr));
          }
          mockReadTicketsFromBoard();
-         if (nonNull(boardName)) {
-            saveProperty2Settings("boardName", boardName);
-         }
+         saveProperty2Settings("boardName", boardName, TICKET_SYSTEM_PROPERTIES);
          TicketBacklog ticketBacklog = new TicketBacklogImpl(jiraApiReader, createDefaultFileReader(), mock(ServiceCodeAdapter.class));
          ticketBacklog.addTicketBacklogCallbackHandler(callbackHandler);
          return ticketBacklog;

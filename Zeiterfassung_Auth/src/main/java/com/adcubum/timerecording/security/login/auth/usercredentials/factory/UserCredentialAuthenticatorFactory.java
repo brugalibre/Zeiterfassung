@@ -3,6 +3,8 @@ package com.adcubum.timerecording.security.login.auth.usercredentials.factory;
 import com.adcubum.timerecording.security.login.auth.configuration.impl.ConfigurationImpl;
 import com.adcubum.timerecording.security.login.auth.usercredentials.UserCredentialsAuthenticator;
 
+import static com.adcubum.timerecording.security.login.auth.configuration.constant.AuthenticationConst.TICKET_SYSTEM_PROPERTIES;
+
 /**
  * Responsible for creating the {@link UserCredentialAuthenticatorFactory} which matches to the given login configuration.
  *
@@ -25,7 +27,7 @@ public class UserCredentialAuthenticatorFactory {
 
    private static UserCredentialsAuthenticator createUserCredentialsAuthenticator() {
       // the authentication is depending on the configured ticket-system.
-      String ticketSystemName = new ConfigurationImpl().getValue(TICKET_SYSTEM_NAME);
+      String ticketSystemName = new ConfigurationImpl(TICKET_SYSTEM_PROPERTIES).getValue(TICKET_SYSTEM_NAME);
       return UserCredentialsAuthenticatorType.getForName(ticketSystemName)
               .createUserCredentialAuthenticator();
    }

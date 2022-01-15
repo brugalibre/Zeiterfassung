@@ -11,15 +11,15 @@ import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 class SettingsImplTest {
 
    @Test
-   public void testUnknownPropertieFile() {
+   void testUnknownPropertieFile() {
 
       // Given
       String propertyName = "key";
       String propertyValue = "value";
-      ValueKey<String> key = ValueKeyFactory.createNew(propertyName, String.class);
+      ValueKey<String> key = ValueKeyFactory.createNew(propertyName,"dontExist", String.class);
 
       // When
-      Executable exec = () -> new SettingsImpl("dontExist").saveValueToProperties(key, propertyValue);
+      Executable exec = () -> new SettingsImpl().saveValueToProperties(key, propertyValue);
       // Then
       assertThrows(IllegalStateException.class, exec);
    }

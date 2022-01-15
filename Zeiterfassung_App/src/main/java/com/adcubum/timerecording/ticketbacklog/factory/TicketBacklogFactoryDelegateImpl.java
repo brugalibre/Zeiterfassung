@@ -7,6 +7,7 @@ import com.adcubum.timerecording.ticketbacklog.TicketBacklog;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import static com.adcubum.timerecording.settings.common.Const.TICKET_SYSTEM_PROPERTIES;
 import static java.util.Objects.requireNonNull;
 
 public class TicketBacklogFactoryDelegateImpl implements TicketBacklogFactoryDelegate {
@@ -15,7 +16,7 @@ public class TicketBacklogFactoryDelegateImpl implements TicketBacklogFactoryDel
    private final Function<String, String> ticketBacklogNameProvider;
 
    private TicketBacklogFactoryDelegateImpl(){
-      this(keyName -> Settings.INSTANCE.getSettingsValue(ValueKeyFactory.createNew(keyName, String.class)));
+      this(keyName -> Settings.INSTANCE.getSettingsValue(ValueKeyFactory.createNew(keyName,TICKET_SYSTEM_PROPERTIES, String.class)));
    }
 
    TicketBacklogFactoryDelegateImpl(UnaryOperator<String> ticketBacklogNameProvider){

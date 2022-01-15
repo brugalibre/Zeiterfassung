@@ -8,6 +8,7 @@ import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import static com.adcubum.timerecording.settings.common.Const.TICKET_SYSTEM_PROPERTIES;
 import static java.util.Objects.requireNonNull;
 
 public class BookerAdapterFactoryDelegateImpl implements BookerAdapterFactoryDelegate {
@@ -16,7 +17,7 @@ public class BookerAdapterFactoryDelegateImpl implements BookerAdapterFactoryDel
    private final Function<String, String> bookerNameProvider;
 
    private BookerAdapterFactoryDelegateImpl(){
-      this(keyName -> Settings.INSTANCE.getSettingsValue(ValueKeyFactory.createNew(keyName, String.class)));
+      this(keyName -> Settings.INSTANCE.getSettingsValue(ValueKeyFactory.createNew(keyName, TICKET_SYSTEM_PROPERTIES, String.class)));
    }
 
    BookerAdapterFactoryDelegateImpl(UnaryOperator<String> bookerNameProvider){

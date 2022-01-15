@@ -19,7 +19,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 class JiraApiReaderImplIntegTest {
 
    private static final String LOCALHOST = "127.0.0.1";
-   private static int portNumber = 8181;
+   public static final String SPRINT = "/sprint";
+   public static final String ISSUE = "/issue";
+   private static final int portNumber = 6181;
    private static String restAgileApiPath;
 
    @BeforeAll
@@ -36,8 +38,8 @@ class JiraApiReaderImplIntegTest {
       DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
             .withHost(LOCALHOST + ":" + portNumber)
             .withHeaderAndResponse(restAgileApiPath, READ_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
-            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + "/sprint", READ_SPRINT_ID_RESPONSE) // Request & Response for reading the sprint id
-            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + "/sprint/" + SPRINT_ID_FOR_BOARD + "/issue", // Request & Response for reading the tickets for sprint
+            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + SPRINT, READ_SPRINT_ID_RESPONSE) // Request & Response for reading the sprint id
+            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + SPRINT +"/" + SPRINT_ID_FOR_BOARD + ISSUE, // Request & Response for reading the tickets for sprint
                   READ_SPRINT_ISSUES_RESPONSE)
             .withHttpWrapper(new HttpClient())
             .withJiraApiReader()
@@ -61,12 +63,12 @@ class JiraApiReaderImplIntegTest {
             .withHost(LOCALHOST + ":" + portNumber)
             .withHeaderAndResponse(restAgileApiPath, READ_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
             // Request & Response for reading the sprint id
-            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + "/sprint", READ_SPRINT_ID_RESPONSE_TWO_ACTIVE_SPRINTS)
+            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + SPRINT, READ_SPRINT_ID_RESPONSE_TWO_ACTIVE_SPRINTS)
             // Request & Response for reading the tickets for the first active sprint
-            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + "/sprint/" + ACTIVE_SPRINT_ID_1_FOR_BOARD + "/issue",
+            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + SPRINT +"/" + ACTIVE_SPRINT_ID_1_FOR_BOARD + ISSUE,
                   READ_SPRINT_ISSUES_FOR_ACTIVE_SPRINT_1_RESPONSE)
             // Request & Response for reading the tickets for 2nd active sprint
-            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + "/sprint/" + ACTIVE_SPRINT_ID_2_FOR_BOARD + "/issue",
+            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + SPRINT +"/" + ACTIVE_SPRINT_ID_2_FOR_BOARD + ISSUE,
                   READ_SPRINT_ISSUES_FOR_ACTIVE_SPRINT_2_RESPONSE)
             .withHttpWrapper(new HttpClient())
             .withJiraApiReader()

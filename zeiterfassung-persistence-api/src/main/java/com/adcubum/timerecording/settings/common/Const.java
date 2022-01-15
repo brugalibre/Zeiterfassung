@@ -17,6 +17,9 @@ public class Const {
     */
    public static final String TURBO_BUCHER_PROPERTIES = "turbo-bucher.properties";
 
-   /** The properties file for the {@link TimeRecorder} app */
+   /** The properties file for the main application */
    public static final String ZEITERFASSUNG_PROPERTIES = "zeiterfassung.properties";
+
+   /** The properties file for the ticket and booking-system  */
+   public static final String TICKET_SYSTEM_PROPERTIES = "ticketSystem.properties";
 }

@@ -13,13 +13,13 @@ public class ConfigurationImpl implements Configuration {
    private String propertiesName;
 
    public ConfigurationImpl() {
-      this.propertiesName = AuthenticationConst.AUTH_CONFIGURATION_PROPERTIES;
+      this(AuthenticationConst.AUTH_CONFIGURATION_PROPERTIES);
    }
 
    /**
     * Constructor used only for testing purpose!
     */
-   ConfigurationImpl(String propertiesName) {
+   public ConfigurationImpl(String propertiesName) {
       this.propertiesName = propertiesName;
    }
 

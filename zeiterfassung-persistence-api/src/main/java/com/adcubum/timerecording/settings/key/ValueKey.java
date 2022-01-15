@@ -15,12 +15,19 @@ public interface ValueKey<T> {
     * 
     * @return the type of the value this key is mapping
     */
-   public Class<T> getType();
+   Class<T> getType();
 
    /**
     * Return the (internal) name of this key
     * 
     * @return the (internal) name of this key
     */
-   public String getName();
+    String getName();
+
+   /**
+    * Return the name of the esourceName, which contains the stored value
+    *
+    * @return the name of the esourceName, which contains the stored value
+    */
+    String getResourceName();
 }

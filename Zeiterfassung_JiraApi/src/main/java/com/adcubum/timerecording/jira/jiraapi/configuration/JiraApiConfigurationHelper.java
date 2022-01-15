@@ -4,14 +4,15 @@ import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.settings.key.ValueKey;
 import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 
+import static com.adcubum.timerecording.settings.common.Const.TICKET_SYSTEM_PROPERTIES;
 import static java.util.Objects.isNull;
 
 public class JiraApiConfigurationHelper {
-   private static final ValueKey<String> JIRA_BASE_URL_VALUE_KEY = ValueKeyFactory.createNew("jiraUrl", String.class);
-   private static final ValueKey<String> DEFAULT_TICKET_NAME_KEY = ValueKeyFactory.createNew("defaultticketname", String.class);
-   private static final ValueKey<String> TICKET_NAME_PATTERN_KEY = ValueKeyFactory.createNew("ticketnamepattern", String.class);
-   private static final ValueKey<String> BOARD_TYPE_VALUE_KEY = ValueKeyFactory.createNew("boardType", String.class);
-   private static final ValueKey<String> FETCH_BOARD_BEGIN_INDEX_KEY = ValueKeyFactory.createNew("fetchBoardsBeginIndex", String.class);
+   private static final ValueKey<String> JIRA_BASE_URL_VALUE_KEY = ValueKeyFactory.createNew("jiraUrl", TICKET_SYSTEM_PROPERTIES, String.class);
+   private static final ValueKey<String> DEFAULT_TICKET_NAME_KEY = ValueKeyFactory.createNew("defaultticketname", TICKET_SYSTEM_PROPERTIES, String.class);
+   private static final ValueKey<String> TICKET_NAME_PATTERN_KEY = ValueKeyFactory.createNew("ticketnamepattern", TICKET_SYSTEM_PROPERTIES,String.class);
+   private static final ValueKey<String> BOARD_TYPE_VALUE_KEY = ValueKeyFactory.createNew("boardType", TICKET_SYSTEM_PROPERTIES, String.class);
+   private static final ValueKey<String> FETCH_BOARD_BEGIN_INDEX_KEY = ValueKeyFactory.createNew("fetchBoardsBeginIndex", TICKET_SYSTEM_PROPERTIES,String.class);
 
    /**
     * @return the configured board type
