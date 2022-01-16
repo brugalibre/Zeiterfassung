@@ -1,26 +1,23 @@
 package com.adcubum.timerecording.app;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-
-import java.io.File;
-
-import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
-
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
-import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
-import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.coolguys.exception.InvalidChargeTypeRepresentationException;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryIntegMockUtil;
 import com.adcubum.timerecording.importexport.in.file.exception.FileImportException;
+import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import java.io.File;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 class TimeRecorder_ImportBusinessDayTest {
 
@@ -29,10 +26,10 @@ class TimeRecorder_ImportBusinessDayTest {
       // Given
       File testImportFile = new File("src\\integTest\\resources\\io\\testImportFile.csv");
       String ticketNr = "SYRIUS-1234";
-      String firstTicketLeistungsartRep = "Umsetzung/Dokumentation";
+      String firstTicketLeistungsartRep = "113 - Umsetzung/Dokumentation";
       float firstTicketDuration = 1.0f;
       String secondTicketNr = "INTA-556";
-      String secondTicketLeistungsartRep = "Qualtitaetssicherung";
+      String secondTicketLeistungsartRep = "122 - Qualtitätssicherung";
       int serviceCodeTesting = 122;
       float secondTicketDuration = 4.25f;
       TimeRecorder timeRecorder = buildTimeRecorder();

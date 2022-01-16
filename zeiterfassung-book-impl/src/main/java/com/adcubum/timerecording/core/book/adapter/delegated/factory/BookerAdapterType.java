@@ -17,7 +17,7 @@ public enum BookerAdapterType {
    ADC_JIRA_WEB("adc_jira-web", BookerHelper.class),
 
    /** Uses jira's work-log api to book*/
-   JIRA_WORK_LOG_API("jira-web", JiraBookerAdapter.class),
+   JIRA_API("jira-api", JiraBookerAdapter.class),
 
    /** A booker which books directly via the abacus api */
    // ABACUS_API("abacus-api", AbacusBookerAdapter.class),

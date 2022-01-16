@@ -13,7 +13,7 @@ public class ConfigurationImpl implements Configuration {
    private String propertiesName;
 
    public ConfigurationImpl() {
-      this.propertiesName = AuthenticationConst.ZEITERFASSUNG_PROPERTIES;
+      this.propertiesName = AuthenticationConst.AUTH_CONFIGURATION_PROPERTIES;
    }
 
    /**

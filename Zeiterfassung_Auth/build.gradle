@@ -12,6 +12,8 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/com.azure/azure-identity
 	api group: 'com.azure', name: 'azure-security-keyvault-secrets', version: '4.3.0-beta.4'
-	
+
+	implementation 'io.github.classgraph:classgraph:4.8.28'
+
 	implementation project(':zeiterfassung-common-api')
 }

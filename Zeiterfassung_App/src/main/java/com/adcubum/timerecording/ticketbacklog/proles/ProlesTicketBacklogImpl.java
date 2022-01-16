@@ -21,7 +21,7 @@ public class ProlesTicketBacklogImpl extends AbstractTicketBacklog {
    private static final String DEFAULT_PROLES_TICKETS_FILE = "defaultProlesTickets.json";
    private List<Ticket> tickets;
 
-   ProlesTicketBacklogImpl() {
+   public ProlesTicketBacklogImpl() {
       super();
       this.tickets = new ArrayList<>();
    }

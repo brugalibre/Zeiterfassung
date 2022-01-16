@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
-import com.adcubum.timerecording.security.login.auth.usercredentials.UserCredentialAuthenticatorFactory;
+import com.adcubum.timerecording.security.login.auth.usercredentials.factory.UserCredentialAuthenticatorFactory;
 import com.adcubum.timerecording.security.login.auth.usercredentials.UserCredentialsAuthenticator;
 
 public class AuthenticationService {
@@ -52,8 +52,7 @@ public class AuthenticationService {
    }
 
    /**
-    * Does the authentication of the given username and password. Additionally the
-    * password is stored within the {@link SecureStorage}
+    * Does the authentication of the given username and password.
     * 
     * @param username
     *        the username

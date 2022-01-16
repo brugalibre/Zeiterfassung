@@ -1,5 +1,7 @@
 package com.adcubum.timerecording.ticketbacklog;
 
+import com.adcubum.timerecording.ticketbacklog.factory.TicketBacklogFactory;
+
 /**
  * Provides access to the {@link TicketBacklog} implementation. Well it's not really an SPI yet
  * 

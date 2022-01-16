@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 
 public class BookerAdapterFactoryDelegateImpl implements BookerAdapterFactoryDelegate {
 
-   private static final String BOOKER_NAME = "BookerName";
+   private static final String TICKET_SYSTEM_NAME = "TicketSystem";
    private final Function<String, String> bookerNameProvider;
 
    private BookerAdapterFactoryDelegateImpl(){
@@ -25,7 +25,7 @@ public class BookerAdapterFactoryDelegateImpl implements BookerAdapterFactoryDel
 
    @Override
    public BookerAdapter createBookerAdapter() {
-      String bookerName = bookerNameProvider.apply(BOOKER_NAME);
-      return BookerAdapterType.getForName(bookerName).createBookerAdapter();
+      String ticketSystemName = bookerNameProvider.apply(TICKET_SYSTEM_NAME);
+      return BookerAdapterType.getForName(ticketSystemName).createBookerAdapter();
    }
 }

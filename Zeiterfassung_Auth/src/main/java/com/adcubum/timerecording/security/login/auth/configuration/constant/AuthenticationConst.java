@@ -7,7 +7,7 @@ public class AuthenticationConst {
    }
 
    /** The properties file for all the security-stuff */
-   public static final String ZEITERFASSUNG_PROPERTIES = "zeiterfassung.properties";
+   public static final String AUTH_CONFIGURATION_PROPERTIES = "zeiterfassung.properties";
 
    public static final String AUTHENTICATION_VAULT_URL_KEY = "authenticationVaultUrl";
    public static final String AUTHORITY_HOST_KEY = "authorityHostKey";

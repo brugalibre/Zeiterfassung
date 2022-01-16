@@ -31,7 +31,7 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
    private Set<Ticket> tickets;
    private FileImporter fileImporter;
 
-   TicketBacklogImpl() {
+   public TicketBacklogImpl() {
       this(JiraApiReaderBuilder.of()
               .withJiraApiConfiguration(JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration())
               .build(), FileImporterFactory.createNew(), BookerAdapterFactory.getServiceCodeAdapter());

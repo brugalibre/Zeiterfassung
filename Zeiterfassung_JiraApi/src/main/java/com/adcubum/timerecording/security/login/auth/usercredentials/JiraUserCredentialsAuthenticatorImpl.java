@@ -11,6 +11,7 @@ import com.adcubum.timerecording.settings.key.ValueKey;
 import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 import com.adcubum.util.utils.StringUtil;
 
+@Authenticator(authenticatorNames = {"JIRA_API", "ADC_JIRA_WEB"})
 public class JiraUserCredentialsAuthenticatorImpl implements UserCredentialsAuthenticator {
 
    private String ticketNr2TestConnection;
