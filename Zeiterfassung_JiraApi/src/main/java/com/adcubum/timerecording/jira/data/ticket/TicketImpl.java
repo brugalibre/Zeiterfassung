@@ -1,5 +1,6 @@
 package com.adcubum.timerecording.jira.data.ticket;
 
+import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.book.adapter.BookerAdapterFactory;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.servicecode.ServiceCodeDto;
@@ -14,7 +15,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.*;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 /**
  * {@link TicketImpl} implements the {@link Ticket}
@@ -23,18 +25,18 @@ import static java.util.Objects.*;
  */
 public class TicketImpl implements Ticket{
 
-   private Optional<ServiceCodeAdapter> serviceCodeAdapterOptional;
+   private Optional<BookerAdapter> bookerAdapterOptional;
    private TicketAttrs ticketAttrs;
    private boolean isCurrentUserAssigned;
    private boolean isSprintTicket;
    private boolean isDummyTicket;
 
-   private TicketImpl(TicketAttrsImpl ticketAttrs, boolean isSprintTicket, boolean isDummyTicket, ServiceCodeAdapter serviceCodeAdapter) {
+   private TicketImpl(TicketAttrsImpl ticketAttrs, boolean isSprintTicket, boolean isDummyTicket, BookerAdapter bookerAdapter) {
       this.ticketAttrs = ticketAttrs;
       this.isCurrentUserAssigned = isCurrentUserAssigned(ticketAttrs.getAssignee());
       this.isSprintTicket = isSprintTicket;
       this.isDummyTicket = isDummyTicket;
-      this.serviceCodeAdapterOptional = Optional.ofNullable(serviceCodeAdapter);
+      this.bookerAdapterOptional = Optional.ofNullable(bookerAdapter);
    }
 
    /**
@@ -51,11 +53,11 @@ public class TicketImpl implements Ticket{
    }
 
    public static TicketImpl of(JiraIssue issue, boolean isSprintTicket, boolean isDummyTicket) {
-      return new TicketImpl(TicketAttrsImpl.of(issue), isSprintTicket, isDummyTicket, isDummyTicket ? null : BookerAdapterFactory.getServiceCodeAdapter());
+      return new TicketImpl(TicketAttrsImpl.of(issue), isSprintTicket, isDummyTicket, isDummyTicket ? null : BookerAdapterFactory.getAdapter());
    }
 
    public static TicketImpl of(JiraIssue issue) {
-      return new TicketImpl(TicketAttrsImpl.of(issue), true, false, BookerAdapterFactory.getServiceCodeAdapter());
+      return new TicketImpl(TicketAttrsImpl.of(issue), true, false, BookerAdapterFactory.getAdapter());
    }
 
    private boolean isCurrentUserAssigned(String assignee) {
@@ -65,7 +67,8 @@ public class TicketImpl implements Ticket{
 
    @Override
    public List<TicketActivity> getTicketActivities() {
-      return serviceCodeAdapterOptional.map(serviceCodeAdapter -> fetchServiceCodesForProjectNr(serviceCodeAdapter)
+      return bookerAdapterOptional.map(BookerAdapter::getServiceCodeAdapter)
+              .map(serviceCodeAdapter -> fetchServiceCodesForProjectNr(serviceCodeAdapter)
                       .stream()
                       .map(toTicketActivity())
                       .collect(Collectors.toList()))
@@ -93,7 +96,8 @@ public class TicketImpl implements Ticket{
 
    @Override
    public boolean isBookable() {
-      return ticketAttrs.isBookable();
+      return bookerAdapterOptional.map(bookerAdapter -> bookerAdapter.isTicketBookable(this))
+              .orElse(false);
    }
 
    @Override

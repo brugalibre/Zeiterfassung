@@ -46,9 +46,4 @@ public interface TicketAttrs {
 
    String getSprintName();
 
-   /**
-    * @return <code>true</code> if there are all relevant value present or <code>false</code> if not
-    */
-   boolean isBookable();
-
 }

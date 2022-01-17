@@ -1,8 +1,5 @@
 package com.adcubum.timerecording.core.book.coolguys;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
 import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.coolguys.exception.ChargeException;
@@ -10,10 +7,14 @@ import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.importexport.out.businessday.BusinessDayExporter;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
 import com.coolguys.turbo.Booker;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Is responsible for booking the given {@link BusinessDay}.
@@ -65,6 +66,17 @@ public class BookerHelper implements BookerAdapter, UserAuthenticatedObservable 
       return new BookerHelperResult(bookedBusinessDay);
    }
 
+   /**
+    * He {@link BookerHelper} books via the adc-jira plugin and therefore a jira-issue aka {@link com.adcubum.timerecording.jira.data.ticket.Ticket}
+    * needs to have project-nr. configured
+    *
+    * @param ticket the Ticket to verify
+    * @return <code>true</code> if this certain {@link Ticket} can be booked by this {@link BookerAdapter} or <code>false</code> if not
+    */
+   @Override
+   public boolean isTicketBookable(Ticket ticket) {
+      return ticket.getTicketAttrs().getProjectNr() > 0;
+   }
 
    /*
     * Does the actual charging

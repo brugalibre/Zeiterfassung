@@ -1,15 +1,15 @@
 package com.adcubum.timerecording.jira.jiraapi.mapresponse;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketImpl;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssue;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssueResponse;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssuesResponse;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * The {@link JiraResponseMapper} maps a {@link JiraIssuesResponse} (json-style) to an {@link JiraApiReadTicketsResult}

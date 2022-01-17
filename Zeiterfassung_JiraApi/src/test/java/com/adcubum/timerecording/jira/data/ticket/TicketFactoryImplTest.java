@@ -19,7 +19,7 @@ class TicketFactoryImplTest {
 
 		// Then
 		assertThat(dummy1.isDummyTicket(), is(true));
-		assertThat(dummy1.getTicketAttrs().isBookable(), is(false));
+		assertThat(dummy1.isBookable(), is(false));
 	}
 
 }

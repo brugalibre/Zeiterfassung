@@ -1,9 +1,9 @@
 package com.adcubum.timerecording.jira.data.ticket;
 
+import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssue;
+
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-
-import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssue;
 
 /**
  * {@link TicketAttrsImpl} implements the {@link TicketAttrs}. It's actually more a wrapper for the {@link JiraIssue} and all it's
@@ -167,11 +167,6 @@ public class TicketAttrsImpl implements TicketAttrs{
    @Override
    public String getSprintName() {
       return sprintName;
-   }
-
-   @Override
-   public boolean isBookable() {
-      return nonNull(projectNr) && !projectNr.isEmpty();
    }
 
    @Override

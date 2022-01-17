@@ -4,6 +4,7 @@ import com.adcubum.timerecording.core.book.common.CommonBookerAdapter;
 import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.util.parser.DateParser;
 import com.adcubum.util.parser.NumberFormat;
 import com.zeiterfassung.web.book.common.record.BookRecord;
@@ -39,6 +40,11 @@ public class ProlesBookerAdapter extends CommonBookerAdapter<ProlesServiceCodeAd
         BookRecord bookedBookRecord = prolesBooker.bookRecords(bookRecord);
         BusinessDay bookedBusinessDay = flagBookedBDIncrements(businessDay, bookedBookRecord);
         return createAndReturnBookResult(bookedBusinessDay, businessDay);
+    }
+
+    @Override
+    public boolean isTicketBookable(Ticket ticket) {
+        return true; // proles uses its own internal implementation of a Ticket and knows very well what is required and what not
     }
 
     private static BusinessDay flagBookedBDIncrements(BusinessDay businessDay, BookRecord bookedBookRecord) {

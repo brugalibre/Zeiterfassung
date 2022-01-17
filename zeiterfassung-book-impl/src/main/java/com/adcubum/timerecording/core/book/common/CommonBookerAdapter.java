@@ -7,6 +7,7 @@ import com.adcubum.timerecording.core.book.result.BookResultType;
 import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
 import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
@@ -47,6 +48,11 @@ public abstract class CommonBookerAdapter<T extends ServiceCodeAdapter> implemen
    public void userAuthenticated(AuthenticationContext authenticationContext) {
       this.username = authenticationContext.getUsername();
       this.userPwdSupplier = authenticationContext::getUserPw; // still evil but on the other hand still better than saving it plain text..
+   }
+
+   @Override
+   public boolean isTicketBookable(Ticket ticket) {
+      return true; // per default there are no mandatory attributes
    }
 
    @Override

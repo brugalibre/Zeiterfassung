@@ -28,10 +28,7 @@ import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryIntegMockUtil.mockBusinessDayRepository;
@@ -810,6 +807,11 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
                return bookResultType;
             }
          };
+      }
+
+      @Override
+      public boolean isTicketBookable(Ticket ticket) {
+         return true;
       }
    }
 
