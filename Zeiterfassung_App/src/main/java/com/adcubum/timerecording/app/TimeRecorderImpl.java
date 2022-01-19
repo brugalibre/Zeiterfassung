@@ -412,6 +412,11 @@ public class TimeRecorderImpl implements TimeRecorder {
    }
 
    @Override
+   public String getApplicationTitle() {
+      return TimeRecorderHelper.getApplicationTitle();
+   }
+
+   @Override
    public BusinessDay getBussinessDay() {
       synchronized (businessDayHelper) {
          return businessDayHelper.getBusinessDay();

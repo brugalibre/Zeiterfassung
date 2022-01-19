@@ -3,21 +3,23 @@
  */
 package com.adcubum.timerecording.ui.core.view.impl;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Optional;
-
 import com.adcubum.timerecording.ui.core.control.Controller;
 import com.adcubum.timerecording.ui.core.model.PageModel;
 import com.adcubum.timerecording.ui.core.view.Page;
 import com.adcubum.timerecording.ui.core.view.impl.pagecontent.FXPageContent;
 import com.adcubum.timerecording.ui.core.view.impl.region.FxRegionImpl;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Optional;
+
+import static java.util.Objects.nonNull;
 
 /**
  * @author Dominic Stalder
@@ -132,7 +134,7 @@ public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
     */
    protected void applyStyle(Optional<Stage> optionalStage) {
       String styleResource = getUIStyleResource();
-      applyStileForResource(styleResource, optionalStage);
+      applyStyleForResource(styleResource, optionalStage);
    }
 
    /**
@@ -141,12 +143,21 @@ public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
     *        the optional {@link Stage}
     * @throws MalformedURLException
     */
-   protected void applyStileForResource(String styleResource, Optional<Stage> optionalStage) {
+   protected void applyStyleForResource(String styleResource, Optional<Stage> optionalStage) {
       URL resource = getClass().getResource(styleResource);
-      if (resource == null) {
-         return;
+      if (nonNull(resource)) {
+         optionalStage.ifPresent(stage -> stage.getScene().getStylesheets().addAll(resource.toExternalForm()));
       }
-      optionalStage.ifPresent(stage -> stage.getScene().getStylesheets().addAll(resource.toExternalForm()));
+      tryApplyExternalStyleResource(styleResource, optionalStage);
+   }
+
+   private void tryApplyExternalStyleResource(String styleResource, Optional<Stage> optionalStage) {
+      File styleResourceFile = new File(styleResource.replaceFirst("/", ""));
+      if (styleResourceFile.exists()){
+         optionalStage.ifPresent(stage -> stage.getScene()
+                 .getStylesheets()
+                 .addAll(styleResourceFile.toURI().toString()));
+      }
    }
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -154,8 +165,7 @@ public abstract class AbstractFXPage<I extends PageModel, O extends PageModel>
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    /**
-    * @param uiResource
-    * @return
+    * @return the {@link URL} of the fxml-location
     * @throws MalformedURLException
     */
    protected URL getFXMLLocation() {

@@ -118,7 +118,7 @@ public class LoginController extends BaseFXController<LoginPageModel, LoginPageM
    private void prepareLoginStage() {
       Stage stage = getStage();
       stage.setTitle(TextLabel.LOGIN_LABEL);
-      stage.getIcons().add(PictureLibrary.getClockImageIcon());
+      stage.getIcons().add(PictureLibrary.getAppIcon());
       stage.initModality(Modality.APPLICATION_MODAL);
       stage.setResizable(false);
       stage.setAlwaysOnTop(true);

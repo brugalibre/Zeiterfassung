@@ -85,4 +85,11 @@ public class TimeRecorderService {
    public TimeRecorderDto getTimeRecorderDto() {
       return new TimeRecorderDto(timeRecorder);
    }
+
+   /**
+    * @return the title of this application
+    */
+   public String getApplicationTitle() {
+      return timeRecorder.getApplicationTitle();
+   }
 }

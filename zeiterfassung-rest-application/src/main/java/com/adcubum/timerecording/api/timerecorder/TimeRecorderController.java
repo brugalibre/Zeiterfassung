@@ -1,13 +1,11 @@
 package com.adcubum.timerecording.api.timerecorder;
 
-import com.adcubum.librarys.text.res.TextLabel;
-import com.adcubum.timerecording.model.timerecorder.ApplicationTitle;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.adcubum.timerecording.model.businessday.AddNewBusinessDayIncrementDto;
+import com.adcubum.timerecording.model.timerecorder.ApplicationTitle;
 import com.adcubum.timerecording.model.timerecorder.TimeRecorderDto;
 import com.adcubum.timerecording.service.timerecorder.TimeRecorderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/v1/timerecorder")
 @RestController
@@ -28,7 +26,7 @@ public class TimeRecorderController {
    @GetMapping("/getApplicationTitle")
    @ResponseBody
    public ApplicationTitle getApplicationTitle(){
-      return new ApplicationTitle(TextLabel.APPLICATION_TITLE);
+      return new ApplicationTitle(timeRecorderService.getApplicationTitle());
    }
 
    @PostMapping("/startStopRecording")

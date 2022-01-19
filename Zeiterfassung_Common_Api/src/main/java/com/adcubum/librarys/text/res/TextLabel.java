@@ -10,7 +10,8 @@ public class TextLabel {
    }
 
    public static final String SHOW_WORKING_HOURS = "Zeige Arbeitsstunden";
-   public static final String APPLICATION_TITLE = "Adcubum Zeiterfassung";
+   public static final String TEMPLATE_APPLICATION_TITLE = "%s Zeiterfassung";
+   public static final String ADC_APPLICATION_TITLE = "Adcubum Zeiterfassung";
    public static final String EXIT_APP = "App beenden";
    public static final String CLOSE_POPUP_MENU = "Menu schliessen";
 

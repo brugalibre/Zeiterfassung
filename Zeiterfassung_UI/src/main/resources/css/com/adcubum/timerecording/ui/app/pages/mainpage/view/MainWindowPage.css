@@ -14,24 +14,27 @@
 * like "FlatBee theme by karlthebee (https://github.com/karlthebee/flatbee)"
 */
 
-	/*
-	* These are values you can edit safely.
-	The "color" is your main color (in this case greenish)
-	*/
 {
-	-color : #2ecc71;
 	-white : #ffffff;
-	-adcblue : rgb(0,69,135);
-	-brightadcblue : derive(-adcblue,+25%);
+	-main-color : rgb(0,69,135);
+	-bright-main-color : derive(-main-color,+35%);
 	-black : #444444dd;
 	-abort : #e74c3c;
 	-lightslategray: #778899;
+	-text-field-focused-color: -bright-main-color;
+	-text-fill-color: -white;
+	-button-color: -text-fill-color;
+	-button-focused-color: -text-fill-color;
+	-text-field-text-fill: -text-fill-color;
+	-text-area-text-fill: -text-fill-color;
+	-table-view-text-fill: -text-fill-color;
+	-combo-box-item-text-fill: -text-fill-color;
 }
 
 .root{
 	-fx-background-color : -white;
 	-fx-fill-width : true;
-	-fx-color : -adcblue;
+	-fx-color : -main-color;
 	-fx-fill-height : true;
 	-fx-font-family: 'Segoe UI';
 	/* remove the ugly focus shade */
@@ -40,54 +43,54 @@
 }
 
 .invalidLabel {
-    -fx-border-color: red;
-    -fx-background-radius:2;
+	-fx-border-color: red;
+	-fx-background-radius:2;
 	-fx-border-radius:2;
-    -fx-border-width: 1 1 1 1;
-    -fx-background-insets: 1;
-	
+	-fx-border-width: 1 1 1 1;
+	-fx-background-insets: 1;
+
 	-fx-text-box-border: #DBB1B1 ;
-    -fx-control-inner-background: #FFF0F0 ;
-    -fx-focus-color: #FF2020 ;
-    -fx-faint-focus-color: #FF202020 ;
+	-fx-control-inner-background: #FFF0F0 ;
+	-fx-focus-color: #FF2020 ;
+	-fx-faint-focus-color: #FF202020 ;
 }
 
 .currentUserHasTicketAssigned {
-    -fx-font-weight: bold;
+	-fx-font-weight: bold;
 }
 
 .wordMatch {
-	-fx-font-weight: bold; 
+	-fx-font-weight: bold;
 	-fx-fill: #dcab09;
 }
 
 .invalidLabel:focused {
-    -fx-border-color: red;
-    -fx-background-radius:2;
+	-fx-border-color: red;
+	-fx-background-radius:2;
 	-fx-border-radius:2;
-    -fx-border-width: 1 1 1 1;
-    -fx-background-insets: 1;
-	
+	-fx-border-width: 1 1 1 1;
+	-fx-background-insets: 1;
+
 	-fx-text-box-border: #DBB1B1 ;
-    -fx-control-inner-background: #FFF0F0 ;
-    -fx-focus-color: #FF2020 ;
-    -fx-faint-focus-color: #FF202020 ;
+	-fx-control-inner-background: #FFF0F0 ;
+	-fx-focus-color: #FF2020 ;
+	-fx-faint-focus-color: #FF202020 ;
 }
 
 #comeAndGoTableView {
-  -fx-table-cell-border-color: transparent;
+	-fx-table-cell-border-color: transparent;
 }
 
 #flatbee-tiny{
-	-fx-font-size : 8.0;	
+	-fx-font-size : 8.0;
 }
 
 #flatbee-small{
-	-fx-font-size : 10.0;	
+	-fx-font-size : 10.0;
 }
 
 #flatbee-medium{
-	-fx-font-size : 12.0;	
+	-fx-font-size : 12.0;
 }
 
 #flatbee-large{
@@ -144,305 +147,251 @@
 	-fx-font-size : 12.0;
 }
 .label{
-	 -fx-text-fill : -black;
- }
- 
+	-fx-text-fill : -black;
+}
+
 /*
  * **********
  * BUTTONS
  * **********
- * 
+ *
  */
 .button {
-	-fx-background-color : -adcblue,-adcblue,-adcblue,-adcblue;
+	-fx-background-color : -main-color,-main-color,-main-color,-main-color;
 
-    -fx-text-fill: white;
+	-fx-text-fill: -button-color;
 	-fx-font-size: 12px;
 	-fx-font-weight: bold;
 }
 
 .button:pressed {
-    -fx-background-color: -adcblue;
-    -fx-text-fill: white;
+	-fx-background-color: -main-color;
+	-fx-text-fill: -button-color;
 }
 .button:default{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 }
 .button:cancel{
 	-fx-background-color : -abort;
 }
 
 .button:focused {
-   -fx-color : -brightadcblue;
-   -fx-focus-color : -brightadcblue;
-   -fx-border-color: -white;
-   -fx-background-color: -brightadcblue;
-   -fx-background-radius:2;
-   -fx-border-width: 1 1 1 1;
-   -fx-background-insets: 1;
+	-fx-color : -bright-main-color;
+	-fx-focus-color : -bright-main-color;
+	-fx-border-color: -button-focused-color;
+	-fx-background-color: -bright-main-color;
+	-fx-border-radius:2;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-insets: 1;
 }
 
 .button:armed {
-    -fx-color: -white;				
+	-fx-color: -white;
 }
 
-
 .toggle-button{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 }
 
 .toggle-button:selected{
-	-fx-background-color : -brightadcblue;
+	-fx-background-color : -bright-main-color;
 }
 
 .menu-button{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 }
 
 .split-menu-button{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 }
 
 .split-menu-button>*.label{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 }
 
 .split-menu-button>*.arrow-button{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 }
 
 /*
  * **********
  * COMBOBOX
  * **********
- * 
+ *
  */
 .editable_combo-box {
 	-fx-highlight-text-fill : -white;
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 	-fx-font-size: 12px;
 }
- 
+
 .combo-box {
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 	-fx-font-size: 12px;
 	-fx-font-weight: bold;
 }
 
-.combo-box-popup .list-view .list-cell:filled:hover 
+.combo-box-popup .list-view .list-cell:filled:hover
 {
-    -fx-background-color: -adcblue;
-    -fx-text-fill: -white;
+	-fx-background-color: -main-color;
+	-fx-text-fill: -combo-box-item-text-fill;
 }
 
-.combo-box-base:showing 
+.combo-box-base:showing
 {
-    -fx-color: -fx-pressed-base;
+	-fx-color: -fx-pressed-base;
 }
 
 .combo-box-base:focused {
-   -fx-color : -brightadcblue;
-   -fx-focus-color : -brightadcblue;
-   -fx-border-color: -white;
-   -fx-background-color: -brightadcblue;
-   -fx-background-radius:2;
-   -fx-border-width: 1 1 1 1;
-   -fx-background-insets: 1;
+	-fx-color : -bright-main-color;
+	-fx-focus-color : -bright-main-color;
+	-fx-border-color: -white;
+	-fx-background-color: -bright-main-color;
+	-fx-background-radius:2;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-insets: 1;
 }
 
 .combo-box-base:hover
 {
-    -fx-color: -adcblue;
+	-fx-color: -main-color;
 }
 
 .check-box>*.box{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 }
 
 /*
  * **********
  * MENU
  * **********
- * 
+ *
  */
 .menu-bar{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 }
- 
 
 /*
  * **********
  * Checkbox
  * **********
- * 
+ *
  */
- .check-box>*.box{
-	 -fx-background-color : -adcblue;
- }
- 
- .check-box:selected>*.box>*.mark{
-	 -fx-background-color : -black;
- }
+.check-box>*.box{
+	-fx-background-color : -main-color;
+}
+
+.check-box:selected>*.box>*.mark{
+	-fx-background-color : -black;
+}
 .check-box:indeterminate>*.box>*.mark{
-	 -fx-background-color : -black;
- }
- 
- 
- /*
- * **********
- * RADIO BUTTONS
- * **********
- * 
- */
- .radio-button>*.radio{
-	-fx-background-color : -adcblue; 
- }
- 
- .radio-button:selected>*.radio>*.dot{
-	 -fx-background-color : -black;
- }
- 
+	-fx-background-color : -black;
+}
+
+/*
+* **********
+* RADIO BUTTONS
+* **********
+*
+*/
+.radio-button>*.radio{
+	-fx-background-color : -main-color;
+}
+
+.radio-button:selected>*.radio>*.dot{
+	-fx-background-color : -black;
+}
+
 /*
  *
  * **********
  * TEXT FIELDS
  * **********
- * 
+ *
  */
- .text-field {
-	-fx-highlight-fill : -adcblue;
-	-fx-highlight-text-fill : -white;
+.text-field {
+	-fx-highlight-fill : -main-color;
+	-fx-highlight-text-fill : -text-field-text-fill;
 }
 
 .text-field:focused {
 	-fx-text-fill: -black;
-	-fx-border-color: -brightadcblue;
+	-fx-border-color: -text-field-focused-color;
 	-fx-border-radius:2;
 	-fx-border-width: 1 1 1 1;
 	-fx-background-insets: 1;
- }
+}
 
 .text-area{
-	-fx-highlight-fill : -adcblue;
-	-fx-highlight-text-fill : -white;
+	-fx-highlight-fill : -main-color;
+	-fx-highlight-text-fill : -text-area-text-fill;
 }
- 
+
 .spinner>*.increment-arrow-button{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 }
 
 .spinner>*.decrement-arrow-button{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
+}
+
+.progress-indicator {
+	-fx-progress-color: -main-color;
 }
 
 /*
  * **********
  * Table
  * **********
- * 
+ *
  */
- .table-view{
-	-fx-color : -brightadcblue
+.table-view{
+	-fx-color : -bright-main-color
 }
+
 .table-view .column-header-background .label{
-    -fx-background-color: transparent;
-    -fx-text-fill: white;
-}
- /*
-.table-view:row-selection{
-	-fx-background-color : -adcblue;
+	-fx-background-color: transparent;
+	-fx-text-fill: -table-view-text-fill;
 }
 
-.table-view:row-selection>*.column-header-background{
-	-fx-background-color : -white;
-	-fx-text-fill: -white;
-}
-
-.table-view>*.column-resize-line{
-	-fx-background-color : -black;
-}
-
-.table-view>*.column-header-background>*.nested-column-header>*.table-column{
-	-fx-background-color : -brightadcblue, -brightadcblue;
-	-fx-color : -brightadcblue
-	-fx-text-fill: white;
-}
-
-.table-view>*.column-header-background>*.filler{
-	-fx-background-color : -brightadcblue, -brightadcblue;
-	-fx-color : -brightadcblue
-	-fx-text-fill: white;
-}
-
-.table-view>*.column-header-background>*.show-hide-columns-button{
-	-fx-background-color : -adcblue;
-}
-
-.tree-table-view:row-selection{
-	-fx-background-color : -adcblue;
-}
-
-.tree-table-view:row-selection>*.column-header-background{
-	-fx-background-color : -white;
-}
-
-.tree-table-view>*.column-resize-line{
-	-fx-background-color : -white;
-}
-
-.tree-table-view>*.column-header-background>*.nested-column-header>*.table-column{
-	-fx-background-color : -brightadcblue, -white;
-	-fx-text-fill: -white;
-}
-
-.tree-table-view>*.column-header-background>*.filler{
-	-fx-background-color : -brightadcblue, -adcblue;
-	-fx-text-fill: white;
-}
-
-.tree-table-view>*.column-header-background>*.show-hide-columns-button{
-	-fx-background-color : -white;
-}
-*/
 /*
  * **********
  * Any pane
  * **********
- * 
+ *
  */
 .anchorpane{
-    -fx-background-color: -white;
+	-fx-background-color: -white;
 }
 
- 
 .pane{
-    -fx-background-color: -white;
+	-fx-background-color: -white;
 }
 
 /*
  * **********
  * H,- und VBox
  * **********
- * 
+ *
  */
 .hbox {
-    -fx-background-color: -white;
+	-fx-background-color: -white;
 }
 
 .vbox {
-    -fx-background-color: -white;
+	-fx-background-color: -white;
 }
 
 /*
  * **********
  * Scroll pane
  * **********
- * 
+ *
  */
 .scroll-pane>*.scroll-bar{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 }
 
 .scroll-pane>*.scroll-bar>*.thumb{
-	-fx-background-color : -adcblue;
+	-fx-background-color : -main-color;
 }

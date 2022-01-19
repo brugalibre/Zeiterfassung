@@ -5,7 +5,6 @@ package com.adcubum.timerecording.ui.app.pages.mainpage.control;
 
 import java.io.File;
 
-import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
@@ -64,8 +63,8 @@ public class MainWindowController extends BaseFXController<MainWindowPageModel, 
       overviewPanelController.addOnResizeHandler(dimension -> initStage4NewComponent(getStage(), dimension));
       stopBusinessDayIncrementPanelController.setOnFinishHandler(this::finishOrAbortAndDispose);
       Stage stage = getStage();
-      stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
-      stage.getIcons().add(PictureLibrary.getClockImageIcon());
+      stage.setTitle(TimeRecorder.INSTANCE.getApplicationTitle() + " v" + TimeRecorder.VERSION);
+      stage.getIcons().add(PictureLibrary.getAppIcon());
       fileImportHelper = new FileImportDialogHelper();
    }
 

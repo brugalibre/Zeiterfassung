@@ -240,4 +240,9 @@ public interface TimeRecorder extends BusinessDayHistoryOverviewResolver {
    BusinessDay getBussinessDay();
 
    void setCallbackHandler(UiCallbackHandler callbackHandler);
+
+   /**
+    * @return the title of this application
+    */
+   String getApplicationTitle();
 }

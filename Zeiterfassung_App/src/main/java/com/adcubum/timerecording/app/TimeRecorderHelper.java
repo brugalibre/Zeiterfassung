@@ -1,11 +1,19 @@
 package com.adcubum.timerecording.app;
 
+import com.adcubum.librarys.text.res.TextLabel;
 import com.adcubum.timerecording.core.work.WorkStates;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
+import com.adcubum.timerecording.settings.Settings;
+import com.adcubum.timerecording.settings.key.ValueKey;
+import com.adcubum.timerecording.settings.key.ValueKeyFactory;
+
+import static java.util.Objects.isNull;
 
 public class TimeRecorderHelper {
+
+   private static final ValueKey<String> APPLICATION_TITLE_KEY = ValueKeyFactory.createNew("AppTitle", String.class);
 
    private TimeRecorderHelper() {
       // private 
@@ -30,4 +38,11 @@ public class TimeRecorderHelper {
       return currentState;
    }
 
+   /**
+    * @return the applications title
+    */
+   public static String getApplicationTitle() {
+      String appTitle = Settings.INSTANCE.getSettingsValue(APPLICATION_TITLE_KEY);
+      return isNull(appTitle) ? TextLabel.ADC_APPLICATION_TITLE : String.format(TextLabel.TEMPLATE_APPLICATION_TITLE, appTitle);
+   }
 }

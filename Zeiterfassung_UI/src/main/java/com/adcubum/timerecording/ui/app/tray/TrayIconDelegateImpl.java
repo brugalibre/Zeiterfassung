@@ -35,15 +35,17 @@ import javafx.stage.StageStyle;
 
 public class TrayIconDelegateImpl implements TrayIconDelegate {
 
+   private final String applicationTitle;
    private TrayIcon trayIcon;
    private JLabel dummyTrayIconLabel;
    private Stage stage;
    private double xOffset;
    private double yOffset;
 
-   public TrayIconDelegateImpl() {
+   public TrayIconDelegateImpl(String applicationTitle) {
       yOffset = 0;
       xOffset = 0;
+      this.applicationTitle = applicationTitle;
    }
 
    @Override
@@ -162,8 +164,8 @@ public class TrayIconDelegateImpl implements TrayIconDelegate {
       stage.setResizable(false);
       stage.initStyle(StageStyle.TRANSPARENT);
       stage.sizeToScene();
-      stage.getIcons().add(PictureLibrary.getClockImageIcon());
-      stage.setTitle(TextLabel.APPLICATION_TITLE + " v" + TimeRecorder.VERSION);
+      stage.getIcons().add(PictureLibrary.getAppIcon());
+      stage.setTitle(applicationTitle + " v" + TimeRecorder.VERSION);
       Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
       stage.setX(screenBounds.getMaxX() - iconHeight * 1.5);
       stage.setY(screenBounds.getMaxY() - iconHeight * 1.5);
@@ -182,7 +184,7 @@ public class TrayIconDelegateImpl implements TrayIconDelegate {
    private void addTrayIcon2SystemTray() {
       try {
          SystemTray tray = SystemTray.getSystemTray();
-         trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImage(), TextLabel.APPLICATION_TITLE + ": " + TextLabel.CAPTURING_INACTIVE);
+         trayIcon = new TrayIcon(PictureLibrary.getNotWorkingImage(), applicationTitle + ": " + TextLabel.CAPTURING_INACTIVE);
          tray.add(trayIcon);
       } catch (AWTException e) {
          throw new ApplicationLaunchException(e);

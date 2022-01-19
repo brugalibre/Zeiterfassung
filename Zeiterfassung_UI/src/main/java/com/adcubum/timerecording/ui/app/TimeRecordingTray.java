@@ -429,7 +429,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    }
 
    private void addTrayIconToSystemTray() {
-      trayIcon = new TrayIconDelegateImpl();
+      trayIcon = new TrayIconDelegateImpl(TimeRecorder.INSTANCE.getApplicationTitle());
       trayIcon.show();
    }
 

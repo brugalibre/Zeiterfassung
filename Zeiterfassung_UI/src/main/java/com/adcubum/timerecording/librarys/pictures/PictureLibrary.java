@@ -3,10 +3,10 @@
  */
 package com.adcubum.timerecording.librarys.pictures;
 
-import java.awt.Image;
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 import java.net.URL;
-
-import javax.swing.ImageIcon;
 
 /**
  * @author Dominic
@@ -16,7 +16,7 @@ public class PictureLibrary {
 
    private static Image workingImage;
    private static Image notWorkingImage;
-   private static javafx.scene.image.Image clockImageIcon;
+   private static javafx.scene.image.Image appIcon;
    private static javafx.scene.image.Image warningIcon;
    private static ImageIcon comeOrGoImageIcon;
    private static Image comeOrGoImage;
@@ -43,8 +43,18 @@ public class PictureLibrary {
       URL workingUrl = PictureLibrary.class.getResource(getPath() + "/working.png");
       workingImageIcon = new ImageIcon(workingUrl);
       workingImage = workingImageIcon.getImage();
-      clockImageIcon = new javafx.scene.image.Image(getPath() + "/clock.png");
+
+      appIcon = createAppIcon();
+
       warningIcon = SVGReader.loadSVG(getPath() + "/warning.svg");
+   }
+
+   private static javafx.scene.image.Image createAppIcon() {
+      File appIconFile = new File("images/icon.png");
+      if (appIconFile.exists()) {
+        return new javafx.scene.image.Image(appIconFile.toURI().toString());
+      }
+      return new javafx.scene.image.Image(getPath() + "/clock.png");
    }
 
    /**
@@ -62,24 +72,16 @@ public class PictureLibrary {
       return notWorkingImage;
    }
 
-   public static ImageIcon getWorkingImageIcon() {
-      return workingImageIcon;
-   }
-
    public static ImageIcon getNotWorkingImageIcon() {
       return notWorkingImageIcon;
-   }
-
-   public static ImageIcon getComeOrGoImageIcon() {
-      return comeOrGoImageIcon;
    }
 
    public static Image getComeOrGoImage() {
       return comeOrGoImage;
    }
 
-   public static javafx.scene.image.Image getClockImageIcon() {
-      return clockImageIcon;
+   public static javafx.scene.image.Image getAppIcon() {
+      return appIcon;
    }
 
    public static javafx.scene.image.Image getWarningIcon() {
