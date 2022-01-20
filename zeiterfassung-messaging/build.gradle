@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+    id 'java'
+}
+
+apply from: '..//Zeiterfassung-zeiterfassung/zeiterfassung.gradle'
+apply from: '..//Zeiterfassung-zeiterfassung/test.gradle'
+
+dependencies {
+    implementation 'org.springframework.kafka:spring-kafka:2.8.2'
+    // required somehow from the JsonDeserializer. So without spring-boot-starte, we need this dep.
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+    implementation 'io.github.classgraph:classgraph:4.8.28'
+    implementation 'org.slf4j:slf4j-api:1.7.35'
+}
+
+test {
+    useJUnitPlatform()
+}
+

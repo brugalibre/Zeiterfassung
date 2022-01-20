@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import com.adcubum.timerecording.messaging.send.BookBusinessDayMessageSender;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
@@ -169,7 +170,7 @@ class TimeRecorderImplTest {
 
       private TestCaseBuilder build() {
          BusinessDayRepository businessDayRepository = mockBusinessDayRepository(businessDay);
-         this.timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businessDayRepository);
+         this.timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businessDayRepository, mock(BookBusinessDayMessageSender.class));
          this.timeRecorder.setCallbackHandler(mock(UiCallbackHandler.class));
          this.timeRecorder.init();
          return this;

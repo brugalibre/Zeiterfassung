@@ -1,6 +1,7 @@
 package com.adcubum.timerecording.core.book.jira;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.core.book.adapter.ServiceCodeAdapter;
 import com.adcubum.timerecording.core.book.result.BookResultType;
 import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.work.businessday.*;
@@ -10,9 +11,6 @@ import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
-import com.adcubum.timerecording.security.login.auth.AuthenticationService;
-import com.adcubum.timerecording.security.login.auth.TestAuthenticationService;
-import com.adcubum.timerecording.security.login.auth.usercredentials.UserCredentialsAuthenticator;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -27,8 +25,20 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class JiraBookerAdapterTest {
-   private static final String USER_PWD = "blabb";
-   private static final String USERNAME = "username";
+
+   @Test
+   void testInitAndGetJiraServiceCodeAdapter() {
+      // Given
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .build();
+
+      // When
+      tcb.jiraBookerAdapter.init();
+      ServiceCodeAdapter actualServiceCodeAdapter = tcb.jiraBookerAdapter.getServiceCodeAdapter();
+
+      // Then
+      assertThat(actualServiceCodeAdapter, is(tcb.jiraServiceCodeAdapter));
+   }
 
    @Test
    void testBook_TwoIncrements_BothAlreadyBooked() {
@@ -182,7 +192,6 @@ class JiraBookerAdapterTest {
               .build();
 
       // When
-      tcb.authenticationService.doUserAuthentication(USERNAME, USER_PWD.toCharArray());
       BookerResult actualBookResult = tcb.jiraBookerAdapter.book(tcb.businessDay);
 
       // Then
@@ -215,7 +224,7 @@ class JiraBookerAdapterTest {
       Ticket ticket = mock(Ticket.class);
       TicketAttrs attrs = mock(TicketAttrs.class);
       when(attrs.getIssueType()).thenReturn(IssueType.BUG);
-      when(attrs.getProjectNr()).thenReturn(1234l);
+      when(attrs.getProjectNr()).thenReturn((long) 1234);
       when(attrs.getNr()).thenReturn(ticketNr);
       when(ticket.getTicketAttrs()).thenReturn(attrs);
       when(ticket.getNr()).thenReturn(ticketNr);
@@ -236,7 +245,6 @@ class JiraBookerAdapterTest {
       private TestJiraApiWorklogCreatorImpl jiraApiWorklogCreator;
 
       private JiraServiceCodeAdapter jiraServiceCodeAdapter;
-      private AuthenticationService authenticationService;
 
       private BusinessDay businessDay;
       private List<BusinessDayIncrementAdd> businessDayIncrementAdds;
@@ -248,13 +256,6 @@ class JiraBookerAdapterTest {
          this.businessDay = spy(new BusinessDayImpl());
          this.bookedTicketNrs = new ArrayList<>();
          this.alreadyBookedBusinessDayIncrements = new ArrayList<>();
-         createTestAuthenticationService();
-      }
-
-      private void createTestAuthenticationService() {
-         UserCredentialsAuthenticator userCredentialsAuthenticator = mock(UserCredentialsAuthenticator.class);
-         when(userCredentialsAuthenticator.doUserAuthentication(any(), any())).thenReturn(true);
-         this.authenticationService = new TestAuthenticationService(userCredentialsAuthenticator);
       }
 
       public TestCaseBuilder withBusinessDayIncrementAdd(BusinessDayIncrementAdd businessDayIncrementAdd) {
@@ -273,7 +274,6 @@ class JiraBookerAdapterTest {
 
          this.jiraApiWorklogCreator = spy(new TestJiraApiWorklogCreatorImpl(this.bookedTicketNrs));
          this.jiraBookerAdapter = spy(new JiraBookerAdapter(jiraServiceCodeAdapter, () -> jiraApiConfiguration, (a, b, c) -> jiraApiWorklogCreator));
-         authenticationService.registerUserAuthenticatedObservable(jiraBookerAdapter);
          return this;
       }
 

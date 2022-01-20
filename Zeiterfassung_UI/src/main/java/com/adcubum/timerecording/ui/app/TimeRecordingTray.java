@@ -332,6 +332,11 @@ public class TimeRecordingTray implements LoginCallbackHandler {
          public void onGo() {
             handleGo();
          }
+
+         @Override
+         public void onBusinessDayChanged() {
+            updateUIStates();
+         }
       };
    }
 

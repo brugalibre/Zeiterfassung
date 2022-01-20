@@ -31,6 +31,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.*;
@@ -130,7 +131,7 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
-   public BusinessDay flagBusinessDayAsCharged() {
+   public BusinessDay flagBusinessDayAsBooked() {
       List<BusinessDayIncrement> changedBusinessDayIncrements = increments.stream()
             .map(BusinessDayIncrement::flagAsBooked)
             .collect(Collectors.toList());
@@ -139,9 +140,18 @@ public class BusinessDayImpl implements BusinessDay {
 
    @Override
    public BusinessDay flagBusinessDayIncrementAsBooked(UUID id) {
+      return changeBusinessIncrementById(id, BusinessDayIncrement::flagAsBooked);
+   }
+
+   @Override
+   public BusinessDay flagBusinessDayIncrementAsSent(UUID id) {
+      return changeBusinessIncrementById(id, BusinessDayIncrement::flagAsSent);
+   }
+
+   private BusinessDay changeBusinessIncrementById(UUID id, UnaryOperator<BusinessDayIncrement> businessDayIncrementUpdater ) {
       Optional<BusinessDayIncrement> businessDayIncrementOpt4Id = findBusinessIncrementById(id);
       if (businessDayIncrementOpt4Id.isPresent()) {
-         BusinessDayIncrement businessDayIncrement4Id = businessDayIncrementOpt4Id.get().flagAsBooked();
+         BusinessDayIncrement businessDayIncrement4Id = businessDayIncrementUpdater.apply(businessDayIncrementOpt4Id.get());
          return createCopy(businessDayIncrement4Id);
       }
       return createCopy(increments);

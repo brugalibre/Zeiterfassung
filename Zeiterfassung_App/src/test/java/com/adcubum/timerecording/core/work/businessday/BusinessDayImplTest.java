@@ -395,7 +395,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       BusinessDay businessDay = new BusinessDayImpl()
             .addBusinessIncrement(updateWithTimeSnippet)
-            .flagBusinessDayAsCharged()
+            .flagBusinessDayAsBooked()
             .addBusinessIncrement(updateWithTimeSnippetTomorrow);
 
       // When
@@ -420,7 +420,7 @@ class BusinessDayImplTest extends BaseTestWithSettings {
       BusinessDay businessDay = new BusinessDayImpl()
             .addBusinessIncrement(updateWithTimeSnippet)
             .addBusinessIncrement(updateWithTimeSnippetTomorrow)
-            .flagBusinessDayAsCharged();
+            .flagBusinessDayAsBooked();
 
       // When
       boolean actualHasNotChargedElements = businessDay.hasNotChargedElements();

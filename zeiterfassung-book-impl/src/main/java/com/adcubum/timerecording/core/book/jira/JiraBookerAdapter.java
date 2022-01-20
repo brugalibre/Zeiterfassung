@@ -25,11 +25,19 @@ public class JiraBookerAdapter extends CommonBookerAdapter<JiraServiceCodeAdapte
    private JiraApiWorklogCreatorFactory jiraApiWorklogCreatorFactory;
 
    public JiraBookerAdapter() {
-      this(new JiraServiceCodeAdapter(), JiraApiConfigurationProvider.INSTANCE::getJiraApiConfiguration,
+      this(new JiraServiceCodeAdapter(),
+              JiraApiConfigurationProvider.INSTANCE::getJiraApiConfiguration,
               com.adcubum.timerecording.jira.jiraapi.postrequest.post.worklog.JiraApiWorklogCreatorFactory::createNew);
    }
 
-   public JiraBookerAdapter(JiraServiceCodeAdapter jiraServiceCodeAdapter, Supplier<JiraApiConfiguration>
+   /**
+    * Constructor for testing purpose only
+    *
+    * @param jiraServiceCodeAdapter        the {@link JiraServiceCodeAdapter}
+    * @param jiraApiConfigurationSupplier  the {@link Supplier} for a {@link JiraApiConfiguration}
+    * @param jiraApiWorklogCreatorFactory  a {@link JiraApiWorklogCreatorFactory}
+    */
+   JiraBookerAdapter(JiraServiceCodeAdapter jiraServiceCodeAdapter, Supplier<JiraApiConfiguration>
            jiraApiConfigurationSupplier, JiraApiWorklogCreatorFactory jiraApiWorklogCreatorFactory) {
       super(JiraServiceCodeAdapter.class);
       this.serviceCodeAdapter = jiraServiceCodeAdapter;

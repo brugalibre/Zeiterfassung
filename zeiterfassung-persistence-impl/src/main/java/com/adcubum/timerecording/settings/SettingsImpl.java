@@ -78,7 +78,7 @@ public class SettingsImpl implements Settings {
 
    private static InputStream getInputStream(String propertiesName) throws FileNotFoundException {
       InputStream resourceStreamFromResource = SettingsImpl.class.getClassLoader().getResourceAsStream(propertiesName);
-      if (isNull(resourceStreamFromResource)){
+      if (isNull(resourceStreamFromResource)) {
          return new FileInputStream(propertiesName);
       }
       return resourceStreamFromResource;

@@ -56,4 +56,11 @@ public interface UiCallbackHandler {
     * Is called whenever a user has 'gone'. This means, the user is marked as afk
     */
    public void onGo();
+
+   /**
+    * Is called whenever the state of the BusinessDas has changed
+    */
+   default void onBusinessDayChanged(){
+      // empty
+   }
 }

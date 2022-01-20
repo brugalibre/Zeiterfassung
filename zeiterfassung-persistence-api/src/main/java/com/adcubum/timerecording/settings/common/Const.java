@@ -12,6 +12,12 @@ public class Const {
       // private 
    }
 
+   /** The ticket-name within proles for postfinance related work. We define at a central location this here */
+   public static final String PROLES_PF_TICKET_NAME = "ProlesPFTicketName";
+
+   /** The properites for the proles-ticket and proles-ticket-activities*/
+   public static final String PROLES_TICKET_ACTIVITIES_PROPERTIES = "proles-ticket.properties";
+
    /**
     * The properties file for the turob-bucher
     */

@@ -25,7 +25,8 @@ public class ProlesBookerAdapter extends CommonBookerAdapter<ProlesServiceCodeAd
 
     /**
      * Constructor for testing purpose only
-     * @param prolesBooker the mocked {@link ProlesBooker}
+     *
+     * @param prolesBooker                  the mocked {@link ProlesBooker}
      */
     ProlesBookerAdapter(ProlesBooker prolesBooker) {
         super(ProlesServiceCodeAdapter.class);

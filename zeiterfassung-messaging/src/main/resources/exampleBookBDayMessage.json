@@ -1,0 +1,21 @@
+[
+  {
+    "businessDayDto": {
+      "id": "f30c6381-9cc4-44d3-974f-22390f2fec4e",
+      "businessDayIncrementDtos": [
+        {
+          "id": "692f23d4-f551-47d3-9c48-e3864b823ef2",
+          "description": "dummy",
+          "ticketNr": "PKS-14",
+          "ticketActivityCode": "113 - programmieren",
+          "timeSnippetMessageDto": {
+            "id": "692f23d4-f551-47d3-9c48-e3864b823ef3",
+            "beginTimeStamp": "2022-01-26T16:19:48.2946837",
+            "endTimeStamp": "2022-01-26T18:19:48.2966773"
+          }
+        }
+      ]
+    },
+    "bookSenderReceiverId": "NAG"
+  }
+]

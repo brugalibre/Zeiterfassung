@@ -19,7 +19,7 @@ public interface Settings {
    /**
     * Saves a new value
     * 
-    * @param key
+    * @param settingValueKey
     *        the key
     * @param value
     *        the value

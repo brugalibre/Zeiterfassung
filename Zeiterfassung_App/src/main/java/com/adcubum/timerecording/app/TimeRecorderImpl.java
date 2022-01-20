@@ -1,9 +1,7 @@
-/**
- * 
- */
 package com.adcubum.timerecording.app;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.app.book.TimeRecorderBookResult;
 import com.adcubum.timerecording.app.businessday.BusinessDayHelper;
 import com.adcubum.timerecording.app.businessday.BusinessDayHelperImpl;
 import com.adcubum.timerecording.app.startstopresult.StartNotPossibleInfo;
@@ -35,6 +33,8 @@ import com.adcubum.timerecording.importexport.out.file.FileExporter;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageFactory;
 import com.adcubum.timerecording.message.MessageType;
+import com.adcubum.timerecording.messaging.book.adapter.proxy.MessagingBookerAdapterProxy;
+import com.adcubum.timerecording.messaging.send.BookBusinessDayMessageSender;
 import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.settings.key.ValueKey;
 import com.adcubum.timerecording.settings.key.ValueKeyFactory;
@@ -45,39 +45,41 @@ import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.Objects.nonNull;
+
 /**
  * Responsible for recording the time. The {@link TimeRecorder} consist of one
  * object, that represent a business day. When the user clicks on the tray-icon,
  * a current {@link BusinessDayIncrement} is either started or terminated -
- * depending if the user was working before or not
+ * depending on if the user was working before or not
  * 
  * @author Dominic
  */
 public class TimeRecorderImpl implements TimeRecorder {
 
-   private BusinessDayHelper businessDayHelper;
-   private Settings settings;
+   private final BusinessDayHelper businessDayHelper;
+   private final BookerAdapter bookAdapter;
+   private final Settings settings;
    private UiCallbackHandler callbackHandler;
    private WorkStates currentState;
-   private BookerAdapter bookAdapter;
 
    /**
     * Constructor for testing purpose only!
     */
-   TimeRecorderImpl(BookerAdapter bookAdapter, BusinessDayRepository businessDayRepository) {
-      this(bookAdapter, Settings.INSTANCE, businessDayRepository);
+   TimeRecorderImpl(BookerAdapter bookAdapter, BusinessDayRepository businessDayRepository, BookBusinessDayMessageSender bookBusinessDayMessageSender) {
+      this(bookAdapter, Settings.INSTANCE, businessDayRepository, bookBusinessDayMessageSender);
    }
 
    /**
     * Default constructor used by Spring
     */
    protected TimeRecorderImpl() {
-      this(BookerAdapterFactory.getAdapter(), Settings.INSTANCE, new BusinessDayRepositoryImpl());
+      this(BookerAdapterFactory.getAdapter(), Settings.INSTANCE, new BusinessDayRepositoryImpl(), new BookBusinessDayMessageSender());
    }
 
-   TimeRecorderImpl(BookerAdapter bookAdapter, Settings settings, BusinessDayRepository businessDayRepository) {
+   TimeRecorderImpl(BookerAdapter bookAdapter, Settings settings, BusinessDayRepository businessDayRepository, BookBusinessDayMessageSender bookBusinessDayMessageSender) {
       this.businessDayHelper = new BusinessDayHelperImpl(businessDayRepository);
-      this.bookAdapter = bookAdapter;
+      this.bookAdapter = new MessagingBookerAdapterProxy(bookAdapter, bookBusinessDayMessageSender);
       this.settings = settings;
    }
 
@@ -241,13 +243,18 @@ public class TimeRecorderImpl implements TimeRecorder {
       saveBusinessDay(businessDay);
    }
 
+   @Override
+   public void flagBusinessDayAsBooked() {
+      saveBusinessDay(businessDayHelper.getBusinessDay()
+              .flagBusinessDayAsBooked());
+   }
+
    /////////////////////////////////////////////////////////////////////////////////////////////
    // Import, Export & Booking
    /////////////////////////////////////////////////////////////////////////////////////////////
 
    @Override
-   public boolean book() {
-      boolean hasBooked = false;
+   public TimeRecorderBookResult book() {
       BusinessDay businessDay = businessDayHelper.getBusinessDay();
       if (businessDay.hasNotChargedElements()) {
          WorkStates tmpState = currentState;
@@ -258,13 +265,14 @@ public class TimeRecorderImpl implements TimeRecorder {
             if (bookResult.hasBooked()) {
                businessDayHelper.addBookedBusinessDayIncrements(businessDay.getIncrements());
                callbackHandler.displayMessage(MessageFactory.createNew(map2MessageType(bookResult), null, bookResult.getMessage()));
-               hasBooked = true;
+               notifyBusinessDayChanged();
             }
+            return TimeRecorderBookResultImpl.of(bookResult);
          } finally {
             currentState = tmpState;
          }
       }
-      return hasBooked;
+      return TimeRecorderBookResultImpl.nonBooked();
    }
 
    private static MessageType map2MessageType(BookerResult bookResult) {
@@ -435,10 +443,15 @@ public class TimeRecorderImpl implements TimeRecorder {
 
    /*
     * Stores the current changes on the BusinessDay to the repository.
-    * Also, since we map from a BusinessDay to a BusinessDayEntity and back, we need to assign
-    * the new re-mapped BusinessDayEntity to the existing BusinessDay instance
     */
    private void saveBusinessDay(BusinessDay businessDay) {
       businessDayHelper.save(businessDay);
+      notifyBusinessDayChanged();
+   }
+
+   private void notifyBusinessDayChanged() {
+      if (nonNull(callbackHandler)){
+         callbackHandler.onBusinessDayChanged();
+      }
    }
 }

@@ -16,6 +16,7 @@ import com.adcubum.timerecording.importexport.out.file.FileExportResult;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.message.Message;
+import com.adcubum.timerecording.messaging.send.BookBusinessDayMessageSender;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.util.parser.DateParser;
@@ -87,7 +88,7 @@ class TimeRecorder_ExportBusinessDayTest {
       private TestCaseBuilder() {
          this.businessDayIncrementAdds = new ArrayList<>();
          BusinessDayRepository businessDayRepository = BusinessDayRepositoryIntegMockUtil.mockBusinessDayRepository(new BusinessDayImpl());
-         this.timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businessDayRepository);
+         this.timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businessDayRepository, mock(BookBusinessDayMessageSender.class));
          this.timeRecorder.init();
       }
 

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 /**
  * Factory in order to create {@link BusinessDayIncrement}s
- * 
+ *
  * @author Dominic
  *
  */
@@ -24,7 +24,7 @@ public class BusinessDayIncrementFactory extends AbstractFactory {
 
    /**
     * Creates a new {@link BusinessDayIncrement} instance
-    * 
+    *
     * @param currentTimeSnippet
     *        the current {@link TimeSnippet} of the {@link BusinessDayIncrement} to create. May be null
     * @param description
@@ -33,14 +33,14 @@ public class BusinessDayIncrementFactory extends AbstractFactory {
     *        the ticket itself
     * @param ticketActivity
     *        the {@link TicketActivity}
-    * @param isCharged
-    *        <code>true</code> if this {@link BusinessDayIncrement} is charged or <code>false</code> if not
+    * @param isBooked
+    *        <code>true</code> if this {@link BusinessDayIncrement} is booked or <code>false</code> if not
     * @param id
     *        the id of the {@link BusinessDayIncrement}
     * @return a new {@link BusinessDayIncrement} instance
     */
    public static BusinessDayIncrement createNew(TimeSnippet currentTimeSnippet, UUID id, String description, Ticket ticket, TicketActivity ticketActivity,
-         boolean isCharged) {
-      return INSTANCE.createNewWithAgruments(BEAN_NAME, currentTimeSnippet, id, description, ticket, ticketActivity, isCharged);
+         boolean isBooked, boolean isSent) {
+      return INSTANCE.createNewWithAgruments(BEAN_NAME, currentTimeSnippet, id, description, ticket, ticketActivity, isBooked, isSent);
    }
 }

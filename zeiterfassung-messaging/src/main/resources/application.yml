@@ -1,0 +1,9 @@
+timerecording:
+  messaging:
+    brokers: sulky-01.srvs.cloudkafka.com:9094,sulky-03.srvs.cloudkafka.com:9094,sulky-02.srvs.cloudkafka.com:9094
+    groupId: vgns6bra-consumer
+    topic: vgns6bra-add-and-book-businessday
+    consumer-enabled: true
+  auth:
+    username: username
+    password: userpw

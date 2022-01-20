@@ -87,7 +87,7 @@ public class BusinessDayIntegTestUtil {
                               .build())
                         .build())
                   .build());
-      return businessDayRepository.save(businessDay.flagBusinessDayAsCharged());
+      return businessDayRepository.save(businessDay.flagBusinessDayAsBooked());
    }
 
    private static Ticket mockTicket(String ticketNr) {

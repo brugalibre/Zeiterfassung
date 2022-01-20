@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS businessday_increment (
   description VARCHAR(250),
   ticket_nr VARCHAR(250),
   service_code INT,
-  is_booked BOOLEAN DEFAULT FALSE
+  is_booked BOOLEAN DEFAULT FALSE,
+  is_sent BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS comeandgoes (
@@ -42,3 +43,6 @@ ALTER TABLE businessday
 ALTER TABLE businessday
     ADD CONSTRAINT IF NOT EXISTS FK_COME_AND_GOES FOREIGN KEY (comeandgoes_id) 
     REFERENCES businessday_increment(id);
+
+ALTER TABLE businessday_increment
+    ADD COLUMN IF NOT EXISTS is_sent BOOLEAN DEFAULT FALSE;

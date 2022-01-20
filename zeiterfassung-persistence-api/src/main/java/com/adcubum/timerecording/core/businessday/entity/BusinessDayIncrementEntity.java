@@ -4,6 +4,7 @@ import com.adcubum.timerecording.core.businessday.common.entity.BaseEntity;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -25,7 +26,12 @@ public class BusinessDayIncrementEntity extends BaseEntity {
 
    @NonNull
    private Integer serviceCode;
+
+   @NonNull
    private boolean isBooked;
+
+   @NonNull
+   private boolean isSent;
 
    private BusinessDayIncrementEntity() {
       // private constructor for JPA
@@ -49,13 +55,14 @@ public class BusinessDayIncrementEntity extends BaseEntity {
     *        defines if this {@link BusinessDayIncrementEntity} is already isBooked
     */
    public BusinessDayIncrementEntity(UUID id, BusinessDayEntity businessDayEntity, String description, String ticketNr, Integer chargeType,
-         boolean isBooked) {
+         boolean isBooked, boolean isSent) {
       super(id);
       this.businessDayEntity = businessDayEntity;
       this.description = description;
       this.ticketNr = ticketNr;
       this.serviceCode = chargeType;
       this.isBooked = isBooked;
+      this.isSent = isSent;
    }
 
    public TimeSnippetEntity getCurrentTimeSnippetEntity() {
@@ -78,11 +85,26 @@ public class BusinessDayIncrementEntity extends BaseEntity {
       return isBooked;
    }
 
+   public boolean isSent() {
+      return isSent;
+   }
+
    @Override
    public String toString() {
       return String.format(
-            "BusinessDayIncrementEntity[id=%s, description='%s', ticketNr='%s', chargeType='%s', isBooked='%s', currentTimeSnippetEntity='%s']",
-            id, description, ticketNr, serviceCode, isBooked, currentTimeSnippetEntity);
+            "BusinessDayIncrementEntity[id=%s, " +
+                    "description='%s'," +
+                    " ticketNr='%s'," +
+                    " chargeType='%s'," +
+                    " isBooked='%s'," +
+                    " isSent='%s'," +
+                    " currentTimeSnippetEntity='%s']",
+            id, description, ticketNr, serviceCode, isBooked, isSent, currentTimeSnippetEntity);
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(super.hashCode(), businessDayEntity, currentTimeSnippetEntity, description, ticketNr, serviceCode, isBooked, isSent);
    }
 
    /**
@@ -93,19 +115,6 @@ public class BusinessDayIncrementEntity extends BaseEntity {
     */
    public void setCurrentTimeSnippetEntity(TimeSnippetEntity currentTimeSnippetEntity) {
       this.currentTimeSnippetEntity = currentTimeSnippetEntity;
-   }
-
-   @Override
-   public int hashCode() {
-      final int prime = 31;
-      int result = super.hashCode();
-      result = prime * result + ((businessDayEntity == null) ? 0 : businessDayEntity.hashCode());
-      result = prime * result + ((serviceCode == null) ? 0 : serviceCode.hashCode());
-      result = prime * result + ((currentTimeSnippetEntity == null) ? 0 : currentTimeSnippetEntity.hashCode());
-      result = prime * result + ((description == null) ? 0 : description.hashCode());
-      result = prime * result + (isBooked ? 1231 : 1237);
-      result = prime * result + ((ticketNr == null) ? 0 : ticketNr.hashCode());
-      return result;
    }
 
    @Override

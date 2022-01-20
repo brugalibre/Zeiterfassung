@@ -3,12 +3,10 @@
  */
 package com.adcubum.timerecording.ui.app.pages.overview.control;
 
+import com.adcubum.timerecording.app.book.TimeRecorderBookResult;
 import com.adcubum.timerecording.ui.app.pages.mainpage.control.callback.MainWindowCallbackHandler;
 import com.adcubum.timerecording.ui.app.pages.overview.book.service.BookerService;
 import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.BusinessDayChangeHelperGrouper;
-import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.StringBusinessDayChangeHelper;
-import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.TicketActivityBusinessDayChangeHelper;
-import com.adcubum.timerecording.ui.app.pages.overview.control.businessdaychange.TicketBusinessDayChangeHelper;
 import com.adcubum.timerecording.ui.app.pages.overview.control.descriptionchange.DescriptionAddHelper;
 import com.adcubum.timerecording.ui.app.pages.overview.control.rowdeleter.RowDeleteHelper;
 import com.adcubum.timerecording.ui.app.pages.overview.model.OverviewPageModel;
@@ -108,8 +106,8 @@ public class OverviewController extends BaseFXController<PageModel, OverviewPage
 
    private EventHandler<WorkerStateEvent> onSucceededHandler() {
       return workerStateEvent -> {
-         Boolean res = bookerService.getValue();
-         if (nonNull(res) && res.booleanValue()) {
+         TimeRecorderBookResult res = bookerService.getValue();
+         if (nonNull(res) && res.hasBooked()) {
             refreshUI();
          }
       };

@@ -1,18 +1,19 @@
 package com.adcubum.timerecording.ui.app.pages.overview.book.service;
 
 
+import com.adcubum.timerecording.app.TimeRecorder;
+import com.adcubum.timerecording.app.book.TimeRecorderBookResult;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.control.ProgressIndicator;
 
 /**
- * The {@link BookerService} does the actually boking stuff like. It creates a {@link BookTask}
+ * The {@link BookerService} calls the {@link TimeRecorder#book()} when executed. It creates a {@link BookTask}
  * which will be automatically called when calling {@link BookerService#book()}
- * 
- * @author dominic
  *
+ * @author dominic
  */
-public class BookerService extends Service<Boolean> {
+public class BookerService extends Service<TimeRecorderBookResult> {
 
    /**
     * Does the actually booking process.
@@ -23,14 +24,14 @@ public class BookerService extends Service<Boolean> {
    }
 
    @Override
-   protected Task<Boolean> createTask() {
+   protected Task<TimeRecorderBookResult> createTask() {
       return new BookTask();
    }
 
    /**
     * Creates the binding between the given ProgressIndicator and this {@link BookerService}
     *
-    * @param progressIndicator
+    * @param progressIndicator the {@link ProgressIndicator} bindet to the ui
     */
    public void bind(ProgressIndicator progressIndicator) {
       progressIndicator.visibleProperty().bind(runningProperty());

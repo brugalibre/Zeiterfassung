@@ -7,6 +7,7 @@ import com.adcubum.timerecording.core.work.businessday.BusinessDayImpl;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.core.work.businessday.repository.BusinessDayRepositoryIntegMockUtil;
 import com.adcubum.timerecording.importexport.in.file.exception.FileImportException;
+import com.adcubum.timerecording.messaging.send.BookBusinessDayMessageSender;
 import com.adcubum.timerecording.ticketbacklog.TicketBacklogSPI;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -134,7 +135,7 @@ class TimeRecorder_ImportBusinessDayTest {
 
    private static TimeRecorder buildTimeRecorder() {
       TimeRecorder timeRecorder =
-            new TimeRecorderImpl(mock(BookerAdapter.class), BusinessDayRepositoryIntegMockUtil.mockBusinessDayRepository(new BusinessDayImpl()));
+            new TimeRecorderImpl(mock(BookerAdapter.class), BusinessDayRepositoryIntegMockUtil.mockBusinessDayRepository(new BusinessDayImpl()), mock(BookBusinessDayMessageSender.class));
       timeRecorder.init();
       return timeRecorder;
    }

@@ -19,6 +19,7 @@ import com.adcubum.util.utils.StringUtil;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import static java.util.Objects.*;
 
@@ -37,19 +38,22 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    private String description;
    private Ticket ticket;
    private boolean isBooked;
+   private boolean isSent;
    private TicketActivity ticketActivity;
 
    /**
     * Constructor used by the factory
     */
    @SuppressWarnings("unused")
-   private BusinessDayIncrementImpl(TimeSnippet currentTimeSnippet, UUID id, String description, Ticket ticket, TicketActivity ticketActivity, boolean isCharged) {
+   private BusinessDayIncrementImpl(TimeSnippet currentTimeSnippet, UUID id, String description, Ticket ticket, TicketActivity ticketActivity, boolean isBooked,
+                                    boolean isSent) {
       this.currentTimeSnippet = currentTimeSnippet;
       this.id = id;
       this.description = description;
       this.ticket = ticket;
       this.ticketActivity = ticketActivity;
-      this.isBooked = isCharged;
+      this.isBooked = isBooked;
+      this.isSent = isSent;
    }
 
    /**
@@ -91,17 +95,19 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
 
    @Override
    public BusinessDayIncrement flagAsBooked() {
-      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
-      businessDayIncrementImplCopy.isBooked = true;
-      return businessDayIncrementImplCopy;
+      return changeBusinessDayIncrementInternal(businessDayIncrementImplCopy -> businessDayIncrementImplCopy.isBooked = true);
+   }
+
+   @Override
+   public BusinessDayIncrement flagAsSent() {
+      return changeBusinessDayIncrementInternal(businessDayIncrementImplCopy -> businessDayIncrementImplCopy.isSent = true);
    }
 
    @Override
    public BusinessDayIncrement refreshDummyTicket() {
       if (ticket.isDummyTicket()) {
-         BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
-         businessDayIncrementImplCopy.ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticket.getNr());
-         return businessDayIncrementImplCopy;
+         return changeBusinessDayIncrementInternal(businessDayIncrement ->
+                 businessDayIncrement.ticket = TicketBacklogSPI.getTicketBacklog().getTicket4Nr(ticket.getNr()));
       }
       return this;
    }
@@ -134,9 +140,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
 
    @Override
    public BusinessDayIncrement setDescription(String description) {
-      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
-      businessDayIncrementImplCopy.description = description;
-      return businessDayIncrementImplCopy;
+      return changeBusinessDayIncrementInternal(businessDayIncrement -> businessDayIncrement.description = description);
    }
 
    @Override
@@ -156,10 +160,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
       if (ticketActivity.isDummy() && isCurrentTicketActivityNotDummy()){
          return this;
       }
-      requireNonNull(ticketActivity);
-      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
-      businessDayIncrementImplCopy.ticketActivity = ticketActivity;
-      return businessDayIncrementImplCopy;
+      return changeBusinessDayIncrementInternal(businessDayIncrementCopy -> businessDayIncrementCopy.ticketActivity = requireNonNull(ticketActivity));
    }
 
    private boolean isCurrentTicketActivityNotDummy() {
@@ -173,10 +174,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
 
    @Override
    public BusinessDayIncrement setTicket(Ticket ticket) {
-      requireNonNull(ticket);
-      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
-      businessDayIncrementImplCopy.ticket = requireNonNull(ticket);
-      return businessDayIncrementImplCopy;
+      return changeBusinessDayIncrementInternal(businessDayIncrementImplCopy -> businessDayIncrementImplCopy.ticket = requireNonNull(ticket));
    }
 
    @Override
@@ -187,6 +185,11 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    @Override
    public boolean isBooked() {
       return isBooked;
+   }
+
+   @Override
+   public boolean isSent() {
+      return isSent;
    }
 
    @Override
@@ -234,6 +237,12 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    @Override
    public int hashCode() {
       return hash(currentTimeSnippet, description, ticket, isBooked, ticketActivity);
+   }
+
+   private BusinessDayIncrement changeBusinessDayIncrementInternal(Consumer<BusinessDayIncrementImpl> businessDayIncrementUpdater) {
+      BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
+      businessDayIncrementUpdater.accept(businessDayIncrementImplCopy);
+      return businessDayIncrementImplCopy;
    }
 
    private BusinessDayIncrement createNewBusinessDayIncrement(TimeSnippet changedCurrentTimeSnippet) {
@@ -308,6 +317,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
          businessDayIncrementImpl.description = otherBussinessDayIncremental.getDescription();
          businessDayIncrementImpl.ticket = otherBussinessDayIncremental.getTicket();
          businessDayIncrementImpl.ticketActivity = otherBussinessDayIncremental.getTicketActivity();
+         businessDayIncrementImpl.isSent = otherBussinessDayIncremental.isSent();
          businessDayIncrementImpl.currentTimeSnippet = otherBussinessDayIncremental.getCurrentTimeSnippet();
       }
       return businessDayIncrementImpl;

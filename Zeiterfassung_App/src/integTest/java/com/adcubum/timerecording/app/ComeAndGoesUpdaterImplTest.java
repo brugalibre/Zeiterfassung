@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.adcubum.timerecording.messaging.send.BookBusinessDayMessageSender;
 import org.junit.jupiter.api.Test;
 
 import com.adcubum.timerecording.core.book.adapter.BookerAdapter;
@@ -124,7 +125,7 @@ class ComeAndGoesUpdaterImplTest {
       private TestCaseBuilder build() {
          BusinessDayImpl businessDay = new BusinessDayImpl(comeAndGoes);
          BusinessDayRepository businessDayRepository = mockBusinessDayRepository(businessDay);
-         TimeRecorder timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businessDayRepository);
+         TimeRecorder timeRecorder = new TimeRecorderImpl(mock(BookerAdapter.class), businessDayRepository, mock(BookBusinessDayMessageSender.class));
          timeRecorder.init();
          this.idOfComeAndGo2Change = getIdFromRandomSelectedComeAndGo();
          this.comeAndGoesUpdaterImpl = new BusinessDayChangedCallbackHandlerImpl(timeRecorder);
