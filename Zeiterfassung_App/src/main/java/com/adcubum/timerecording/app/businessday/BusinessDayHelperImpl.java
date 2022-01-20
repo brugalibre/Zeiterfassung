@@ -106,7 +106,7 @@ public class BusinessDayHelperImpl implements BusinessDayHelper {
          for (BusinessDayIncrementAdd businessDayIncrementAdd : businessDayIncrementAdds) {
             changedBookedBusinessDay = changedBookedBusinessDay.addBusinessIncrement(businessDayIncrementAdd);
          }
-         return changedBookedBusinessDay.flagBusinessDayAsCharged();
+         return changedBookedBusinessDay.flagBusinessDayAsBooked();
       };
    }
 

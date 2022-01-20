@@ -23,6 +23,7 @@ import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageType;
+import com.adcubum.timerecording.messaging.send.BookBusinessDayMessageSender;
 import com.adcubum.timerecording.settings.Settings;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
@@ -45,7 +46,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       // Given
       String key = "key";
       Settings settings = mock(Settings.class);
-      TimeRecorder timeRecorderImpl = mockTimeRecorderImpl(settings);
+      TimeRecorder timeRecorderImpl = TestCaseBuilder.mockTimeRecorderImpl(settings);
 
       // When
       timeRecorderImpl.getSettingsValue(key);
@@ -54,39 +55,12 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       verify(settings).getSettingsValue(any());
    }
 
-   private TimeRecorderImpl mockTimeRecorderImpl() {
-      return mockTimeRecorderImpl(mock(BookerAdapter.class), mock(Settings.class), new BusinessDayImpl());
-   }
-
-   private TimeRecorderImpl mockTimeRecorderImpl(Settings settings) {
-      return mockTimeRecorderImpl(mock(BookerAdapter.class), settings, new BusinessDayImpl());
-   }
-
-   private TimeRecorder mockTimeRecorderImpl(BusinessDayImpl businessDay) {
-      return mockTimeRecorderImpl(mock(BookerAdapter.class), mock(Settings.class), businessDay);
-   }
-
-   private TimeRecorder mockTimeRecorderImpl(BookerAdapter bookAdapter) {
-      return mockTimeRecorderImpl(bookAdapter, mock(Settings.class));
-   }
-
-   private TimeRecorderImpl mockTimeRecorderImpl(BookerAdapter bookerAdapter, Settings settings) {
-      return mockTimeRecorderImpl(bookerAdapter, settings, new BusinessDayImpl());
-   }
-
-   private TimeRecorderImpl mockTimeRecorderImpl(BookerAdapter bookerAdapter, Settings settings, BusinessDay businessDay) {
-      BusinessDayRepository businessDayRepository = mockBusinessDayRepository(businessDay);
-      TimeRecorderImpl timeRecorderImpl = new TimeRecorderImpl(bookerAdapter, settings, businessDayRepository);
-      timeRecorderImpl.init();
-      return timeRecorderImpl;
-   }
-
    @Test
    void testSaveSettingValue() {
       // Given
       String key = "key";
       Settings settings = mock(Settings.class);
-      TimeRecorder timeRecorderImpl = mockTimeRecorderImpl(settings);
+      TimeRecorder timeRecorderImpl = TestCaseBuilder.mockTimeRecorderImpl(settings);
       String value = "value";
 
       // When
@@ -101,9 +75,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       // Given
       TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .setCallbackHandler(testUiCallbackHandler)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withUiCallbackHandler(testUiCallbackHandler)
+              .build();
 
       // When
       tcb.timeRecorder.handleUserInteraction(true);// come
@@ -124,9 +98,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       // Given
       TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .setCallbackHandler(testUiCallbackHandler)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withUiCallbackHandler(testUiCallbackHandler)
+              .build();
 
       // When
       tcb.timeRecorder.handleUserInteraction(true);// come
@@ -146,7 +120,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       // Given
       BusinessDayImpl businessDay = mockBusinessDayImpl();
-      TimeRecorder timeRecorder = mockTimeRecorderImpl(businessDay);
+      TimeRecorder timeRecorder = TestCaseBuilder.mockTimeRecorderImpl(businessDay);
 
       // When
       timeRecorder.onTicketBacklogInitialized();
@@ -162,9 +136,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       String description = "Test";
       int serviceCode = 113;
       int timeSnippedDuration = 3600 * 1000;
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement(ticketNr, description, serviceCode, timeSnippedDuration)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrement(ticketNr, description, serviceCode, timeSnippedDuration)
+              .build();
 
       // When
       tcb.timeRecorder.removeIncrement4Id(UUID.randomUUID());
@@ -177,9 +151,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    @Test
    void testRemoveBusinessIncrementAtIndex() {
       // Given
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement("SYRIUS-45645", "Test3", 113, 3600 * 1000)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrement("SYRIUS-45645", "Test3", 113, 3600 * 1000)
+              .build();
 
       // When
       BusinessDay bussinessDay = tcb.timeRecorder.getBussinessDay();
@@ -195,9 +169,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    @Test
    void testClearAllBusinessIncrements() {
       // Given
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement("SYRIUS-42353", "Test88", 113, 3600)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrement("SYRIUS-42353", "Test88", 113, 3600)
+              .build();
 
       // When
       BusinessDay bussinessDay = tcb.timeRecorder.getBussinessDay();
@@ -213,10 +187,10 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testStartWithElementsFromPrecedentDay_DoNotStart() {
       // Given, add an existing increment from the 01.02.2020
       TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement("SYRIUS-534534", "Test", 113, 600 * 1000)
-            .setCallbackHandler(testUiCallbackHandler)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrement("SYRIUS-534534", "Test", 113, 600 * 1000)
+              .withUiCallbackHandler(testUiCallbackHandler)
+              .build();
       // When
       UserInteractionResult userInteractionResult = tcb.timeRecorder.handleUserInteraction(false);
 
@@ -236,7 +210,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
       BusinessDayImpl businessDay = mockBusinessDayImpl();
       when(businessDay.hasComeAndGoesFromPrecedentDays()).thenReturn(true);
-      TimeRecorder timeRecorder = mockTimeRecorderImpl(businessDay);
+      TimeRecorder timeRecorder = TestCaseBuilder.mockTimeRecorderImpl(businessDay);
       timeRecorder.setCallbackHandler(testUiCallbackHandler);
 
       // When
@@ -251,10 +225,10 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testComeWithBDIncrementsFromPrecedentDay_DoNotStart() {
       // Given, add an existing increment from the 01.02.2020
       TestUiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement("SYRIUS-534534", "Test", 113, 600 * 1000)
-            .setCallbackHandler(testUiCallbackHandler)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrement("SYRIUS-534534", "Test", 113, 600 * 1000)
+              .withUiCallbackHandler(testUiCallbackHandler)
+              .build();
 
       // When
       tcb.timeRecorder.handleUserInteraction(true);
@@ -267,7 +241,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    @Test
    void testStartAndStopNewBusinessIncrement() throws InterruptedException {
       // Given
-      TimeRecorderImpl timeRecorderImpl = mockTimeRecorderImpl();
+      TimeRecorderImpl timeRecorderImpl = TestCaseBuilder.mockTimeRecorderImpl();
       UiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
       timeRecorderImpl.setCallbackHandler(testUiCallbackHandler);
 
@@ -291,7 +265,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    @Test
    void testStartNewBusinessIncrement() {
       // Given
-      TimeRecorderImpl timeRecorderImpl = mockTimeRecorderImpl();
+      TimeRecorderImpl timeRecorderImpl = TestCaseBuilder.mockTimeRecorderImpl();
       UiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
       timeRecorderImpl.setCallbackHandler(testUiCallbackHandler);
 
@@ -314,7 +288,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testStartStopAndResumeNewBusinessIncrement() throws InterruptedException {
       // Given
       UiCallbackHandler testUiCallbackHandler = spy(new TestUiCallbackHandler());
-      TimeRecorderImpl timeRecorderImpl = mockTimeRecorderImpl();
+      TimeRecorderImpl timeRecorderImpl = TestCaseBuilder.mockTimeRecorderImpl();
       timeRecorderImpl.setCallbackHandler(testUiCallbackHandler);
 
       // When
@@ -334,8 +308,8 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       assertThat(currentTimeSnippet.getEndTimeStamp(), is(nullValue()));
 
       // Then
-      BusinessDay bussinessDay = timeRecorderImpl.getBussinessDay();
-      assertThat(bussinessDay.getIncrements().isEmpty(), is(true));
+      BusinessDay businessDay = timeRecorderImpl.getBussinessDay();
+      assertThat(businessDay.getIncrements().isEmpty(), is(true));
       assertThat(isRecordingAfterFirstHandle, is(true));
       assertThat(isRecordingAfterSecondHandle, is(false));
       verify(testUiCallbackHandler).onStart();
@@ -347,36 +321,36 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testBook_StartDuringBooking() throws InterruptedException {
 
       // Given
-      BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.FAILURE, 500);
-      BusinessDayRepository businessDayRepository = mockBusinessDayRepository(new BusinessDayImpl());
-      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter, businessDayRepository);
-      TestUiCallbackHandler uiCallbackHandler = new TestUiCallbackHandler();
-      timeRecorder.setCallbackHandler(uiCallbackHandler);
-      new TestCaseBuilder(timeRecorder)
-            .withBusinessDayIncrement("SYRIUS-65468", "fest", 113, 3600 * 1000)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBookerAdapter(mockBookAdapter(true, BookResultType.FAILURE, 500))
+              .withBusinessDayRepository(mockBusinessDayRepository(new BusinessDayImpl()))
+              .withBookBusinessDayMessageSender(mock(BookBusinessDayMessageSender.class))
+              .withUiCallbackHandler(new TestUiCallbackHandler())
+              .withBusinessDayIncrement("SYRIUS-65468", "fest", 113, 3600 * 1000)
+              .build();
 
       // When
-      Thread startBookThread = new Thread(() -> timeRecorder.book());
+      Thread startBookThread = new Thread(() -> tcb.timeRecorder.book());
       startBookThread.start();
       TimeUnit.MILLISECONDS.sleep(50);
-      boolean actualIsBooking = timeRecorder.isBooking();
-      UserInteractionResult actualHandleResult = timeRecorder.handleUserInteraction(false);
+      boolean actualIsBooking = tcb.timeRecorder.isBooking();
+      UserInteractionResult actualHandleResult = tcb.timeRecorder.handleUserInteraction(false);
 
       // Then
-      verify(bookAdapter).book(any());
+      verify(tcb.bookerAdapter).book(any());
+      verify(tcb.bookBusinessDayMessageSender, never()).sendBookedIncrements(any());
       assertThat(actualIsBooking, is(true));
       assertThat(actualHandleResult.isUserInteractionRequired(), is(false));
    }
 
    @Test
-   void testBook_StartWhileComeAndGoIsEnabled() throws InterruptedException {
+   void testBook_StartWhileComeAndGoIsEnabled() {
 
       // Given
 
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .setCallbackHandler(new TestUiCallbackHandler())
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withUiCallbackHandler(new TestUiCallbackHandler())
+              .build();
 
       // When
       // start come and go
@@ -398,9 +372,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       String description = "Test";
       String newDescription = "Test2";
       int serviceCode = 113;
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement(ticketNr, description, serviceCode, firstTimeBetweenStartAndStop)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrement(ticketNr, description, serviceCode, firstTimeBetweenStartAndStop)
+              .build();
       BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
       ChangedValue changeValue = ChangedValue.of(BusinessDayIncrement.getId(), newDescription, ValueTypes.DESCRIPTION);
 
@@ -420,9 +394,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       // Given
       int serviceCode = 113;
       int expectedNewServiceCode = 111;
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement("SYRIUS-11111", "Test", serviceCode, 3600 * 1000)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrement("SYRIUS-11111", "Test", serviceCode, 3600 * 1000)
+              .build();
       BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
 
       TicketActivity newTicketActivity = TicketActivityFactory.INSTANCE.createNew("Meeting", 111);
@@ -442,9 +416,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       // Given
       // Given
       int currentServiceCode = 113;
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement("SYRIUS-11111", "Test", currentServiceCode, 3600 * 1000)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrement("SYRIUS-11111", "Test", currentServiceCode, 3600 * 1000)
+              .build();
       BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
 
       TicketActivity newTicketActivity = TicketActivityFactory.INSTANCE.dummy("Schubedibuuu", -1);
@@ -462,9 +436,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testHasContent() {
 
       // Given
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement("SYRIUS-48642", "Test", 113, 3600 * 1000)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrement("SYRIUS-48642", "Test", 113, 3600 * 1000)
+              .build();
 
       // When
       boolean actualHasContent = tcb.timeRecorder.hasContent();
@@ -480,9 +454,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       // Given
       String expectedInfoStatePrefix = "Zeiterfassung inaktiv seit: ";
-      TestCaseBuilder tcb = new TestCaseBuilder(mockTimeRecorderImpl())
-            .withBusinessDayIncrement("SYRIUS-1234", "Test", 113, 3600 * 1000)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrement("SYRIUS-1234", "Test", 113, 3600 * 1000)
+              .build();
 
       // When
       String infoStringForStateNotWorking = tcb.timeRecorder.getInfoStringForState();
@@ -495,7 +469,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testGetInfoStringForStateNotWorking_WithoutBusinessDayIncrement() {
 
       // Given
-      TimeRecorderImpl timeRecorderImpl = mockTimeRecorderImpl();
+      TimeRecorderImpl timeRecorderImpl = TestCaseBuilder.mockTimeRecorderImpl();
       String expectedInfoStatePrefix = TextLabel.CAPTURING_INACTIVE;
       // When
       String infoStringForStateNotWorking = timeRecorderImpl.getInfoStringForState();
@@ -508,7 +482,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testGetInfoStringForStateWorking() {
 
       // Given
-      TimeRecorderImpl timeRecorderImpl = mockTimeRecorderImpl();
+      TimeRecorderImpl timeRecorderImpl = TestCaseBuilder.mockTimeRecorderImpl();
       timeRecorderImpl.setCallbackHandler(mock(TestUiCallbackHandler.class));
       String expectedInfoStatePrefix = "Zeiterfassung aktiv seit: ";
 
@@ -524,7 +498,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testGetInfoStringForStateComeAndGo() {
 
       // Given
-      TimeRecorderImpl timeRecorderImpl = mockTimeRecorderImpl();
+      TimeRecorderImpl timeRecorderImpl = TestCaseBuilder.mockTimeRecorderImpl();
       timeRecorderImpl.setCallbackHandler(mock(TestUiCallbackHandler.class));
       String expectedInfoStatePrefix = TextLabel.CAPTURING_INACTIVE + ". " + TextLabel.COME_OR_GO;
 
@@ -540,18 +514,17 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testGetInfoStringForStateBooking() throws InterruptedException {
 
       // Given
-      BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.FAILURE, 500);
-      TimeRecorder timeRecorder = mockTimeRecorderImpl(bookAdapter);
-      timeRecorder.setCallbackHandler(mock(UiCallbackHandler.class));
-      new TestCaseBuilder(timeRecorder)
-            .withBusinessDayIncrement("SYRIUS-99999", "fest", 113, 3600 * 1000)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBookerAdapter(mockBookAdapter(true, BookResultType.FAILURE, 500))
+              .withUiCallbackHandler(mock(UiCallbackHandler.class))
+              .withBusinessDayIncrement("SYRIUS-99999", "fest", 113, 3600 * 1000)
+              .build();
 
       // When
-      Thread startBookThread = new Thread(() -> timeRecorder.book());
+      Thread startBookThread = new Thread(() -> tcb.timeRecorder.book());
       startBookThread.start();
       TimeUnit.MILLISECONDS.sleep(50);
-      String infoStringForStateBooking = timeRecorder.getInfoStringForState();
+      String infoStringForStateBooking = tcb.timeRecorder.getInfoStringForState();
 
       // Then
       assertThat(infoStringForStateBooking.equals(TextLabel.BOOKING_RUNNING), is(true));
@@ -562,7 +535,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       // Given
       BookerAdapter bookAdapter = mock(BookerAdapter.class);
-      TimeRecorder timeRecorder = mockTimeRecorderImpl(bookAdapter);
+      TimeRecorder timeRecorder = TestCaseBuilder.mockTimeRecorderImpl(bookAdapter);
       timeRecorder.setCallbackHandler(mock(TestUiCallbackHandler.class));
 
       // When
@@ -578,21 +551,21 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testBook_HasSomethingToBookButNotBookingWasNotSuccessfull() {
 
       // Given
-      BookerAdapter bookAdapter = mockBookAdapter(false, BookResultType.FAILURE);
-      TimeRecorder timeRecorder = mockTimeRecorderImpl(bookAdapter);
+      BookerAdapter bookerAdapter = mockBookAdapter(false, BookResultType.FAILURE);
       TestUiCallbackHandler uiCallbackHandler = mock(TestUiCallbackHandler.class);
-      timeRecorder.setCallbackHandler(uiCallbackHandler);
-      new TestCaseBuilder(timeRecorder)
-            .withBusinessDayIncrement("SYRIUS-34345", "fest", 113, 3600 * 1000)
-            .build();
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBookerAdapter(bookerAdapter)
+              .withBusinessDayIncrement("SYRIUS-34345", "fest", 113, 3600 * 1000)
+              .build();
 
       // When
-      boolean actualHasNotChargedElements = timeRecorder.hasNotChargedElements();
-      timeRecorder.book();
+      boolean actualHasNotChargedElements = tcb.timeRecorder.hasNotChargedElements();
+      tcb.timeRecorder.book();
 
       // Then
-      verify(bookAdapter).book(any());
+      verify(bookerAdapter).book(any());
       verify(uiCallbackHandler, never()).displayMessage(any());
+      assertThat(uiCallbackHandler.onBusinessDayChangedCount, is(0));
       assertThat(actualHasNotChargedElements, is(true));
    }
 
@@ -601,18 +574,19 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       // Given
       BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.SUCCESS);
-      TimeRecorder timeRecorder = mockTimeRecorderImpl(bookAdapter);
-      TestUiCallbackHandler uiCallbackHandler = new TestUiCallbackHandler();
-      timeRecorder.setCallbackHandler(uiCallbackHandler);
-      new TestCaseBuilder(timeRecorder)
-            .withBusinessDayIncrement("SYRIUS-456456", "fest", 113, 3600 * 1000)
-            .build();
+      TestUiCallbackHandler uiCallbackHandler = spy(new TestUiCallbackHandler());
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBookerAdapter(bookAdapter)
+              .withUiCallbackHandler(uiCallbackHandler)
+              .withBusinessDayIncrement("SYRIUS-456456", "fest", 113, 3600 * 1000)
+              .build();
 
       // When
-      timeRecorder.book();
+      tcb.timeRecorder.book();
 
       // Then
       verify(bookAdapter).book(any());
+      assertThat(uiCallbackHandler.onBusinessDayChangedCount, is(1));
       assertThat(uiCallbackHandler.receivedMessageType, is(MessageType.INFORMATION));
    }
 
@@ -620,63 +594,69 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    void testBook_BookPartialSuccess() {
 
       // Given
-      BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.PARTIAL_SUCCESS_WITH_ERROR);
-      BusinessDayRepository businessDayRepository = mockBusinessDayRepository(new BusinessDayImpl());
-      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter, businessDayRepository);
-      TestUiCallbackHandler uiCallbackHandler = new TestUiCallbackHandler();
-      timeRecorder.setCallbackHandler(uiCallbackHandler);
-      new TestCaseBuilder(timeRecorder)
-            .withBusinessDayIncrement("SYRIUS-25345", "fest", 113, 3600 * 1000)
-            .build();
+      BookBusinessDayMessageSender bookBusinessDayMessageSender = mock(BookBusinessDayMessageSender.class);
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBookerAdapter(mockBookAdapter(true, BookResultType.PARTIAL_SUCCESS_WITH_ERROR))
+              .withBusinessDayRepository(mockBusinessDayRepository(new BusinessDayImpl()))
+              .withBookBusinessDayMessageSender(bookBusinessDayMessageSender)
+              .withUiCallbackHandler(spy(new TestUiCallbackHandler()))
+              .withBusinessDayIncrement("SYRIUS-25345", "fest", 113, 3600 * 1000)
+              .build();
 
       // When
-      timeRecorder.book();
+      tcb.timeRecorder.book();
 
       // Then
-      verify(bookAdapter).book(any());
-      assertThat(uiCallbackHandler.receivedMessageType, is(MessageType.WARNING));
+      verify(tcb.bookerAdapter).book(any());
+      verify(bookBusinessDayMessageSender).sendBookedIncrements(any());
+      assertThat(((TestUiCallbackHandler) tcb.uiCallbackHandler).onBusinessDayChangedCount, is(1));
+      assertThat(((TestUiCallbackHandler) tcb.uiCallbackHandler).receivedMessageType, is(MessageType.WARNING));
    }
 
    @Test
    void testBook_BookPartialSuccess2() {
 
       // Given
-      BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.PARTIAL_SUCCESS_WITH_NON_BOOKABLE);
-      BusinessDayRepository businessDayRepository = mockBusinessDayRepository(new BusinessDayImpl());
-      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter, businessDayRepository);
-      TestUiCallbackHandler uiCallbackHandler = new TestUiCallbackHandler();
-      timeRecorder.setCallbackHandler(uiCallbackHandler);
-      new TestCaseBuilder(timeRecorder)
-            .withBusinessDayIncrement("SYRIUS-5656", "fest", 113, 3600 * 1000)
-            .build();
+      BookBusinessDayMessageSender bookBusinessDayMessageSender = mock(BookBusinessDayMessageSender.class);
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBookerAdapter(mockBookAdapter(true, BookResultType.PARTIAL_SUCCESS_WITH_NON_BOOKABLE))
+              .withUiCallbackHandler(spy(new TestUiCallbackHandler()))
+              .withBusinessDayRepository(mockBusinessDayRepository(new BusinessDayImpl()))
+              .withBookBusinessDayMessageSender(bookBusinessDayMessageSender)
+              .withBusinessDayIncrement("SYRIUS-5656", "fest", 113, 3600 * 1000)
+              .build();
 
       // When
-      timeRecorder.book();
+      tcb.timeRecorder.book();
 
       // Then
-      verify(bookAdapter).book(any());
-      assertThat(uiCallbackHandler.receivedMessageType, is(MessageType.WARNING));
+      verify(tcb.bookerAdapter).book(any());
+      verify(bookBusinessDayMessageSender).sendBookedIncrements(any());
+      assertThat(((TestUiCallbackHandler) tcb.uiCallbackHandler).onBusinessDayChangedCount, is(1));
+      assertThat(((TestUiCallbackHandler) tcb.uiCallbackHandler).receivedMessageType, is(MessageType.WARNING));
    }
 
    @Test
    void testBook_BookPartialFailure() {
 
       // Given
-      BookerAdapter bookAdapter = mockBookAdapter(true, BookResultType.FAILURE);
-      BusinessDayRepository businessDayRepository = mockBusinessDayRepository(new BusinessDayImpl());
-      TimeRecorder timeRecorder = new TimeRecorderImpl(bookAdapter, businessDayRepository);
-      TestUiCallbackHandler uiCallbackHandler = new TestUiCallbackHandler();
-      timeRecorder.setCallbackHandler(uiCallbackHandler);
-      new TestCaseBuilder(timeRecorder)
-            .withBusinessDayIncrement("SYRIUS-65468", "fest", 113, 3600 * 1000)
-            .build();
+      BookBusinessDayMessageSender bookBusinessDayMessageSender = mock(BookBusinessDayMessageSender.class);
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBookerAdapter(mockBookAdapter(true, BookResultType.FAILURE))
+              .withBusinessDayRepository(mockBusinessDayRepository(new BusinessDayImpl()))
+              .withBookBusinessDayMessageSender(bookBusinessDayMessageSender)
+              .withUiCallbackHandler(new TestUiCallbackHandler())
+              .withBusinessDayIncrement("SYRIUS-65468", "fest", 113, 3600 * 1000)
+              .build();
 
       // When
-      timeRecorder.book();
+      tcb.timeRecorder.book();
 
       // Then
-      verify(bookAdapter).book(any());
-      assertThat(uiCallbackHandler.receivedMessageType, is(MessageType.ERROR));
+      verify(tcb.bookerAdapter).book(any());
+      verify(bookBusinessDayMessageSender).sendBookedIncrements(any());
+      assertThat(((TestUiCallbackHandler) tcb.uiCallbackHandler).onBusinessDayChangedCount, is(1));
+      assertThat(((TestUiCallbackHandler) tcb.uiCallbackHandler).receivedMessageType, is(MessageType.ERROR));
    }
 
    private BookerAdapter mockBookAdapter(boolean hasBooked, BookResultType bookResultType, int delayDuringBooking) {
@@ -689,28 +669,32 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
    private static class TestCaseBuilder {
 
-      private List<BusinessDayIncrementAdd> businessDayIncrementAdds;
       private TimeRecorder timeRecorder;
+      private final List<BusinessDayIncrementAdd> businessDayIncrementAdds;
 
-      private TestCaseBuilder(TimeRecorder timeRecorder) {
+      private final Settings settings;
+      private BookerAdapter bookerAdapter;
+      private UiCallbackHandler uiCallbackHandler;
+      private BusinessDayRepository businessDayRepository;
+      private BookBusinessDayMessageSender bookBusinessDayMessageSender;
+
+      private TestCaseBuilder() {
+         this.bookBusinessDayMessageSender = mock(BookBusinessDayMessageSender.class);
+         this.businessDayRepository = mockBusinessDayRepository(new BusinessDayImpl());
+         this.bookerAdapter = mock(BookerAdapter.class);
+         this.settings = mock(Settings.class);
          this.businessDayIncrementAdds = new ArrayList<>();
-         this.timeRecorder = timeRecorder;
-      }
-
-      public TestCaseBuilder setCallbackHandler(UiCallbackHandler testUiCallbackHandler) {
-         timeRecorder.setCallbackHandler(testUiCallbackHandler);
-         return this;
       }
 
       private TestCaseBuilder withBusinessDayIncrement(String ticketNr, String description, int serviceCode, int timeSnippedDuration) {
          Ticket ticket = mockTicket(ticketNr);
          businessDayIncrementAdds.add(new BusinessDayIncrementAddBuilder()
-               .withTimeSnippet(createTimeSnippet(timeSnippedDuration, false))
-               .withDescription(description)
-               .withTicket(ticket)
-               .withId(UUID.randomUUID())
-               .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test", serviceCode))
-               .build());
+                 .withTimeSnippet(createTimeSnippet(timeSnippedDuration))
+                 .withDescription(description)
+                 .withTicket(ticket)
+                 .withId(UUID.randomUUID())
+                 .withTicketActivity(TicketActivityFactory.INSTANCE.createNew("test", serviceCode))
+                 .build());
          return this;
       }
 
@@ -720,9 +704,23 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
          return ticket;
       }
 
+      private TestCaseBuilder withBookerAdapter(BookerAdapter bookerAdapter) {
+         this.bookerAdapter = bookerAdapter;
+         return this;
+      }
+
+      private TestCaseBuilder withUiCallbackHandler(UiCallbackHandler uiCallbackHandler) {
+         this.uiCallbackHandler = uiCallbackHandler;
+         return this;
+      }
+
       private TestCaseBuilder build() {
+         timeRecorder = new TimeRecorderImpl(bookerAdapter, settings, businessDayRepository, bookBusinessDayMessageSender);
          timeRecorder.init();
          addBusinessIncrements();
+         // set callback handler after we added the business-day calling the timerecorder-api, otherwise the 'addBusinessIncrements' already triggers it
+         timeRecorder.setCallbackHandler(uiCallbackHandler);
+         when(bookBusinessDayMessageSender.sendBookedIncrements(any())).thenReturn(timeRecorder.getBusinessDay());
          return this;
       }
 
@@ -732,18 +730,52 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
          }
       }
 
-      private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd, boolean isToday) {
-         GregorianCalendar startDate = new GregorianCalendar(2020, 1, 1);// year, month (starts at zero!), day, hours, min, second
-         if (isToday) {
-            startDate = new GregorianCalendar();
-         } else {
-            startDate = new GregorianCalendar(2020, 1, 1);// year, month (starts at zero!), day, hours, min, second
-         }
+      private TimeSnippet createTimeSnippet(int timeBetweenBeginAndEnd) {
+         GregorianCalendar startDate = new GregorianCalendar(2020, Calendar.FEBRUARY, 1);// year, month, day, hours, min, second
          DateTime beginTimeStamp = DateTimeFactory.createNew(startDate.getTimeInMillis());
          return TimeSnippetBuilder.of()
-               .withBeginTime(beginTimeStamp)
-               .withEndTime(DateTimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd))
-               .build();
+                 .withBeginTime(beginTimeStamp)
+                 .withEndTime(DateTimeFactory.createNew(startDate.getTimeInMillis() + timeBetweenBeginAndEnd))
+                 .build();
+      }
+
+      private static TimeRecorderImpl mockTimeRecorderImpl() {
+         return mockTimeRecorderImpl(mock(BookerAdapter.class), mock(Settings.class), new BusinessDayImpl());
+      }
+
+      private static TimeRecorderImpl mockTimeRecorderImpl(Settings settings) {
+         return mockTimeRecorderImpl(mock(BookerAdapter.class), settings, new BusinessDayImpl());
+      }
+
+      private static TimeRecorder mockTimeRecorderImpl(BusinessDayImpl businessDay) {
+         return mockTimeRecorderImpl(mock(BookerAdapter.class), mock(Settings.class), businessDay);
+      }
+
+      private static TimeRecorder mockTimeRecorderImpl(BookerAdapter bookAdapter) {
+         return mockTimeRecorderImpl(bookAdapter, mock(Settings.class));
+      }
+
+      private static TimeRecorderImpl mockTimeRecorderImpl(BookerAdapter bookerAdapter, Settings settings) {
+         return mockTimeRecorderImpl(bookerAdapter, settings, new BusinessDayImpl());
+      }
+
+      private static TimeRecorderImpl mockTimeRecorderImpl(BookerAdapter bookerAdapter, Settings settings, BusinessDay businessDay) {
+         BusinessDayRepository businessDayRepository = mockBusinessDayRepository(businessDay);
+         BookBusinessDayMessageSender bookBusinessDayMessageSender = mock(BookBusinessDayMessageSender.class);
+         when(bookBusinessDayMessageSender.sendBookedIncrements(any())).thenReturn(businessDay);
+         TimeRecorderImpl timeRecorderImpl = new TimeRecorderImpl(bookerAdapter, settings, businessDayRepository, bookBusinessDayMessageSender);
+         timeRecorderImpl.init();
+         return timeRecorderImpl;
+      }
+
+      public TestCaseBuilder withBusinessDayRepository(BusinessDayRepository businessDayRepository) {
+         this.businessDayRepository = businessDayRepository;
+         return this;
+      }
+
+      public TestCaseBuilder withBookBusinessDayMessageSender(BookBusinessDayMessageSender bookBusinessDayMessageSender) {
+         this.bookBusinessDayMessageSender = bookBusinessDayMessageSender;
+         return this;
       }
    }
 
@@ -755,9 +787,9 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
    private static class TestBookAdapter implements BookerAdapter {
 
-      private BookResultType bookResultType;
-      private boolean hasBooked;
-      private int delayDuringBooking;
+      private final BookResultType bookResultType;
+      private final boolean hasBooked;
+      private final int delayDuringBooking;
       private BusinessDay bookedBusinessDay;
 
       private TestBookAdapter(boolean hasBooked, BookResultType bookResultType, int delayDuringBooking) {
@@ -818,6 +850,12 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
    private static class TestUiCallbackHandler implements UiCallbackHandler {
 
       private MessageType receivedMessageType;
+      private int onBusinessDayChangedCount = 0;
+
+      @Override
+      public void onBusinessDayChanged() {
+         this.onBusinessDayChangedCount++;
+      }
 
       @Override
       public void onStop() {

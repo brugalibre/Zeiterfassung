@@ -16,7 +16,7 @@ import java.util.UUID;
 public interface BusinessDay extends DomainModel {
 
    /**
-    * Resumes the {@link #currentBussinessDayIncremental}
+    * Resumes the current recording of a {@link TimeSnippet}
     * 
     * @return a new and changed instance of this {@link BusinessDay}
     */
@@ -62,8 +62,7 @@ public interface BusinessDay extends DomainModel {
    BusinessDay startNewIncremental();
 
    /**
-    * Stops the current incremental and add the
-    * {@link #currentBussinessDayIncremental} to the list with increments. After
+    * Stops the current incremental and creates and add a new {@link BusinessDayIncrement} to the list with increments. After
     * that, a new incremental is created
     * 
     * @return a new and changed instance of this {@link BusinessDay}
@@ -116,19 +115,27 @@ public interface BusinessDay extends DomainModel {
    BusinessDay changeBusinesDayIncrement(ChangedValue changeValue);
 
    /**
-    * Flags this {@link BusinessDay} as charged
+    * Flags this {@link BusinessDay} and all its {@link BusinessDayIncrement }as booked
     * 
     * @return a new and changed instance of this {@link BusinessDay}
     */
-   BusinessDay flagBusinessDayAsCharged();
+   BusinessDay flagBusinessDayAsBooked();
 
    /**
-    * Flags a specific {@link BusinessDayIncrement} as charged
+    * Flags a specific {@link BusinessDayIncrement} as booked
     *
     * @param id the Id of the {@link BusinessDayIncrement} to flag as charged
     * @return a changed copy of this {@link BusinessDay}
     */
    BusinessDay flagBusinessDayIncrementAsBooked(UUID id);
+
+   /**
+    * Flags a specific {@link BusinessDayIncrement} as sent
+    *
+    * @param id the Id of the {@link BusinessDayIncrement} to flag as charged
+    * @return a changed copy of this {@link BusinessDay}
+    */
+   BusinessDay flagBusinessDayIncrementAsSent(UUID id);
 
    /**
     * Deletes all {@link BusinessDayIncrement} which are already finished
@@ -222,10 +229,10 @@ public interface BusinessDay extends DomainModel {
    /**
     * Returns the {@link DateTime} of this {@link BusinessDay}. If this
     * {@link BusinessDay} has no <br>
-    * {@link BusinessDayIncrement}, so the {@link #increments} is empty, a new
+    * {@link BusinessDayIncrement}, so the {@link #getIncrements()} is empty, a new
     * instance of {@link DateTime} is returned.
     * 
-    * @return the {@link DateTime} of this BussinessDay.
+    * @return the {@link DateTime} of this BusinessDay.
     */
    DateTime getDateTime();
 

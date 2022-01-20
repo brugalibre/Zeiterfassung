@@ -67,6 +67,13 @@ public interface BusinessDayIncrement extends DomainModel {
    BusinessDayIncrement flagAsBooked();
 
    /**
+    * Flags this {@link BusinessDayIncrement} as sent
+    *
+    * @return a new {@link BusinessDayIncrement} with the changes
+    */
+   BusinessDayIncrement flagAsSent();
+
+   /**
     * Defines a new {@link Ticket}
     * 
     * @param ticket
@@ -93,9 +100,14 @@ public interface BusinessDayIncrement extends DomainModel {
    boolean isBookable();
 
    /**
-    * @return <code>true</code> if this {@link BusinessDayIncrement} is charged or <code>false</code> if not
+    * @return <code>true</code> if this {@link BusinessDayIncrement} is booked or <code>false</code> if not
     */
    boolean isBooked();
+
+   /**
+    * @return <code>true</code> if this {@link BusinessDayIncrement} is sent or <code>false</code> if not
+    */
+   boolean isSent();
 
    /**
     * @return <code>true<code> if this {@link BusinessDayIncrement} has a description or <code>false<code>, if not

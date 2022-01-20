@@ -107,7 +107,7 @@ public class BusinessDayEntityMapper {
          BusinessDayEntity businessDayEntity) {
       Ticket ticket = businessDayIncrement.getTicket();
       return new BusinessDayIncrementEntity(businessDayIncrement.getId(), businessDayEntity, businessDayIncrement.getDescription(),
-            isNull(ticket) ? null : ticket.getNr(), businessDayIncrement.getTicketActivity().getActivityCode(), businessDayIncrement.isBooked());
+            isNull(ticket) ? null : ticket.getNr(), businessDayIncrement.getTicketActivity().getActivityCode(), businessDayIncrement.isBooked(), businessDayIncrement.isSent());
    }
 
    /**
@@ -122,7 +122,7 @@ public class BusinessDayEntityMapper {
       Ticket ticket = map2Ticket(businessDayIncrementEntity);
       TicketActivity ticketActivity = map2TicketActivity(businessDayIncrementEntity);
       return BusinessDayIncrementFactory.createNew(timeSnippet, businessDayIncrementEntity.getId(), businessDayIncrementEntity.getDescription(),
-            ticket, ticketActivity, businessDayIncrementEntity.isBooked());
+            ticket, ticketActivity, businessDayIncrementEntity.isBooked(), businessDayIncrementEntity.isSent());
    }
 
    private static Ticket map2Ticket(BusinessDayIncrementEntity businessDayIncrementEntity) {

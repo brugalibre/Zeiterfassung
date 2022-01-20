@@ -2,16 +2,16 @@
 Projekt aufsezten
 1. Import in Eclipse:
 
-Projekt kann als normales Gradle-7.x-projekt importiert werden. 
+Projekt kann als normales Gradle-7.x-projekt importiert werden.
 
 - Projekt in Eclipse importieren (via import -> gradle project -> zeiterfassung-zeiterfassung auswählen
 - Rechtslick auf zeiterfassung-root -> gradle -> refresh gradle project
 - Durch diesen gradle task werden die .classpath von zeiterfassung-ui & zeiterfassung-spring-boot "verwurstelt".
-- d.h. gewisse Klassen mit 'fx' imports können anschliessend nicht mehr kompiliert werden 
+- d.h. gewisse Klassen mit 'fx' imports können anschliessend nicht mehr kompiliert werden
 	-> wechsle zu git staging -> alles anwählen -> replace with head
-- gradle auf java 11 umstellen, grundsätzlich gradle.properties 
+- gradle auf java 11 umstellen, grundsätzlich gradle.properties
   Bei mir hat allerdings nur folgender Command geholfen (der muss nach einem Neustart erneut eingegeben werden!):
-  set JAVA_HOME="C:\Program Files\Java\jdk-11"	
+  set JAVA_HOME="C:\Program Files\Java\jdk-11"
 
 2. Install node.js:
 - Für Windows muss zuerst den node-package-manager (npm) installiert werden:
@@ -51,8 +51,8 @@ Erstellen eines lauffähiges jar:
   '..\zeiterfassung-web\src\main\ui\dist' folder kopiert
 - Den kompletten Inhalt dieses dist-Ordners ausschneiden und in
   '...\zeiterfassung-spring-boot\src\main\resources\static\'
-  kopieren. Dadurch kann spring-boot die index.html Seite ansprechen  
-    
+  kopieren. Dadurch kann spring-boot die index.html Seite ansprechen
+
 
 2.) Bauen eines startfähigen jars
 
@@ -65,3 +65,12 @@ Erstellen eines lauffähiges jar:
 - Falls Umlaute nicht sauber dargestellt werden, brauchts vor dem shadowJar noch ein
   set GRADLE_OPTS=-Dfile.encoding=utf-8
   auf der Konsole
+
+
+  3.) Kafka aufsetzen
+
+  Java mässig: https://developer.okta.com/blog/2019/11/19/java-kafka
+  kafa konfiguration aber hier https://kafka.apache.org/quickstart
+  achtung: developer.okta nutzt Port 9092, Zookeeper runs at 2181 (for creating a topi)
+
+  https://memorynotfound.com/spring-kafka-json-serializer-deserializer-example/

@@ -114,13 +114,13 @@ public abstract class CommonBookerAdapter<T extends ServiceCodeAdapter> implemen
    }
 
    private static BookResultType evalBookResultType(List<BusinessDayIncrement> currentIncrements2Book) {
-      if (wasBookingCompleteSuccessfull(currentIncrements2Book)) {
+      if (wasBookingCompleteSuccessful(currentIncrements2Book)) {
          return BookResultType.SUCCESS;
       } else if (!currentIncrements2Book.isEmpty()) {
          List<BusinessDayIncrement> notBookableIncrements = getNotBookableIncrements(currentIncrements2Book);
          if (wasBookingFailure(currentIncrements2Book)) {
             return BookResultType.FAILURE;
-         } else if (hasNotBookeableInc(notBookableIncrements)) {
+         } else if (hasNotBookableInc(notBookableIncrements)) {
             return BookResultType.PARTIAL_SUCCESS_WITH_NON_BOOKABLE;
          } else {
             return BookResultType.PARTIAL_SUCCESS_WITH_ERROR;
@@ -129,12 +129,12 @@ public abstract class CommonBookerAdapter<T extends ServiceCodeAdapter> implemen
       return BookResultType.NOT_BOOKED;
    }
 
-   private static boolean hasNotBookeableInc(List<BusinessDayIncrement> notBookableIncrements) {
+   private static boolean hasNotBookableInc(List<BusinessDayIncrement> notBookableIncrements) {
       // we implicitly have booked increments, otherwise it would be a full 'failure'
       return !notBookableIncrements.isEmpty();
    }
 
-   private static boolean wasBookingCompleteSuccessfull(List<BusinessDayIncrement> currentIncrements2Book) {
+   private static boolean wasBookingCompleteSuccessful(List<BusinessDayIncrement> currentIncrements2Book) {
       return wasBookingSuccessOrFailure(currentIncrements2Book, BusinessDayIncrement::isBooked);
    }
 

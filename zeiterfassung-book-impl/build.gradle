@@ -9,6 +9,7 @@ apply from: '..//Zeiterfassung-zeiterfassung/test.gradle'
 
 dependencies {
     implementation project(':zeiterfassung-book-api')
+    implementation project(':zeiterfassung-messaging-api')
 	implementation project(':zeiterfassung-core-api')
 	implementation project(':zeiterfassung-persistence-api')
 	implementation project(':zeiterfassung-common-api')
@@ -17,6 +18,7 @@ dependencies {
     
     testImplementation project(':zeiterfassung-core-impl')
     testImplementation project(':zeiterfassung-common-impl')
+    testImplementation project(':zeiterfassung-persistence-impl')
 
     implementation files('libs/turbo-bucher-6.6.2.jar')
     implementation files('libs/zeiterfassung-web-bucher-1.0-SNAPSHOT.jar')

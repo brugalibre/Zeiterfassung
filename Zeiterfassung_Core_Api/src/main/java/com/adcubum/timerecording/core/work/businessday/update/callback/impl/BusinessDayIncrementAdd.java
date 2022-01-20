@@ -8,6 +8,7 @@ import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
@@ -31,6 +32,31 @@ public class BusinessDayIncrementAdd {
 
    private BusinessDayIncrementAdd() {
       // private 
+   }
+
+   @Override
+   public String toString() {
+      return "BusinessDayIncrementAddBuilder{" +
+              "ticket=" + ticket +
+              ", description='" + description + '\'' +
+              ", amountOfHours='" + amountOfHours + '\'' +
+              ", ticketActivity=" + ticketActivity +
+              ", timeSnippet=" + timeSnippet +
+              ", id=" + id +
+              '}';
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      BusinessDayIncrementAdd that = (BusinessDayIncrementAdd) o;
+      return Objects.equals(ticket, that.ticket) && Objects.equals(description, that.description) && Objects.equals(amountOfHours, that.amountOfHours) && Objects.equals(ticketActivity, that.ticketActivity) && Objects.equals(timeSnippet, that.timeSnippet);
+   }
+
+   @Override
+   public int hashCode() {
+      return Objects.hash(ticket, description, amountOfHours, ticketActivity, timeSnippet);
    }
 
    public final Ticket getTicket() {
@@ -95,7 +121,7 @@ public class BusinessDayIncrementAdd {
        * 
        * @param id
        *        id
-       * @return
+       * @return the {@link BusinessDayIncrementAddBuilder}
        */
       public BusinessDayIncrementAddBuilder withId(UUID id) {
          this.id = id;

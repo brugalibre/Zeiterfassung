@@ -140,7 +140,7 @@ class BusinessDayDaoTest {
          BusinessDayEntity businessDayEntity = new BusinessDayEntity();
          businessDayEntity.setComeAndGoesEntity(null);
          BusinessDayIncrementEntity businessDayIncrementEntity =
-               new BusinessDayIncrementEntity(null, businessDayEntity, description, ticketNr, 113, false);
+               new BusinessDayIncrementEntity(null, businessDayEntity, description, ticketNr, 113, false, false);
          businessDayEntity.setBusinessDayIncrementEntities(Collections.singletonList(businessDayIncrementEntity));
          return businessDayEntity;
       }
