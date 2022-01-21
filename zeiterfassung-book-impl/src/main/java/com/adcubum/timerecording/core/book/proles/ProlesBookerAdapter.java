@@ -4,26 +4,37 @@ import com.adcubum.timerecording.core.book.common.CommonBookerAdapter;
 import com.adcubum.timerecording.core.book.result.BookerResult;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.util.parser.DateParser;
 import com.adcubum.util.parser.NumberFormat;
-import com.zeiterfassung.web.book.common.record.BookRecord;
-import com.zeiterfassung.web.book.common.record.BookRecord.BookRecordBuilder;
-import com.zeiterfassung.web.book.common.record.BookRecordEntry;
+import com.zeiterfassung.web.common.book.record.BookRecord;
+import com.zeiterfassung.web.common.book.record.BookRecordEntry;
 import com.zeiterfassung.web.proles.book.ProlesBooker;
-import com.zeiterfassung.web.proles.book.record.ProlesBookRecordEntry;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.adcubum.util.parser.DateParser.DD_MM_YYYY;
+import static com.zeiterfassung.web.common.book.record.impl.BookRecordImpl.BookRecordBuilder;
 import static com.zeiterfassung.web.proles.book.record.ProlesBookRecordEntry.ProlesBookRecordEntryBuilder;
 
 public class ProlesBookerAdapter extends CommonBookerAdapter<ProlesServiceCodeAdapter> {
 
+    private Supplier<ProlesBooker> prolesBookerSupplier;
+
+    /**
+     * Constructor for testing purpose only
+     * @param prolesBooker the mocked {@link ProlesBooker}
+     */
+    ProlesBookerAdapter(ProlesBooker prolesBooker) {
+        super(ProlesServiceCodeAdapter.class);
+        this.prolesBookerSupplier = () -> prolesBooker;
+    }
+
     public ProlesBookerAdapter() {
         super(ProlesServiceCodeAdapter.class);
+        this.prolesBookerSupplier = () -> ProlesBooker.createAndInitBooker(username, String.valueOf(userPwdSupplier.get()));
     }
 
     /**
@@ -36,21 +47,16 @@ public class ProlesBookerAdapter extends CommonBookerAdapter<ProlesServiceCodeAd
     @Override
     public BookerResult book(BusinessDay businessDay) {
         BookRecord bookRecord = createBookRecord(businessDay);
-        ProlesBooker prolesBooker = ProlesBooker.createProlesBooker(username, String.valueOf(userPwdSupplier.get()));
+        ProlesBooker prolesBooker = prolesBookerSupplier.get();
         BookRecord bookedBookRecord = prolesBooker.bookRecords(bookRecord);
         BusinessDay bookedBusinessDay = flagBookedBDIncrements(businessDay, bookedBookRecord);
         return createAndReturnBookResult(bookedBusinessDay, businessDay);
     }
 
-    @Override
-    public boolean isTicketBookable(Ticket ticket) {
-        return true; // proles uses its own internal implementation of a Ticket and knows very well what is required and what not
-    }
-
     private static BusinessDay flagBookedBDIncrements(BusinessDay businessDay, BookRecord bookedBookRecord) {
         for (BookRecordEntry bookedRecordEntry : bookedBookRecord.getBookerRecordEntries()) {
             if (bookedRecordEntry.getIsBooked()) {
-                UUID bdIncrementId = UUID.fromString(((ProlesBookRecordEntry) bookedRecordEntry).getExternalId());
+                UUID bdIncrementId = UUID.fromString(bookedRecordEntry.getExternalId());
                 businessDay = businessDay.flagBusinessDayIncrementAsBooked(bdIncrementId);
             }
         }
@@ -59,7 +65,6 @@ public class ProlesBookerAdapter extends CommonBookerAdapter<ProlesServiceCodeAd
 
     private static BookRecord createBookRecord(BusinessDay businessDay) {
         return BookRecordBuilder.of()
-                .withDate(DateParser.parse2String(businessDay.getDateTime(), DD_MM_YYYY))
                 .withBookRecordEntries(map2BookRecordEntries(businessDay))
                 .build();
     }
@@ -69,6 +74,7 @@ public class ProlesBookerAdapter extends CommonBookerAdapter<ProlesServiceCodeAd
                 .filter(BusinessDayIncrement::isBookable)
                 .filter(businessDayIncrement -> !businessDayIncrement.isBooked())
                 .map(businessDayIncrement -> ProlesBookRecordEntryBuilder.of()
+                        .withDate(DateParser.parse2String(businessDay.getDateTime(), DD_MM_YYYY))
                         .withActivity(businessDayIncrement.getTicketActivity().getActivityName())
                         .withCustomer(businessDayIncrement.getTicket().getTicketAttrs().getThema())
                         .withProject(businessDayIncrement.getTicket().getTicketAttrs().getProjectDesc())
