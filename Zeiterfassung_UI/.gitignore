@@ -1,4 +1,5 @@
 /bin/
+/out/
 /turbo-bucher.properties
 /ZeiterfassungSecureKeyStore.jks
 /zeiterfassung.properties

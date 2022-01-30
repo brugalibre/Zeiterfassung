@@ -1,6 +1,7 @@
 /.idea/.gitignore
 /.idea/*
 *.json
+./out/
 zeiterfassung-web-bucher.properties
 zeiterfassung.properties
 defaultProlesTickets.json
