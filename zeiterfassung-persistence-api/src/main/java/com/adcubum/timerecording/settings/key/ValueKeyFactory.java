@@ -21,8 +21,26 @@ public class ValueKeyFactory extends AbstractFactory {
     * 
     * @return a new Instance of a new {@link ValueKey} with the given arguments
     */
+   public static <T> ValueKey<T> createNew(String name, Class<T> clazz, T defaultValue) {
+      return INSTANCE.createNewWithAgruments(BEAN_NAME, name, clazz, defaultValue);
+   }
+
+   /**
+    * Creates a new Instance of a new {@link ValueKey} with the given arguments
+    *
+    * @return a new Instance of a new {@link ValueKey} with the given arguments
+    */
    public static <T> ValueKey<T> createNew(String name, Class<T> clazz) {
-      return INSTANCE.createNewWithAgruments(BEAN_NAME, name, clazz);
+      return INSTANCE.createNewWithAgruments(BEAN_NAME, name, clazz, null);
+   }
+
+   /**
+    * Creates a new Instance of a new {@link ValueKey} with the given arguments
+    *
+    * @return a new Instance of a new {@link ValueKey} with the given arguments
+    */
+   public static <T> ValueKey<T> createNew(String name, String resourceName, Class<T> clazz, T defaultValue) {
+      return INSTANCE.createNewWithAgruments(BEAN_NAME, name, resourceName, clazz, defaultValue);
    }
 
    /**
@@ -31,6 +49,6 @@ public class ValueKeyFactory extends AbstractFactory {
     * @return a new Instance of a new {@link ValueKey} with the given arguments
     */
    public static <T> ValueKey<T> createNew(String name, String resourceName, Class<T> clazz) {
-      return INSTANCE.createNewWithAgruments(BEAN_NAME, name, resourceName, clazz);
+      return INSTANCE.createNewWithAgruments(BEAN_NAME, name, resourceName, clazz, null);
    }
 }

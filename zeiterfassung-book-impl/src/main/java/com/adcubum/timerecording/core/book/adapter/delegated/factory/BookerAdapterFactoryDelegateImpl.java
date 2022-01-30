@@ -13,20 +13,20 @@ import static java.util.Objects.requireNonNull;
 
 public class BookerAdapterFactoryDelegateImpl implements BookerAdapterFactoryDelegate {
 
-   private static final String TICKET_SYSTEM_NAME = "TicketSystem";
-   private final Function<String, String> bookerNameProvider;
+   private static final String BOOKER_ADAPTER_NAME = "TicketSystem";
+   private final Function<String, BookerAdapterType> bookerNameProvider;
 
    private BookerAdapterFactoryDelegateImpl(){
-      this(keyName -> Settings.INSTANCE.getSettingsValue(ValueKeyFactory.createNew(keyName, TICKET_SYSTEM_PROPERTIES, String.class)));
+      this(keyName -> Settings.INSTANCE.getSettingsValue(ValueKeyFactory.createNew(keyName, TICKET_SYSTEM_PROPERTIES, BookerAdapterType.class)));
    }
 
-   BookerAdapterFactoryDelegateImpl(UnaryOperator<String> bookerNameProvider){
+   BookerAdapterFactoryDelegateImpl(Function<String, BookerAdapterType> bookerNameProvider){
       this.bookerNameProvider = requireNonNull(bookerNameProvider);
    }
 
    @Override
    public BookerAdapter createBookerAdapter() {
-      String ticketSystemName = bookerNameProvider.apply(TICKET_SYSTEM_NAME);
-      return BookerAdapterType.getForName(ticketSystemName).createBookerAdapter();
+      BookerAdapterType bookerAdapterType = bookerNameProvider.apply(BOOKER_ADAPTER_NAME);
+      return bookerAdapterType.createBookerAdapter();
    }
 }

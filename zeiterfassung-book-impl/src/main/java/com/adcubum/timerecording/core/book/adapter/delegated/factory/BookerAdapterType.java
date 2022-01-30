@@ -46,15 +46,4 @@ public enum BookerAdapterType {
          throw new IllegalArgumentException("Could not create new instance of BookingAdapter '" + bookerAdapterClass + "!'", e);
       }
    }
-
-   public static BookerAdapterType getForName(String bookerName) {
-      for (BookerAdapterType bookerAdapterType : BookerAdapterType.values()) {
-         if (bookerAdapterType.name.equals(bookerName)) {
-            return bookerAdapterType;
-         }
-      }
-      LOG.warn("No BookerAdapterType found for name '{}'. Fallback to the default '{}'", bookerName, BookerAdapterType.ADC_JIRA_WEB.name);
-      // Fallback due to backwards compatibility
-      return BookerAdapterType.ADC_JIRA_WEB;
-   }
 }

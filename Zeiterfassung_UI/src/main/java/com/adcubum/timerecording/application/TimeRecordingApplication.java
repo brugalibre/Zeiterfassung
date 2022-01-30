@@ -3,17 +3,6 @@
  */
 package com.adcubum.timerecording.application;
 
-import static com.adcubum.timerecording.settings.common.Const.TURBO_BUCHER_PROPERTIES;
-import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.function.BooleanSupplier;
-import java.util.function.UnaryOperator;
-
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
-
 import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminder;
 import com.adcubum.scheduler.startrecordingdobooking.StartRecordingAndDoBookingReminderFactory;
 import com.adcubum.timerecording.app.TimeRecorder;
@@ -24,10 +13,18 @@ import com.adcubum.timerecording.settings.round.observable.RoundModeChangedListe
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.security.login.auth.UiAuthenticationService;
 import com.adcubum.util.exception.GlobalExceptionHandler;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.function.BooleanSupplier;
+import java.util.function.UnaryOperator;
+
+import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 
 /**
  * @author Dominic
@@ -86,7 +83,6 @@ public class TimeRecordingApplication extends Application {
       PictureLibrary.loadPictures();
       Platform.setImplicitExit(false);
       createPropertieFileIfNotExists(ZEITERFASSUNG_PROPERTIES);
-      createPropertieFileIfNotExists(TURBO_BUCHER_PROPERTIES);
 
       UiAuthenticationService.prepare();
       TimeRecorder.INSTANCE.init();

@@ -9,7 +9,7 @@ import com.adcubum.timerecording.settings.key.ValueKeyFactory;
 
 public class BusinessDayConfigImpl implements BusinessDayConfig {
 
-   private static final ValueKey<String> SET_HOURS_KEY = ValueKeyFactory.createNew("setWorkingHours", String.class);
+   private static final ValueKey<Float> SET_HOURS_KEY = ValueKeyFactory.createNew("setWorkingHours", Float.class, 8.5f);
    private float setHours;
 
    public BusinessDayConfigImpl() {
@@ -17,8 +17,7 @@ public class BusinessDayConfigImpl implements BusinessDayConfig {
    }
 
    public BusinessDayConfigImpl(Settings settings) {
-      String setHoursAsString = settings.getSettingsValue(SET_HOURS_KEY);
-      this.setHours = isNull(setHoursAsString) ? 8.5f : Float.parseFloat(setHoursAsString);
+      this.setHours = settings.getSettingsValue(SET_HOURS_KEY);
    }
 
    @Override

@@ -13,7 +13,7 @@ class BookerAdapterFactoryDelegateImplTest {
     void testGetProlesBookerServiceAdapter (){
 
         // Given
-        BookerAdapterFactoryDelegateImpl bookerAdapterFactoryDelegate = new BookerAdapterFactoryDelegateImpl(key -> "proles-web");
+        BookerAdapterFactoryDelegateImpl bookerAdapterFactoryDelegate = new BookerAdapterFactoryDelegateImpl(key -> BookerAdapterType.PROLES_WEB);
 
         // When
         BookerAdapter bookerAdapter = bookerAdapterFactoryDelegate.createBookerAdapter();

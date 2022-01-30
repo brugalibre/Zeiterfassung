@@ -40,13 +40,13 @@ class JiraApiReaderImplTest {
       // Given
       String pwd = "";
       String username = "";
-      AuthenticationContext atuhenticationContext = new AuthenticationContext(username, () -> pwd.toCharArray());
+      AuthenticationContext authenticationContext = new AuthenticationContext(username, () -> pwd.toCharArray());
       HttpClient httpClient = mock(HttpClient.class);
       JiraApiConfiguration jiraApiConfiguration = JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration();
       JiraApiReader jiraApiReader = new JiraApiReaderImpl(httpClient, jiraApiConfiguration);
 
       // When
-      jiraApiReader.userAuthenticated(atuhenticationContext);
+      jiraApiReader.userAuthenticated(authenticationContext);
 
       // When
       verify(httpClient).setCredentials(eq(username), eq(pwd));

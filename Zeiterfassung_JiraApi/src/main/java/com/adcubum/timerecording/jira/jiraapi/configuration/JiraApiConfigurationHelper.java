@@ -12,7 +12,7 @@ public class JiraApiConfigurationHelper {
    private static final ValueKey<String> DEFAULT_TICKET_NAME_KEY = ValueKeyFactory.createNew("defaultticketname", TICKET_SYSTEM_PROPERTIES, String.class);
    private static final ValueKey<String> TICKET_NAME_PATTERN_KEY = ValueKeyFactory.createNew("ticketnamepattern", TICKET_SYSTEM_PROPERTIES,String.class);
    private static final ValueKey<String> BOARD_TYPE_VALUE_KEY = ValueKeyFactory.createNew("boardType", TICKET_SYSTEM_PROPERTIES, String.class);
-   private static final ValueKey<String> FETCH_BOARD_BEGIN_INDEX_KEY = ValueKeyFactory.createNew("fetchBoardsBeginIndex", TICKET_SYSTEM_PROPERTIES,String.class);
+   private static final ValueKey<Integer> FETCH_BOARD_BEGIN_INDEX_KEY = ValueKeyFactory.createNew("fetchBoardsBeginIndex", TICKET_SYSTEM_PROPERTIES, Integer.class, 0);
 
    /**
     * @return the configured board type
@@ -24,8 +24,7 @@ public class JiraApiConfigurationHelper {
     * @return the configured fetchBoardsBeginIndex
     */
    public Integer getFetchBoardsBeginIndex() {
-      String fetchBoardsBeginIndexAsString = Settings.INSTANCE.getSettingsValue(FETCH_BOARD_BEGIN_INDEX_KEY);
-      return isNull(fetchBoardsBeginIndexAsString) ? 0 : Integer.valueOf(fetchBoardsBeginIndexAsString);
+      return Settings.INSTANCE.getSettingsValue(FETCH_BOARD_BEGIN_INDEX_KEY);
    }
 
    /**

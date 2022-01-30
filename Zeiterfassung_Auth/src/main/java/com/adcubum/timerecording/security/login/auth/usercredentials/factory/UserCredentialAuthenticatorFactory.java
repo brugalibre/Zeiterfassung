@@ -28,7 +28,7 @@ public class UserCredentialAuthenticatorFactory {
    private static UserCredentialsAuthenticator createUserCredentialsAuthenticator() {
       // the authentication is depending on the configured ticket-system.
       String ticketSystemName = new ConfigurationImpl(TICKET_SYSTEM_PROPERTIES).getValue(TICKET_SYSTEM_NAME);
-      return UserCredentialsAuthenticatorType.getForName(ticketSystemName)
+      return UserCredentialsAuthenticatorType.valueOf(ticketSystemName.toUpperCase())
               .createUserCredentialAuthenticator();
    }
 

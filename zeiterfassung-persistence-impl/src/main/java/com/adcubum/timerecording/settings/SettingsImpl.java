@@ -7,7 +7,8 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.Properties;
 
-import static com.adcubum.timerecording.settings.common.Const.*;
+import static com.adcubum.timerecording.settings.common.Const.TICKET_SYSTEM_PROPERTIES;
+import static com.adcubum.timerecording.settings.common.Const.ZEITERFASSUNG_PROPERTIES;
 import static java.util.Objects.isNull;
 
 public class SettingsImpl implements Settings {
@@ -24,7 +25,26 @@ public class SettingsImpl implements Settings {
    @SuppressWarnings("unchecked")
    @Override
    public <T> T getSettingsValue(ValueKey<T> settingValueKey) {
-      return (T) getSettingsValue(settingValueKey.getName(), settingValueKey.getResourceName());
+      String settingsValue = getSettingsValue(settingValueKey.getName(), settingValueKey.getResourceName());
+      return (T) map2TargetClass(settingsValue, settingValueKey);
+   }
+
+   private static <T> Object map2TargetClass(String settingsValue, ValueKey<T> settingValueKey) {
+      Class<?> clazz = settingValueKey.getType();
+      if (isNull(settingsValue)) {
+         return settingValueKey.getDefault();
+      } else if (clazz.isAssignableFrom(String.class)) {
+         return settingsValue;
+      } else if (clazz.isAssignableFrom(Integer.class)) {
+         return Integer.parseInt(settingsValue);
+      } else if (clazz.isAssignableFrom(Float.class)) {
+         return Float.parseFloat(settingsValue);
+      } else if (clazz.isAssignableFrom(Boolean.class)) {
+         return Boolean.valueOf(settingsValue);
+      } else if (clazz.isEnum()) {
+         return Enum.valueOf((Class<? extends Enum>) clazz, settingsValue.toUpperCase());
+      }
+      throw new IllegalStateException("SettingKey-Type '" + clazz + "' not implemented!");
    }
 
    private static String getSettingsValue(String settingValueKey, String propFile) {

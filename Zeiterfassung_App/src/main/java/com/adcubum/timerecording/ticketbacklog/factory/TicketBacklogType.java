@@ -42,15 +42,4 @@ public enum TicketBacklogType {
          throw new IllegalArgumentException("Could not create new instance of TicketBacklog '" + ticketBacklogClass + "!'", e);
       }
    }
-
-   public static TicketBacklogType getForName(String ticketBacklogName) {
-      for (TicketBacklogType ticketBacklogType : TicketBacklogType.values()) {
-         if (ticketBacklogType.name.equals(ticketBacklogName)) {
-            return ticketBacklogType;
-         }
-      }
-      LOG.warn("No TicketBacklogType found for name '{}'. Fallback to the default '{}'", ticketBacklogName, TicketBacklogType.ADC_JIRA_WEB.name);
-      // Fallback due to backwards compatibility
-      return TicketBacklogType.ADC_JIRA_WEB;
-   }
 }

@@ -7,15 +7,17 @@ public class ValueKeyImpl<T> implements ValueKey<T> {
    private final String resourceName;
    private Class<T> clazz;
    private String name;
+   private T defaultValue;
 
-   private ValueKeyImpl(String name, Class<T> clazz) {
-      this(name, Const.ZEITERFASSUNG_PROPERTIES, clazz);
+   private ValueKeyImpl(String name, Class<T> clazz, T defaultValue) {
+      this(name, Const.ZEITERFASSUNG_PROPERTIES, clazz, defaultValue);
    }
 
-   private ValueKeyImpl(String name, String resourceName, Class<T> clazz) {
+   private ValueKeyImpl(String name, String resourceName, Class<T> clazz, T defaultValue) {
       this.name = name;
       this.resourceName = resourceName;
       this.clazz = clazz;
+      this.defaultValue = defaultValue;
    }
 
    @Override
@@ -31,5 +33,10 @@ public class ValueKeyImpl<T> implements ValueKey<T> {
    @Override
    public String getName() {
       return name;
+   }
+
+   @Override
+   public T getDefault() {
+      return defaultValue;
    }
 }

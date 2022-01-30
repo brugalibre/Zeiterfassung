@@ -71,15 +71,4 @@ public enum UserCredentialsAuthenticatorType {
       }
       throw new NoSuchElementException("No UserCredentialsAuthenticator registered for name '" + authenticatorName + "'");
    }
-
-   public static UserCredentialsAuthenticatorType getForName(String ticketSystemName) {
-      for (UserCredentialsAuthenticatorType userCredentialsAuthenticatorType : UserCredentialsAuthenticatorType.values()) {
-         if (userCredentialsAuthenticatorType.authenticatorName.equals(ticketSystemName)) {
-            return userCredentialsAuthenticatorType;
-         }
-      }
-      LOG.warn("No UserCredentialsAuthenticatorType found for name '{}'. Fallback to the default '{}'", ticketSystemName, UserCredentialsAuthenticatorType.ADC_JIRA_WEB.authenticatorName);
-      // Fallback due to backwards compatibility
-      return UserCredentialsAuthenticatorType.ADC_JIRA_WEB;
-   }
 }
