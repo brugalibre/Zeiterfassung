@@ -1,9 +1,9 @@
 package com.adcubum.timerecording.jira.jiraapi.mapresponse;
 
+import com.adcubum.timerecording.jira.data.ticket.Ticket;
+
 import java.util.Collections;
 import java.util.List;
-
-import com.adcubum.timerecording.jira.data.ticket.Ticket;
 
 /**
  * The final result from reading from the jira api.
@@ -12,26 +12,32 @@ import com.adcubum.timerecording.jira.data.ticket.Ticket;
 public class JiraApiReadTicketsResult {
 
    private List<Ticket> tickets;
-   private boolean isSuccess;
+   private ResponseStatus responseStatus;
 
-   private JiraApiReadTicketsResult(List<Ticket> tickets, boolean isSuccess) {
+   private JiraApiReadTicketsResult(List<Ticket> tickets, ResponseStatus responseStatus) {
       this.tickets = tickets;
-      this.isSuccess = isSuccess;
+      this.responseStatus = responseStatus;
    }
 
    public static JiraApiReadTicketsResult of(List<Ticket> tickets, Exception exception) {
-      return new JiraApiReadTicketsResult(tickets, exception == null);
+      return new JiraApiReadTicketsResult(tickets, evalResponseStatus(tickets, exception));
+   }
+
+   private static ResponseStatus evalResponseStatus(List<Ticket> tickets, Exception exception) {
+      return exception == null ? ResponseStatus.SUCCESS
+              : !tickets.isEmpty() ? ResponseStatus.PARTIAL_SUCCESS
+              : ResponseStatus.FAILURE;
    }
 
    public static JiraApiReadTicketsResult failed() {
-      return new JiraApiReadTicketsResult(Collections.emptyList(), false);
+      return new JiraApiReadTicketsResult(Collections.emptyList(), ResponseStatus.FAILURE);
    }
 
    public List<Ticket> getTickets() {
       return Collections.unmodifiableList(tickets);
    }
 
-   public boolean isSuccess() {
-      return isSuccess;
+   public ResponseStatus getResponseStatus() {
+      return responseStatus;
    }
 }
