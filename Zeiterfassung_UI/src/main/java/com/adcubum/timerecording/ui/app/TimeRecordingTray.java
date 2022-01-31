@@ -1,7 +1,3 @@
-
-/**
- *
- */
 package com.adcubum.timerecording.ui.app;
 
 import com.adcubum.librarys.text.res.TextLabel;
@@ -166,9 +162,14 @@ public class TimeRecordingTray implements LoginCallbackHandler {
          case NOT_CONFIGURED:
             displayMessage(null, TextLabel.REFRESH_TICKET_BACKLOG_NOT_POSSIBLE, MessageType.WARNING);
             break;
+         case PARTIAL_SUCCESS:
+            displayMessage(null, TextLabel.REFRESH_TICKET_BACKLOG_PARTIAL_DONE, MessageType.WARNING);
+            break;
          case FAIL:
             displayMessage(null, TextLabel.REFRESH_TICKET_BACKLOG_FAILED, MessageType.ERROR);
             break;
+         default:
+            throw new IllegalStateException("Unknown status '" + status + "'!");
       }
    }
 

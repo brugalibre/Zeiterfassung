@@ -145,6 +145,28 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
    }
 
    @Test
+   void testInitTicketBacklog_ConfiguredAndPartialSuccessful() throws InterruptedException {
+      // Given
+      TicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
+      int expectedSize = 2; // since we have one default Ticket configured in the 'defaulTickets.txt'
+
+      TicketBacklog ticketBacklog = new TestCaseBuilder()
+            .withCallbackHandler(callbackHandler)
+            .withBoardName("blubbl")
+            .withOneReadTicket()
+            .withRetrievedTicket("SYRIUS-984")
+            .build();
+
+      // When
+      ticketBacklog.initTicketBacklog();
+      Thread.sleep(50);
+
+      // Then
+      verify(callbackHandler).onTicketBacklogUpdated(eq(UpdateStatus.PARTIAL_SUCCESS));
+      assertThat(ticketBacklog.getTickets().size(), is(expectedSize));
+   }
+
+   @Test
    void testInitTicketBacklog_ConfiguredAndFail() throws InterruptedException {
       // Given
       TicketBacklogCallbackHandler callbackHandler = spy(new TestUiTicketBacklogCallbackHandler());
