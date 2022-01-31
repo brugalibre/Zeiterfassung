@@ -104,8 +104,8 @@ public class DateTimeUtil {
       int lastDayInMonth = now.getActualMaximum(Calendar.DAY_OF_MONTH);
 
       now.set(Calendar.DAY_OF_MONTH, lastDayInMonth);
-      now.set(Calendar.HOUR_OF_DAY, 1);
-      now.set(Calendar.MINUTE, 0);
+      now.set(Calendar.HOUR_OF_DAY, 23);
+      now.set(Calendar.MINUTE, 59);
       now.set(Calendar.SECOND, 0);
       now.set(Calendar.MILLISECOND, 0);
       return DateTimeFactory.createNew(now.getTimeInMillis(), RoundMode.ONE_MIN);
@@ -234,7 +234,7 @@ public class DateTimeUtil {
     * @param nextDate
     *        the {@link DateTime} to check
     * @return the day of the week for the given {@link DateTime}
-    * @see Calendar.DAY_OF_WEEK
+    * @see {@link Calendar#DAY_OF_WEEK} for further details
     */
    public static int getCalenderOfTheWeek(DateTime nextDate) {
       Calendar c = Calendar.getInstance();

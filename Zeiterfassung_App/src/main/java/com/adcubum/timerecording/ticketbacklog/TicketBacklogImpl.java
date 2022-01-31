@@ -23,6 +23,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.adcubum.timerecording.jira.jiraapi.mapresponse.ResponseStatus.PARTIAL_SUCCESS;
+import static com.adcubum.timerecording.jira.jiraapi.mapresponse.ResponseStatus.SUCCESS;
+
 public class TicketBacklogImpl extends AbstractTicketBacklog {
 
    private static final Logger LOG = LoggerFactory.getLogger(TicketBacklogImpl.class);
@@ -117,12 +120,22 @@ public class TicketBacklogImpl extends AbstractTicketBacklog {
    }
 
    private static UpdateStatus evalStatus(JiraApiReadTicketsResult jiraApiReadTicketsResult) {
-      return jiraApiReadTicketsResult.isSuccess() ? UpdateStatus.SUCCESS : UpdateStatus.FAIL;
+      switch (jiraApiReadTicketsResult.getResponseStatus()){
+         case SUCCESS:
+            return UpdateStatus.SUCCESS;
+         case PARTIAL_SUCCESS:
+            return UpdateStatus.PARTIAL_SUCCESS;
+         case FAILURE:// fall through
+         default:
+            return UpdateStatus.FAIL;
+      }
    }
 
    private JiraApiReadTicketsResult initTicketBacklog(String boardName, List<String> sprintNames) {
       JiraApiReadTicketsResult jiraApiReadTicketsResult = jiraApiReader.readTicketsFromBoardAndSprints(boardName, sprintNames);
-      if (jiraApiReadTicketsResult.isSuccess()) {
+      // Add tickets if fully successful or if we read a few tickets and this backlog is empty so far
+      if (jiraApiReadTicketsResult.getResponseStatus() == SUCCESS
+              || jiraApiReadTicketsResult.getResponseStatus() == PARTIAL_SUCCESS) {
          this.tickets.clear();
          tickets.addAll(jiraApiReadTicketsResult.getTickets());
       }
