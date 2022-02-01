@@ -69,6 +69,10 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     */
    @Override
    public BusinessDayIncrement startCurrentTimeSnippet(DateTime beginTimeStamp) {
+      if (isBooked){
+         // there is obviously something wrong if someone tries this..
+         throw new IllegalStateException("BusinessDayIncrement is already booked!");
+      }
       TimeSnippet newCurrentTimeSnippet = TimeSnippetFactory.createNew()
             .setBeginTimeStamp(beginTimeStamp);
       return createNewBusinessDayIncrement(newCurrentTimeSnippet);
@@ -79,6 +83,10 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     */
    @Override
    public BusinessDayIncrement stopCurrentTimeSnippet(DateTime endTimeStamp) {
+      if (isBooked){
+         // there is obviously something wrong if someone tries this..
+         throw new IllegalStateException("BusinessDayIncrement is already booked!");
+      }
       TimeSnippet changedCurrentTimeSnippet = currentTimeSnippet.setEndTimeStamp(endTimeStamp);
       return createNewBusinessDayIncrement(changedCurrentTimeSnippet);
    }
@@ -140,6 +148,9 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
 
    @Override
    public BusinessDayIncrement setDescription(String description) {
+      if (isBooked){
+         return this;
+      }
       return changeBusinessDayIncrementInternal(businessDayIncrement -> businessDayIncrement.description = description);
    }
 
@@ -157,7 +168,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    @Override
    public BusinessDayIncrement setTicketActivity(TicketActivity ticketActivity) {
       // Don't change to an invalid TicketActivity
-      if (ticketActivity.isDummy() && isCurrentTicketActivityNotDummy()){
+      if (ticketActivity.isDummy() && isCurrentTicketActivityNotDummy() || isBooked){
          return this;
       }
       return changeBusinessDayIncrementInternal(businessDayIncrementCopy -> businessDayIncrementCopy.ticketActivity = requireNonNull(ticketActivity));
@@ -174,6 +185,9 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
 
    @Override
    public BusinessDayIncrement setTicket(Ticket ticket) {
+      if (isBooked){
+         return this;
+      }
       return changeBusinessDayIncrementInternal(businessDayIncrementImplCopy -> businessDayIncrementImplCopy.ticket = requireNonNull(ticket));
    }
 
@@ -199,6 +213,9 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
 
    @Override
    public BusinessDayIncrement updateBeginTimeSnippetAndCalculate(String newTimeStampValue) {
+      if (isBooked){
+         return this;
+      }
       BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
       TimeSnippet changedCurrentTimeSnippet = currentTimeSnippet.updateAndSetBeginTimeStamp(newTimeStampValue, true);
       businessDayIncrementImplCopy.currentTimeSnippet = changedCurrentTimeSnippet;
@@ -207,6 +224,9 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
 
    @Override
    public BusinessDayIncrement updateEndTimeSnippetAndCalculate(String newTimeStampValue) {
+      if (isBooked){
+         return this;
+      }
       BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
       TimeSnippet changedCurrentTimeSnippet = currentTimeSnippet.updateAndSetEndTimeStamp(newTimeStampValue, true);
       businessDayIncrementImplCopy.currentTimeSnippet = changedCurrentTimeSnippet;
@@ -215,6 +235,9 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
 
    @Override
    public BusinessDayIncrement addAdditionallyTime(float time2Add) {
+      if (isBooked){
+         return this;
+      }
       BusinessDayIncrementImpl businessDayIncrementImplCopy = createCopy();
       TimeSnippet changedCurrentTimeSnippet = currentTimeSnippet.addAdditionallyTime(String.valueOf(time2Add));
       businessDayIncrementImplCopy.currentTimeSnippet = changedCurrentTimeSnippet;
@@ -318,6 +341,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
          businessDayIncrementImpl.ticket = otherBussinessDayIncremental.getTicket();
          businessDayIncrementImpl.ticketActivity = otherBussinessDayIncremental.getTicketActivity();
          businessDayIncrementImpl.isSent = otherBussinessDayIncremental.isSent();
+         businessDayIncrementImpl.isBooked = otherBussinessDayIncremental.isBooked();
          businessDayIncrementImpl.currentTimeSnippet = otherBussinessDayIncremental.getCurrentTimeSnippet();
       }
       return businessDayIncrementImpl;
