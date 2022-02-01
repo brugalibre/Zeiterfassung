@@ -12,6 +12,7 @@ public interface BusinessDayIncrement extends DomainModel {
    /**
     * Updates the {@link TimeSnippet} at the given index and recalulates the entire
     * {@link BusinessDay}. If the update would lead to a negative duration, it's skipped
+    * Note: if this {@link BusinessDayIncrement} is already booked, this {@link BusinessDayIncrement} is returned unchanged
     * 
     * @param newTimeStampValue
     *        the new value for the time stamp
@@ -22,28 +23,29 @@ public interface BusinessDayIncrement extends DomainModel {
    /**
     * Updates the {@link TimeSnippet} at the given index and recalulates the entire
     * {@link BusinessDay}. If the update would lead to a negative duration, it's skipped
+    * Note: if this {@link BusinessDayIncrement} is already booked, this {@link BusinessDayIncrement} is returned unchanged
     * 
     * @param newTimeStampValue
     *        the new value for the time stamp
-    * @return a new {@link BusinessDayIncrement} with the changes
     * @return a new {@link BusinessDayIncrement} with the changes
     */
    BusinessDayIncrement updateBeginTimeSnippetAndCalculate(String newTimeStampValue);
 
    /**
-    * @param endTimeStamp
+    * @param endTimeStamp the {@link DateTime} as the new end-time stamp
     * @return a new {@link BusinessDayIncrement} with the changes
     */
    BusinessDayIncrement stopCurrentTimeSnippet(DateTime endTimeStamp);
 
    /**
-    * @param beginTimeStamp
+    * @param beginTimeStamp the {@link DateTime} as the new begin-time stamp
     * @return a new {@link BusinessDayIncrement} with the changes
     */
    BusinessDayIncrement startCurrentTimeSnippet(DateTime beginTimeStamp);
 
    /**
     * Adds the given amount of time to the {@link TimeSnippet} of this {@link BusinessDayIncrement}
+    * Note: if this {@link BusinessDayIncrement} is already booked, this {@link BusinessDayIncrement} is returned unchanged
     * 
     * @param time2Add
     *        the additionally time to add to this {@link BusinessDayIncrement}
@@ -75,6 +77,7 @@ public interface BusinessDayIncrement extends DomainModel {
 
    /**
     * Defines a new {@link Ticket}
+    * Note: if this {@link BusinessDayIncrement} is already booked, this {@link BusinessDayIncrement} is returned unchanged
     * 
     * @param ticket
     *        the new {@link Ticket}
@@ -84,6 +87,7 @@ public interface BusinessDayIncrement extends DomainModel {
 
    /**
     * Sets a new {@link TicketActivity} with a different name and code
+    * Note: if this {@link BusinessDayIncrement} is already booked, this {@link BusinessDayIncrement} is returned unchanged
     * 
     * @param ticketActivity
     *        the new {@link TicketActivity}
@@ -91,6 +95,14 @@ public interface BusinessDayIncrement extends DomainModel {
     */
    BusinessDayIncrement setTicketActivity(TicketActivity ticketActivity);
 
+   /**
+    * Sets a new description
+    * Note: if this {@link BusinessDayIncrement} is already booked, this {@link BusinessDayIncrement} is returned unchanged
+    *
+    * @param description
+    *        the new description
+    * @return a new {@link BusinessDayIncrement} with the changes
+    */
    BusinessDayIncrement setDescription(String description);
 
    /**
@@ -119,10 +131,8 @@ public interface BusinessDayIncrement extends DomainModel {
     * current {@link TimeSnippet}
     * 
     * @param type
-    * @Override
     *           the {@link TIME_TYPE}
     * @return the total amount of working minuts of the current {@link TimeSnippet}
-    * @Override
     */
    float getTotalDuration(TIME_TYPE type);
 
