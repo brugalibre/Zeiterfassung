@@ -173,14 +173,14 @@ public class BusinessDayIncrementDto {
     * Returns a new {@link BusinessDayIncrementDto} for the given
     * {@link BusinessDayIncrement}
     * 
-    * @param currentBussinessDayIncremental
+    * @param currentBusinessDayIncremental
     * @return a new {@link BusinessDayIncrementDto} for the given
     *         {@link BusinessDayIncrement}
     */
-   public static BusinessDayIncrementDto of(BusinessDayIncrement currentBussinessDayIncremental) {
-      requireNonNull(currentBussinessDayIncremental);
-      requireNonNull(currentBussinessDayIncremental.getTicket());
-      return new BusinessDayIncrementDto(currentBussinessDayIncremental);
+   public static BusinessDayIncrementDto of(BusinessDayIncrement currentBusinessDayIncremental) {
+      requireNonNull(currentBusinessDayIncremental);
+      requireNonNull(currentBusinessDayIncremental.getTicket());
+      return new BusinessDayIncrementDto(currentBusinessDayIncremental);
    }
 
    public static BusinessDayIncrementDto of(TimeSnippet currentTimeSnippet, Ticket ticket) {

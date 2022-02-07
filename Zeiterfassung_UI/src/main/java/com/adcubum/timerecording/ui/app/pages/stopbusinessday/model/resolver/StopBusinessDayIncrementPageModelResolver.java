@@ -51,13 +51,13 @@ public class StopBusinessDayIncrementPageModelResolver extends AbstractPageModel
 
    private static StopBusinessDayIncrementPageModelConstructorInfo buildStopBDayIncPageModelConstructorInfoFromPageModel(
          StopBusinessDayIncrementPageModel inPageModel) {
-      TimeSnippet currentTimeSnippet = TimeRecorder.INSTANCE.getCurrentBussinessDayIncrement();
+      TimeSnippet currentTimeSnippet = TimeRecorder.INSTANCE.getBusinessDay().getCurrentTimeSnippet();
       TimeSnippet actualTimeSnippet = evalEffectCurrentTimeSnippet(inPageModel, currentTimeSnippet);
       return StopBusinessDayIncrementPageModelConstructorInfo.of(inPageModel, actualTimeSnippet);
    }
 
    private static StopBusinessDayIncrementPageModelConstructorInfo buildNewStopBDayIncPageModelConstructorInfo() {
-      TimeSnippet currentTimeSnippet = TimeRecorder.INSTANCE.getCurrentBussinessDayIncrement();
+      TimeSnippet currentTimeSnippet = TimeRecorder.INSTANCE.getBusinessDay().getCurrentTimeSnippet();
       return StopBusinessDayIncrementPageModelConstructorInfo.of(currentTimeSnippet);
    }
 

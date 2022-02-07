@@ -82,11 +82,11 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       // When
       tcb.timeRecorder.handleUserInteraction(true);// come
       tcb.timeRecorder.handleUserInteraction(true);// go
-      BusinessDay bussinessDay = tcb.timeRecorder.getBussinessDay();
-      int amountOfComeAndGoesBeforeDeletion = bussinessDay.getComeAndGoes().getComeAndGoEntries().size();
+      BusinessDay businessDay = tcb.timeRecorder.getBusinessDay();
+      int amountOfComeAndGoesBeforeDeletion = businessDay.getComeAndGoes().getComeAndGoEntries().size();
       tcb.timeRecorder.clearComeAndGoes();
-      bussinessDay = tcb.timeRecorder.getBussinessDay();
-      int amountOfComeAndGoesAfterDeletion = bussinessDay.getComeAndGoes().getComeAndGoEntries().size();
+      businessDay = tcb.timeRecorder.getBusinessDay();
+      int amountOfComeAndGoesAfterDeletion = businessDay.getComeAndGoes().getComeAndGoEntries().size();
 
       // Then
       assertThat(amountOfComeAndGoesBeforeDeletion, is(1));
@@ -107,11 +107,11 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       tcb.timeRecorder.handleUserInteraction(true);// go
       tcb.timeRecorder.flagBusinessDayComeAndGoesAsRecorded();
 
-      BusinessDay bussinessDay = tcb.timeRecorder.getBussinessDay();
+      BusinessDay businessDay = tcb.timeRecorder.getBusinessDay();
 
       // Then
-      assertThat(bussinessDay.getComeAndGoes().getComeAndGoEntries().size(), is(1));
-      ComeAndGo comeAndGo = bussinessDay.getComeAndGoes().getComeAndGoEntries().get(0);
+      assertThat(businessDay.getComeAndGoes().getComeAndGoEntries().size(), is(1));
+      ComeAndGo comeAndGo = businessDay.getComeAndGoes().getComeAndGoEntries().get(0);
       assertThat(comeAndGo.isNotRecorded(), is(false));
    }
 
@@ -144,8 +144,8 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       tcb.timeRecorder.removeIncrement4Id(UUID.randomUUID());
 
       // Then
-      BusinessDay bussinessDay = tcb.timeRecorder.getBussinessDay();
-      assertThat(bussinessDay.getIncrements().size(), is(1));
+      BusinessDay businessDay = tcb.timeRecorder.getBusinessDay();
+      assertThat(businessDay.getIncrements().size(), is(1));
    }
 
    @Test
@@ -156,14 +156,14 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
               .build();
 
       // When
-      BusinessDay bussinessDay = tcb.timeRecorder.getBussinessDay();
-      BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
-      assertThat(bussinessDay.getIncrements().size(), is(1));
+      BusinessDay businessDay = tcb.timeRecorder.getBusinessDay();
+      BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBusinessDay().getIncrements().get(0);
+      assertThat(businessDay.getIncrements().size(), is(1));
       tcb.timeRecorder.removeIncrement4Id(BusinessDayIncrement.getId());
 
       // Then
-      bussinessDay = tcb.timeRecorder.getBussinessDay();
-      assertThat(bussinessDay.getIncrements().isEmpty(), is(true));
+      businessDay = tcb.timeRecorder.getBusinessDay();
+      assertThat(businessDay.getIncrements().isEmpty(), is(true));
    }
 
    @Test
@@ -174,13 +174,13 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
               .build();
 
       // When
-      BusinessDay bussinessDay = tcb.timeRecorder.getBussinessDay();
-      assertThat(bussinessDay.getIncrements().size(), is(1));
+      BusinessDay businessDay = tcb.timeRecorder.getBusinessDay();
+      assertThat(businessDay.getIncrements().size(), is(1));
       tcb.timeRecorder.clear();
 
       // Then
-      bussinessDay = tcb.timeRecorder.getBussinessDay();
-      assertThat(bussinessDay.getIncrements().isEmpty(), is(true));
+      businessDay = tcb.timeRecorder.getBusinessDay();
+      assertThat(businessDay.getIncrements().isEmpty(), is(true));
    }
 
    @Test
@@ -251,11 +251,11 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       timeRecorderImpl.handleUserInteraction(false);
 
       // Then
-      BusinessDay bussinessDay = timeRecorderImpl.getBussinessDay();
+      BusinessDay businessDay = timeRecorderImpl.getBusinessDay();
       boolean actualHasContent = timeRecorderImpl.hasContent();
-      assertThat(bussinessDay.getIncrements().isEmpty(), is(true));
+      assertThat(businessDay.getIncrements().isEmpty(), is(true));
       assertThat(actualHasContent, is(false));
-      TimeSnippet currentTimeSnippet = timeRecorderImpl.getCurrentBussinessDayIncrement();
+      TimeSnippet currentTimeSnippet = timeRecorderImpl.getBusinessDay().getCurrentTimeSnippet();
       assertThat(currentTimeSnippet.getBeginTimeStamp(), is(notNullValue()));
       assertThat(currentTimeSnippet.getEndTimeStamp(), is(notNullValue()));
       verify(testUiCallbackHandler).onStart();
@@ -275,7 +275,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       boolean actualIsBooking = timeRecorderImpl.isBooking();
 
       // Then
-      TimeSnippet currentTimeSnippet = timeRecorderImpl.getCurrentBussinessDayIncrement();
+      TimeSnippet currentTimeSnippet = timeRecorderImpl.getBusinessDay().getCurrentTimeSnippet();
       assertThat(currentTimeSnippet.getBeginTimeStamp(), is(notNullValue()));
       assertThat(currentTimeSnippet.getEndTimeStamp(), is(nullValue()));
       assertThat(isRecordingAfterFirstHandle, is(true));
@@ -298,17 +298,17 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       timeRecorderImpl.handleUserInteraction(false);
       boolean isRecordingAfterSecondHandle = timeRecorderImpl.isRecording();
-      TimeSnippet currentTimeSnippet = timeRecorderImpl.getCurrentBussinessDayIncrement();
+      TimeSnippet currentTimeSnippet = timeRecorderImpl.getBusinessDay().getCurrentTimeSnippet();
       assertThat(currentTimeSnippet.getBeginTimeStamp(), is(notNullValue()));
       assertThat(currentTimeSnippet.getEndTimeStamp(), is(notNullValue()));
 
       timeRecorderImpl.resume();
-      currentTimeSnippet = timeRecorderImpl.getCurrentBussinessDayIncrement();
+      currentTimeSnippet = timeRecorderImpl.getBusinessDay().getCurrentTimeSnippet();
       assertThat(currentTimeSnippet.getBeginTimeStamp(), is(notNullValue()));
       assertThat(currentTimeSnippet.getEndTimeStamp(), is(nullValue()));
 
       // Then
-      BusinessDay businessDay = timeRecorderImpl.getBussinessDay();
+      BusinessDay businessDay = timeRecorderImpl.getBusinessDay();
       assertThat(businessDay.getIncrements().isEmpty(), is(true));
       assertThat(isRecordingAfterFirstHandle, is(true));
       assertThat(isRecordingAfterSecondHandle, is(false));
@@ -358,7 +358,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       UserInteractionResult actualUserInteractionResult = tcb.timeRecorder.handleUserInteraction(false);
 
       // Then
-      ComeAndGoes comeAndGoes = tcb.timeRecorder.getBussinessDay().getComeAndGoes();
+      ComeAndGoes comeAndGoes = tcb.timeRecorder.getBusinessDay().getComeAndGoes();
       assertThat(actualUserInteractionResult.isUserInteractionRequired(), is(false));
       assertThat(comeAndGoes.getComeAndGoEntries().size(), is(1));
    }
@@ -375,17 +375,17 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       TestCaseBuilder tcb = new TestCaseBuilder()
               .withBusinessDayIncrement(ticketNr, description, serviceCode, firstTimeBetweenStartAndStop)
               .build();
-      BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
+      BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBusinessDay().getIncrements().get(0);
       ChangedValue changeValue = ChangedValue.of(BusinessDayIncrement.getId(), newDescription, ValueTypes.DESCRIPTION);
 
       // When
       tcb.timeRecorder.changeBusinesDayIncrement(changeValue);
 
       // Then
-      BusinessDay bussinessDay = tcb.timeRecorder.getBussinessDay();
-      BusinessDayIncrement businessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
+      BusinessDay businessDay = tcb.timeRecorder.getBusinessDay();
+      BusinessDayIncrement businessDayIncrement = tcb.timeRecorder.getBusinessDay().getIncrements().get(0);
       assertThat(businessDayIncrement.getDescription(), is(newDescription));
-      assertThat(bussinessDay.hasDescription(), is(true));
+      assertThat(businessDay.hasDescription(), is(true));
    }
 
    @Test
@@ -397,7 +397,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       TestCaseBuilder tcb = new TestCaseBuilder()
               .withBusinessDayIncrement("SYRIUS-11111", "Test", serviceCode, 3600 * 1000)
               .build();
-      BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
+      BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBusinessDay().getIncrements().get(0);
 
       TicketActivity newTicketActivity = TicketActivityFactory.INSTANCE.createNew("Meeting", 111);
       ChangedValue changeValue = ChangedValue.of(BusinessDayIncrement.getId(), newTicketActivity, ValueTypes.TICKET_ACTIVITY);
@@ -406,7 +406,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       tcb.timeRecorder.changeBusinesDayIncrement(changeValue);
 
       // Then
-      BusinessDayIncrement businessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
+      BusinessDayIncrement businessDayIncrement = tcb.timeRecorder.getBusinessDay().getIncrements().get(0);
       assertThat(businessDayIncrement.getTicketActivity().getActivityCode(), is(expectedNewServiceCode));
    }
 
@@ -419,7 +419,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       TestCaseBuilder tcb = new TestCaseBuilder()
               .withBusinessDayIncrement("SYRIUS-11111", "Test", currentServiceCode, 3600 * 1000)
               .build();
-      BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
+      BusinessDayIncrement BusinessDayIncrement = tcb.timeRecorder.getBusinessDay().getIncrements().get(0);
 
       TicketActivity newTicketActivity = TicketActivityFactory.INSTANCE.dummy("Schubedibuuu", -1);
       ChangedValue changeValue = ChangedValue.of(BusinessDayIncrement.getId(), newTicketActivity, ValueTypes.TICKET_ACTIVITY);
@@ -428,7 +428,7 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
       tcb.timeRecorder.changeBusinesDayIncrement(changeValue);
 
       // Then
-      BusinessDayIncrement businessDayIncrement = tcb.timeRecorder.getBussinessDay().getIncrements().get(0);
+      BusinessDayIncrement businessDayIncrement = tcb.timeRecorder.getBusinessDay().getIncrements().get(0);
       assertThat(businessDayIncrement.getTicketActivity().getActivityCode(), is(currentServiceCode));
    }
 
@@ -442,11 +442,11 @@ class TimeRecorderImplIntegrationTest extends BaseTestWithSettings {
 
       // When
       boolean actualHasContent = tcb.timeRecorder.hasContent();
-      BusinessDay bussinessDay = tcb.timeRecorder.getBussinessDay();
+      BusinessDay businessDay = tcb.timeRecorder.getBusinessDay();
 
       // Then
       assertThat(actualHasContent, is(true));
-      assertThat(bussinessDay.hasNotChargedElements(), is(true));
+      assertThat(businessDay.hasNotChargedElements(), is(true));
    }
 
    @Test

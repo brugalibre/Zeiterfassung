@@ -5,7 +5,6 @@ import com.adcubum.timerecording.app.startstopresult.UserInteractionResult;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
-import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.ValueTypes;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
@@ -224,14 +223,9 @@ public interface TimeRecorder extends BusinessDayHistoryOverviewResolver {
    boolean needsStartBookingReminder();
 
    /**
-    * @return a {@link TimeSnippet} as the current {@link TimeSnippet} of the {@link BusinessDay}
-    */
-   TimeSnippet getCurrentBussinessDayIncrement();
-
-   /**
     * @return a {@link BusinessDay} for the current {@link BusinessDay}
     */
-   BusinessDay getBussinessDay();
+   BusinessDay getBusinessDay();
 
    void setCallbackHandler(UiCallbackHandler callbackHandler);
 

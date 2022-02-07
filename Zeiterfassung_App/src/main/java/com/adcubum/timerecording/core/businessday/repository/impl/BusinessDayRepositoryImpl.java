@@ -47,7 +47,7 @@ public class BusinessDayRepositoryImpl implements BusinessDayRepository {
    }
 
    @Override
-   public List<BusinessDay> findBookedBussinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds) {
+   public List<BusinessDay> findBookedBusinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds) {
       return businessDayEntityRepository.findAllBookedBusinessDayEntitiesWithinRange(lowerBounds, upperBounds)
             .stream()
             .map(BusinessDayEntityMapper.INSTANCE::map2BusinessDay)

@@ -134,6 +134,6 @@ public class BusinessDayServiceHelperImpl implements BusinessDayServiceHelper {
 
    @Override
    public BusinessDayDto getBusinessDayDto() {
-      return BusinessDayDto.of(TimeRecorder.INSTANCE.getBussinessDay());
+      return BusinessDayDto.of(TimeRecorder.INSTANCE.getBusinessDay());
    }
 }

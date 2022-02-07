@@ -414,18 +414,12 @@ public class TimeRecorderImpl implements TimeRecorder {
    }
 
    @Override
-   public TimeSnippet getCurrentBussinessDayIncrement() {
-      BusinessDay businessDay = businessDayHelper.getBusinessDay();
-      return businessDay.getCurrentTimeSnippet();
-   }
-
-   @Override
    public String getApplicationTitle() {
       return TimeRecorderHelper.getApplicationTitle();
    }
 
    @Override
-   public BusinessDay getBussinessDay() {
+   public BusinessDay getBusinessDay() {
       synchronized (businessDayHelper) {
          return businessDayHelper.getBusinessDay();
       }

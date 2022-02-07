@@ -61,7 +61,7 @@ public class TimeRecorderService {
    public AddNewBusinessDayIncrementDto startStopRecording() {
       UserInteractionResult userInteractionResult = timeRecorder.handleUserInteraction(false);
       checkAndThrowStartRecordingNotPossibleException(userInteractionResult);
-      return buildAddNewBusinessDayIncrementDto(timeRecorder.getBussinessDay().getCurrentTimeSnippet());
+      return buildAddNewBusinessDayIncrementDto(timeRecorder.getBusinessDay().getCurrentTimeSnippet());
    }
 
    private static void checkAndThrowStartRecordingNotPossibleException(UserInteractionResult userInteractionResult) {

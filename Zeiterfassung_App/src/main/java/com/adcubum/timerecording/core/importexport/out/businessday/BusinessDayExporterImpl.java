@@ -30,20 +30,20 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
    private static final Object CONTENT_SEPPARATOR_TURBO_BUCHER = ";";
 
    @Override
-   public List<String> exportBusinessDay(BusinessDay bussinessDay) {
-      LOG.info("Export businessDay \n'{}'", bussinessDay);
+   public List<String> exportBusinessDay(BusinessDay businessDay) {
+      LOG.info("Export businessDay \n'{}'", businessDay);
       StringBuilder builder = new StringBuilder();
       List<String> content = new ArrayList<>();
 
       // First line to mark the date, when the time was recorded
-      builder.append(DateParser.parse2String(bussinessDay.getDateTime(), DATE_REP_PATTERN));
+      builder.append(DateParser.parse2String(businessDay.getDateTime(), DATE_REP_PATTERN));
       builder.append(System.getProperty(LINE_SEPARATOR));
       builder.append(System.getProperty(LINE_SEPARATOR));
 
       appendTitleHeaderCells(builder);
 
       // = For each 'Ticket' or Increment of an entire Day
-      for (BusinessDayIncrement inc : bussinessDay.getIncrements()) {
+      for (BusinessDayIncrement inc : businessDay.getIncrements()) {
          LOG.info("Export BusinessDayIncrement '{}'", inc);
          builder.append(TextLabel.TICKET + ": ");
          builder.append(inc.getTicket().getNr());
@@ -69,7 +69,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
          builder.delete(0, builder.capacity());
       }
       builder.append(System.getProperty(LINE_SEPARATOR));
-      builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + BusinessDayUtil.getTotalDurationRep(bussinessDay));
+      builder.append(TextLabel.TOTAL_AMOUNT_OF_HOURS_LABEL + " " + BusinessDayUtil.getTotalDurationRep(businessDay));
       content.add(builder.toString());
       LOG.info("Created last line '{}'", builder);
       LOG.info("Successfully exported BusinessDay");
@@ -101,11 +101,11 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
    }
 
    @Override
-   public List<String> collectContent4Booking(BusinessDay bussinessDay) {
+   public List<String> collectContent4Booking(BusinessDay businessDay) {
 
       StringBuilder builder = new StringBuilder();
       List<String> content = new ArrayList<>();
-      List<BusinessDayIncrement> notChargedIncrements = getNotChargedIncrements(bussinessDay);
+      List<BusinessDayIncrement> notChargedIncrements = getNotChargedIncrements(businessDay);
       for (BusinessDayIncrement inc : notChargedIncrements) {
          builder.append(inc.getTicket().getNr());
          builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
@@ -114,7 +114,7 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
          builder.append(BusinessDayUtil.getTotalDurationRep(inc));
          builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
 
-         builder.append(DateParser.parse2String(bussinessDay.getDateTime(), DD_MM_YYYY));
+         builder.append(DateParser.parse2String(businessDay.getDateTime(), DD_MM_YYYY));
          if (nonNull(inc.getDescription())) {
             builder.append(CONTENT_SEPPARATOR_TURBO_BUCHER);
             builder.append(inc.getDescription());
@@ -126,8 +126,8 @@ public class BusinessDayExporterImpl implements BusinessDayExporter {
       return content;
    }
 
-   private List<BusinessDayIncrement> getNotChargedIncrements(BusinessDay bussinessDay) {
-      return bussinessDay.getIncrements()//
+   private List<BusinessDayIncrement> getNotChargedIncrements(BusinessDay businessDay) {
+      return businessDay.getIncrements()//
             .stream()//
             .filter(bDayInc -> !bDayInc.isBooked())//
             .collect(Collectors.toList());
