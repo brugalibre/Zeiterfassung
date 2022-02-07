@@ -235,7 +235,7 @@ class BusinessDayHelperImplTest {
       }
 
       @Override
-      public List<BusinessDay> findBookedBussinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds) {
+      public List<BusinessDay> findBookedBusinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds) {
          return Collections.emptyList();
       }
 

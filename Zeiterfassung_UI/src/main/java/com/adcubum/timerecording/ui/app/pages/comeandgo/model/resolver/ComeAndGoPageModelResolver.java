@@ -23,7 +23,7 @@ public class ComeAndGoPageModelResolver extends AbstractPageModelResolver<PageMo
    }
 
    private ComeAndGoOverviewPageModel resolvePageModelInternal(PageModel inPageModel) {
-      ComeAndGoes comeAndGoes = TimeRecorder.INSTANCE.getBussinessDay().getComeAndGoes();
+      ComeAndGoes comeAndGoes = TimeRecorder.INSTANCE.getBusinessDay().getComeAndGoes();
       if (inPageModel instanceof ComeAndGoOverviewPageModel) {
          return ComeAndGoOverviewPageModel.of((ComeAndGoOverviewPageModel) inPageModel, comeAndGoes);
       } else if (nonNull(currentPageModel)) {

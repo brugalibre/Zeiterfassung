@@ -268,8 +268,8 @@ public class TimeRecordingTray implements LoginCallbackHandler {
     * Updates the states of the button & elements
     */
    public void updateUIStates() {
-      BusinessDay bussinessDay = TimeRecorder.INSTANCE.getBussinessDay();
-      ComeAndGoes comeAndGoes = bussinessDay.getComeAndGoes();
+      BusinessDay businessDay = TimeRecorder.INSTANCE.getBusinessDay();
+      ComeAndGoes comeAndGoes = businessDay.getComeAndGoes();
       boolean isNotBooking = !TimeRecorder.INSTANCE.isBooking();
       boolean isUserAuthenticated = AuthenticationService.INSTANCE.isUserAuthenticated();
       boolean hasNotChargedElements = TimeRecorder.INSTANCE.hasNotChargedElements();

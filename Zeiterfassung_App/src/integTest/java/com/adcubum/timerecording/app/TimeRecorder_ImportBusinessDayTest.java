@@ -41,10 +41,10 @@ class TimeRecorder_ImportBusinessDayTest {
 
       // Then
       assertThat(actualImported, is(true));
-      BusinessDay bussinessDay = timeRecorder.getBussinessDay();
-      assertThat(bussinessDay.getIncrements().size(), is(2));
-      BusinessDayIncrement firstBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(ticketNr, bussinessDay);
-      BusinessDayIncrement secondBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(secondTicketNr, bussinessDay);
+      BusinessDay businessDay = timeRecorder.getBusinessDay();
+      assertThat(businessDay.getIncrements().size(), is(2));
+      BusinessDayIncrement firstBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(ticketNr, businessDay);
+      BusinessDayIncrement secondBusinessDayInc4TicketNr = findBusinessDayInc4TicketNr(secondTicketNr, businessDay);
       assertThat(firstBusinessDayInc4TicketNr, is(notNullValue()));
       assertThat(firstBusinessDayInc4TicketNr.getDescription(), is("Test"));
       assertThat(firstBusinessDayInc4TicketNr.getTicketActivity().getActivityCode(), is(113));
@@ -125,8 +125,8 @@ class TimeRecorder_ImportBusinessDayTest {
       assertThrows(FileImportException.class, ex);
    }
 
-   private BusinessDayIncrement findBusinessDayInc4TicketNr(String firstTicketNr, BusinessDay bussinessDay) {
-      return bussinessDay.getIncrements()
+   private BusinessDayIncrement findBusinessDayInc4TicketNr(String firstTicketNr, BusinessDay businessDay) {
+      return businessDay.getIncrements()
             .stream()
             .filter(bdIncrement -> bdIncrement.getTicket().getNr().equals(firstTicketNr))
             .findFirst()

@@ -46,7 +46,7 @@ public class BusinessDayEntityMapper {
    public BusinessDay map2BusinessDay(BusinessDayEntity businessDayEntity) {
       requireNonNull(businessDayEntity);
       List<BusinessDayIncrement> increments = map2BusinessDayIncrements(businessDayEntity);
-      TimeSnippet currentTimeSnippet = TimeSnippetEntityMapper.INSTANCE.map2TimeSnippet(businessDayEntity.getCurrentBusinessDayIncrementEntity());
+      TimeSnippet currentTimeSnippet = TimeSnippetEntityMapper.INSTANCE.map2TimeSnippet(businessDayEntity.getCurrentTimeSnippetEntity());
       ComeAndGoes comeAndGoes = ComeAndGoesEntityMapper.INSTANCE.map2ComeAndGoes(businessDayEntity.getComeAndGoesEntity());
       return BusinessDayFactory.createNew(businessDayEntity.getId(), businessDayEntity.isBooked(), increments, currentTimeSnippet,
             comeAndGoes);

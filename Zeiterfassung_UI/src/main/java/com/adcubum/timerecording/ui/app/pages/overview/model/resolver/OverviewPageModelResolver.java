@@ -23,7 +23,7 @@ public class OverviewPageModelResolver extends AbstractPageModelResolver<PageMod
    }
 
    private OverviewPageModel resolvePageModelInternal(PageModel inPageModel) {
-      BusinessDay businessDay = TimeRecorder.INSTANCE.getBussinessDay();
+      BusinessDay businessDay = TimeRecorder.INSTANCE.getBusinessDay();
       if (inPageModel instanceof OverviewPageModel) {
          return OverviewPageModel.of((OverviewPageModel) inPageModel, businessDay);
       } else if (nonNull(currentPageModel)) {

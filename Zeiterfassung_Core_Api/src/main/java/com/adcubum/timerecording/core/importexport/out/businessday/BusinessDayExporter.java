@@ -25,19 +25,19 @@ public interface BusinessDayExporter {
     * Collects all the necessary data in the proper format so the turbo-bucher can
     * charge-off the jira tickets
     * 
-    * @param bussinessDay
+    * @param businessDay
     * @return the content which is required by the {@link BookerAdapter} in order to book
     */
-   List<String> collectContent4Booking(BusinessDay bussinessDay);
+   List<String> collectContent4Booking(BusinessDay businessDay);
 
    /**
     * Selects line by line the content to export for the given
     * {@link BusinessDayVO}
     * 
-    * @param bussinessDay
+    * @param businessDay
     *        the {@link BusinessDayVO} which has to be exported
     * @return a list of {@link String} to export
     */
-   List<String> exportBusinessDay(BusinessDay bussinessDay);
+   List<String> exportBusinessDay(BusinessDay businessDay);
 
 }

@@ -333,21 +333,21 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
       return businessDayIncremental;
    }
 
-   public static BusinessDayIncrement of(BusinessDayIncrement otherBussinessDayIncremental, boolean fullCopy) {
+   public static BusinessDayIncrement of(BusinessDayIncrement otherBusinessDayIncremental, boolean fullCopy) {
       BusinessDayIncrementImpl businessDayIncrementImpl = new BusinessDayIncrementImpl();
-      if (nonNull(otherBussinessDayIncremental) && fullCopy) {
-         businessDayIncrementImpl.id = otherBussinessDayIncremental.getId();
-         businessDayIncrementImpl.description = otherBussinessDayIncremental.getDescription();
-         businessDayIncrementImpl.ticket = otherBussinessDayIncremental.getTicket();
-         businessDayIncrementImpl.ticketActivity = otherBussinessDayIncremental.getTicketActivity();
-         businessDayIncrementImpl.isSent = otherBussinessDayIncremental.isSent();
-         businessDayIncrementImpl.isBooked = otherBussinessDayIncremental.isBooked();
-         businessDayIncrementImpl.currentTimeSnippet = otherBussinessDayIncremental.getCurrentTimeSnippet();
+      if (nonNull(otherBusinessDayIncremental) && fullCopy) {
+         businessDayIncrementImpl.id = otherBusinessDayIncremental.getId();
+         businessDayIncrementImpl.description = otherBusinessDayIncremental.getDescription();
+         businessDayIncrementImpl.ticket = otherBusinessDayIncremental.getTicket();
+         businessDayIncrementImpl.ticketActivity = otherBusinessDayIncremental.getTicketActivity();
+         businessDayIncrementImpl.isSent = otherBusinessDayIncremental.isSent();
+         businessDayIncrementImpl.isBooked = otherBusinessDayIncremental.isBooked();
+         businessDayIncrementImpl.currentTimeSnippet = otherBusinessDayIncremental.getCurrentTimeSnippet();
       }
       return businessDayIncrementImpl;
    }
 
-   public static BusinessDayIncrement of(BusinessDayIncrement otherBussinessDayIncremental) {
-      return of(otherBussinessDayIncremental, true);
+   public static BusinessDayIncrement of(BusinessDayIncrement otherBusinessDayIncremental) {
+      return of(otherBusinessDayIncremental, true);
    }
 }

@@ -67,7 +67,7 @@ public class BusinessDayEntity extends BaseEntity {
       this.comeAndGoesEntity = new ComeAndGoesEntity();
    }
 
-   public TimeSnippetEntity getCurrentBusinessDayIncrementEntity() {
+   public TimeSnippetEntity getCurrentTimeSnippetEntity() {
       return currentTimeSnippetEntity;
    }
 

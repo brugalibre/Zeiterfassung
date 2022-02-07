@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ImportResource;
 
 import java.util.List;
 import java.util.UUID;
@@ -446,13 +445,13 @@ class BusinessDayRepositoryImplIntegrationTest {
 
       // When
       // First make sure all BDays within the range exists 
-      List<BusinessDay> bookedBussinessDaysWithinRange = businessDayRepository.findBookedBussinessDaysWithinRange(lowerBounds, upperBounds);
-      assertThat(bookedBussinessDaysWithinRange.size(), is(2));
+      List<BusinessDay> bookedBusinessDaysWithinRange = businessDayRepository.findBookedBusinessDaysWithinRange(lowerBounds, upperBounds);
+      assertThat(bookedBusinessDaysWithinRange.size(), is(2));
 
       // Then delete and verify that all BDays within the range are deleted
       businessDayRepository.deleteBookedBusinessDaysWithinRange(lowerBounds, upperBounds);
-      bookedBussinessDaysWithinRange = businessDayRepository.findBookedBussinessDaysWithinRange(lowerBounds, upperBounds);
-      assertThat(bookedBussinessDaysWithinRange.size(), is(0));
+      bookedBusinessDaysWithinRange = businessDayRepository.findBookedBusinessDaysWithinRange(lowerBounds, upperBounds);
+      assertThat(bookedBusinessDaysWithinRange.size(), is(0));
 
       // Also make sure, that the one out of scope does still exists
       otherBusinessDay = businessDayRepository.findById(otherBusinessDay.getId());
