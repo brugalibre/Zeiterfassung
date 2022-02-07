@@ -91,16 +91,16 @@ public class BusinessDayTableModelHelper {
    /**
     * Initialises the underlying model of the TableView of this {@link BusinessDayTableModelHelper}
     * 
-    * @param bussinessDay
+    * @param businessDay
     *        the {@link BusinessDay} which provides the data
     * @param tableView
     *        the TableView which displays the data
     */
-   public void init(BusinessDay bussinessDay, TableView<BusinessDayIncTableRowValue> tableView) {
-      Objects.requireNonNull(bussinessDay);
+   public void init(BusinessDay businessDay, TableView<BusinessDayIncTableRowValue> tableView) {
+      Objects.requireNonNull(businessDay);
       this.tableView = tableView;
-      this.colmnValues = getBusinessDayCells(bussinessDay);
-      this.columnNames = getTableHeaders(bussinessDay);
+      this.colmnValues = getBusinessDayCells(businessDay);
+      this.columnNames = getTableHeaders(businessDay);
       tableView.setEditable(true);
       tableView.getSelectionModel().cellSelectionEnabledProperty().set(true);
       tableView.getColumns().setAll(columnNames);
@@ -108,7 +108,7 @@ public class BusinessDayTableModelHelper {
       tableView.setItems(observableList);
    }
 
-   private List<TableColumn<BusinessDayIncTableRowValue, ?>> getTableHeaders(BusinessDay bussinessDay) {
+   private List<TableColumn<BusinessDayIncTableRowValue, ?>> getTableHeaders(BusinessDay businessDay) {
       List<TableColumn<BusinessDayIncTableRowValue, ?>> titleHeaders = new ArrayList<>();
       TableColumn<BusinessDayIncTableRowValue, String> numberTableColumn = new TableColumn<>(
             TextLabel.NUMMER_LABEL);
@@ -123,7 +123,7 @@ public class BusinessDayTableModelHelper {
       titleHeaders.add(ticketTableColumn);
       setEditableTicketCellValueFactory(ticketTableColumn);
 
-      boolean isDescriptionTitleNecessary = bussinessDay.hasDescription();
+      boolean isDescriptionTitleNecessary = businessDay.hasDescription();
       if (isDescriptionTitleNecessary) {
          TableColumn<BusinessDayIncTableRowValue, String> descriptionTableColumn = new TableColumn<>(TextLabel.DESCRIPTION_LABEL);
          setEditableCellValueFactory(descriptionTableColumn, TableConst.DESCRIPTION);
@@ -237,9 +237,9 @@ public class BusinessDayTableModelHelper {
    private List<BusinessDayIncTableRowValue> getBusinessDayCells(BusinessDay businessDay) {
       List<BusinessDayIncTableRowValue> businessDayCells = new ArrayList<>();
       int counter = 1;
-      for (BusinessDayIncrement bussinessDayIncremental : businessDay.getIncrements()) {
+      for (BusinessDayIncrement businessDayIncremental : businessDay.getIncrements()) {
          BusinessDayIncTableRowValue businessDayIncrementalCell = getBusinessDayIncrementalCell(
-               bussinessDayIncremental, businessDay.hasDescription(), counter);
+               businessDayIncremental, businessDay.hasDescription(), counter);
          businessDayCells.add(businessDayIncrementalCell);
          counter++;
       }
@@ -250,30 +250,30 @@ public class BusinessDayTableModelHelper {
     * Creates a list which contains all Cells that are required to paint a
     * BusinessDayIncremental
     */
-   private BusinessDayIncTableRowValue getBusinessDayIncrementalCell(BusinessDayIncrement bussinessDayIncremental,
+   private BusinessDayIncTableRowValue getBusinessDayIncrementalCell(BusinessDayIncrement businessDayIncremental,
          boolean isDescriptionTitleNecessary, int no) {
       // create Cells for the introduction of a BD-inc.
 
-      BusinessDayIncTableRowValue businessDayIncTableCellValue = new BusinessDayIncTableRowValue(bussinessDayIncremental.getId());
+      BusinessDayIncTableRowValue businessDayIncTableCellValue = new BusinessDayIncTableRowValue(businessDayIncremental.getId());
 
       businessDayIncTableCellValue.setNumber(String.valueOf(no));
-      businessDayIncTableCellValue.setTotalDuration(BusinessDayUtil.getTotalDurationRep(bussinessDayIncremental));
-      businessDayIncTableCellValue.setTicket(bussinessDayIncremental.getTicket());
+      businessDayIncTableCellValue.setTotalDuration(BusinessDayUtil.getTotalDurationRep(businessDayIncremental));
+      businessDayIncTableCellValue.setTicket(businessDayIncremental.getTicket());
 
       if (isDescriptionTitleNecessary) {
-         String cellValue = bussinessDayIncremental.hasDescription() ? bussinessDayIncremental.getDescription() : "";
+         String cellValue = businessDayIncremental.hasDescription() ? businessDayIncremental.getDescription() : "";
          businessDayIncTableCellValue.setDescription(cellValue);
       }
       // create Cells for all TimeSnippet's
-      businessDayIncTableCellValue.setTimeSnippets(getTimeSnippets(bussinessDayIncremental));
-      businessDayIncTableCellValue.setTicketActivity(bussinessDayIncremental.getTicketActivity());
-      businessDayIncTableCellValue.setIsBooked(bussinessDayIncremental.isBooked() ? TextLabel.YES : TextLabel.NO);
+      businessDayIncTableCellValue.setTimeSnippets(getTimeSnippets(businessDayIncremental));
+      businessDayIncTableCellValue.setTicketActivity(businessDayIncremental.getTicketActivity());
+      businessDayIncTableCellValue.setIsBooked(businessDayIncremental.isBooked() ? TextLabel.YES : TextLabel.NO);
       businessDayIncTableCellValue.setValueTypes(isDescriptionTitleNecessary);
       return businessDayIncTableCellValue;
    }
 
-   private BeginAndEndCellValue getTimeSnippets(BusinessDayIncrement bussinessDayIncremental) {
-      TimeSnippet snippet = bussinessDayIncremental.getCurrentTimeSnippet();
+   private BeginAndEndCellValue getTimeSnippets(BusinessDayIncrement businessDayIncremental) {
+      TimeSnippet snippet = businessDayIncremental.getCurrentTimeSnippet();
       String begin = String.valueOf(snippet.getBeginTimeStampRep());
       String end = String.valueOf(snippet.getEndTimeStamp());
       return new BeginAndEndCellValue(TimeSnippetCellValue.of(begin, ValueTypes.BEGIN), TimeSnippetCellValue.of(end, ValueTypes.END));

@@ -138,7 +138,7 @@ public class BusinessDayHelperImpl implements BusinessDayHelper {
 
    @Override
    public BusinessDayHistoryOverview getBusinessDayHistoryOverview(DateTime lowerBounds, DateTime upperBounds) {
-      List<BusinessDay> bookedBusinessDaysWithinRange = businessDayRepository.findBookedBussinessDaysWithinRange(lowerBounds, upperBounds);
+      List<BusinessDay> bookedBusinessDaysWithinRange = businessDayRepository.findBookedBusinessDaysWithinRange(lowerBounds, upperBounds);
       return BusinessDayHistoryOverviewImpl.of(lowerBounds, upperBounds, bookedBusinessDaysWithinRange);
    }
 

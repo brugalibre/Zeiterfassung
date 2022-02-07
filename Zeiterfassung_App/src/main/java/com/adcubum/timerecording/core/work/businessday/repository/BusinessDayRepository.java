@@ -38,5 +38,5 @@ public interface BusinessDayRepository extends CommonBusinessDayRepository<Busin
     * @return all booked {@link BusinessDay}s within the given range
     */
    @NonNull
-   List<BusinessDay> findBookedBussinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds);
+   List<BusinessDay> findBookedBusinessDaysWithinRange(DateTime lowerBounds, DateTime upperBounds);
 }
