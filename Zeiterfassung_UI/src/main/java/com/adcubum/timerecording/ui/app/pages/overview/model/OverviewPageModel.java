@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.adcubum.timerecording.ui.app.pages.overview.model;
 
 import com.adcubum.librarys.text.res.TextLabel;
@@ -44,7 +41,7 @@ public class OverviewPageModel implements PageModel {
       isExportButtonDisabled = new SimpleBooleanProperty(!businessDay.hasNotChargedElements());
       hasBusinessDayDescriptionProperty = new SimpleBooleanProperty(businessDay.hasDescription());
 
-      bookButtonLabel = new SimpleStringProperty(TextLabel.CHARGE_LABEL);
+      bookButtonLabel = new SimpleStringProperty(TextLabel.BOOK_LABEL);
       exportButtonLabel = new SimpleStringProperty(TextLabel.EXPORT_LABEL);
       clearButtonLabel = new SimpleStringProperty(TextLabel.CLEAR_LABEL);
 
@@ -52,11 +49,6 @@ public class OverviewPageModel implements PageModel {
       totalAmountOfTimeValue = new SimpleStringProperty(BusinessDayUtil.getTotalDurationRep(businessDay));
    }
 
-   /**
-    * @param inPageModel
-    * @param of
-    * @return
-    */
    public static OverviewPageModel of(OverviewPageModel inPageModel, BusinessDay businessDay) {
       inPageModel.businessDay = businessDay;
       inPageModel.getIsChargeButtonDisabled().setValue(isBookButtonDisabled(businessDay));
@@ -64,7 +56,7 @@ public class OverviewPageModel implements PageModel {
       inPageModel.getIsExportButtonDisabled().setValue(businessDay.getIncrements().isEmpty());
       inPageModel.getHasBusinessDayDescription().setValue(businessDay.hasDescription());
 
-      inPageModel.getBookButtonLabel().set(TextLabel.CHARGE_LABEL);
+      inPageModel.getBookButtonLabel().set(TextLabel.BOOK_LABEL);
       inPageModel.getExportButtonLabel().set(TextLabel.EXPORT_LABEL);
       inPageModel.getClearButtonLabel().set(TextLabel.CLEAR_LABEL);
 
@@ -81,15 +73,12 @@ public class OverviewPageModel implements PageModel {
    }
 
    /**
-    * @returns the {@link BusinessDay}
+    * @return the {@link BusinessDay}
     */
    public final BusinessDay getBusinessDay() {
       return this.businessDay;
    }
 
-   /**
-    * @return
-    */
    public BooleanProperty getIsChargeButtonDisabled() {
       return isChargeButtonDisabled;
    }

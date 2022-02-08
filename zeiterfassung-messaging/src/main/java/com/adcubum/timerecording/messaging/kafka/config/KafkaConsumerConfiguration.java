@@ -15,8 +15,14 @@ import java.util.Map;
 @Configuration
 public class KafkaConsumerConfiguration {
 
+   /** ID of this {@link com.adcubum.timerecording.messaging.kafka.services.BookBusinessDayKafkaConsumer}*/
+   public static final String ID = "bookBusinessDayConsumer";
+
    @Value("${timerecording.messaging.groupId}")
    private String groupId;
+
+   @Value("${timerecording.messaging.consumer-enabled}")
+   private String isConsumerEnabledProperty;
 
    @Value("${timerecording.messaging.brokers}")
    private String brokers;
@@ -45,5 +51,12 @@ public class KafkaConsumerConfiguration {
       ConcurrentKafkaListenerContainerFactory<String, BookBusinessDayMessage> factory = new ConcurrentKafkaListenerContainerFactory<>();
       factory.setConsumerFactory(consumerFactory());
       return factory;
+   }
+
+   /**
+    * @return <code>true</code> if the KafkaConsumer is enabled or <code>false</code> if not
+    */
+   public boolean isConsumerEnabled(){
+      return Boolean.valueOf(isConsumerEnabledProperty);
    }
 }

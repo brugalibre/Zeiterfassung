@@ -4,9 +4,9 @@ import com.adcubum.timerecording.messaging.api.model.BookSenderReceiverId;
 import com.adcubum.timerecording.messaging.api.model.BusinessDayDto;
 import com.adcubum.timerecording.messaging.api.receive.BookBusinessDayMessageReceiver;
 import com.adcubum.timerecording.messaging.api.receive.MessageReceiver;
-import com.adcubum.timerecording.messaging.model.BookBusinessDayMessage;
 import com.adcubum.timerecording.messaging.kafka.services.BookBusinessDayKafkaConsumer;
 import com.adcubum.timerecording.messaging.kafka.services.BookBusinessDayKafkaProducer;
+import com.adcubum.timerecording.messaging.model.BookBusinessDayMessage;
 import com.adcubum.timerecording.messaging.util.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,5 +53,12 @@ public class BookBusinessDayMessageApiService implements BookBusinessDayMessageR
 
    private static List<BookBusinessDayMessageReceiver> createBookBusinessDayMessageReceivers() {
       return ReflectionUtil.lookupClasses4AnnotationAndCreateInstances(MessageReceiver.class.getName());
+   }
+
+   /**
+    * Starts the listener for the {@link BookBusinessDayMessageApiService}
+    */
+   public void startListener() {
+      this.bookBusinessDayKafkaConsumer.start();
    }
 }

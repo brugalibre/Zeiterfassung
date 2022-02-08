@@ -15,6 +15,7 @@
 	<bean id="usercredentialsfactorydelegate" class="com.adcubum.timerecording.security.login.auth.usercredentials.JiraUserCredentialsAuthenticatorImpl" lazy-init="true"/>
 	<bean id="businessday-increment" class="com.adcubum.timerecording.core.work.businessday.BusinessDayIncrementImpl" scope="prototype" lazy-init="true"/>
 	<bean id="businessday" class="com.adcubum.timerecording.core.work.businessday.BusinessDayImpl" scope="prototype" lazy-init="true"/>
+	<bean id="book-businessday-message-api-service" class="com.adcubum.timerecording.messaging.send.BookBusinessDayMessageApiAdapterServiceImpl" lazy-init="true"/>
 	<bean id="businessdayconfig" class="com.adcubum.timerecording.app.businessday.businessdayconfig.impl.BusinessDayConfigImpl" lazy-init="true"/>
 
 </beans>

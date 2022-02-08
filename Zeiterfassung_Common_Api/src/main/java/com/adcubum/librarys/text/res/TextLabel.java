@@ -42,14 +42,13 @@ public class TextLabel {
    public static final String CLEAR_LABEL = "Alles löschen";
    public static final String NEIN = "Nein";
    public static final String JA = "Ja";
-   public static final String WARN_TITLE = "Achtung!";
-   public static final String CHARGE_LABEL = "Abbuchen";
+   public static final String BOOK_LABEL = "Abbuchen";
    public static final String EXPORT_LABEL = "Exportieren";
    public static final String SUCESSFULLY_EXPORTED = "Erfolgreich exportiert";
    public static final String EXPORT_FAILED_TITLE = "Export fehlgeschlagen:";
 
    // Import of recordings
-   public static final String SHOW_IMPORT_DIALOG_MENU_ITEM = "Vorhandene Aufzeichnungen importieren";
+   public static final String SHOW_IMPORT_DIALOG_MENU_ITEM = "Vorhandene Arbeitsstunden importieren";
    public static final String SHOW_IMPORT_DIALOG_TITLE = ".csv Datei mit bestehenden Aufzeichnungen ausäwhlen";
    public static final String IMPORT_SUCESSFULL = "Import erfolgreich";
    public static final String IMPORT_NOT_SUCESSFULL_TITLE = "Import fehlgeschlagen!";
@@ -89,6 +88,9 @@ public class TextLabel {
    public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS =
          "Es sind noch Elemente von vergangenen Tagen vorhanden! Diese zuerst abbuchen bzw. löschen";
    public static final String START_NOT_POSSIBLE_PRECEDENT_ELEMENTS_TITLE = "Start einer neuen Aufzeichnung nicht möglich!";
+
+   // Messaging
+   public static final String SEND_BOOKED_BUSINESS_DAY_INCREMENTS = "Gebuchte Arbeitsstunden senden";
 
    // Login Stuff
    public static final String LOGIN_LABEL = "Login";
