@@ -2,8 +2,8 @@
   <div id="app" class="centered">
     <ZeiterfassungDashboard/>
     <div class="content">
-      <div class="statusAndBDayOverviewPanelAndActualHoursPanel">
-        <div class="timeRecordingStatusAndActualHoursComparison">
+      <div class="timeRecordingDetailsLeftAndRightSide">
+        <div class="timeRecordingDetailsLeftSide">
           <SetActualHoursComparison
             class="setActualHoursComparison tile"
             :key="setActualHoursComparisonKey"
@@ -13,19 +13,25 @@
             class="zeiterfassungRecordingStatus tile"
             :key="zeiterfassungStatusKey"
             @refreshUiWithHistory="refreshAllUisInclHistory"
-            @refreshUi="refreshUis"
+          />
+          <TicketDistribution
+            class="ticketDistributionOverview tile"
+            :key="ticketDistributionOverviewKey"
+            @refreshUiWithHistory="refreshAllUisInclHistory"
           />
         </div>
-        <ZeiterfassungOverview
-          class="zeiterfassungOverview tile"
-          :key="overviewKey"
-          @refreshUi="refreshUis"
-        />
+        <div class="timeRecordingDetailsRightSide">
+          <ZeiterfassungOverview
+            class="zeiterfassungOverview tile"
+            :key="overviewKey"
+            @refreshUi="refreshUis"
+          />
+          <ZeiterfassungHistoryOverview
+            class="zeiterfassungHistoryOverview tile"
+            :key="zeiterfassungHistoryOverviewKey"
+          />
+        </div>
       </div>
-      <ZeiterfassungHistoryOverview
-        class="zeiterfassungHistoryOverview tile"
-        :key="zeiterfassungHistoryOverviewKey"
-      />
     </div>
   </div>
 </template>
@@ -37,11 +43,13 @@ import ZeiterfassungOverview from './views/ZeiterfassungOverview.vue';
 import SetActualHoursComparison from './views/SetActualHoursComparison.vue';
 import ZeiterfassungHistoryOverview from './views/ZeiterfassungHistoryOverview.vue';
 import appApi from "./mixins/AppApi";
+import TicketDistribution from "./views/TicketDistribution";
 
 export default {
   name: 'App',
   mixins: [appApi],
   components: {
+    TicketDistribution,
     ZeiterfassungDashboard,
     ZeiterfassungRecordingStatus,
     ZeiterfassungOverview,
@@ -52,6 +60,7 @@ export default {
    return {
      applicationTitle: '',
      overviewKey: 0,
+     ticketDistributionOverviewKey: 0,
      zeiterfassungStatusKey: 0,
      setActualHoursComparisonKey: 0,
      zeiterfassungHistoryOverviewKey: 0,
@@ -70,12 +79,11 @@ export default {
       this.setActualHoursComparisonKey += 1;
       this.overviewKey += 1;
       this.zeiterfassungStatusKey += 1;
+      this.ticketDistributionOverviewKey += 1;
       console.log("App.vue: Refresh requested!");
     },
     refreshAllUisInclHistory: function(){
-      this.setActualHoursComparisonKey += 1;
-      this.overviewKey += 1;
-      this.zeiterfassungStatusKey += 1;
+      this.refreshUis();
       this.zeiterfassungHistoryOverviewKey += 1;
       console.log("App.vue: Refresh requested incl. history!");
     }
@@ -104,7 +112,7 @@ export default {
 
   table, th, td {
     color: white;
-    table-layout:dynamic;
+    table-layout: dynamic;
     border-collapse: collapse;
     text-align: left;
     padding: 5px;
@@ -159,13 +167,22 @@ export default {
     text-align: center;
   }
 
-  .timeRecordingStatusAndActualHoursComparison{
+  .timeRecordingDetailsLeftSide {
     padding-right: 15px;
     width: 20%;
+    display: flex;
+    flex-direction: column;
     height: auto;
   }
 
-  .statusAndBDayOverviewPanelAndActualHoursPanel{
+  .timeRecordingDetailsRightSide {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 80%;
+  }
+
+  .timeRecordingDetailsLeftAndRightSide{
     display: flex;
     width: 100%;
     padding-bottom: 15px;
@@ -186,16 +203,23 @@ export default {
     margin-bottom: 15px;
   }
 
+  .ticketDistributionOverview {
+    flex-grow: 12;
+  }
+
   .zeiterfassungRecordingStatus{
     width: auto;
+    margin-bottom: 15px;
   }
 
   .zeiterfassungOverview{
-    width: 80%;
+    margin-bottom: 15px;
+    width: auto;
   }
 
-  .zeiterfassungHistoryOverview{
+  .zeiterfassungHistoryOverview {
     width: auto;
+    flex-grow: 1;
   }
 
   .tile{
