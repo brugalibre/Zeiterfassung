@@ -1,5 +1,6 @@
 package com.adcubum.timerecording.messaging.send;
 
+import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.BusinessDayIncrement;
 import com.adcubum.timerecording.messaging.api.BookBusinessDayMessageApiService;
@@ -31,21 +32,23 @@ import static java.util.Objects.nonNull;
 public class BookBusinessDayMessageSender {
 
    private static final Logger LOG = LoggerFactory.getLogger(BookBusinessDayMessageSender.class);
-   private static final ValueKey<Boolean> IS_MASTER_KEY = ValueKeyFactory.createNew("IsMaster", Boolean.class, false);
-   private static final ValueKey<BookSenderReceiverId> BOOK_REQUEST_SENDER_ID_KEY = ValueKeyFactory.createNew("BookBDaySenderReceiverId", BookSenderReceiverId.class);
+   static final ValueKey<Boolean> IS_MASTER_KEY = ValueKeyFactory.createNew("IsMaster", Boolean.class, false);
+   static final ValueKey<BookSenderReceiverId> BOOK_REQUEST_SENDER_ID_KEY = ValueKeyFactory.createNew("BookBDaySenderReceiverId", BookSenderReceiverId.class);
 
    private final Supplier<BookBusinessDayMessageApiService> bookBusinessDayMessageApiServiceSupplier;
    private final Settings settings;
+   private final TimeRecorder timeRecorder;
 
    /**
     * Creates a new default BookBusinessDayMessageSender
     */
    public BookBusinessDayMessageSender() {
-      this(Settings.INSTANCE, BookBusinessDayMessageApiServiceHolder::getBookBusinessDayMessageApiService);
+      this(TimeRecorder.INSTANCE, Settings.INSTANCE, BookBusinessDayMessageApiServiceHolder::getBookBusinessDayMessageApiService);
    }
 
-   public BookBusinessDayMessageSender(Settings settings, Supplier<BookBusinessDayMessageApiService> bookBusinessDayMessageApiServiceSupplier) {
+   public BookBusinessDayMessageSender(TimeRecorder timeRecorder, Settings settings, Supplier<BookBusinessDayMessageApiService> bookBusinessDayMessageApiServiceSupplier) {
       this.settings = settings;
+      this.timeRecorder = timeRecorder;
       this.bookBusinessDayMessageApiServiceSupplier = bookBusinessDayMessageApiServiceSupplier;
    }
 
@@ -63,7 +66,7 @@ public class BookBusinessDayMessageSender {
       if (isSendBookRequestNecessary(bookRequestSenderId, businessDayIncrements)) {
          LOG.info("Map {} booked BusinessDayIncrements and send via broker", businessDayIncrements.size());
          List<BusinessDayIncrement> sentBusinessDayIncrements = createAndSendBookBusinessDayRequest(businessDayIncrements, bookRequestSenderId);
-         sentBusinessDay = flagBDayIncremntsAsSent(businessDay, sentBusinessDayIncrements);
+         sentBusinessDay = flagBDayIncrementsAsSent(businessDay, sentBusinessDayIncrements);
       }
       return sentBusinessDay;
    }
@@ -87,7 +90,7 @@ public class BookBusinessDayMessageSender {
       return Collections.emptyList();
    }
 
-   private static BusinessDay flagBDayIncremntsAsSent(BusinessDay bookedBusinessDay, List<BusinessDayIncrement> sentBusinessDayIncrements) {
+   private static BusinessDay flagBDayIncrementsAsSent(BusinessDay bookedBusinessDay, List<BusinessDayIncrement> sentBusinessDayIncrements) {
       for (BusinessDayIncrement sentBusinessDayIncrement : sentBusinessDayIncrements) {
          bookedBusinessDay = bookedBusinessDay.flagBusinessDayIncrementAsSent(sentBusinessDayIncrement.getId());
       }
@@ -104,11 +107,35 @@ public class BookBusinessDayMessageSender {
 
    private boolean isSendBookRequestNecessary(BookSenderReceiverId bookRequestSenderId, List<BusinessDayIncrement> businessDayIncrements) {
       return nonNull(bookRequestSenderId)
-              && !businessDayIncrements.isEmpty()
+              && hasUnsentAndBookedBusinessDayIncrements(businessDayIncrements)
               && isNotMaster();
    }
 
    private boolean isNotMaster() {
       return !settings.getSettingsValue(IS_MASTER_KEY);
+   }
+
+   /**
+    * Evaluates if the configuration is properly done and if there are any {@link BusinessDayIncrement} to send
+    *
+    * @return <code>true</code> if there are any unsent messages which can be sent to a master {@link TimeRecorder}
+    * or <code>false</code> if not
+    */
+   public boolean isSendBookedBusinessDayIncrementsEnabled() {
+      BookSenderReceiverId bookRequestSenderId = settings.getSettingsValue(BOOK_REQUEST_SENDER_ID_KEY);
+      return nonNull(bookRequestSenderId)
+              && hasUnsentAndBookedBusinessDayIncrements()
+              && isNotMaster();
+   }
+
+   private boolean hasUnsentAndBookedBusinessDayIncrements() {
+      return hasUnsentAndBookedBusinessDayIncrements(timeRecorder.getBusinessDay()
+              .getIncrements());
+   }
+
+   private static boolean hasUnsentAndBookedBusinessDayIncrements(List<BusinessDayIncrement> businessDayIncrements) {
+      return businessDayIncrements.stream()
+              .filter(BusinessDayIncrement::isBooked)
+              .anyMatch(businessDayIncrement -> !businessDayIncrement.isSent());
    }
 }

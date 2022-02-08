@@ -1,5 +1,6 @@
 package com.adcubum.timerecording.messaging.send;
 
+import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.work.businessday.*;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.jira.data.ticket.IssueType;
@@ -12,7 +13,6 @@ import com.adcubum.timerecording.messaging.api.model.BusinessDayDto;
 import com.adcubum.timerecording.messaging.send.mapping.BusinessDayIncrementsToBusinessDayDtoMapper;
 import com.adcubum.timerecording.settings.Settings;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +28,116 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class BookBusinessDayMessageSenderTest {
+
+   @Test
+   void testCanSend_HappyCase() {
+
+      // Given
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                      .withTicket(mockTicket(true, "ABC-123"))
+                      .withDescription("Im booked")
+                      .withTimeSnippet(createTimeSnippet(50))
+                      .withTicketActivity(createTicketActivity("Im booked", 113))
+                      .withId(UUID.randomUUID())
+                      .build())
+              .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                      .withTicket(mockTicket(true, "ABC-114"))
+                      .withDescription("Im booked")
+                      .withTimeSnippet(createTimeSnippet(50))
+                      .withTicketActivity(createTicketActivity("Im also booked", 111))
+                      .withId(UUID.randomUUID())
+                      .build())
+              .withBookedBusinessDayIncrements("ABC-123", "ABC-114")
+              .build();
+
+      // When
+      boolean isActualEnabled = tcb.bookBusinessDayMessageSender.isSendBookedBusinessDayIncrementsEnabled();
+
+      // Then
+      assertThat(isActualEnabled, is(true));
+   }
+   @Test
+   void testCanSendNotBooked_NotEnabled() {
+
+      // Given
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                      .withTicket(mockTicket(true, "ABC-123"))
+                      .withDescription("Im booked")
+                      .withTimeSnippet(createTimeSnippet(50))
+                      .withTicketActivity(createTicketActivity("Im booked", 113))
+                      .withId(UUID.randomUUID())
+                      .build())
+              .build();
+
+      // When
+      boolean isActualEnabled = tcb.bookBusinessDayMessageSender.isSendBookedBusinessDayIncrementsEnabled();
+
+      // Then
+      assertThat(isActualEnabled, is(false));
+   }
+
+   @Test
+   void testCanSend_Master_NotEnabled() {
+
+      // Given
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                      .withTicket(mockTicket(true, "ABC-123"))
+                      .withDescription("Im booked")
+                      .withTimeSnippet(createTimeSnippet(50))
+                      .withTicketActivity(createTicketActivity("Im booked", 113))
+                      .withId(UUID.randomUUID())
+                      .build())
+              .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                      .withTicket(mockTicket(true, "ABC-114"))
+                      .withDescription("Im booked")
+                      .withTimeSnippet(createTimeSnippet(50))
+                      .withTicketActivity(createTicketActivity("Im also booked", 111))
+                      .withId(UUID.randomUUID())
+                      .build())
+              .withBookedBusinessDayIncrements("ABC-123", "ABC-114")
+              .isMaster(true)
+              .build();
+
+      // When
+      boolean isActualEnabled = tcb.bookBusinessDayMessageSender.isSendBookedBusinessDayIncrementsEnabled();
+
+      // Then
+      assertThat(isActualEnabled, is(false));
+   }
+
+   @Test
+   void testCanSend_NoSenderId_NotEnabled() {
+
+      // Given
+      TestCaseBuilder tcb = new TestCaseBuilder()
+              .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                      .withTicket(mockTicket(true, "ABC-123"))
+                      .withDescription("Im booked")
+                      .withTimeSnippet(createTimeSnippet(50))
+                      .withTicketActivity(createTicketActivity("Im booked", 113))
+                      .withId(UUID.randomUUID())
+                      .build())
+              .withBusinessDayIncrementAdd(new BusinessDayIncrementAddBuilder()
+                      .withTicket(mockTicket(true, "ABC-114"))
+                      .withDescription("Im booked")
+                      .withTimeSnippet(createTimeSnippet(50))
+                      .withTicketActivity(createTicketActivity("Im also booked", 111))
+                      .withId(UUID.randomUUID())
+                      .build())
+              .withBookedBusinessDayIncrements("ABC-123", "ABC-114")
+              .isMaster(false)
+              .withSenderId(null)
+              .build();
+
+      // When
+      boolean isActualEnabled = tcb.bookBusinessDayMessageSender.isSendBookedBusinessDayIncrementsEnabled();
+
+      // Then
+      assertThat(isActualEnabled, is(false));
+   }
 
    @Test
    void testHappyCase_TwoIncrements_BothBookedAndNotSent() {
@@ -63,7 +173,7 @@ class BookBusinessDayMessageSenderTest {
    }
 
    @Test
-   void testHappyCase_TwoIncrements_BothBookedAndNotSent_SendFailure() {
+   void testTwoIncrements_BothBookedAndNotSent_SendFailure() {
 
       // Given
       TestCaseBuilder tcb = new TestCaseBuilder()
@@ -180,12 +290,12 @@ class BookBusinessDayMessageSenderTest {
    private static Ticket mockTicket(boolean isBookable, String ticketNr) {
       Ticket ticket = mock(Ticket.class);
       TicketAttrs attrs = mock(TicketAttrs.class);
-      Mockito.when(attrs.getIssueType()).thenReturn(IssueType.BUG);
-      Mockito.when(attrs.getProjectNr()).thenReturn((long) 1234);
-      Mockito.when(attrs.getNr()).thenReturn(ticketNr);
-      Mockito.when(ticket.getTicketAttrs()).thenReturn(attrs);
-      Mockito.when(ticket.getNr()).thenReturn(ticketNr);
-      Mockito.when(ticket.isBookable()).thenReturn(isBookable);
+      when(attrs.getIssueType()).thenReturn(IssueType.BUG);
+      when(attrs.getProjectNr()).thenReturn((long) 1234);
+      when(attrs.getNr()).thenReturn(ticketNr);
+      when(ticket.getTicketAttrs()).thenReturn(attrs);
+      when(ticket.getNr()).thenReturn(ticketNr);
+      when(ticket.isBookable()).thenReturn(isBookable);
       return ticket;
    }
 
@@ -206,6 +316,8 @@ class BookBusinessDayMessageSenderTest {
       private BookBusinessDayMessageSender bookBusinessDayMessageSender;
       private BookBusinessDayMessageApiService bookBusinessDayMessageApiService;
       private boolean sendSuccess;
+      private boolean isMaster;
+      private BookSenderReceiverId senderId;
 
       private TestCaseBuilder() {
          this.businessDayIncrementAdds = new ArrayList<>();
@@ -213,6 +325,8 @@ class BookBusinessDayMessageSenderTest {
          this.bookedBusinessDayIncrements = new ArrayList<>();
          this.sentBusinessDayIncrements = new ArrayList<>();
          this.sendSuccess = true;
+         this.isMaster = false;
+         this.senderId = BookSenderReceiverId.NAG;
       }
 
       public TestCaseBuilder withBusinessDayIncrementAdd(BusinessDayIncrementAdd businessDayIncrementAdd) {
@@ -225,7 +339,12 @@ class BookBusinessDayMessageSenderTest {
          Supplier<BookBusinessDayMessageApiService> bookBusinessDayMessageApiServiceSupplier = () -> bookBusinessDayMessageApiService;
          this.bookBusinessDayMessageApiService = mock(BookBusinessDayMessageApiService.class);
          when(bookBusinessDayMessageApiService.createAndSendBookBusinessDayMessage(any(), any())).thenReturn(sendSuccess);
-         this.bookBusinessDayMessageSender = spy(new BookBusinessDayMessageSender(Settings.INSTANCE, bookBusinessDayMessageApiServiceSupplier));
+         TimeRecorder timeRecorder = mock(TimeRecorder.class);
+         when(timeRecorder.getBusinessDay()).thenReturn(businessDay);
+         Settings settings = mock(Settings.class);
+         when(settings.getSettingsValue(eq(BookBusinessDayMessageSender.IS_MASTER_KEY))).thenReturn(isMaster);
+         when(settings.getSettingsValue(eq(BookBusinessDayMessageSender.BOOK_REQUEST_SENDER_ID_KEY))).thenReturn(senderId);
+         this.bookBusinessDayMessageSender = spy(new BookBusinessDayMessageSender(timeRecorder, settings, bookBusinessDayMessageApiServiceSupplier));
          return this;
       }
 
@@ -257,6 +376,18 @@ class BookBusinessDayMessageSenderTest {
 
       public TestCaseBuilder withSendFailure() {
          this.sendSuccess = false;
+         return this;
+      }
+
+      public TestCaseBuilder isMaster(boolean isMaster) {
+         this.isMaster = isMaster;
+         return this;
+      }
+
+      public TestCaseBuilder withSenderId(BookSenderReceiverId senderId
+
+      ) {
+         this.senderId = senderId;
          return this;
       }
    }

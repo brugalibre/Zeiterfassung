@@ -12,6 +12,7 @@ import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
+import com.adcubum.timerecording.message.BookBusinessDayMessageApiService;
 import com.adcubum.timerecording.message.Message;
 import com.adcubum.timerecording.message.MessageType;
 import com.adcubum.timerecording.security.login.auth.AuthenticationService;
@@ -54,8 +55,9 @@ import static com.adcubum.timerecording.ui.app.settings.hotkey.HotKeyManager.STA
  */
 public class TimeRecordingTray implements LoginCallbackHandler {
    private JMenuItem showHoursItem;
-   private JMenuItem startTurboBucher;
+   private JMenuItem startBookingMenuItem;
    private JMenuItem showImportDialogItem;
+   private JMenuItem sendBookedBusinessDayIncrementsMenuItem;
    private JMenuItem refreshTicketBacklogMenuItem;
    private JMenuItem doUserAuthenticationMenuItem;
    private JMenuItem comeAndGoItem;
@@ -70,18 +72,19 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       addTrayIconToSystemTray();
 
       // Create a popup menu components
-      JPopupMenueSupplier popupMenuSupplier = new JPopupMenueSupplier();
+      JPopupMenuSupplier popupMenuSupplier = new JPopupMenuSupplier();
       JMenu settingsRoundMenu = createSettingsMenu();
       JMenuItem exitItem = createExitMenu();
       JMenuItem closePopupItem = createClosePopupMenu(popupMenuSupplier);
       createRefreshTicketBacklogMenuItem();
+      createSendBookedBusinessDayIncrementsMenuItem();
       createShowHoursMenuItem();
-      createStartTurboBucherMenuItem();
+      createStartBookingMenuItem();
       createDoUserAuthenticationMenuItem();
-      createImportAufzeichnungMenueItem();
-      createComeAndGoMenueItem();
+      createImportAufzeichnungMenuItem();
+      createComeAndGoMenuItem();
       JPopupMenu popupMenu = createPopupMenu(settingsRoundMenu, exitItem, closePopupItem);
-      popupMenuSupplier.setJMenuePopup(popupMenu);
+      popupMenuSupplier.setJMenuPopup(popupMenu);
 
       mainWindowPage = new MainWindowPage(this, primaryStage);
 
@@ -129,6 +132,16 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       TicketBacklogSPI.getTicketBacklog().initTicketBacklog();
    }
 
+   private void sendBookedBusinessDayIncrements() {
+      sendBookedBusinessDayIncrementsMenuItem.setEnabled(false);
+      ThreadFactory.INSTANCE.execute(this::sendBookedBusinessDayIncrementsRunnable);
+   }
+
+   private void sendBookedBusinessDayIncrementsRunnable() {
+      BookBusinessDayMessageApiService.INSTANCE.sendBookedIncrements(TimeRecorder.INSTANCE.getBusinessDay());
+      sendBookedBusinessDayIncrementsMenuItem.setEnabled(BookBusinessDayMessageApiService.INSTANCE.canSendBookedBusinessDayIncrements());
+   }
+
    private void handleTicketBacklogUpdated(UpdateStatus status) {
       runInFxThread(() -> {
          mainWindowPage.refresh();
@@ -152,7 +165,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       }
    }
 
-   private static final class JPopupMenueSupplier implements Supplier<JPopupMenu> {
+   private static final class JPopupMenuSupplier implements Supplier<JPopupMenu> {
       private JPopupMenu jPopupMenu;
 
       @Override
@@ -160,7 +173,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
          return jPopupMenu;
       }
 
-      private void setJMenuePopup(JPopupMenu popupMenu) {
+      private void setJMenuPopup(JPopupMenu popupMenu) {
          this.jPopupMenu = popupMenu;
       }
    }
@@ -171,7 +184,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       return closePopupMenuItem;
    }
 
-   private JMenuItem createShowWebUiMenueItem() {
+   private JMenuItem createShowWebUiMenuItem() {
       JMenuItem showWebUiItem = new JMenuItem(TextLabel.SHOW_WEB_UI);
       WebUiHelper webUiHelper = new WebUiHelper(getCallbackHandler());
       showWebUiItem.addActionListener(actionEvent -> webUiHelper.openUrlInBrowser());
@@ -179,7 +192,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       return showWebUiItem;
    }
 
-   private void createComeAndGoMenueItem() {
+   private void createComeAndGoMenuItem() {
       comeAndGoItem = new JMenuItem(TextLabel.COME_OR_GO);
       comeAndGoItem.addActionListener(actionEvent -> comeOrGo());
       comeAndGoItem.setEnabled(true);
@@ -193,7 +206,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       showComeAndGoItem.setEnabled(true);
    }
 
-   private void createImportAufzeichnungMenueItem() {
+   private void createImportAufzeichnungMenuItem() {
       showImportDialogItem = new JMenuItem(TextLabel.SHOW_IMPORT_DIALOG_MENU_ITEM);
       showImportDialogItem.addActionListener(actionEvent -> showImportDialog());
       showImportDialogItem.setEnabled(true);
@@ -247,7 +260,7 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    private void stopWorking() {
       trayIcon.setImage(PictureLibrary.getNotWorkingImage());
       showHoursItem.setEnabled(false);
-      startTurboBucher.setEnabled(false);
+      startBookingMenuItem.setEnabled(false);
    }
 
    /**
@@ -260,9 +273,9 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       boolean isUserAuthenticated = AuthenticationService.INSTANCE.isUserAuthenticated();
       boolean hasNotChargedElements = TimeRecorder.INSTANCE.hasNotChargedElements();
       boolean hasNoComeAndGoes = comeAndGoes.getComeAndGoEntries().isEmpty();
+      sendBookedBusinessDayIncrementsMenuItem.setEnabled(BookBusinessDayMessageApiService.INSTANCE.canSendBookedBusinessDayIncrements());
       showHoursItem.setEnabled(TimeRecorder.INSTANCE.hasContent() && isNotBooking);
-      startTurboBucher.setEnabled(TimeRecorder.INSTANCE.hasNotChargedElements() && isNotBooking);
-      startTurboBucher.setEnabled(isUserAuthenticated && hasNotChargedElements && isNotBooking);
+      startBookingMenuItem.setEnabled(isUserAuthenticated && hasNotChargedElements && isNotBooking);
       doUserAuthenticationMenuItem.setEnabled(!isUserAuthenticated);
       showImportDialogItem.setEnabled(hasNoContentAndIsNotRecording() && isNotBooking && hasNoComeAndGoes);
       comeAndGoItem.setEnabled(!TimeRecorder.INSTANCE.isRecording());
@@ -409,16 +422,22 @@ public class TimeRecordingTray implements LoginCallbackHandler {
       return exitItem;
    }
 
-   private void createStartTurboBucherMenuItem() {
-      startTurboBucher = new JMenuItem(TextLabel.CHARGE_LABEL);
-      startTurboBucher.addActionListener(actionEvent -> book());
-      startTurboBucher.setEnabled(false);
+   private void createStartBookingMenuItem() {
+      startBookingMenuItem = new JMenuItem(TextLabel.BOOK_LABEL);
+      startBookingMenuItem.addActionListener(actionEvent -> book());
+      startBookingMenuItem.setEnabled(false);
    }
 
    private void createRefreshTicketBacklogMenuItem() {
       refreshTicketBacklogMenuItem = new JMenuItem(TextLabel.REFRESH_TICKET_BACKLOG);
       refreshTicketBacklogMenuItem.addActionListener(actionEvent -> initTicketBacklog());
       refreshTicketBacklogMenuItem.setEnabled(AuthenticationService.INSTANCE.isUserAuthenticated());
+   }
+
+   private void createSendBookedBusinessDayIncrementsMenuItem() {
+      sendBookedBusinessDayIncrementsMenuItem = new JMenuItem(TextLabel.SEND_BOOKED_BUSINESS_DAY_INCREMENTS);
+      sendBookedBusinessDayIncrementsMenuItem.addActionListener(actionEvent -> sendBookedBusinessDayIncrements());
+      sendBookedBusinessDayIncrementsMenuItem.setEnabled(BookBusinessDayMessageApiService.INSTANCE.canSendBookedBusinessDayIncrements());
    }
 
    private void createDoUserAuthenticationMenuItem() {
@@ -491,17 +510,18 @@ public class TimeRecordingTray implements LoginCallbackHandler {
    }
 
    private JPopupMenu createPopupMenu(JMenu settingsRoundMenu, JMenuItem exitItem, JMenuItem closePopupItem) {
-      JMenuItem showWebUiMenueItem = createShowWebUiMenueItem();
+      JMenuItem showWebUiMenuItem = createShowWebUiMenuItem();
       JPopupMenu popupMenu = new JPopupMenu();
       popupMenu.add(settingsRoundMenu);
       popupMenu.addSeparator();
       popupMenu.add(refreshTicketBacklogMenuItem);
       popupMenu.addSeparator();
       popupMenu.add(showImportDialogItem);
-      popupMenu.add(startTurboBucher);
+      popupMenu.add(sendBookedBusinessDayIncrementsMenuItem);
+      popupMenu.add(startBookingMenuItem);
       popupMenu.addSeparator();
       popupMenu.add(showHoursItem);
-      popupMenu.add(showWebUiMenueItem);
+      popupMenu.add(showWebUiMenuItem);
       popupMenu.addSeparator();
       popupMenu.add(showComeAndGoItem);
       popupMenu.add(comeAndGoItem);
