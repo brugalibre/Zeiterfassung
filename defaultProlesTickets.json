@@ -1,48 +1,69 @@
 {
-  "prolesTicketJsonImports" :  [
-    {
-      "ticketNr" : "NAG-nxT",
-      "customer" : "nag",
-      "project" : "nxT",
-      "description" : "Für nag nxT Entwicklungen",
-      "ticketActivities" : [
-        {
-          "activityName" : "Entwicklung",
-          "activityCode" : "113"
-        },
-        {
-          "activityName" : "Planung",
-          "activityCode" : "111"
-       },
-        {
-          "activityName" : "Analyse & Konzeption",
-          "activityCode" : "112"
-        },
-        {
-          "activityName" : "Testing",
-          "activityCode" : "114"
-        }
-      ]
-    },
-    {
-      "ticketNr" : "NAG-Intern",
-      "customer" : "nag",
-      "project" : "Intern",
-      "description" : "Für LENA's",
-      "ticketActivities" : [{
-        "activityName" : "LENA",
-        "activityCode" : "160"
-      }]
-    },
-    {
-      "ticketNr" : "NAG-Ausbildung",
-      "customer" : "nag",
-      "project" : "Ausbildung",
-      "description" : "Für interne Ausbildungen",
-      "ticketActivities" : [{
-        "activityName" : "Interne Ausbildung",
-        "activityCode" : "164"
-      }]
-    }
-  ]
+  "prolesTicketJsonImports" : [ {
+    "customer" : "nag",
+    "ticketNr" : "nag-ABWE",
+    "description" : "Krank/Unfall",
+    "project" : "ABWE",
+    "ticketActivities" : [ {
+      "activityName" : "Krank/Unfall",
+      "activityCode" : 999
+    } ]
+  }, {
+    "customer" : "nag",
+    "ticketNr" : "nag-Ausbildung",
+    "description" : "Interne Ausbildung",
+    "project" : "Ausbildung",
+    "ticketActivities" : [ {
+      "activityName" : "Interne Ausbildung",
+      "activityCode" : 199
+    } ]
+  }, {
+    "customer" : "nag",
+    "ticketNr" : "nag-Intern",
+    "description" : "LENA, nag Events",
+    "project" : "Intern",
+    "ticketActivities" : [ {
+      "activityName" : "LENA",
+      "activityCode" : 201
+    }, {
+      "activityName" : "nag Events",
+      "activityCode" : 202
+    } ]
+  }, {
+    "customer" : "nag",
+    "ticketNr" : "nag-nxT",
+    "description" : "Analyse & Konzeption, Dokumentation & Schulungsunterlagen, Entwicklung, Planung, Testing",
+    "project" : "nxT",
+    "ticketActivities" : [ {
+      "activityName" : "Analyse & Konzeption",
+      "activityCode" : 103
+    }, {
+      "activityName" : "Dokumentation & Schulungsunterlagen",
+      "activityCode" : 105
+    }, {
+      "activityName" : "Entwicklung",
+      "activityCode" : 101
+    }, {
+      "activityName" : "Planung",
+      "activityCode" : 102
+    }, {
+      "activityName" : "Testing",
+      "activityCode" : 104
+    } ]
+  }, {
+    "customer" : "PostFinance",
+    "ticketNr" : "PostFinance-4000010170",
+    "description" : "Projektarbeit in Basel, Projektarbeit in Zofingen, Reisezeit nicht verrechenbar",
+    "project" : "4000010170",
+    "ticketActivities" : [ {
+      "activityName" : "Projektarbeit in Basel",
+      "activityCode" : 301
+    }, {
+      "activityName" : "Projektarbeit in Zofingen",
+      "activityCode" : 302
+    }, {
+      "activityName" : "Reisezeit nicht verrechenbar",
+      "activityCode" : 303
+    } ]
+  } ]
 }

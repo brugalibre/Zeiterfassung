@@ -48,10 +48,10 @@ public class ProlesBookerAdapter extends CommonBookerAdapter<ProlesServiceCodeAd
     @Override
     public BookerResult book(BusinessDay businessDay) {
         BookRecord bookRecord = createBookRecord(businessDay);
-        ProlesBooker prolesBooker = prolesBookerSupplier.get();
-        BookRecord bookedBookRecord = prolesBooker.bookRecords(bookRecord);
-        BusinessDay bookedBusinessDay = flagBookedBDIncrements(businessDay, bookedBookRecord);
-        return createAndReturnBookResult(bookedBusinessDay, businessDay);
+//        ProlesBooker prolesBooker = prolesBookerSupplier.get();
+//        BookRecord bookedBookRecord = prolesBooker.bookRecords(bookRecord);
+//        BusinessDay bookedBusinessDay = flagBookedBDIncrements(businessDay, bookedBookRecord);
+        return createAndReturnBookResult(businessDay.flagBusinessDayAsBooked(), businessDay);
     }
 
     private static BusinessDay flagBookedBDIncrements(BusinessDay businessDay, BookRecord bookedBookRecord) {
