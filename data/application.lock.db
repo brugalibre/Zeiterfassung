@@ -1,0 +1,6 @@
+#FileLock
+#Wed Feb 09 00:25:22 CET 2022
+server=192.168.43.174\:9090
+hostName=nagnbstd001.nagintern.ch
+method=file
+id=17edb7f27c787dbfb4ab627211af22fe394c89de740

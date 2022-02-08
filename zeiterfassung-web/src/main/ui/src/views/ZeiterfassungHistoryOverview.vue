@@ -21,9 +21,14 @@ import businessDayHistoryApi from '../mixins/BusinessDayHistoryApi';
 export default {
   name: 'BusinessDayHistoryChart',
   mixins: [businessDayHistoryApi],
+  computed: {
+    businessDayHistoryChartData() {
+      return this.$store.getters.businessDayHistoryChartData;
+    }
+  },
   data() {
     return {
-      title: 'Monatsübersicht',
+      title: 'Monatsübersicht Buchungen',
     }
   },
   mounted() {

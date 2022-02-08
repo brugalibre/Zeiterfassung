@@ -2,6 +2,8 @@ package com.adcubum.timerecording.core.work.businessday.history;
 
 import com.adcubum.timerecording.core.work.businessday.BusinessDay;
 import com.adcubum.timerecording.core.work.businessday.history.compare.BusinessDayHistoryComparator;
+import com.adcubum.timerecording.core.work.businessday.ticketdistribution.TicketDistribution;
+import com.adcubum.timerecording.core.work.businessday.ticketdistribution.TicketDistributionEvaluator;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeUtil;
 
@@ -16,15 +18,24 @@ import static java.util.Objects.requireNonNull;
 
 public class BusinessDayHistoryOverviewImpl implements BusinessDayHistoryOverview {
 
+   private TicketDistribution ticketDistribution;
    private List<BusinessDayHistory> businessDayHistoryEntries;
 
    private BusinessDayHistoryOverviewImpl(DateTime historyBegin, DateTime historyEnd, List<BusinessDay> businessDaysHistory) {
-      buildBusinessDayHistroyEntries(businessDaysHistory);
+      buildBusinessDayHistoryEntries(businessDaysHistory);
       addEmptyBusinessDayHistoryEntryIfNeeded(historyBegin, historyEnd);
+      this.ticketDistribution = evaluateTicketDistributionFromIncrements(businessDaysHistory);
       Collections.sort(businessDayHistoryEntries, new BusinessDayHistoryComparator());
    }
 
-   private void buildBusinessDayHistroyEntries(List<BusinessDay> businessDaysHistory) {
+   private static TicketDistribution evaluateTicketDistributionFromIncrements(List<BusinessDay> businessDaysHistory) {
+      return new TicketDistributionEvaluator().evaluateTicketDistributionFromIncrements(businessDaysHistory.stream()
+              .map(BusinessDay::getIncrements)
+              .flatMap(List::stream)
+              .collect(Collectors.toList()));
+   }
+
+   private void buildBusinessDayHistoryEntries(List<BusinessDay> businessDaysHistory) {
       this.businessDayHistoryEntries = requireNonNull(businessDaysHistory)
             .stream()
             .map(BusinessDayHistoryImpl::of)
@@ -70,13 +81,18 @@ public class BusinessDayHistoryOverviewImpl implements BusinessDayHistoryOvervie
       return Collections.unmodifiableList(businessDayHistoryEntries);
    }
 
+   @Override
+   public TicketDistribution getTicketDistribution() {
+      return ticketDistribution;
+   }
+
    /**
     * Creates a new {@link BusinessDayHistoryOverviewImpl} for the given period and for the given booked business-days
     * For each day between the given period (incl. begin & end) there is a {@link BusinessDayHistory}.
     * If there is a booked {@link BusinessDay} for a {@link BusinessDayHistory} the total duration of this {@link BusinessDay} is used
     * for the {@link BusinessDayHistory#getBookedHours()}. If there is no {@link BusinessDay} the amount of booked hours is <code>0</code>
-    * 
-    * 
+    *
+    *
     * @param historyBegin
     *        the begin of the history
     * @param historyEnd
