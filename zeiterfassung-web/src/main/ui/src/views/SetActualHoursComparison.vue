@@ -1,22 +1,23 @@
 <template>
-<div>
-  <h2 class="centeredText">{{ title }}</h2>
+  <div>
+    <h2 class="centeredText">{{ title }}</h2>
     <pie-chart
-      class="centered"
-      empty="Keine Daten"
-      loading="Lade Daten..."
       id="set-actual-pie-chart"
-      legend="bottom"
-      width="230px" height="230px"
-      suffix="h"
-      donut="true"
-      :round="2"
       :colors="['#004587', '#358fe6']"
       :data="setActualWorkingPieChartData"
+      :round="2"
+      class="centered"
+      height="230px"
+      donut="true"
+      empty="Keine Daten"
+      legend="bottom"
+      loading="Lade Daten..."
+      suffix="h"
+      width="230px"
     >
     </pie-chart>
-    <label>Tagessoll: {{setHours}}h</label>
-</div>
+    <label>Tagessoll: {{ setHours }}h</label>
+  </div>
 </template>
 
 <script>
