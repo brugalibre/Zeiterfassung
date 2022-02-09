@@ -2,15 +2,15 @@
   <div>
     <h2 class="centeredText">{{ title }}</h2>
     <pie-chart
+      id="ticket-distribution-pie-chart"
+      :data="ticketDistributionChartData"
+      :round="2"
       class="centered"
       empty="Keine Daten"
+      height="230px" legend="bottom"
       loading="Lade Daten..."
-      id="ticket-distribution-pie-chart"
-      legend="bottom"
-      width="230px" height="230px"
       suffix="%"
-      :round="2"
-      :data="ticketDistributionChartData"
+      width="230px"
     >
     </pie-chart>
   </div>
