@@ -2,6 +2,11 @@ import {createStore} from 'vuex'
 
 export const store = createStore({
   state: {
+    // the current business-day
+    businessDay: {
+      businessDayIncrementDtos: '',
+    },
+    // The overview of all booked business-days
     businessDayHistoryOverviewDto: {
       businessDayHistoryDtos: [
         {dateRepresentation: String},
@@ -30,16 +35,25 @@ export const store = createStore({
     },
     businessDayHistoryDtos: state => {
       return state.businessDayHistoryOverviewDto.businessDayHistoryDtos;
+    },
+    businessDay: state => {
+      return state.businessDay;
     }
   },
   mutations: {
     setBusinessDayHistoryOverviewDto(state, businessDayHistoryOverviewDto) {
       state.businessDayHistoryOverviewDto = businessDayHistoryOverviewDto
     },
+    setBusinessDay(state, businessDay) {
+      state.businessDay = businessDay
+    },
   },
   actions: {
     setBusinessDayHistoryOverviewDto(context, businessDayHistoryOverviewDto) {
       context.commit("setBusinessDayHistoryOverviewDto", businessDayHistoryOverviewDto);
+    },
+    setBusinessDay(context, businessDay) {
+      context.commit("setBusinessDay", businessDay);
     },
   },
 });
