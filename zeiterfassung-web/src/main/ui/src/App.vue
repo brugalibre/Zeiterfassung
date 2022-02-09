@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="centered">
+  <div id="app" class="centered" >
     <ZeiterfassungDashboard/>
     <div class="content">
       <div class="timeRecordingDetailsLeftAndRightSide">
@@ -111,12 +111,18 @@ export default {
   }
 
   table, th, td {
-    color: white;
+    color: black;
     table-layout: dynamic;
     border-collapse: collapse;
     text-align: left;
     padding: 5px;
   }
+
+  table td {
+    border-top: #004587 thin solid;
+    border-bottom: #004587 thin solid;
+  }
+
 
   td.fitwidth {
     width: 1px;
@@ -124,15 +130,9 @@ export default {
   }
 
   th {
+    color: white;
     padding: 5px;
     padding-right: 20px;
-  }
-
-  table {
-    background-color:#358fe6;
-  }
-
-  th {
     background-color:#004587;
   }
 
@@ -185,7 +185,6 @@ export default {
   .timeRecordingDetailsLeftAndRightSide{
     display: flex;
     width: 100%;
-    padding-bottom: 15px;
   }
 
   .content{
