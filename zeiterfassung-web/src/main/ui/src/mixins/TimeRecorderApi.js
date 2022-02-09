@@ -1,34 +1,32 @@
 const timeRecorderApiUrl = "/api/v1/timerecorder";
 export default {
   name: 'timeRecorderApi',
-  data (){
+  data() {
     return {
       timeRecorderDto: '',
       ticketsFromBacklog: '',
       postErrorDetails: null,
-      postRequestOptions : {
+      postRequestOptions: {
         method: "POST",
-        headers: { "Content-Type": "application/json" }
+        headers: {"Content-Type": "application/json"}
       },
     }
   },
   methods: {
-    fetchTimeRecorderDto: function(){
+    fetchTimeRecorderDto: function () {
       fetch(timeRecorderApiUrl)
         .then(response => response.json())
-        .then(data => {
-          this.timeRecorderDto = data;
-      });
+        .then(data => this.timeRecorderDto = data);
     },
 
-    startStopRecording: function(){
+    startStopRecording: function () {
       fetch(timeRecorderApiUrl + "/startStopRecording", this.postRequestOptions)
         .then(async response => {
           // retrieve the response in two stepts: text -> JSON.parse. Thats necessary in case we receive an empty response (which leads always to an exception)
           const plainData = await response.text();
           const data = await (plainData ? JSON.parse(plainData) : {});
           // check for error response
-          if(!response.ok){
+          if (!response.ok) {
             // get error message from body or default to response status
             const error = (data && data.message) || response.status;
             this.postErrorDetails = data;
@@ -40,24 +38,20 @@ export default {
           this.endTimeStampRepresentation = this.addNewBusinessDayIncrementDto.businessDayIncrementDto.timeSnippetDto.endTimeStampRepresentation;
           this.isAddBusinessDayIncrementActive = this.beginTimeStampRepresentation !== null && this.endTimeStampRepresentation !== null;
           console.info("begin: " + this.beginTimeStampRepresentation + ", end: " + this.endTimeStampRepresentation + ", is active: " + this.isAddBusinessDayIncrementActive);
-      }).catch(error => console.error("Error occurred while start/stop businessDayIncrement", error));
+        }).catch(error => console.error("Error occurred while start/stop businessDayIncrement", error));
     },
     resume: function () {
       fetch(timeRecorderApiUrl + "/resume", this.postRequestOptions)
         .then(response => response.json())
         .then(data => (this.postId = data.id))
-        .catch(error => {
-          console.error("Error occurred while resuming", error);
-      });
+        .catch(error => console.error("Error occurred while resuming", error));
       this.$emit('resumed');
     },
-    book: function(){
+    book: function () {
       fetch(timeRecorderApiUrl + "/book", this.postRequestOptions)
         .then(response => response.json())
         .then(data => (this.postId = data.id))
-        .catch(error => {
-          console.error("Error occurred while booking", error);
-      });
+        .catch(error => console.error("Error occurred while booking", error));
     },
   }
 }
