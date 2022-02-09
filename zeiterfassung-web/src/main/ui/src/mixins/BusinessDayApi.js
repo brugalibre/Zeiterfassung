@@ -3,9 +3,6 @@
   name: 'BusinessDayApi',
   data (){
     return {
-      businessDay: {
-        businessDayIncrementDtos: '',
-      },
       postErrorDetails: null,
       deleteRequestOptions : {
         method: "DELETE",
@@ -18,12 +15,11 @@
     }
   },
   methods: {
-    fetchBusinessDayDto: function(){
+    fetchBusinessDayDto: function () {
       fetch(businessDayApiUrl)
-      .then(response => response.json())
-      .then(data => {
-        this.businessDay = data;
-      });
+        .then(response => response.json())
+        .then(data => this.$store.dispatch('setBusinessDay', data))
+        .catch(error => console.error("Error occurred while fetching businessDay", error));
     },
     addBusinessDayIncrement: function(businessDayIncrement){
       const requestOptions = {

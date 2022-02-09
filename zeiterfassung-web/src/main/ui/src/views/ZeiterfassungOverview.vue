@@ -1,5 +1,5 @@
 <template>
-  <div class="zeiterfassungOverviewContainer">
+  <div>
     <h2 class="centeredText">{{ title }}</h2>
     <div class="tableAndBottom">
       <table>
@@ -103,6 +103,7 @@
           </td>
         </tr>
       </table>
+      <div><!--placeholder --></div>
       <div class="bottom">
         <div>
           <label>Gesamt Anzahl Stunden: {{businessDay.totalDurationRep}}h</label>
@@ -141,6 +142,9 @@ export default {
     isDeleteAllButtonDisabled: function(){
       return !this.businessDay.isDeleteAllPossible;
     },
+    businessDay: function() {
+      return this.$store.getters.businessDay
+    }
   },
   methods: {
     onTicketNrChanged: function(businessDayIncrement, newTicketNr){
@@ -167,11 +171,11 @@ export default {
 
 <style scoped>
 
-  .zeiterfassungOverviewContainer{
-    position: relative;
-  }
-
   .tableAndBottom{
+    display: flex;
+    flex-direction: column;
+
+     justify-content: space-between;
      overflow: auto;
      height: 375px;
      width: auto;
@@ -210,8 +214,6 @@ export default {
   }
 
   .bottom{
-    position: absolute;
-    bottom: 0;
     padding-bottom: 5px;
   }
 </style>
