@@ -1,11 +1,11 @@
 <template>
   <div>
     <input
-      required
       v-model="timeValueOject.timeRepresentation"
+      required
       type="time"
     />
-	</div>
+  </div>
 </template>
 <script>
 import dateCalculation from '../mixins/DateCalculation';
@@ -15,7 +15,7 @@ export default {
   mixins: [dateCalculation],
   props: ['initTimeRepresentation'],
   emits: ['timeRepChanged'],
-  data (){
+  data() {
     return {
       timeValueOject: {
         timeRepresentation: this.initTimeRepresentation,
@@ -24,10 +24,10 @@ export default {
     }
   },
   methods: {
-    onTimeRepChanged: function(){
+    onTimeRepChanged: function () {
       this.$emit('timeRepChanged', this.timeValueOject);
     },
-    calcTimeValue: function() {
+    calcTimeValue: function () {
       return this.createDateNowWithTime(this.timeValueOject.timeRepresentation);
     },
   },
@@ -35,13 +35,13 @@ export default {
     this.timeValueOject.timeValue = this.calcTimeValue();
   },
   watch: {
-    'timeValueOject.timeRepresentation': function(newVal, oldVal){
+    'timeValueOject.timeRepresentation': function (newVal, oldVal) {
       console.log("timeValueOject.timeRepresentation: Changed time from old '" + oldVal + ", to new '" + newVal);
       this.timeValueOject.timeValue = this.calcTimeValue();
     },
-    'timeValueOject.timeValue': function(newVal, oldVal){
+    'timeValueOject.timeValue': function (newVal, oldVal) {
       console.log("timeValueOject.timeValue: Changed time from old '" + oldVal + ", to new '" + newVal);
-       this.onTimeRepChanged();
+      this.onTimeRepChanged();
     },
   },
 }

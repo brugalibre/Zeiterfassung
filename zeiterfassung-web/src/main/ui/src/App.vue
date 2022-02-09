@@ -1,35 +1,35 @@
 <template>
-  <div id="app" class="centered" >
+  <div id="app" class="centered">
     <ZeiterfassungDashboard/>
     <div class="content">
       <div class="timeRecordingDetailsLeftAndRightSide">
         <div class="timeRecordingDetailsLeftSide">
           <SetActualHoursComparison
-            class="setActualHoursComparison tile"
             :key="setActualHoursComparisonKey"
+            class="setActualHoursComparison tile"
             @refreshUi="refreshUis"
           />
           <ZeiterfassungRecordingStatus
-            class="zeiterfassungRecordingStatus tile"
             :key="zeiterfassungStatusKey"
+            class="zeiterfassungRecordingStatus tile"
             @refreshUi="refreshUis"
             @refreshUiWithHistory="refreshAllUisInclHistory"
           />
           <TicketDistribution
-            class="ticketDistributionOverview tile"
             :key="ticketDistributionOverviewKey"
+            class="ticketDistributionOverview tile"
             @refreshUiWithHistory="refreshAllUisInclHistory"
           />
         </div>
         <div class="timeRecordingDetailsRightSide">
           <ZeiterfassungOverview
-            class="zeiterfassungOverview tile"
             :key="overviewKey"
+            class="zeiterfassungOverview tile"
             @refreshUi="refreshUis"
           />
           <ZeiterfassungHistoryOverview
-            class="zeiterfassungHistoryOverview tile"
             :key="zeiterfassungHistoryOverviewKey"
+            class="zeiterfassungHistoryOverview tile"
           />
         </div>
       </div>
@@ -57,16 +57,16 @@ export default {
     SetActualHoursComparison,
     ZeiterfassungHistoryOverview,
   },
-  data () {
-   return {
-     applicationTitle: '',
-     overviewKey: 0,
-     ticketDistributionOverviewKey: 0,
-     zeiterfassungStatusKey: 0,
-     setActualHoursComparisonKey: 0,
-     zeiterfassungHistoryOverviewKey: 0,
-   };
- },
+  data() {
+    return {
+      applicationTitle: '',
+      overviewKey: 0,
+      ticketDistributionOverviewKey: 0,
+      zeiterfassungStatusKey: 0,
+      setActualHoursComparisonKey: 0,
+      zeiterfassungHistoryOverviewKey: 0,
+    };
+  },
   watch: {
     applicationTitle: {
       immediate: true,
@@ -76,14 +76,14 @@ export default {
     }
   },
   methods: {
-    refreshUis: function(){
+    refreshUis: function () {
       this.setActualHoursComparisonKey += 1;
       this.overviewKey += 1;
       this.zeiterfassungStatusKey += 1;
       this.ticketDistributionOverviewKey += 1;
       console.log("App.vue: Refresh requested!");
     },
-    refreshAllUisInclHistory: function(){
+    refreshAllUisInclHistory: function () {
       this.refreshUis();
       this.zeiterfassungHistoryOverviewKey += 1;
       console.log("App.vue: Refresh requested incl. history!");
@@ -96,137 +96,137 @@ export default {
 </script>
 
 <style>
-  * {
-   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
+* {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-  button{
-    border-collapse: collapse;
-    background-color:#004587;
-    color:white;
-  }
+button {
+  border-collapse: collapse;
+  background-color: #004587;
+  color: white;
+}
 
-  button:disabled{
-    border-collapse: collapse;
-    background-color:lightslategray;
-  }
+button:disabled {
+  border-collapse: collapse;
+  background-color: lightslategray;
+}
 
-  table, th, td {
-    color: black;
-    table-layout: dynamic;
-    border-collapse: collapse;
-    text-align: left;
-    padding: 5px;
-  }
+table, th, td {
+  color: black;
+  table-layout: dynamic;
+  border-collapse: collapse;
+  text-align: left;
+  padding: 5px;
+}
 
-  table td {
-    border-top: #004587 thin solid;
-    border-bottom: #004587 thin solid;
-  }
+table td {
+  border-top: #004587 thin solid;
+  border-bottom: #004587 thin solid;
+}
 
 
-  td.fitwidth {
-    width: 1px;
-    white-space: nowrap;
-  }
+td.fitwidth {
+  width: 1px;
+  white-space: nowrap;
+}
 
-  th {
-    color: white;
-    padding: 5px;
-    padding-right: 20px;
-    background-color:#004587;
-  }
+th {
+  color: white;
+  padding: 5px;
+  padding-right: 20px;
+  background-color: #004587;
+}
 
-  button{
-    table-layout: auto;
-  }
+button {
+  table-layout: auto;
+}
 
-  .container{
-    display: flex;
-    justify-content: space-between;
-    max-width: 400px;
-    margin: 5 auto;
-    padding: 0 0 0 0;
-  }
+.container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 400px;
+  margin: 5 auto;
+  padding: 0 0 0 0;
+}
 
-  .containerElement{
-    width: 49.5%;
-  }
+.containerElement {
+  width: 49.5%;
+}
 
-  .center {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+.center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
-  .centered {
-    margin: auto;
-  }
+.centered {
+  margin: auto;
+}
 
-  .centeredText {
-    text-align: center;
-  }
+.centeredText {
+  text-align: center;
+}
 
-  .timeRecordingDetailsLeftSide {
-    padding-right: 15px;
-    width: 20%;
-    display: flex;
-    flex-direction: column;
-    height: auto;
-  }
+.timeRecordingDetailsLeftSide {
+  padding-right: 15px;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
 
-  .timeRecordingDetailsRightSide {
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    width: 80%;
-  }
+.timeRecordingDetailsRightSide {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: 80%;
+}
 
-  .timeRecordingDetailsLeftAndRightSide{
-    display: flex;
-    width: 100%;
-  }
+.timeRecordingDetailsLeftAndRightSide {
+  display: flex;
+  width: 100%;
+}
 
-  .content{
-    position: relative;
-    width: auto;
-    padding-left: 50px;
-    padding-right: 50px;
-    display: flexbox;
-    flex-flow: row wrap;
-  }
+.content {
+  position: relative;
+  width: auto;
+  padding-left: 50px;
+  padding-right: 50px;
+  display: flexbox;
+  flex-flow: row wrap;
+}
 
-  .setActualHoursComparison{
-    width: auto;
-    height: auto;
-    margin-bottom: 15px;
-  }
+.setActualHoursComparison {
+  width: auto;
+  height: auto;
+  margin-bottom: 15px;
+}
 
-  .ticketDistributionOverview {
-    flex-grow: 12;
-  }
+.ticketDistributionOverview {
+  flex-grow: 12;
+}
 
-  .zeiterfassungRecordingStatus{
-    width: auto;
-    margin-bottom: 15px;
-  }
+.zeiterfassungRecordingStatus {
+  width: auto;
+  margin-bottom: 15px;
+}
 
-  .zeiterfassungOverview{
-    margin-bottom: 15px;
-    width: auto;
-  }
+.zeiterfassungOverview {
+  margin-bottom: 15px;
+  width: auto;
+}
 
-  .zeiterfassungHistoryOverview {
-    width: auto;
-    flex-grow: 1;
-  }
+.zeiterfassungHistoryOverview {
+  width: auto;
+  flex-grow: 1;
+}
 
-  .tile{
-    padding: 5px;
-    max-width:100%;
-    border-style: outset;
-    border-width: 3px;
-    border-color: #358fe6;
-  }
+.tile {
+  padding: 5px;
+  max-width: 100%;
+  border-style: outset;
+  border-width: 3px;
+  border-color: #358fe6;
+}
 </style>

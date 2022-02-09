@@ -11,11 +11,12 @@
 
 <script>
 import ticketBacklogApi from '../mixins/TicketBacklogApi';
+
 export default {
   props: ['ticketNr', 'initialServiceCode', 'initialServiceCodeRepresentation'],
   name: 'ServiceCodeSelect',
   mixins: [ticketBacklogApi],
-  data (){
+  data() {
     return {
       serviceCodeDto: {
         value: this.initialServiceCode,
@@ -26,7 +27,7 @@ export default {
   },
   watch: {
     ticketNr: {
-      handler: function(newTicketNr, oldTicketNr) {
+      handler: function (newTicketNr, oldTicketNr) {
         console.log("Changed ticket from " + oldTicketNr + " to " + newTicketNr);
         this.fetchServiceCodes(newTicketNr);
       },

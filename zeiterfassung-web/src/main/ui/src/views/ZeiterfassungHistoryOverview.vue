@@ -3,12 +3,12 @@
     <h2 class="centeredText">{{ title }}</h2>
     <div>
       <column-chart
-        empty="Keine Daten"
-        loading="Lade Daten..."
-        xtitle="Tage" ytitle="Stunden"
-        suffix="h"
-        :dataset="{borderColor: '#004587', backgroundColor: '#358fe6'}"
         :data="businessDayHistoryChartData"
+        :dataset="{borderColor: '#004587', backgroundColor: '#358fe6'}"
+        empty="Keine Daten" loading="Lade Daten..."
+        suffix="h"
+        xtitle="Tage"
+        ytitle="Stunden"
       >
       </column-chart>
     </div>

@@ -3,9 +3,9 @@
     <div class="inputForm centered tile">
       <p>
         <ticket-nr-input-field
+          v-model="businessDayIncrement.ticketNr"
           class="containerElement100"
           required
-          v-model="businessDayIncrement.ticketNr"
           v-bind:initTicketNr="businessDayIncrement.ticketNr"
           @ticketNrChanged="onTicketNrChanged"
         >
@@ -13,18 +13,18 @@
       </p>
       <div>
         <input
-          class="descriptionInput"
           id="description"
           v-model="businessDayIncrement.description"
-          type="text"
+          class="descriptionInput"
           name="description"
           placeholder="Beschreibung"
+          type="text"
         >
       </div>
       <p>
         <service-code-select
-          class="containerElement100"
           v-model="businessDayIncrement.serviceCodeDto"
+          class="containerElement100"
           v-bind:initialServiceCode="businessDayIncrement.serviceCodeDto.value"
           v-bind:initialServiceCodeRepresentation="businessDayIncrement.serviceCodeDto.representation"
           v-bind:ticketNr="businessDayIncrement.ticketNr"
@@ -35,45 +35,47 @@
         <label for="von">Von: </label>
         <time-input-field
           id="beginTimeStamp"
-          @timeRepChanged="onBeginTimeRepChanged"
-          required
           v-model="businessDayIncrement.beginTimeValue"
-          v-bind:initTimeRepresentation="businessDayIncrement.beginTimeValue.timeRepresentation"
           name="beginTimeStamp"
+          required
+          v-bind:initTimeRepresentation="businessDayIncrement.beginTimeValue.timeRepresentation"
+          @timeRepChanged="onBeginTimeRepChanged"
         >
         </time-input-field>
         <label for="upto">Bis: </label>
         <time-input-field
           id="endTimeStamp"
-          @timeRepChanged="onEndTimeRepChanged"
-          required
           v-model="businessDayIncrement.endTimeValue"
-          v-bind:initTimeRepresentation="businessDayIncrement.endTimeValue.timeRepresentation"
           name="endTimeStamp"
+          required
+          v-bind:initTimeRepresentation="businessDayIncrement.endTimeValue.timeRepresentation"
+          @timeRepChanged="onEndTimeRepChanged"
         >
         </time-input-field>
       </p>
       <p>
         <label>Dauer: </label>
         <input
-          class="timeInputField"
           id="duration"
-          type="number"
-          required
           v-model="businessDayIncrement.currentDuration"
+          class="timeInputField"
           name="duration"
+          required
+          type="number"
         />
         <label> h</label>
       </p>
       <p class="container containerElement100">
-        <button class="containerElement" :disabled="isSubmitButtonDisabled" v-on:click="addBusinessDayIncrementAndRefresh(businessDayIncrement)">Speichern</button>
+        <button :disabled="isSubmitButtonDisabled" class="containerElement"
+                v-on:click="addBusinessDayIncrementAndRefresh(businessDayIncrement)">Speichern
+        </button>
         <button class="containerElement" v-on:click="resume">Abbrechen</button>
       </p>
     </div>
     <error-box v-if="postErrorDetails">
-      {{postErrorDetails}}
+      {{ postErrorDetails }}
     </error-box>
-	</div>
+  </div>
 </template>
 <script>
 import timeRecorderApi from '../mixins/TimeRecorderApi';
@@ -96,9 +98,9 @@ export default {
     'error-box': ErrorBox
   },
   props: ['initBeginTimeStampRepresentation', 'initEndTimeStampRepresentation', 'initTicketNr'],
-  data () {
+  data() {
     return {
-      businessDayIncrement : {
+      businessDayIncrement: {
         currentDuration: 0,
         ticketNr: this.initTicketNr,
         description: '',
@@ -119,7 +121,7 @@ export default {
     }
   },
   watch: {
-    'businessDayIncrement.currentDuration': function(newVal, oldVal){
+    'businessDayIncrement.currentDuration': function (newVal, oldVal) {
       console.log("Changed duration from old '" + oldVal + ", to new '" + newVal);
       var newEndTimeValue = this.calculateDateFromDuration(this.businessDayIncrement.beginTimeValue.timeValue, newVal);
       this.businessDayIncrement.endTimeValue.timeValue = newEndTimeValue.timeValue;
@@ -127,31 +129,31 @@ export default {
     },
   },
   methods: {
-    addBusinessDayIncrementAndRefresh: function(businessDayIncrement){
+    addBusinessDayIncrementAndRefresh: function (businessDayIncrement) {
       this.addBusinessDayIncrement(businessDayIncrement);
       setTimeout(() => this.requestUiRefresh(), 1000);
       console.log("AddNewBusinessDayInc: refresh Ui requested");
     },
-    onBeginTimeRepChanged: function(beginTimeValue){
-      console.log("On-Begin-Time-Rep-Changed '" + beginTimeValue.timeValue + ", amount of Hours '" + beginTimeValue.timeValue.getHours() + "', amount of minutes '" + beginTimeValue.timeValue.getMinutes() +"'");
+    onBeginTimeRepChanged: function (beginTimeValue) {
+      console.log("On-Begin-Time-Rep-Changed '" + beginTimeValue.timeValue + ", amount of Hours '" + beginTimeValue.timeValue.getHours() + "', amount of minutes '" + beginTimeValue.timeValue.getMinutes() + "'");
       this.businessDayIncrement.beginTimeValue = beginTimeValue;
-      if (this.businessDayIncrement.endTimeValue.timeValue !== null){
-        this.businessDayIncrement.currentDuration = this.beginOrEndTimeStampChanged (beginTimeValue.timeValue, this.businessDayIncrement.endTimeValue.timeValue);
+      if (this.businessDayIncrement.endTimeValue.timeValue !== null) {
+        this.businessDayIncrement.currentDuration = this.beginOrEndTimeStampChanged(beginTimeValue.timeValue, this.businessDayIncrement.endTimeValue.timeValue);
       }
     },
-    onEndTimeRepChanged: function(endTimeValue){
-      console.log("On-End-Time-Rep-Changed '" + endTimeValue + ", amount of Hours '" + endTimeValue.timeValue.getHours()+ "', amount of minutes '" + endTimeValue.timeValue.getMinutes() +"'");
+    onEndTimeRepChanged: function (endTimeValue) {
+      console.log("On-End-Time-Rep-Changed '" + endTimeValue + ", amount of Hours '" + endTimeValue.timeValue.getHours() + "', amount of minutes '" + endTimeValue.timeValue.getMinutes() + "'");
       this.businessDayIncrement.endTimeValue = endTimeValue;
-      if (this.businessDayIncrement.beginTimeValue.timeValue !== null){
+      if (this.businessDayIncrement.beginTimeValue.timeValue !== null) {
         this.businessDayIncrement.currentDuration = this.beginOrEndTimeStampChanged(this.businessDayIncrement.beginTimeValue.timeValue, endTimeValue.timeValue);
       }
     },
-    onTicketNrChanged: function(newTicketNr){
+    onTicketNrChanged: function (newTicketNr) {
       this.businessDayIncrement.ticketNr = newTicketNr;
     },
   },
   computed: {
-    isSubmitButtonDisabled: function() {
+    isSubmitButtonDisabled: function () {
       return !this.businessDayIncrement.ticketNr || !this.businessDayIncrement.serviceCodeDto.value
         || !this.businessDayIncrement.endTimeValue.timeRepresentation || !this.businessDayIncrement.beginTimeValue.timeRepresentation
         || this.businessDayIncrement.currentDuration <= 0;
@@ -160,41 +162,41 @@ export default {
 }
 </script>
 <style scoped>
-  .container0{
-    display: inline-block;
-    justify-content: space-between;
-  }
+.container0 {
+  display: inline-block;
+  justify-content: space-between;
+}
 
-  .descriptionInput{
-    width: 97%;/* don't ask me why but with a width of 100% the input field is slightly to long :S*/
-  }
+.descriptionInput {
+  width: 97%; /* don't ask me why but with a width of 100% the input field is slightly to long :S*/
+}
 
-  .containerElement100{
-    width: 100%;
-  }
+.containerElement100 {
+  width: 100%;
+}
 
-  .timeInputField{
-    width: 5vh;
-  }
+.timeInputField {
+  width: 5vh;
+}
 
-  .inputForm{
-    background: white;
-    position: fixed;
-    max-width: 15%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-  }
+.inputForm {
+  background: white;
+  position: fixed;
+  max-width: 15%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
 
-  .blurBackground{
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(5px);
-    height: 100vh;
-    width: 250vh;
-    position: fixed;
-    top: 0%;
-    left: 0%;
-    z-index: 1;
-  }
+.blurBackground {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(5px);
+  height: 100vh;
+  width: 250vh;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  z-index: 1;
+}
 </style>

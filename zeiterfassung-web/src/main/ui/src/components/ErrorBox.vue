@@ -8,10 +8,10 @@
 </template>
 
 <style>
-  .error-box{
-    background-color: #ffcccb;
-    border-color: black;
-    border-style: solid;
-    border-radius: 5px;
-  }
+.error-box {
+  background-color: #ffcccb;
+  border-color: black;
+  border-style: solid;
+  border-radius: 5px;
+}
 </style>
