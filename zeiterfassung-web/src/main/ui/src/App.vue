@@ -12,6 +12,7 @@
           <ZeiterfassungRecordingStatus
             class="zeiterfassungRecordingStatus tile"
             :key="zeiterfassungStatusKey"
+            @refreshUi="refreshUis"
             @refreshUiWithHistory="refreshAllUisInclHistory"
           />
           <TicketDistribution
