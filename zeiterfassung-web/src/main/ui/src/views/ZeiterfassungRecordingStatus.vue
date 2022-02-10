@@ -2,17 +2,21 @@
   <div>
     <h2 class="centeredText">{{ title }} </h2>
     <div class="centered">
-      <div v-bind:class="{ isRecording: timeRecorderDto.isRecording, isNotRecording: !timeRecorderDto.isRecording}">
+      <div
+        v-bind:class="{ isRecording: timeRecorderDto.applicationStatus === 'RECORDING',
+        isComeAndGo: timeRecorderDto.applicationStatus === 'COME_AND_GO',
+        isNotRecording: timeRecorderDto.applicationStatus === 'IDLE'
+        }">
         <label>
           {{ timeRecorderDto.statusMsg }}
         </label>
       </div>
-      <div class="container">
-        <button class="containerElement" :disabled="isAddBusinessDayIncrementActive"
+      <div class="button-container">
+        <button class="container-element element-left" :disabled="isStartStopButtonDisabled"
                 v-on:click="startStopRecordingAndRefresh">
-          {{ timeRecorderDto.isRecording ? 'Aufzeichnung beenden' : 'Aufzeichnung starten' }}
+          {{ timeRecorderDto.applicationStatus === 'RECORDING' ? 'Aufzeichnung beenden' : 'Aufzeichnung starten' }}
         </button>
-        <button class="containerElement" :disabled="isBookButtonDisabled" v-on:click="bookAndRefresh">Abbuchen</button>
+        <button class="container-element element-right" :disabled="isBookButtonDisabled" v-on:click="bookAndRefresh">Abbuchen</button>
       </div>
     </div>
     <add-businessday-increment
@@ -45,7 +49,7 @@ export default {
   },
   data() {
     return {
-      title: 'Aktueller Status:',
+      title: 'Aktueller Status',
       isAddBusinessDayIncrementActive: false,
       ticketNr: '',
       beginTimeStampRepresentation: '',
@@ -55,7 +59,15 @@ export default {
   computed: {
     isBookButtonDisabled: function () {
       return !this.timeRecorderDto.isBookingPossible;
-    }
+    },
+    isStartStopButtonDisabled: function () {
+      return this.isAddBusinessDayIncrementActive
+          ||!this.timeRecorderDto
+          || this.timeRecorderDto.applicationStatus === 'COME_AND_GO';
+    },
+    timeRecorderDto: function () {
+      return this.$store.getters.timeRecorderDto
+    },
   },
   methods: {
     bookAndRefresh: function () {
@@ -67,12 +79,10 @@ export default {
       this.fetchTimeRecorderDto();// only 'refresh' this view
     },
     onResumed: function () {
-      console.log('onResumed..');
       this.isAddBusinessDayIncrementActive = false;
       this.refreshUiState();
     },
     refreshUiState: function () {
-      console.log("ZeiterfassungRecordStatus: refreshUiStates");
       this.requestUiRefresh();
     },
   },
@@ -82,15 +92,27 @@ export default {
 }
 </script>
 <style scoped>
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
 .isNotRecording {
   background-color: #ffcccb;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
+  padding: 3px;
+}
+
+.isComeAndGo {
+  background-color: #358fe6;
+  margin-bottom: 5px;
   padding: 3px;
 }
 
 .isRecording {
   background-color: #90EE90;
-  margin-bottom: 3px;
+  margin-bottom: 5px;
   padding: 3px;
 }
 </style>

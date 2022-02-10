@@ -158,8 +158,16 @@ th:last-child{
   padding: 0 0 0 0;
 }
 
-.containerElement {
+.container-element {
   width: 49.5%;
+}
+
+.element-left {
+  margin-right: 5px;
+}
+
+.element-right {
+  margin-left: 5px;
 }
 
 .center {

@@ -42,7 +42,7 @@
           @timeRepChanged="onBeginTimeRepChanged"
         >
         </time-input-field>
-        <label for="upto">Bis: </label>
+        <label for='endTimeStamp'>Bis: </label>
         <time-input-field
           id="endTimeStamp"
           v-model="businessDayIncrement.endTimeValue"
@@ -66,10 +66,10 @@
         <label> h</label>
       </p>
       <p class="container containerElement100">
-        <button :disabled="isSubmitButtonDisabled" class="containerElement"
+        <button :disabled="isSubmitButtonDisabled" class="container-element element-left"
                 v-on:click="addBusinessDayIncrementAndRefresh(businessDayIncrement)">Speichern
         </button>
-        <button class="containerElement" v-on:click="resume">Abbrechen</button>
+        <button class="container-element element-right" v-on:click="resume">Abbrechen</button>
       </p>
     </div>
     <error-box v-if="postErrorDetails">
@@ -162,10 +162,6 @@ export default {
 }
 </script>
 <style scoped>
-.container0 {
-  display: inline-block;
-  justify-content: space-between;
-}
 
 .descriptionInput {
   width: 97%; /* don't ask me why but with a width of 100% the input field is slightly to long :S*/
@@ -182,7 +178,7 @@ export default {
 .inputForm {
   background: white;
   position: fixed;
-  max-width: 15%;
+  width: 230px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -193,7 +189,7 @@ export default {
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(5px);
   height: 100vh;
-  width: 250vh;
+  width: 200vh;
   position: fixed;
   top: 0%;
   left: 0%;
