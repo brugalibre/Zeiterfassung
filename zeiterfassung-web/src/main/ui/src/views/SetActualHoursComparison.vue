@@ -7,13 +7,11 @@
       :data="setActualWorkingPieChartData"
       :round="2"
       class="centered"
-      height="230px"
       donut="true"
       empty="Keine Daten"
       legend="bottom"
       loading="Lade Daten..."
       suffix="h"
-      width="230px"
     >
     </pie-chart>
     <label>Tagessoll: {{ setHours }}h</label>

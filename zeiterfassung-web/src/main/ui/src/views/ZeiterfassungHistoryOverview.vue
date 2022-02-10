@@ -5,7 +5,8 @@
       <column-chart
         :data="businessDayHistoryChartData"
         :dataset="{borderColor: '#004587', backgroundColor: '#358fe6'}"
-        empty="Keine Daten" loading="Lade Daten..."
+        empty="Keine Daten"
+        loading="Lade Daten..."
         suffix="h"
         xtitle="Tage"
         ytitle="Stunden"

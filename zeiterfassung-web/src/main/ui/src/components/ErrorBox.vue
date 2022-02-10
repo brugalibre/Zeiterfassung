@@ -9,6 +9,7 @@
 
 <style>
 .error-box {
+  padding: 3px;
   background-color: #ffcccb;
   border-color: black;
   border-style: solid;

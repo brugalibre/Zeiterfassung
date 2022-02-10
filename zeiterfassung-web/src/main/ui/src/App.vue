@@ -15,11 +15,6 @@
             @refreshUi="refreshUis"
             @refreshUiWithHistory="refreshAllUisInclHistory"
           />
-          <TicketDistribution
-            :key="ticketDistributionOverviewKey"
-            class="ticketDistributionOverview tile"
-            @refreshUiWithHistory="refreshAllUisInclHistory"
-          />
         </div>
         <div class="timeRecordingDetailsRightSide">
           <ZeiterfassungOverview
@@ -27,6 +22,17 @@
             class="zeiterfassungOverview tile"
             @refreshUi="refreshUis"
           />
+        </div>
+      </div>
+      <div class="timeRecordingDetailsLeftAndRightSide">
+        <div class="timeRecordingDetailsLeftSide">
+          <TicketDistribution
+            :key="ticketDistributionOverviewKey"
+            class="ticketDistributionOverview tile"
+            @refreshUiWithHistory="refreshAllUisInclHistory"
+          />
+        </div>
+        <div class="timeRecordingDetailsRightSide">
           <ZeiterfassungHistoryOverview
             :key="zeiterfassungHistoryOverviewKey"
             class="zeiterfassungHistoryOverview tile"
@@ -59,7 +65,7 @@ export default {
   },
   data() {
     return {
-      applicationTitle: '',
+      applicationTitle: 'Zeiterfassung',
       overviewKey: 0,
       ticketDistributionOverviewKey: 0,
       zeiterfassungStatusKey: 0,
@@ -97,55 +103,58 @@ export default {
 
 <style>
 * {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  font-family: Verdana, Tahoma, Geneva, sans-serif;
 }
 
 button {
-  border-collapse: collapse;
   background-color: #004587;
   color: white;
+  table-layout: auto;
+  word-wrap: break-word;
+}
+
+h1, h2, h3, label {
+  word-wrap: break-word;
 }
 
 button:disabled {
   border-collapse: collapse;
-  background-color: lightslategray;
+  background-color: #9F9F9F;
 }
 
 table, th, td {
   color: black;
-  table-layout: dynamic;
+  table-layout: auto;
   border-collapse: collapse;
   text-align: left;
   padding: 5px;
-}
-
-table td {
-  border-top: #004587 thin solid;
-  border-bottom: #004587 thin solid;
-}
-
-
-td.fitwidth {
-  width: 1px;
   white-space: nowrap;
+}
+
+td {
+  border-bottom: #004587 thin solid;
 }
 
 th {
   color: white;
-  padding: 5px;
-  padding-right: 20px;
+  padding: 0.5vw 1.5vh;
   background-color: #004587;
 }
 
-button {
-  table-layout: auto;
+th:first-child{
+  border-top-left-radius: 7px;
+}
+
+th:last-child{
+  border-top-right-radius: 7px;
 }
 
 .container {
   display: flex;
   justify-content: space-between;
   max-width: 400px;
-  margin: 5 auto;
+  margin: 5px auto;
   padding: 0 0 0 0;
 }
 
@@ -193,7 +202,7 @@ button {
   width: auto;
   padding-left: 50px;
   padding-right: 50px;
-  display: flexbox;
+  display: flex;
   flex-flow: row wrap;
 }
 
@@ -204,17 +213,19 @@ button {
 }
 
 .ticketDistributionOverview {
-  flex-grow: 12;
+  flex-grow: 2;
 }
 
 .zeiterfassungRecordingStatus {
   width: auto;
   margin-bottom: 15px;
+  flex-grow: 2;
 }
 
 .zeiterfassungOverview {
   margin-bottom: 15px;
   width: auto;
+  flex-grow: 2;
 }
 
 .zeiterfassungHistoryOverview {
@@ -223,10 +234,9 @@ button {
 }
 
 .tile {
-  padding: 5px;
+  padding: 10px;
   max-width: 100%;
-  border-style: outset;
-  border-width: 3px;
-  border-color: #358fe6;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.16), 0 4px 6px rgba(0,0,0,0.45);
+  border-radius: 10px;
 }
 </style>
