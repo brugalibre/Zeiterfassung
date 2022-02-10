@@ -1,9 +1,11 @@
 <template>
   <div>
     <h2 class="centeredText">{{ title }} </h2>
-    <div class="timeRecorderStatusView centered">
+    <div class="centered">
       <div v-bind:class="{ isRecording: timeRecorderDto.isRecording, isNotRecording: !timeRecorderDto.isRecording}">
-        {{ timeRecorderDto.statusMsg }}
+        <label>
+          {{ timeRecorderDto.statusMsg }}
+        </label>
       </div>
       <div class="container">
         <button class="containerElement" :disabled="isAddBusinessDayIncrementActive"

@@ -15,7 +15,7 @@ export default {
           this.setActualWorkingHoursDto = data;
           this.setActualWorkingPieChartData =
             [['Bereits geleistete Stunden (' + this.setActualWorkingHoursDto.actualHours + ')', this.setActualWorkingHoursDto.actualHours],
-              ['Rest Stunden (' + this.setActualWorkingHoursDto.hoursLeft + ')', this.setActualWorkingHoursDto.hoursLeft]];
+              ['Übrige Stunden (' + this.setActualWorkingHoursDto.hoursLeft + ')', this.setActualWorkingHoursDto.hoursLeft]];
           this.setHours = this.setActualWorkingHoursDto.setHours;
         });
     },
