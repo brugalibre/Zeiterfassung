@@ -2,6 +2,8 @@ import {createStore} from 'vuex'
 
 export const store = createStore({
   state: {
+    // The time-recording application itself
+    timeRecorderDto: '',
     // the current business-day
     businessDay: {
       businessDayIncrementDtos: '',
@@ -31,6 +33,9 @@ export const store = createStore({
     },
     businessDay: state => {
       return state.businessDay;
+    },
+    timeRecorderDto: state => {
+      return state.timeRecorderDto;
     }
   },
   mutations: {
@@ -40,6 +45,9 @@ export const store = createStore({
     setBusinessDay(state, businessDay) {
       state.businessDay = businessDay
     },
+    setTimeRecorderDto(state, timeRecorderDto) {
+      state.timeRecorderDto = timeRecorderDto
+    },
   },
   actions: {
     setBusinessDayHistoryOverviewDto(context, businessDayHistoryOverviewDto) {
@@ -47,6 +55,9 @@ export const store = createStore({
     },
     setBusinessDay(context, businessDay) {
       context.commit("setBusinessDay", businessDay);
+    },
+    setTimeRecorderDto(context, timeRecorderDto) {
+      context.commit("setTimeRecorderDto", timeRecorderDto);
     },
   },
 });

@@ -3,7 +3,6 @@ export default {
   name: 'timeRecorderApi',
   data() {
     return {
-      timeRecorderDto: '',
       ticketsFromBacklog: '',
       postErrorDetails: null,
       postRequestOptions: {
@@ -16,7 +15,8 @@ export default {
     fetchTimeRecorderDto: function () {
       fetch(timeRecorderApiUrl)
         .then(response => response.json())
-        .then(data => this.timeRecorderDto = data);
+        .then(data => this.$store.dispatch('setTimeRecorderDto', data))
+        .catch(error => console.error("Error occurred while fetching timeRecorderDto", error));
     },
 
     startStopRecording: function () {
