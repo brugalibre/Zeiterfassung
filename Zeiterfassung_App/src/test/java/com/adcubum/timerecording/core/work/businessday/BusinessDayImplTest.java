@@ -22,8 +22,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
@@ -99,6 +98,21 @@ class BusinessDayImplTest extends BaseTestWithSettings {
 
       // Then
       assertThat(actualCapturingInactiveSinceMsg, is(TextLabel.CAPTURING_ACTIVE_SINCE + " " + currentTimeSnippet.getBeginTimeStamp()));
+   }
+
+   @Test
+   void testHasOneFinishedBusinessDayIncrementAndStartNewOne() {
+      // Given
+      BusinessDay businessDay = new BusinessDayImpl()
+              .startNewIncremental()
+              .stopCurrentIncremental()
+              .startNewIncremental();
+
+      // When
+      TimeSnippet currentTimeSnippet = businessDay.getCurrentTimeSnippet();
+
+      // Then
+      assertThat(currentTimeSnippet.getEndTimeStamp(), is(nullValue()));
    }
 
    @Test

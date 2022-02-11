@@ -113,7 +113,8 @@ public class BusinessDayImpl implements BusinessDay {
    public BusinessDay startNewIncremental() {
       DateTime time = DateTimeFactory.createNew(System.currentTimeMillis(), TimeRounder.INSTANCE.getRoundMode());
       TimeSnippet changedCurrentTimeSnippet = TimeSnippetImpl.of(currentTimeSnippet)
-            .setBeginTimeStamp(time);
+              .setBeginTimeStamp(time)
+              .setEndTimeStamp(null);
       return createCopyWithCurrentTimeSnippet(changedCurrentTimeSnippet);
    }
 

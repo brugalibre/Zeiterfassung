@@ -50,7 +50,7 @@
             <Label fx:id="amountOfHoursLabel" prefHeight="30.0" text="amountOfHoursLabel" GridPane.rowIndex="5" />
             <TextField id="amountOfHoursTextField" fx:id="amountOfHoursTextField" onAction="#onAction" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label fx:id="serviceCodesLabel" prefHeight="30.0" text="serviceCodesLabel" GridPane.rowIndex="6" />
-            <ComboBox fx:id="serviceCodesComboBox" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <ComboBox fx:id="serviceCodesComboBox" minWidth="160" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
             <GridPane hgap="5.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
