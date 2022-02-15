@@ -1,15 +1,6 @@
-/**
- * 
- */
 package com.adcubum.timerecording.core.work.businessday;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-import static java.util.Objects.requireNonNull;
-
-import java.text.ParseException;
-import java.util.UUID;
-
+import com.adcubum.timerecording.core.domainmodel.BaseDomainModel;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.timerecording.work.date.TimeType;
@@ -17,6 +8,11 @@ import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
 import com.adcubum.util.parser.DateParser;
 import com.adcubum.util.parser.NumberFormat;
 import com.adcubum.util.utils.StringUtil;
+
+import java.text.ParseException;
+import java.util.UUID;
+
+import static java.util.Objects.*;
 
 /**
  * Defines a period, that begin with the {@link #beginTimeStamp} and ends with
@@ -27,13 +23,12 @@ import com.adcubum.util.utils.StringUtil;
  * @author Dominic
  *
  */
-public class TimeSnippetImpl implements TimeSnippet {
-   private UUID id;
+public class TimeSnippetImpl extends BaseDomainModel implements TimeSnippet {
    private DateTime beginTimeStamp;
    private DateTime endTimeStamp;
 
    protected TimeSnippetImpl(UUID id, Long beginTimeStampValue, Long endTimeStampValue) {
-      this.id = id;
+      super(id);
       if (nonNull(beginTimeStampValue)) {
          this.beginTimeStamp = DateTimeFactory.createNew(beginTimeStampValue);
       }
@@ -46,7 +41,7 @@ public class TimeSnippetImpl implements TimeSnippet {
     * Creates a new and empty {@link TimeSnippetImpl}
     */
    protected TimeSnippetImpl() {
-      // nothing to do
+      super(null);
    }
 
    /**
@@ -68,10 +63,10 @@ public class TimeSnippetImpl implements TimeSnippet {
     *        <code>true</code> if the id is copied <code>false</code> if not
     */
    private TimeSnippetImpl(TimeSnippet otherTimeSnippet, boolean withId) {
+      super(null);
       requireNonNull(otherTimeSnippet);
       this.beginTimeStamp = otherTimeSnippet.getBeginTimeStamp();
       this.endTimeStamp = otherTimeSnippet.getEndTimeStamp();
-      this.id = null;// since we create a new one, we need also a new id
       if (withId) {
          this.id = otherTimeSnippet.getId();
       }
@@ -179,11 +174,6 @@ public class TimeSnippetImpl implements TimeSnippet {
    @Override
    public String getBeginTimeStampRep() {
       return String.valueOf(beginTimeStamp);
-   }
-
-   @Override
-   public UUID getId() {
-      return id;
    }
 
    @Override

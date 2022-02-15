@@ -1,5 +1,19 @@
 package com.adcubum.timerecording.core.businessday.impl.repository;
 
+import com.adcubum.timerecording.core.businessday.comeandgo.dao.ComeAndGoDao;
+import com.adcubum.timerecording.core.businessday.comeandgo.dao.ComeAndGoesDao;
+import com.adcubum.timerecording.core.businessday.comeandgo.entity.ComeAndGoesEntity;
+import com.adcubum.timerecording.core.businessday.dao.BusinessDayDao;
+import com.adcubum.timerecording.core.businessday.dao.BusinessDayIncrementDao;
+import com.adcubum.timerecording.core.businessday.dao.TimeSnippetDao;
+import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import static java.util.Objects.nonNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -7,18 +21,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.junit.jupiter.api.Test;
-
-import com.adcubum.timerecording.core.businessday.comeandgo.dao.ComeAndGoesDao;
-import com.adcubum.timerecording.core.businessday.comeandgo.entity.ComeAndGoesEntity;
-import com.adcubum.timerecording.core.businessday.dao.BusinessDayDao;
-import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
 
 
 class BusinessDayEntityRepositoryImplTest {
@@ -65,7 +67,9 @@ class BusinessDayEntityRepositoryImplTest {
          this.comeAndGoesDao = mock(ComeAndGoesDao.class);
          this.businessDayDao = mock(BusinessDayDao.class);
          this.businessDayEntityIds = new ArrayList<>();
-         this.businessDayEntityRepository = new BusinessDayEntityRepositoryImpl(businessDayDao, comeAndGoesDao);
+         BusinessDayEntityRepositoryHelper businessDayEntityRepositoryHelper = new BusinessDayEntityRepositoryHelper(businessDayDao,
+                 mock(BusinessDayIncrementDao.class), mock(TimeSnippetDao.class), comeAndGoesDao, mock(ComeAndGoDao.class));
+         this.businessDayEntityRepository = new BusinessDayEntityRepositoryImpl(businessDayEntityRepositoryHelper);
       }
 
       private TestCaseBuilder withExistingUuid(UUID existingId, boolean isBooked) {

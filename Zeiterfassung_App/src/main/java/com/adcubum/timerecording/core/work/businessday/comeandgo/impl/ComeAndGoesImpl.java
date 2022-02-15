@@ -1,5 +1,6 @@
 package com.adcubum.timerecording.core.work.businessday.comeandgo.impl;
 
+import com.adcubum.timerecording.core.domainmodel.BaseDomainModel;
 import com.adcubum.timerecording.core.work.businessday.TimeSnippet;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
@@ -20,9 +21,8 @@ import java.util.stream.Collectors;
  * @author DStalder
  *
  */
-public class ComeAndGoesImpl implements ComeAndGoes {
+public class ComeAndGoesImpl extends BaseDomainModel implements ComeAndGoes {
 
-   private UUID id;
    private LinkedList<ComeAndGo> comeAndGoEntries;
 
    private ComeAndGoesImpl() {
@@ -30,8 +30,8 @@ public class ComeAndGoesImpl implements ComeAndGoes {
    }
 
    private ComeAndGoesImpl(UUID id, List<ComeAndGo> comeAndGoEntries) {
+      super(id);
       this.comeAndGoEntries = new LinkedList<>(comeAndGoEntries);
-      this.id = id;
    }
 
    @Override

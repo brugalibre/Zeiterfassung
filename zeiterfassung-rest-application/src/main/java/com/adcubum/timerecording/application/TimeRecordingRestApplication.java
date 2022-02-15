@@ -3,6 +3,7 @@ package com.adcubum.timerecording.application;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javafx.application.Application;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 public class TimeRecordingRestApplication {

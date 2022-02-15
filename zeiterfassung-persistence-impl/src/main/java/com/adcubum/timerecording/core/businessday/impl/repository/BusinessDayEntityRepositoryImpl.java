@@ -1,9 +1,12 @@
 package com.adcubum.timerecording.core.businessday.impl.repository;
 
 import com.adcubum.timerecording.core.businessday.comeandgo.dao.ComeAndGoesDao;
+import com.adcubum.timerecording.core.businessday.comeandgo.entity.ComeAndGoEntity;
 import com.adcubum.timerecording.core.businessday.comeandgo.entity.ComeAndGoesEntity;
 import com.adcubum.timerecording.core.businessday.dao.BusinessDayDao;
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
+import com.adcubum.timerecording.core.businessday.entity.BusinessDayIncrementEntity;
+import com.adcubum.timerecording.core.businessday.entity.TimeSnippetEntity;
 import com.adcubum.timerecording.core.businessday.entity.repository.BusinessDayEntityRepository;
 import com.adcubum.timerecording.core.repository.ObjectNotFoundException;
 import com.adcubum.timerecording.work.date.DateTime;
@@ -26,11 +29,13 @@ public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityReposit
 
    private BusinessDayDao businessDayDao;
    private ComeAndGoesDao comeAndGoesDao;
+   private BusinessDayEntityRepositoryHelper businessDayEntityRepositoryHelper;
 
    @Autowired
-   public BusinessDayEntityRepositoryImpl(BusinessDayDao businessDayDao, ComeAndGoesDao comeAndGoesDao) {
-      this.businessDayDao = businessDayDao;
-      this.comeAndGoesDao = comeAndGoesDao;
+   public BusinessDayEntityRepositoryImpl(BusinessDayEntityRepositoryHelper businessDayEntityRepositoryHelper) {
+      this.businessDayDao = businessDayEntityRepositoryHelper.getBusinessDayDao();
+      this.comeAndGoesDao = businessDayEntityRepositoryHelper.getComeAndGoesDao();
+      this.businessDayEntityRepositoryHelper = businessDayEntityRepositoryHelper;
    }
 
    @Override
@@ -45,7 +50,6 @@ public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityReposit
 
    private List<BusinessDayEntity> setAdditionalComesAndGoes(List<BusinessDayEntity> businessDayEntities) {
       return businessDayEntities.stream()
-            .map(findAndSetComesAndGoes())
             .collect(Collectors.toList());
    }
 
@@ -111,8 +115,10 @@ public class BusinessDayEntityRepositoryImpl implements BusinessDayEntityReposit
    @Override
    public BusinessDayEntity save(BusinessDayEntity businessDayEntity) {
       LOG.info("Save business-day '{}'", businessDayEntity);
+      businessDayEntityRepositoryHelper.setNonMappedComeAndGoesEntityAttrs(businessDayEntity.getComeAndGoesEntity());
       ComeAndGoesEntity comeAndGoesEntity = comeAndGoesDao.save(businessDayEntity.getComeAndGoesEntity());
       businessDayEntity.setComeAndGoesEntity(comeAndGoesEntity);// set, so the BusinessDayEntity::comeandgoes_id is persisted
+      businessDayEntityRepositoryHelper.setNonMappedBusinessDayEntityAttrs(businessDayEntity);
       BusinessDayEntity savedBusinessDayEntity = businessDayDao.save(businessDayEntity);
       savedBusinessDayEntity.setComeAndGoesEntity(comeAndGoesEntity); // set, so the BusinessDayEntity-value is available
       return savedBusinessDayEntity;

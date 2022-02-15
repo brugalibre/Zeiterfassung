@@ -1,9 +1,7 @@
-/**
- * 
- */
 package com.adcubum.timerecording.core.work.businessday;
 
 import com.adcubum.librarys.text.res.TextLabel;
+import com.adcubum.timerecording.core.domainmodel.BaseDomainModel;
 import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayIncrementImport;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGo;
 import com.adcubum.timerecording.core.work.businessday.comeandgo.ComeAndGoes;
@@ -24,6 +22,7 @@ import com.adcubum.timerecording.work.date.DateTimeFactory;
 import com.adcubum.timerecording.work.date.DateTimeUtil;
 import com.adcubum.timerecording.work.date.TimeType;
 import com.adcubum.timerecording.work.date.TimeType.TIME_TYPE;
+import com.adcubum.util.parser.DateParser;
 import com.adcubum.util.parser.NumberFormat;
 import com.adcubum.util.utils.LogUtil;
 
@@ -49,8 +48,8 @@ import static java.util.Objects.*;
  * @author Dominic
  * 
  */
-public class BusinessDayImpl implements BusinessDay {
-   private UUID id;
+public class BusinessDayImpl extends BaseDomainModel implements BusinessDay {
+
    // all increments of this BusinessDayImpl (those are all finished!)
    private CopyOnWriteArrayList<BusinessDayIncrement> increments;
    // the current increment which has been started but not yet finished so far
@@ -63,13 +62,13 @@ public class BusinessDayImpl implements BusinessDay {
    /**
     * Creates a new {@link BusinessDayImpl} from the {@link BusinessDayFactory}
     */
-   public BusinessDayImpl(UUID id, boolean isBooked, List<BusinessDayIncrement> businessDayIncrements, TimeSnippet currentTimeSnippet,
-         ComeAndGoes comeAndGoes) {
+   public BusinessDayImpl(UUID id, boolean isBooked, List<BusinessDayIncrement> businessDayIncrements,
+                          TimeSnippet currentTimeSnippet, ComeAndGoes comeAndGoes) {
+      super(id);
       this.comeAndGoes = comeAndGoes;
       this.increments = new CopyOnWriteArrayList<>(businessDayIncrements);
       this.currentTimeSnippet = currentTimeSnippet;
       this.isBooked = isBooked;
-      this.id = id;
    }
 
    /**
@@ -84,6 +83,7 @@ public class BusinessDayImpl implements BusinessDay {
     * Constructor only for testing purpose!
     */
    public BusinessDayImpl(ComeAndGoes comeAndGoes) {
+      super(null);
       initialize(comeAndGoes);
    }
 
@@ -206,7 +206,7 @@ public class BusinessDayImpl implements BusinessDay {
    @Override
    public List<BusinessDayIncrement> getIncrements() {
       List<BusinessDayIncrement> incrementsCopy = new ArrayList<>(increments);
-      Collections.sort(incrementsCopy, new BusinessDayIncrementComparator());
+      incrementsCopy.sort(new BusinessDayIncrementComparator());
       return incrementsCopy;
    }
 
@@ -356,14 +356,10 @@ public class BusinessDayImpl implements BusinessDay {
    }
 
    @Override
-   public UUID getId() {
-      return id;
-   }
-
-   @Override
    public String toString() {
       return "BusinessDayImpl {" +
               "\n\tid=" + id + "," +
+              "\n\tdate=" + (increments.isEmpty() ? "null" : DateParser.parse2String(increments.get(0).getDateTime(), DateParser.DD_MM_YYYY)) + "," +
               "\n\tincrements=" +  LogUtil.toLogString(increments) + "," +
               "\n\tcurrentTimeSnippet=" + currentTimeSnippet + "," +
               "\n\tcomeAndGoes=" +  comeAndGoes + "," +

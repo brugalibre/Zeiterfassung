@@ -26,8 +26,6 @@ public class ComeAndGoesEntity extends BaseEntity {
    /**
     * Creates a new {@link ComeAndGoesEntity}
     * 
-    * @param id
-    *        the id
     */
    public ComeAndGoesEntity() {
       this(null);

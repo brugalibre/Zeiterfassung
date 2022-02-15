@@ -12,7 +12,7 @@ import java.util.UUID;
 public class BusinessDayIncrementEntity extends BaseEntity {
 
    @ManyToOne
-   @JoinColumn(name = "businessday_id", nullable = true)
+   @JoinColumn(name = "businessday_id")
    private BusinessDayEntity businessDayEntity;
 
    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -40,22 +40,16 @@ public class BusinessDayIncrementEntity extends BaseEntity {
 
    /**
     * Creates a new {@link BusinessDayIncrementEntity}
-    * 
-    * @param id
-    *        the id
-    * @param businessDayEntity
-    *        the {@link BusinessDayEntity}
-    * @param description
-    *        the description of the {@link BusinessDayIncrementEntity}
-    * @param ticketNr
-    *        the ticket nr
-    * @param chargeType
-    *        the charge type
-    * @param isBooked
-    *        defines if this {@link BusinessDayIncrementEntity} is already isBooked
+    *
+    * @param id                the id
+    * @param businessDayEntity the {@link BusinessDayEntity}
+    * @param description       the description of the {@link BusinessDayIncrementEntity}
+    * @param ticketNr          the ticket nr
+    * @param chargeType        the charge type
+    * @param isBooked          defines if this {@link BusinessDayIncrementEntity} is already isBooked
     */
    public BusinessDayIncrementEntity(UUID id, BusinessDayEntity businessDayEntity, String description, String ticketNr, Integer chargeType,
-         boolean isBooked, boolean isSent) {
+                                     boolean isBooked, boolean isSent) {
       super(id);
       this.businessDayEntity = businessDayEntity;
       this.description = description;
@@ -92,14 +86,14 @@ public class BusinessDayIncrementEntity extends BaseEntity {
    @Override
    public String toString() {
       return String.format(
-            "BusinessDayIncrementEntity[id=%s, " +
-                    "description='%s'," +
-                    " ticketNr='%s'," +
-                    " chargeType='%s'," +
-                    " isBooked='%s'," +
-                    " isSent='%s'," +
-                    " currentTimeSnippetEntity='%s']",
-            id, description, ticketNr, serviceCode, isBooked, isSent, currentTimeSnippetEntity);
+              "BusinessDayIncrementEntity[id=%s, " +
+                      "description='%s'," +
+                      " ticketNr='%s'," +
+                      " chargeType='%s'," +
+                      " isBooked='%s'," +
+                      " isSent='%s'," +
+                      " currentTimeSnippetEntity='%s']",
+              id, description, ticketNr, serviceCode, isBooked, isSent, currentTimeSnippetEntity);
    }
 
    @Override
@@ -109,9 +103,8 @@ public class BusinessDayIncrementEntity extends BaseEntity {
 
    /**
     * Defines this {@link BusinessDayIncrementEntity} current {@link TimeSnippetEntity}
-    * 
-    * @param currentTimeSnippetEntity
-    *        the {@link TimeSnippetEntity} to set
+    *
+    * @param currentTimeSnippetEntity the {@link TimeSnippetEntity} to set
     */
    public void setCurrentTimeSnippetEntity(TimeSnippetEntity currentTimeSnippetEntity) {
       this.currentTimeSnippetEntity = currentTimeSnippetEntity;

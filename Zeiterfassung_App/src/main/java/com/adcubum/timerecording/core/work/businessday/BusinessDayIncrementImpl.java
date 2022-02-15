@@ -1,8 +1,6 @@
-/**
- * 
- */
 package com.adcubum.timerecording.core.work.businessday;
 
+import com.adcubum.timerecording.core.domainmodel.BaseDomainModel;
 import com.adcubum.timerecording.core.importexport.in.businessday.BusinessDayIncrementImport;
 import com.adcubum.timerecording.core.work.businessday.update.callback.impl.BusinessDayIncrementAdd;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
@@ -31,10 +29,9 @@ import static java.util.Objects.*;
  * 
  * @author Dominic
  */
-public class BusinessDayIncrementImpl implements BusinessDayIncrement {
+public class BusinessDayIncrementImpl extends BaseDomainModel implements BusinessDayIncrement {
    private TimeSnippet currentTimeSnippet;
 
-   private UUID id;
    private String description;
    private Ticket ticket;
    private boolean isBooked;
@@ -45,10 +42,10 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     * Constructor used by the factory
     */
    @SuppressWarnings("unused")
-   private BusinessDayIncrementImpl(TimeSnippet currentTimeSnippet, UUID id, String description, Ticket ticket, TicketActivity ticketActivity, boolean isBooked,
-                                    boolean isSent) {
+   private BusinessDayIncrementImpl(TimeSnippet currentTimeSnippet, UUID id, String description, Ticket ticket,
+                                    TicketActivity ticketActivity, boolean isBooked, boolean isSent) {
+      super(id);
       this.currentTimeSnippet = currentTimeSnippet;
-      this.id = id;
       this.description = description;
       this.ticket = ticket;
       this.ticketActivity = ticketActivity;
@@ -61,12 +58,9 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     * 
     */
    public BusinessDayIncrementImpl() {
-      // nothing to do
+      super(null);
    }
 
-   /**
-    * @param beginTimeStamp
-    */
    @Override
    public BusinessDayIncrement startCurrentTimeSnippet(DateTime beginTimeStamp) {
       if (isBooked){
@@ -78,9 +72,6 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
       return createNewBusinessDayIncrement(newCurrentTimeSnippet);
    }
 
-   /**
-    * @param endTimeStamp
-    */
    @Override
    public BusinessDayIncrement stopCurrentTimeSnippet(DateTime endTimeStamp) {
       if (isBooked){
@@ -245,11 +236,6 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
    }
 
    @Override
-   public UUID getId() {
-      return id;
-   }
-
-   @Override
    public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
@@ -313,7 +299,7 @@ public class BusinessDayIncrementImpl implements BusinessDayIncrement {
     * Creates a new {@link BusinessDayIncrement} for the given
     * {@link BusinessDayIncrementImport} with all its {@link TimeSnippet}s
     * 
-    * @param businessDayIncrementImport
+    * @param businessDayIncrementImport the {@link BusinessDayIncrementImport} to copy from
     * @return a new {@link BusinessDayIncrement}
     */
    public static BusinessDayIncrement of(BusinessDayIncrementImport businessDayIncrementImport) {
