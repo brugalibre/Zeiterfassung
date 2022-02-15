@@ -13,7 +13,7 @@ import com.adcubum.timerecording.work.date.DateTime;
 
 /**
  * The {@link BusinessDayDao} as data-access-object in order to create, retrieve and change {@link BusinessDayEntity}
- * 
+ *
  * @author dstalder
  *
  */
@@ -39,7 +39,7 @@ public interface BusinessDayDao extends CrudRepository<BusinessDayEntity, UUID> 
 
    /**
     * Selects all booked {@link BusinessDayEntity} which are within or equal the given {@link DateTime} bounds
-    * 
+    *
     * @param lowerBounds
     *        the lower bound
     * @param upperBounds
@@ -56,7 +56,7 @@ public interface BusinessDayDao extends CrudRepository<BusinessDayEntity, UUID> 
    /**
     * Selects the id's of all {@link BusinessDayEntity} which are either booked or not booked - depending on the given
     * parameter
-    * 
+    *
     * @param isBooked
     *        <code>true</code> if only booked {@link BusinessDayEntity} should be considered or <code>false</code> if not
     * @return a list of all id's of all {@link BusinessDayEntity} which are either booked or not

@@ -26,8 +26,6 @@ public class ComeAndGoesEntity extends BaseEntity {
    /**
     * Creates a new {@link ComeAndGoesEntity}
     * 
-    * @param id
-    *        the id
     */
    public ComeAndGoesEntity() {
       this(null);
@@ -50,6 +48,11 @@ public class ComeAndGoesEntity extends BaseEntity {
 
    public void setComeAndGoEntriesEntities(List<ComeAndGoEntity> comeAndGoEntriesEntities) {
       this.comeAndGoEntriesEntities = comeAndGoEntriesEntities;
+   }
+
+   @Override
+   public <T extends BaseEntity> boolean hasChangesForLastModified(T persistentOther) {
+      return false;// since there are no other attributes to change on ComeAndGoesEntity
    }
 
    @Override

@@ -4,10 +4,8 @@ import java.util.UUID;
 
 /**
  * The {@link DomainModel} defines a domain model which contains not only data but also logic
- * 
+ *
  * @author DStalder
- * @param <I>
- *        the specific type of it's id
  */
 public interface DomainModel {
 

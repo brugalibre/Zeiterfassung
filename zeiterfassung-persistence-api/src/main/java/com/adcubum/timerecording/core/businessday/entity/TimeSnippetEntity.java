@@ -1,14 +1,14 @@
 package com.adcubum.timerecording.core.businessday.entity;
 
-import java.sql.Timestamp;
-import java.util.UUID;
+import com.adcubum.timerecording.core.businessday.common.entity.BaseEntity;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.sql.Timestamp;
+import java.util.UUID;
 
-import org.springframework.lang.NonNull;
-
-import com.adcubum.timerecording.core.businessday.common.entity.BaseEntity;
+import static java.util.Objects.nonNull;
 
 @Entity
 @Table(name = "timesnippet")
@@ -28,13 +28,10 @@ public class TimeSnippetEntity extends BaseEntity {
 
    /**
     * Creates a new {@link TimeSnippetEntity}
-    * 
-    * @param id
-    *        the id
-    * @param beginTime
-    *        the {@link Timestamp} of the begin time stamp
-    * @param endTime
-    *        the {@link Timestamp} of the end time stamp
+    *
+    * @param id        the id
+    * @param beginTime the {@link Timestamp} of the begin time stamp
+    * @param endTime   the {@link Timestamp} of the end time stamp
     */
    public TimeSnippetEntity(UUID id, Timestamp beginTime, Timestamp endTime) {
       super(id);
@@ -51,10 +48,21 @@ public class TimeSnippetEntity extends BaseEntity {
    }
 
    @Override
+   public <T extends BaseEntity> boolean hasChangesForLastModified(T persistentOther) {
+      if (persistentOther instanceof TimeSnippetEntity) {
+         TimeSnippetEntity persistentTimeSnippetEntity = (TimeSnippetEntity) persistentOther;
+         return nonNull(this.getBeginTimestamp()) && this.getBeginTimestamp().equals(persistentTimeSnippetEntity.getBeginTimestamp())
+                 || nonNull(this.getEndTimestamp()) && nonNull(persistentTimeSnippetEntity.getEndTimestamp())
+                 && this.getEndTimestamp().equals(persistentTimeSnippetEntity.getEndTimestamp());
+      }
+      return false;
+   }
+
+   @Override
    public String toString() {
       return String.format(
-            "TimeSnippetEntity[id=%s, beginTimestamp='%s', endTimestamp='%s']",
-            id, beginTimestamp, endTimestamp);
+              "TimeSnippetEntity[id=%s, beginTimestamp='%s', endTimestamp='%s']",
+              id, beginTimestamp, endTimestamp);
    }
 
    @Override

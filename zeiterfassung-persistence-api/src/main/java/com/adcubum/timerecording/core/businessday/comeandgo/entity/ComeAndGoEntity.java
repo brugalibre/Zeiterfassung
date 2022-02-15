@@ -1,18 +1,12 @@
 package com.adcubum.timerecording.core.businessday.comeandgo.entity;
 
-import static java.util.Objects.requireNonNull;
-
-import java.util.UUID;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 import com.adcubum.timerecording.core.businessday.common.entity.BaseEntity;
 import com.adcubum.timerecording.core.businessday.entity.TimeSnippetEntity;
+
+import javax.persistence.*;
+import java.util.UUID;
+
+import static java.util.Objects.requireNonNull;
 
 @Entity
 @Table(name = "comeandgo")
@@ -34,13 +28,10 @@ public class ComeAndGoEntity extends BaseEntity {
 
    /**
     * Creates a new {@link ComeAndGoEntity}
-    * 
-    * @param id
-    *        the id
-    * @param comeAndGoesEntity
-    *        the {@link ComeAndGoesEntity}
-    * @param isRecorded
-    *        <code>true</code> if this {@link ComeAndGoEntity} is already recorded or <code>false</code> if not
+    *
+    * @param id                the id
+    * @param comeAndGoesEntity the {@link ComeAndGoesEntity}
+    * @param isRecorded        <code>true</code> if this {@link ComeAndGoEntity} is already recorded or <code>false</code> if not
     */
    public ComeAndGoEntity(UUID id, ComeAndGoesEntity comeAndGoesEntity, boolean isRecorded) {
       super(id);
@@ -55,8 +46,8 @@ public class ComeAndGoEntity extends BaseEntity {
    @Override
    public String toString() {
       return String.format(
-            "ComeAndGoEntity[id=%s, isRecorded='%s', timeSnippetEntity='%s']",
-            id, isRecorded, timeSnippetEntity);
+              "ComeAndGoEntity[id=%s, isRecorded='%s', timeSnippetEntity='%s']",
+              id, isRecorded, timeSnippetEntity);
    }
 
    public boolean isRecorded() {
@@ -65,12 +56,20 @@ public class ComeAndGoEntity extends BaseEntity {
 
    /**
     * Defines this {@link ComeAndGoEntity} current {@link TimeSnippetEntity}
-    * 
-    * @param timeSnippetEntity
-    *        the {@link TimeSnippetEntity} to set
+    *
+    * @param timeSnippetEntity the {@link TimeSnippetEntity} to set
     */
    public void setTimeSnippetEntity(TimeSnippetEntity timeSnippetEntity) {
       this.timeSnippetEntity = timeSnippetEntity;
+   }
+
+   @Override
+   public <T extends BaseEntity> boolean hasChangesForLastModified(T persistentOther) {
+      if (persistentOther instanceof ComeAndGoEntity) {
+         ComeAndGoEntity persistentComeAndGoEntity = (ComeAndGoEntity) persistentOther;
+         return isRecorded() != persistentComeAndGoEntity.isRecorded();
+      }
+      return false;
    }
 
    @Override

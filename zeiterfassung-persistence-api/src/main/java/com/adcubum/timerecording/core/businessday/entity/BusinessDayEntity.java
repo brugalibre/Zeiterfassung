@@ -1,23 +1,15 @@
 package com.adcubum.timerecording.core.businessday.entity;
 
-import static java.util.Objects.requireNonNull;
+import com.adcubum.timerecording.core.businessday.comeandgo.entity.ComeAndGoesEntity;
+import com.adcubum.timerecording.core.businessday.common.entity.BaseEntity;
+import org.springframework.lang.NonNull;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import org.springframework.lang.NonNull;
-
-import com.adcubum.timerecording.core.businessday.comeandgo.entity.ComeAndGoesEntity;
-import com.adcubum.timerecording.core.businessday.common.entity.BaseEntity;
+import static java.util.Objects.requireNonNull;
 
 @Entity
 @Table(name = "businessday")
@@ -28,10 +20,10 @@ public class BusinessDayEntity extends BaseEntity {
     * Besides this should'nt be a performance issue, since there are not that much active increments.
     */
    @OneToMany(targetEntity = BusinessDayIncrementEntity.class,
-         mappedBy = "businessDayEntity",
-         cascade = CascadeType.ALL,
-         fetch = FetchType.EAGER,
-         orphanRemoval = true)
+           mappedBy = "businessDayEntity",
+           cascade = CascadeType.ALL,
+           fetch = FetchType.EAGER,
+           orphanRemoval = true)
    @NonNull
    private List<BusinessDayIncrementEntity> businessDayIncrementEntities;
 
@@ -55,9 +47,8 @@ public class BusinessDayEntity extends BaseEntity {
 
    /**
     * Creates a new {@link BusinessDayEntity}
-    * 
-    * @param id
-    *        the id
+    *
+    * @param id the id
     */
    public BusinessDayEntity(UUID id, boolean isBooked) {
       super(id);
@@ -88,13 +79,22 @@ public class BusinessDayEntity extends BaseEntity {
    }
 
    @Override
+   public <T extends BaseEntity> boolean hasChangesForLastModified(T persistentOther) {
+      if (persistentOther instanceof BusinessDayEntity) {
+         BusinessDayEntity persistentBusinessDayEntity = (BusinessDayEntity) persistentOther;
+         return isBooked() != persistentBusinessDayEntity.isBooked();
+      }
+      return false;
+   }
+
+   @Override
    public String toString() {
       String bdIncEntitiesRep = businessDayIncrementEntities.stream()
-            .map(bDIncEntity -> String.format("BusinessDayIncrementEntity='%s'", bDIncEntity))
-            .reduce("", (a, b) -> a + "," + b);
+              .map(bDIncEntity -> String.format("BusinessDayIncrementEntity='%s'", bDIncEntity))
+              .reduce("", (a, b) -> a + "," + b);
       return String.format(
-            "BusinessDayEntity[id=%s, isBooked=%s, currentTimeSnippetEntity=%s, bdIncEntitiesRep='%s']",
-            id, isBooked, currentTimeSnippetEntity, bdIncEntitiesRep);
+              "BusinessDayEntity[id=%s, isBooked=%s, currentTimeSnippetEntity=%s, bdIncEntitiesRep='%s']",
+              id, isBooked, currentTimeSnippetEntity, bdIncEntitiesRep);
    }
 
    public void setBusinessDayIncrementEntities(List<BusinessDayIncrementEntity> businessDayIncrementEntities) {
