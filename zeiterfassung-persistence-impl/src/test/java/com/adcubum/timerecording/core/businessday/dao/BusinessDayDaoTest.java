@@ -1,23 +1,22 @@
 package com.adcubum.timerecording.core.businessday.dao;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import com.adcubum.timerecording.core.businessday.dao.config.TestTimeSnippetDaoConfig;
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayEntity;
 import com.adcubum.timerecording.core.businessday.entity.BusinessDayIncrementEntity;
 import com.adcubum.timerecording.core.businessday.entity.TimeSnippetEntity;
 import com.adcubum.timerecording.work.date.DateTime;
 import com.adcubum.timerecording.work.date.DateTimeBuilder;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @SpringBootTest(classes = {TestTimeSnippetDaoConfig.class})
 class BusinessDayDaoTest {
@@ -72,7 +71,7 @@ class BusinessDayDaoTest {
             .build();
 
       // When
-      List<BusinessDayEntity> allBusinessDaysWithinRange = tcb.businessDayDao.findAllBusinessDayEntitiesWithinRange(lowerBounds, upperBounds);
+      List<BusinessDayEntity> allBusinessDaysWithinRange = tcb.businessDayDao.findAllBookedBusinessDayEntitiesWithinRange(lowerBounds, upperBounds);
 
       // Then
       assertThat(allBusinessDaysWithinRange.size(), is(1));
@@ -120,7 +119,7 @@ class BusinessDayDaoTest {
             .build();
 
       // When
-      List<BusinessDayEntity> allBusinessDaysWithinRange = tcb.businessDayDao.findAllBusinessDayEntitiesWithinRange(lowerBounds, upperBounds);
+      List<BusinessDayEntity> allBusinessDaysWithinRange = tcb.businessDayDao.findAllBookedBusinessDayEntitiesWithinRange(lowerBounds, upperBounds);
 
       // Then
       assertThat(allBusinessDaysWithinRange.isEmpty(), is(true));
@@ -138,6 +137,7 @@ class BusinessDayDaoTest {
 
       private static BusinessDayEntity buildBusinessDayEntity(String description, String ticketNr) {
          BusinessDayEntity businessDayEntity = new BusinessDayEntity();
+         businessDayEntity.setIsBooked(true);// since we can only load booked business-days
          businessDayEntity.setComeAndGoesEntity(null);
          BusinessDayIncrementEntity businessDayIncrementEntity =
                new BusinessDayIncrementEntity(null, businessDayEntity, description, ticketNr, 113, false, false);
@@ -159,9 +159,7 @@ class BusinessDayDaoTest {
       }
 
       private void saveAllTimeSnippetEntities() {
-         for (BusinessDayEntity businessDayEntity : businessDayEntities) {
-            businessDayDao.save(businessDayEntity);
-         }
+         businessDayDao.saveAll(businessDayEntities);
       }
    }
 }
