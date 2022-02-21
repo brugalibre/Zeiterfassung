@@ -18,24 +18,9 @@ import com.adcubum.timerecording.work.date.DateTime;
  *
  */
 public interface BusinessDayDao extends CrudRepository<BusinessDayEntity, UUID> {
-   static final String SELECT_ALL_FROM_BUSINESS_DAY = "SELECT bd "
+   static final String SELECT_ALL_FROM_BUSINESS_DAY = "SELECT DISTINCT bd "
          + "FROM BusinessDayEntity bd "
          + "JOIN bd.businessDayIncrementEntities bdIncrements ";
-
-   /**
-    * Selects all {@link BusinessDayEntity} which are within or equal the given {@link DateTime} bounds
-    * 
-    * @param lowerBounds
-    *        the lower bound
-    * @param upperBounds
-    *        the upper bound
-    * @return a list of all selected {@link BusinessDayEntity}
-    */
-   @Query(SELECT_ALL_FROM_BUSINESS_DAY
-         + "WHERE bdIncrements.currentTimeSnippetEntity.beginTimestamp >= ?1 "
-         + "AND bdIncrements.currentTimeSnippetEntity.beginTimestamp <= ?2")
-   @NonNull
-   List<BusinessDayEntity> findAllBusinessDayEntitiesWithinRange(@NonNull Timestamp lowerBounds, @NonNull Timestamp upperBounds);
 
    /**
     * Selects all booked {@link BusinessDayEntity} which are within or equal the given {@link DateTime} bounds
