@@ -5,6 +5,7 @@ import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationProvider;
 import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
+import com.adcubum.timerecording.jira.jiraapi.mapresponse.ResponseStatus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -22,14 +23,18 @@ class JiraApiReaderImplIntegTest {
    public static final String SPRINT = "/sprint";
    public static final String ISSUE = "/issue";
    private static final int portNumber = 6181;
-   private static String restAgileApiPath;
+   public static final String PROJECT_987 = "PROJECT-987";
+   private static String getJiraBoardBaseUrl;
+   private static String getJiraReadKanbanIssuesUrl;
 
    @BeforeAll
    public static void setUp() {
       // Path with which the request is registered on the mock-webserver. It's without the url and parameters!
       JiraApiConfiguration jiraApiConfiguration = JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration();
-      restAgileApiPath = jiraApiConfiguration.getJiraBoardBaseUrl()
+      getJiraBoardBaseUrl = jiraApiConfiguration.getJiraBoardBaseUrl()
             .replace(jiraApiConfiguration.getJiraUrl(), "");
+      // For mocking the header, don't add the parameter values (like beginAt, boardId and so on)
+      getJiraReadKanbanIssuesUrl = getJiraBoardBaseUrl + "/" + BOARD_ID_FOR_NAME + ISSUE;
    }
 
    @Test
@@ -37,9 +42,9 @@ class JiraApiReaderImplIntegTest {
       // Given
       DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
             .withHost(LOCALHOST + ":" + portNumber)
-            .withHeaderAndResponse(restAgileApiPath, READ_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
-            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + SPRINT, READ_SPRINT_ID_RESPONSE) // Request & Response for reading the sprint id
-            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + SPRINT +"/" + SPRINT_ID_FOR_BOARD + ISSUE, // Request & Response for reading the tickets for sprint
+            .withHeaderAndResponse(getJiraBoardBaseUrl, READ_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
+            .withHeaderAndResponse(getJiraBoardBaseUrl + "/" + BOARD_ID_FOR_NAME + SPRINT, READ_SPRINT_ID_RESPONSE) // Request & Response for reading the sprint id
+            .withHeaderAndResponse(getJiraBoardBaseUrl + "/" + BOARD_ID_FOR_NAME + SPRINT +"/" + SPRINT_ID_FOR_BOARD + ISSUE, // Request & Response for reading the tickets for sprint
                   READ_SPRINT_ISSUES_RESPONSE)
             .withHttpWrapper(new HttpClient())
             .withJiraApiReader()
@@ -57,18 +62,60 @@ class JiraApiReaderImplIntegTest {
    }
 
    @Test
+   void testReadTicketsFromKanbanBoardWithTickets() {
+      // Given
+      DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
+            .withHost(LOCALHOST + ":" + portNumber)
+            .withHeaderAndResponse(getJiraBoardBaseUrl, READ_KANBAN_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
+            .withHeaderAndResponse(getJiraReadKanbanIssuesUrl, READ_KANBAN_ISSUES_RESPONSE)
+            .withHttpWrapper(new HttpClient())
+            .withJiraApiReader()
+            .build();
+
+      // When
+      JiraApiReadTicketsResult ticketsFromBoard =
+            tcb.jiraApiReader.readTicketsFromBoardAndSprints(JiraApiTestReadConst.BOARD_NAME, Collections.emptyList());
+      assertThat(ticketsFromBoard.getTickets().size(), is(1));
+      Ticket ticket = ticketsFromBoard.getTickets().get(0);
+      assertThat(ticket.getNr(), is(PROJECT_987));
+
+      // finally
+      tcb.clientServer.stop();
+   }
+
+   @Test
+   void testReadTicketsFromKanbanBoardWithFailedBoardIdFetch() {
+      // Given
+      DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
+            .withHost(LOCALHOST + ":" + portNumber)
+            .withHeaderAndResponse(getJiraBoardBaseUrl, "empty response") // Request & Response for reading the board
+            .withHttpWrapper(new HttpClient())
+            .withJiraApiReader()
+            .build();
+
+      // When
+      JiraApiReadTicketsResult ticketsFromBoard =
+            tcb.jiraApiReader.readTicketsFromBoardAndSprints(JiraApiTestReadConst.BOARD_NAME, Collections.emptyList());
+      assertThat(ticketsFromBoard.getTickets().isEmpty(), is(true));
+      assertThat(ticketsFromBoard.getResponseStatus(), is(ResponseStatus.FAILURE));
+
+      // finally
+      tcb.clientServer.stop();
+   }
+
+   @Test
    void testReadTwoActiveSprintsFromBoard() {
       // Given
       DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
             .withHost(LOCALHOST + ":" + portNumber)
-            .withHeaderAndResponse(restAgileApiPath, READ_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
+            .withHeaderAndResponse(getJiraBoardBaseUrl, READ_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
             // Request & Response for reading the sprint id
-            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + SPRINT, READ_SPRINT_ID_RESPONSE_TWO_ACTIVE_SPRINTS)
+            .withHeaderAndResponse(getJiraBoardBaseUrl + "/" + BOARD_ID_FOR_NAME + SPRINT, READ_SPRINT_ID_RESPONSE_TWO_ACTIVE_SPRINTS)
             // Request & Response for reading the tickets for the first active sprint
-            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + SPRINT +"/" + ACTIVE_SPRINT_ID_1_FOR_BOARD + ISSUE,
+            .withHeaderAndResponse(getJiraBoardBaseUrl + "/" + BOARD_ID_FOR_NAME + SPRINT +"/" + ACTIVE_SPRINT_ID_1_FOR_BOARD + ISSUE,
                   READ_SPRINT_ISSUES_FOR_ACTIVE_SPRINT_1_RESPONSE)
             // Request & Response for reading the tickets for 2nd active sprint
-            .withHeaderAndResponse(restAgileApiPath + "/" + BOARD_ID_FOR_NAME + SPRINT +"/" + ACTIVE_SPRINT_ID_2_FOR_BOARD + ISSUE,
+            .withHeaderAndResponse(getJiraBoardBaseUrl + "/" + BOARD_ID_FOR_NAME + SPRINT +"/" + ACTIVE_SPRINT_ID_2_FOR_BOARD + ISSUE,
                   READ_SPRINT_ISSUES_FOR_ACTIVE_SPRINT_2_RESPONSE)
             .withHttpWrapper(new HttpClient())
             .withJiraApiReader()

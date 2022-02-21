@@ -83,12 +83,17 @@ public class JiraApiReaderImpl implements JiraApiReader {
    public JiraApiReadTicketsResult readTicketsFromBoardAndSprints(String boardName, List<String> sprintNames) {
       LOG.info("Try to read the tickets from the current sprint from board '{}'", boardName);
       BoardInfo boardInfo = evalActiveSprints4BoardName(boardName);
-      if (boardInfo.getSprintInfos().isEmpty() && boardInfo.isScrumBoard()) {
+      if (isReadingBoardFailed(boardInfo)) {
          return failedResult(boardInfo); // A scrum-board without any active nor futur sprints -> error
       }
       JiraIssuesResponse activeSprintIssues = createUrlAndReadScrumIssuesFromJira(boardInfo);
       readAndApplyFutureSprintTickets(activeSprintIssues, boardInfo, sprintNames);
       return JiraResponseMapper.INSTANCE.map2TicketResult(activeSprintIssues);
+   }
+
+   private static boolean isReadingBoardFailed(BoardInfo boardInfo) {
+      return (boardInfo.getSprintInfos().isEmpty() && boardInfo.isScrumBoard())
+              || BoardInfo.isUnknown(boardInfo.getBoardId());
    }
 
    private void readAndApplyFutureSprintTickets(JiraIssuesResponse activeSprintIssues, BoardInfo boardInfo, List<String> sprintNames) {
