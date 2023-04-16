@@ -6,3 +6,4 @@ zeiterfassung-web-bucher.properties
 zeiterfassung.properties
 defaultProlesTickets.json
 /data/application.mv.db
+/.metadata/
