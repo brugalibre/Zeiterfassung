@@ -3,7 +3,7 @@ timerecording:
     brokers: sulky-01.srvs.cloudkafka.com:9094,sulky-03.srvs.cloudkafka.com:9094,sulky-02.srvs.cloudkafka.com:9094
     groupId: vgns6bra-consumer
     topic: vgns6bra-add-and-book-businessday
-    consumer-enabled: true
+    consumer-enabled: false
   auth:
     username: vgns6bra
     password: t6JEcZDPa2sssLBFjuUObE15_JPWjyTP
@@ -22,3 +22,12 @@ spring:
   sql:
     init:
       mode: always
+AppTitle: Adcubum Zeiterfassung
+ComeOrGoHotKey: control shift SPACE
+Rundungseinstellungen: 15
+StartStopHotKey: control shift ENTER
+beginWork: 07:15
+IsMaster: true
+endWork: 16:15
+BookBDaySenderReceiverId: nag
+setWorkingHours: 8.5
