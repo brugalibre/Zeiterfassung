@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 @Component
@@ -70,6 +71,9 @@ public class BusinessDayEntityRepositoryHelper {
    }
 
    private <T extends BaseEntity> void findAndSetNonMappedEntityAttr4BaseEntity(T changedBaseEntity) {
+      if (isNull(changedBaseEntity.getId())) {
+         return;
+      }
       CrudRepository<T, UUID> repo = getRepoForEntity(changedBaseEntity);
       repo.findById(changedBaseEntity.getId())
               .ifPresent(persistentBaseEntity -> {
