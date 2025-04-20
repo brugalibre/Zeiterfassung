@@ -1,6 +1,5 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.data;
 
-import com.adcubum.timerecording.jira.jiraapi.readresponse.response.error.JiraErrorResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import static java.util.Objects.isNull;
  *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class JiraIssuesResponse extends JiraErrorResponse {
+public class JiraIssuesResponse extends AbstractJiraResponse {
 
    private List<JiraIssue> issues;
    private int total;
@@ -26,14 +25,6 @@ public class JiraIssuesResponse extends JiraErrorResponse {
     * Default constructor needed by jackson
     */
    public JiraIssuesResponse() {
-      this(null, null);
-   }
-
-   /**
-    * Constructor needed when something went south
-    */
-   public JiraIssuesResponse(Exception e, String url) {
-      super(e, url);
       this.issues = new ArrayList<>();
    }
 

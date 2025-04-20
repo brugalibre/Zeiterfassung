@@ -9,6 +9,7 @@ import com.adcubum.timerecording.app.TimeRecorder;
 import com.adcubum.timerecording.core.callbackhandler.UiCallbackHandler;
 import com.adcubum.timerecording.librarys.pictures.PictureLibrary;
 import com.adcubum.timerecording.settings.round.TimeRounder;
+import com.adcubum.timerecording.settings.round.constant.RoundModeConst;
 import com.adcubum.timerecording.settings.round.observable.RoundModeChangedListener;
 import com.adcubum.timerecording.ui.app.TimeRecordingTray;
 import com.adcubum.timerecording.ui.security.login.auth.UiAuthenticationService;
@@ -104,7 +105,7 @@ public class TimeRecordingApplication extends Application {
 
    private static void initTimeRounder() {
       RoundModeChangedListener saveChangedTimeRoundValue =
-            (oldVal, newVal) -> TimeRecorder.INSTANCE.saveSettingValue(String.valueOf(newVal.getAmount()), "");
+            (oldVal, newVal) -> TimeRecorder.INSTANCE.saveSettingValue(String.valueOf(newVal.getAmount()), RoundModeConst.SETTINGS_ROUND_KEY);
       TimeRounder.INSTANCE.init(TimeRecorder.INSTANCE::getSettingsValue);
       TimeRounder.INSTANCE.addRoundModeChangedListener(saveChangedTimeRoundValue);
    }

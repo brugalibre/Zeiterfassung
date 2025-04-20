@@ -1,8 +1,10 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader;
 
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraIssuesResponse;
+import com.brugalibre.common.http.model.response.ResponseWrapper;
+import com.brugalibre.common.http.service.response.AbstractHttpResponseReader;
 
-public class JiraIssuesResponseReader extends AbstractJiraResponseReader<JiraIssuesResponse> {
+public class JiraIssuesResponseReader extends AbstractHttpResponseReader<JiraIssuesResponse> {
 
    @Override
    protected Class<JiraIssuesResponse> getResponseResultClass() {
@@ -10,7 +12,7 @@ public class JiraIssuesResponseReader extends AbstractJiraResponseReader<JiraIss
    }
 
    @Override
-   public JiraIssuesResponse createErrorResponse(Exception e, String url) {
-      return new JiraIssuesResponse(e, url);
+   public ResponseWrapper<JiraIssuesResponse> createErrorResponse(Exception e, String url) {
+      return new ResponseWrapper<>(new JiraIssuesResponse(), 500, e, url);
    }
 }

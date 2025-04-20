@@ -27,7 +27,7 @@ public class JiraResponseMapper {
 
    /**
     * Mapps the given {@link JiraIssueResponse} into a {@link Ticket} {@link Optional}
-    * If the fetch was not sucessfull, then {@link Optional#empty()} is returned instead
+    * If the fetch was not successful, then {@link Optional#empty()} is returned instead
     * 
     * @param jiraIssueResponse
     *        the received {@link JiraIssueResponse}
@@ -59,6 +59,6 @@ public class JiraResponseMapper {
    }
 
    private static Function<List<Ticket>, JiraApiReadTicketsResult> map2JiraApiReadTicketsResult(JiraIssuesResponse jiraIssuesResponse) {
-      return tickets -> JiraApiReadTicketsResult.of(tickets, jiraIssuesResponse.getException());
+      return tickets -> JiraApiReadTicketsResult.of(tickets, jiraIssuesResponse.isSuccessful());
    }
 }

@@ -21,7 +21,7 @@ public class JiraThemaParser {
     * @return the thema extracted from the input
     */
    public String getThema(String projectThemaAndCostUnit) {
-      if (isNull(projectThemaAndCostUnit) || projectThemaAndCostUnit.indexOf(DELIMITER) < 0) {
+      if (isNull(projectThemaAndCostUnit) || !projectThemaAndCostUnit.contains(DELIMITER)) {
          return "";
       }
       return projectThemaAndCostUnit.substring(0, projectThemaAndCostUnit.lastIndexOf(DELIMITER));

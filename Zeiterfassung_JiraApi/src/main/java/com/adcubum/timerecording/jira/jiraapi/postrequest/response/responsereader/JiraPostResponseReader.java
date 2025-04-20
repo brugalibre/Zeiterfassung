@@ -2,9 +2,10 @@ package com.adcubum.timerecording.jira.jiraapi.postrequest.response.responseread
 
 import com.adcubum.timerecording.jira.jiraapi.postrequest.post.data.JiraPostResponse;
 import com.adcubum.timerecording.jira.jiraapi.postrequest.post.data.JiraPostResponseImpl;
-import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.AbstractJiraResponseReader;
+import com.brugalibre.common.http.model.response.ResponseWrapper;
+import com.brugalibre.common.http.service.response.AbstractHttpResponseReader;
 
-public class JiraPostResponseReader extends AbstractJiraResponseReader<JiraPostResponse> {
+public class JiraPostResponseReader extends AbstractHttpResponseReader<JiraPostResponse> {
 
    @Override
    protected Class<JiraPostResponse> getResponseResultClass() {
@@ -12,7 +13,7 @@ public class JiraPostResponseReader extends AbstractJiraResponseReader<JiraPostR
    }
 
    @Override
-   public JiraPostResponse createErrorResponse(Exception e, String url) {
-      return new JiraPostResponseImpl(e, url);
+   public ResponseWrapper<JiraPostResponse> createErrorResponse(Exception e, String url) {
+      return new ResponseWrapper<>(new JiraPostResponseImpl(), 500, e, url);
    }
 }

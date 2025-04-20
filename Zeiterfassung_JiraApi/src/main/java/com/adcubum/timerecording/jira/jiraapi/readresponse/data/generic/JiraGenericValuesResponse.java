@@ -3,7 +3,7 @@ package com.adcubum.timerecording.jira.jiraapi.readresponse.data.generic;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.adcubum.timerecording.jira.jiraapi.readresponse.response.error.JiraErrorResponse;
+import com.adcubum.timerecording.jira.jiraapi.readresponse.data.AbstractJiraResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
@@ -14,21 +14,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class JiraGenericValuesResponse extends JiraErrorResponse {
+public class JiraGenericValuesResponse extends AbstractJiraResponse {
    private List<GenericNameAttrs> values;
 
    /**
     * Default constructor needed by jackson
     */
    public JiraGenericValuesResponse() {
-      this(null, null);
-   }
-
-   /**
-    * Constructor needed when something went south
-    */
-   public JiraGenericValuesResponse(Exception e, String url) {
-      super(e, url);
       this.values = new ArrayList<>();
    }
 

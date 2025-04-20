@@ -6,7 +6,6 @@ import com.adcubum.timerecording.jira.data.ticket.TicketAttrs;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationProvider;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConstants;
-import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.*;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraBoardsResponse.JiraBoardResponse;
@@ -18,6 +17,10 @@ import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responseread
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssueResponseReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssuesResponseReader;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
+import com.adcubum.timerecording.security.login.auth.usercredentials.JiraCredentialsProvider;
+import com.brugalibre.common.http.model.method.HttpMethod;
+import com.brugalibre.common.http.model.request.HttpRequest;
+import com.brugalibre.common.http.service.HttpService;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -36,23 +39,6 @@ import static org.mockito.Mockito.*;
 class JiraApiReaderImplTest {
 
    @Test
-   void testUserAuthenticated() {
-      // Given
-      String pwd = "";
-      String username = "";
-      AuthenticationContext authenticationContext = new AuthenticationContext(username, () -> pwd.toCharArray());
-      HttpClient httpClient = mock(HttpClient.class);
-      JiraApiConfiguration jiraApiConfiguration = JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration();
-      JiraApiReader jiraApiReader = new JiraApiReaderImpl(httpClient, jiraApiConfiguration);
-
-      // When
-      jiraApiReader.userAuthenticated(authenticationContext);
-
-      // When
-      verify(httpClient).setCredentials(eq(username), eq(pwd));
-   }
-
-   @Test
    void testReadTicket4Id_VerifyProjectDescAndNr() {
       // Given
       String ticketNr = "SYRIUS-65468";
@@ -63,7 +49,7 @@ class JiraApiReaderImplTest {
       JiraApiReaderImpl jiraApiReader = new TestCaseBuilder()
             .withTicketNr(ticketNr)
             .withJiraIssueResponse(true, issueType)
-            .withCustomField_10060(expectedProjectNumber + " " + expectedProjectDesc + "")
+            .withCustomField_10060(expectedProjectNumber + " " + expectedProjectDesc)
             .build();
 
       // When
@@ -204,13 +190,14 @@ class JiraApiReaderImplTest {
 
    private static class TestCaseBuilder {
 
-      private JiraApiConfiguration jiraApiConfiguration;
-      private HttpClient httpClient;
+      private final JiraApiConfiguration jiraApiConfiguration;
+      private final HttpService httpService;
+      private final JiraIssueResponse jiraIssueResponse;
+      private final JiraBoardsResponse jiraGetBoardsResponse;
+      private final JiraGenericValuesResponse jiraGetSprintResponse;
+      private final JiraGenericValuesResponse jiraGetFuturSprintResponse;
+      private final String authorization;
       private String ticketNr;
-      private JiraIssueResponse jiraIssueResponse;
-      private JiraBoardsResponse jiraGetBoardsResponse;
-      private JiraGenericValuesResponse jiraGetSprintResponse;
-      private JiraGenericValuesResponse jiraGetFuturSprintResponse;
       private List<JiraIssue> issues;
       private String boardName;
       private List<JiraIssue> futureIssues;
@@ -218,12 +205,13 @@ class JiraApiReaderImplTest {
       private String futurSprintName;
 
       private TestCaseBuilder() {
-         this.httpClient = mock(HttpClient.class);
+         this.httpService = mock(HttpService.class);
          this.jiraIssueResponse = new JiraIssueResponse();
          this.jiraGetBoardsResponse = new JiraBoardsResponse();
          this.jiraGetSprintResponse = new JiraGenericValuesResponse();
          this.jiraGetFuturSprintResponse = new JiraGenericValuesResponse();
          this.issues = new ArrayList<>();
+         this.authorization = "test";
          this.futureIssues = new ArrayList<>();
          this.jiraApiConfiguration = JiraApiConfigurationProvider.INSTANCE.getJiraApiConfiguration();;
       }
@@ -290,7 +278,7 @@ class JiraApiReaderImplTest {
          String sprintId = "1";
          mockReadTicket4TicketNr();
          mockReadTicketsFromBoardName(boardId, sprintId, futurSprintId, futurSprintName);
-         return new JiraApiReaderImpl(httpClient, jiraApiConfiguration);
+         return new JiraApiReaderImpl(httpService, jiraApiConfiguration, new TestJiraCredentialsProvider(authorization));
       }
 
       private void mockReadTicketsFromBoardName(String boardId, String sprintId, String futurSprintId, String futurSprintName) {
@@ -312,7 +300,9 @@ class JiraApiReaderImplTest {
          int index = 0;
          do {
             String getAllBoardsUrl = jiraApiConfiguration.getGetAllBoardUrls().replace(START_AT_PLACE_HOLDER, String.valueOf(index));
-            when(httpClient.callRequestAndParse(any(JiraBoardResponseReader.class), eq(getAllBoardsUrl))).thenReturn(jiraGetBoardsResponse);
+            HttpRequest request = HttpRequest.getHttpRequest(HttpMethod.GET, getAllBoardsUrl)
+                            .withAuthorization(authorization);
+            when(httpService.callRequestParseAndUnwrap(any(JiraBoardResponseReader.class), eq(request))).thenReturn(jiraGetBoardsResponse);
             index = index + JiraApiConstants.JIRA_MAX_RESULTS_RETURNED;
 
          } while (index < JiraApiConstants.MAX_RESULTS);
@@ -320,13 +310,16 @@ class JiraApiReaderImplTest {
 
       private void mockReadSprint(String boardId) {
          String getSprintIdUrl = jiraApiConfiguration.getGetActiveSprintIdsForBoardUrl().replace(BOARD_ID_PLACE_HOLDER, boardId);
-         when(httpClient.callRequestAndParse(any(JiraGenericValuesResponseReader.class), eq(getSprintIdUrl))).thenReturn(jiraGetSprintResponse);
+         HttpRequest request = HttpRequest.getHttpRequest(HttpMethod.GET, getSprintIdUrl)
+                 .withAuthorization(authorization);
+         when(httpService.callRequestParseAndUnwrap(any(JiraGenericValuesResponseReader.class), eq(request))).thenReturn(jiraGetSprintResponse);
       }
 
       private void mockReadFutureSprint(String boardId) {
          String getFuturSprintIdUrl = jiraApiConfiguration.getGetFuturSprintIdsForBoardUrl().replace(BOARD_ID_PLACE_HOLDER, boardId);
-         when(httpClient.callRequestAndParse(any(JiraGenericValuesResponseReader.class), eq(getFuturSprintIdUrl)))
-               .thenReturn(jiraGetFuturSprintResponse);
+         HttpRequest request = HttpRequest.getHttpRequest(HttpMethod.GET, getFuturSprintIdUrl)
+                 .withAuthorization(authorization);
+         doReturn(jiraGetFuturSprintResponse).when(httpService).callRequestParseAndUnwrap(any(JiraGenericValuesResponseReader.class), eq(request));
       }
 
       private void prepareReadResults(String boardId, String sprintId, String sprintName, List<JiraIssue> sprintIssues,
@@ -353,7 +346,9 @@ class JiraApiReaderImplTest {
             JiraIssuesResponse jiraIssuesResponse = new JiraIssuesResponse();
             jiraIssuesResponse.setIssues(issues.subList(JIRA_MAX_RESULTS_RETURNED, issues.size()));
             jiraIssuesResponse.setTotal(issues.size());
-            when(httpClient.callRequestAndParse(any(JiraIssuesResponseReader.class), eq(url))).thenReturn(jiraIssuesResponse);
+            HttpRequest request = HttpRequest.getHttpRequest(HttpMethod.GET, url)
+                    .withAuthorization(authorization);
+            when(httpService.callRequestParseAndUnwrap(any(JiraIssuesResponseReader.class), eq(request))).thenReturn(jiraIssuesResponse);
          }
       }
 
@@ -366,7 +361,9 @@ class JiraApiReaderImplTest {
          } else {
             jiraIssuesResponse.setIssues(Collections.emptyList());
          }
-         when(httpClient.callRequestAndParse(any(JiraIssuesResponseReader.class), eq(createGetIssues4BoardUrl))).thenReturn(jiraIssuesResponse);
+         HttpRequest request = HttpRequest.getHttpRequest(HttpMethod.GET, createGetIssues4BoardUrl)
+                 .withAuthorization(authorization);
+         when(httpService.callRequestParseAndUnwrap(any(JiraIssuesResponseReader.class), eq(request))).thenReturn(jiraIssuesResponse);
       }
 
       private String createGetIssues4BoardUrl(String boardId, String sprintId) {
@@ -378,9 +375,28 @@ class JiraApiReaderImplTest {
 
       private void mockReadTicket4TicketNr() {
          String url = jiraApiConfiguration.getGetIssueUrl() + ticketNr;
-         when(httpClient.callRequestAndParse(any(JiraIssueResponseReader.class), eq(url))).thenReturn(jiraIssueResponse);
+         HttpRequest request = HttpRequest.getHttpRequest(HttpMethod.GET, url)
+                 .withAuthorization(authorization);
+         when(httpService.callRequestParseAndUnwrap(any(JiraIssueResponseReader.class), eq(request))).thenReturn(jiraIssueResponse);
       }
 
+      private static class TestJiraCredentialsProvider implements JiraCredentialsProvider {
+         private final String authorization;
+
+         public TestJiraCredentialsProvider(String authorization) {
+            this.authorization = authorization;
+         }
+
+         @Override
+         public String getCredentials() {
+            return this.authorization;
+         }
+
+         @Override
+         public void userAuthenticated(AuthenticationContext authenticationContext) {
+
+         }
+      }
    }
 
 }

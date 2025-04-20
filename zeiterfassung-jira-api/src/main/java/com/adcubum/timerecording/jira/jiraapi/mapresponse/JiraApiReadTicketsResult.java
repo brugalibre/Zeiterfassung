@@ -11,20 +11,20 @@ import java.util.List;
  */
 public class JiraApiReadTicketsResult {
 
-   private List<Ticket> tickets;
-   private ResponseStatus responseStatus;
+   private final List<Ticket> tickets;
+   private final ResponseStatus responseStatus;
 
    private JiraApiReadTicketsResult(List<Ticket> tickets, ResponseStatus responseStatus) {
       this.tickets = tickets;
       this.responseStatus = responseStatus;
    }
 
-   public static JiraApiReadTicketsResult of(List<Ticket> tickets, Exception exception) {
-      return new JiraApiReadTicketsResult(tickets, evalResponseStatus(tickets, exception));
+   public static JiraApiReadTicketsResult of(List<Ticket> tickets, boolean isSuccessful) {
+      return new JiraApiReadTicketsResult(tickets, evalResponseStatus(tickets, isSuccessful));
    }
 
-   private static ResponseStatus evalResponseStatus(List<Ticket> tickets, Exception exception) {
-      return exception == null ? ResponseStatus.SUCCESS
+   private static ResponseStatus evalResponseStatus(List<Ticket> tickets, boolean isSuccessful) {
+      return isSuccessful ? ResponseStatus.SUCCESS
               : !tickets.isEmpty() ? ResponseStatus.PARTIAL_SUCCESS
               : ResponseStatus.FAILURE;
    }

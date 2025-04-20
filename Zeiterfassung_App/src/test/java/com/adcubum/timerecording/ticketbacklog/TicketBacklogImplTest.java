@@ -271,11 +271,7 @@ class TicketBacklogImplTest extends BaseTestWithSettings {
       }
 
       private void mockReadTicketsFromBoard() {
-         Exception ex = null;
-         if (!isReadBordSuccessfull) {
-            ex = new RuntimeException();
-         }
-         when(jiraApiReader.readTicketsFromBoardAndSprints(any(), any())).thenReturn(JiraApiReadTicketsResult.of(readTickets, ex));
+         when(jiraApiReader.readTicketsFromBoardAndSprints(any(), any())).thenReturn(JiraApiReadTicketsResult.of(readTickets, isReadBordSuccessfull));
       }
 
       public TestCaseBuilder withCallbackHandler(TicketBacklogCallbackHandler callbackHandler) {

@@ -2,7 +2,6 @@ package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
-import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraResponseMapper;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.data.JiraBoardsResponse;
@@ -16,7 +15,11 @@ import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responseread
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssueResponseReader;
 import com.adcubum.timerecording.jira.jiraapi.readresponse.response.responsereader.JiraIssuesResponseReader;
 import com.adcubum.timerecording.security.login.auth.AuthenticationContext;
-import com.adcubum.timerecording.security.login.auth.AuthenticationService;
+import com.adcubum.timerecording.security.login.auth.usercredentials.JiraBasicCredentialsProvider;
+import com.adcubum.timerecording.security.login.auth.usercredentials.JiraCredentialsProvider;
+import com.brugalibre.common.http.model.method.HttpMethod;
+import com.brugalibre.common.http.model.request.HttpRequest;
+import com.brugalibre.common.http.service.HttpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,8 +35,9 @@ import static java.util.Objects.requireNonNull;
 public class JiraApiReaderImpl implements JiraApiReader {
 
    private static final Logger LOG = LoggerFactory.getLogger(JiraApiReaderImpl.class);
-   private HttpClient httpClient;
-   private JiraApiConfiguration jiraApiConfiguration;
+   private final HttpService httpService;
+   private final JiraApiConfiguration jiraApiConfiguration;
+   private final JiraCredentialsProvider jiraCredentialsProvider;
 
    /**
     * Private constructor called by the {@link JiraApiReaderFactory}
@@ -42,21 +46,23 @@ public class JiraApiReaderImpl implements JiraApiReader {
     *        the {@link JiraApiConfiguration}
     */
    private JiraApiReaderImpl(JiraApiConfiguration jiraApiConfiguration) {
-      this(new HttpClient(), jiraApiConfiguration);
+      this(new HttpService(30), jiraApiConfiguration, new JiraBasicCredentialsProvider());
    }
 
    /**
     * Package private constructor for testing purpose only!
-    * 
-    * @param httpClient
-    *        the {@link HttpClient}
+    *
+    * @param httpService
+    *        the {@link HttpService}
     * @param jiraApiConfiguration
     *        the {@link JiraApiConfiguration}
+    * @param jiraCredentialsProvider the {@link JiraCredentialsProvider}
     */
-   JiraApiReaderImpl(HttpClient httpClient, JiraApiConfiguration jiraApiConfiguration) {
-      this.httpClient = httpClient;
+   JiraApiReaderImpl(HttpService httpService, JiraApiConfiguration jiraApiConfiguration,
+                     JiraCredentialsProvider jiraCredentialsProvider) {
+      this.httpService = httpService;
+      this.jiraCredentialsProvider = jiraCredentialsProvider;
       this.jiraApiConfiguration = requireNonNull(jiraApiConfiguration);
-      AuthenticationService.INSTANCE.registerUserAuthenticatedObservable(this);
    }
 
    @Override
@@ -67,14 +73,15 @@ public class JiraApiReaderImpl implements JiraApiReader {
 
    @Override
    public void userAuthenticated(AuthenticationContext authenticationContext) {
-      httpClient.setCredentials(authenticationContext.getUsername(), String.valueOf(authenticationContext.getUserPw()));
+      this.jiraCredentialsProvider.userAuthenticated(authenticationContext);
    }
 
    @Override
    public Optional<Ticket> readTicket4Nr(String ticketNr) {
       LOG.info("Try to read ticket for ticket-nr '{}'", ticketNr);
-      String url = jiraApiConfiguration.getGetIssueUrl() + ticketNr;
-      JiraIssueResponse jiraIssueResponse = httpClient.callRequestAndParse(new JiraIssueResponseReader(), url);
+      HttpRequest request = HttpRequest.getHttpRequest(HttpMethod.GET, jiraApiConfiguration.getGetIssueUrl() + ticketNr)
+              .withAuthorization(jiraCredentialsProvider.getCredentials());
+      JiraIssueResponse jiraIssueResponse = httpService.callRequestParseAndUnwrap(new JiraIssueResponseReader(), request);
       LOG.info("Read was successfully: {}", (jiraIssueResponse.isSuccess() ? "yes" : "no"));
       return JiraResponseMapper.INSTANCE.map2Ticket(jiraIssueResponse);
    }
@@ -141,7 +148,9 @@ public class JiraApiReaderImpl implements JiraApiReader {
 
    private List<SprintInfo> getFutureSprintInfos(String boardId) {
       String getFutureSprintIdUrl = jiraApiConfiguration.getGetFuturSprintIdsForBoardUrl().replace(BOARD_ID_PLACE_HOLDER, boardId);
-      JiraGenericValuesResponse jiraGetSprintIdResponse = httpClient.callRequestAndParse(new JiraGenericValuesResponseReader(), getFutureSprintIdUrl);
+      HttpRequest request = HttpRequest.getHttpRequest(HttpMethod.GET, getFutureSprintIdUrl)
+              .withAuthorization(jiraCredentialsProvider.getCredentials());
+      JiraGenericValuesResponse jiraGetSprintIdResponse = httpService.callRequestParseAndUnwrap(new JiraGenericValuesResponseReader(), request);
       return jiraGetSprintIdResponse.getValues()
             .stream()
             .map(buildSprintInfo(boardId))
@@ -150,7 +159,9 @@ public class JiraApiReaderImpl implements JiraApiReader {
 
    private List<SprintInfo> getActiveSprintInfos(String boardId) {
       String getActiveSprintIdUrl = jiraApiConfiguration.getGetActiveSprintIdsForBoardUrl().replace(BOARD_ID_PLACE_HOLDER, boardId);
-      JiraGenericValuesResponse jiraGetSprintIdResponse = httpClient.callRequestAndParse(new JiraGenericValuesResponseReader(), getActiveSprintIdUrl);
+      HttpRequest request = HttpRequest.getHttpRequest(HttpMethod.GET, getActiveSprintIdUrl)
+              .withAuthorization(jiraCredentialsProvider.getCredentials());
+      JiraGenericValuesResponse jiraGetSprintIdResponse = httpService.callRequestParseAndUnwrap(new JiraGenericValuesResponseReader(), request);
       return jiraGetSprintIdResponse.getValues()
             .stream()
             .map(buildSprintInfo(boardId))
@@ -159,8 +170,10 @@ public class JiraApiReaderImpl implements JiraApiReader {
 
    private BoardInfo getBoardInfo4Name(String boardName, String startAt) {
       String allBoardsUrl = jiraApiConfiguration.getGetAllBoardUrls().replace(START_AT_PLACE_HOLDER, startAt);
+      HttpRequest request = HttpRequest.getHttpRequest(HttpMethod.GET, allBoardsUrl)
+              .withAuthorization(jiraCredentialsProvider.getCredentials());
       JiraBoardsResponse jiraGetBoardsResponse =
-            httpClient.callRequestAndParse(new JiraBoardResponseReader(), allBoardsUrl);
+            httpService.callRequestParseAndUnwrap(new JiraBoardResponseReader(), request);
       return jiraGetBoardsResponse.getValues()
             .stream()
             .filter(jiraBoard ->  boardName.equals(jiraBoard.getName()))
@@ -219,7 +232,9 @@ public class JiraApiReaderImpl implements JiraApiReader {
 
    private JiraIssuesResponse readIssuesFromJira(String urlWithPlaceholder, int startIndex, JiraIssuesResponse otherParsedIssuesFromJira) {
       String url = urlWithPlaceholder.replace(START_AT_PLACE_HOLDER, String.valueOf(startIndex));
-      JiraIssuesResponse parsedIssuesFromJira = httpClient.callRequestAndParse(new JiraIssuesResponseReader(), url);
+      HttpRequest request = HttpRequest.getHttpRequest(HttpMethod.GET, url)
+              .withAuthorization(jiraCredentialsProvider.getCredentials());
+      JiraIssuesResponse parsedIssuesFromJira = httpService.callRequestParseAndUnwrap(new JiraIssuesResponseReader(), request);
       int endIndex = startIndex + JIRA_MAX_RESULTS_RETURNED;
       LOG.info("Read {} jira issues from start index {} to end index {}", parsedIssuesFromJira.getIssues().size(), startIndex, endIndex);
       if (parsedIssuesFromJira.getTotal() > endIndex) {

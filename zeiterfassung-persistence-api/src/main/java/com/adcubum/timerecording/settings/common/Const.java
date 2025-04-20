@@ -19,12 +19,12 @@ public class Const {
    public static final String PROLES_TICKET_ACTIVITIES_PROPERTIES = "proles-ticket.properties";
 
    /**
-    * The properties file for the turob-bucher
+    * The properties file for the turbo-bucher
     */
    public static final String TURBO_BUCHER_PROPERTIES = "turbo-bucher.properties";
 
    /** The properties file for the main application */
-   public static final String ZEITERFASSUNG_PROPERTIES = "zeiterfassung.properties";
+   public static final String ZEITERFASSUNG_PROPERTIES = "application.yml";
 
    /** The properties file for the ticket and booking-system  */
    public static final String TICKET_SYSTEM_PROPERTIES = "ticketSystem.properties";

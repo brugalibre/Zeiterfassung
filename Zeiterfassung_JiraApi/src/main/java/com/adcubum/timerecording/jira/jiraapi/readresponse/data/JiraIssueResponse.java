@@ -1,13 +1,11 @@
 package com.adcubum.timerecording.jira.jiraapi.readresponse.data;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-import com.adcubum.timerecording.jira.jiraapi.readresponse.response.error.JiraErrorResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class JiraIssueResponse extends JiraErrorResponse {
+public class JiraIssueResponse extends AbstractJiraResponse {
 
    private String id;
    private String key;
@@ -17,15 +15,9 @@ public class JiraIssueResponse extends JiraErrorResponse {
     * Default constructor needed by jackson
     */
    public JiraIssueResponse() {
-      this(null, null);
+
    }
 
-   /**
-    * Constructor needed when something went south
-    */
-   public JiraIssueResponse(Exception e, String url) {
-      super(e, url);
-   }
 
    public String getId() {
       return id;
@@ -52,6 +44,6 @@ public class JiraIssueResponse extends JiraErrorResponse {
    }
 
    public boolean isSuccess() {
-      return isNull(getException()) && nonNull(fields) && nonNull(key);
+      return nonNull(fields) && nonNull(key);
    }
 }

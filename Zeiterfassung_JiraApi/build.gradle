@@ -1,19 +1,22 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
-    id 'eclipse'
 }
 
 apply from: '..//Zeiterfassung-zeiterfassung/zeiterfassung.gradle'
 apply from: '..//Zeiterfassung-zeiterfassung/test.gradle'
 apply from: '..//Zeiterfassung-zeiterfassung/integtest.gradle'
 
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
 dependencies {
-	// https://mvnrepository.com/artifact/org.mock-server/mockserver-netty
-	testImplementation group: 'org.mock-server', name: 'mockserver-netty', version: '5.11.2'
-	
-	// https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
-	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '5.0.0-alpha.2'
+
+	implementation group: 'com.brugalibre', name: 'common-app-util', version: '1.1.0-SNAPSHOT'
+	implementation group: 'com.brugalibre', name: 'common-app-http', version: '2.0.1-SNAPSHOT'
+	implementation group: 'com.brugalibre', name: 'common-app-test', version: '1.0.2-SNAPSHOT'
 	
 	// https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.5'

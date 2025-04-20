@@ -12,7 +12,7 @@ import com.adcubum.timerecording.jira.data.ticket.TicketActivity;
  */
 public interface TicketActivityFactory {
    /** The singleton instance of a {@link TicketActivityFactory} in order to create {@link TicketActivity} instances */
-   public static final TicketActivityFactory INSTANCE = StaticFactory.createNewObject("ticketactivityfactory", "jira-module-configuration.xml");
+   TicketActivityFactory INSTANCE = StaticFactory.createNewObject("ticketactivityfactory", "jira-module-configuration.xml");
 
    /**
     * Creates a new  {@link TicketActivity} for the given name and serviceCode

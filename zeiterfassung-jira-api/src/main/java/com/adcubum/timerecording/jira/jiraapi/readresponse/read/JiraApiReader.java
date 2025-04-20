@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
-import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraConfigurationAware;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.security.login.auth.init.UserAuthenticatedObservable;
@@ -42,7 +41,7 @@ public interface JiraApiReader extends UserAuthenticatedObservable, JiraConfigur
     *        a list with sprint names
     * @return a {@link JiraApiReadTicketsResult} which contains any
     *         {@link Ticket}s if the request was successfully or none if not
-    *         (see also {@link JiraApiReadTicketsResult#isSuccess()}
+    *         (see also {@link JiraApiReadTicketsResult#failed()}
     */
    JiraApiReadTicketsResult readTicketsFromBoardAndSprints(String boardName, List<String> sprintNames);
 }

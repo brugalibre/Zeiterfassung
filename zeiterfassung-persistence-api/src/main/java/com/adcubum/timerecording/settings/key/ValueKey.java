@@ -30,9 +30,9 @@ public interface ValueKey<T> {
    T getDefault();
 
    /**
-    * Return the name of the esourceName, which contains the stored value
+    * Return the name of the resourceName, which contains the stored value
     *
-    * @return the name of the esourceName, which contains the stored value
+    * @return the name of the resourceName, which contains the stored value
     */
     String getResourceName();
 }

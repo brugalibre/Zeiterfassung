@@ -1,18 +1,19 @@
 package com.adcubum.timerecording.jira.jiraapi.postrequest.post.data;
 
-import com.adcubum.timerecording.jira.jiraapi.readresponse.response.error.JiraErrorResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class JiraPostResponseImpl extends JiraErrorResponse implements JiraPostResponse {
+public class JiraPostResponseImpl implements JiraPostResponse {
 
-   public JiraPostResponseImpl() {
-      // empty for jackson-fasterxml
-      super(null, null);
+   private boolean successful;
+
+   @Override
+   public boolean isSuccessful() {
+      return successful;
    }
 
-   public JiraPostResponseImpl(Exception e, String url) {
-      super(e, url);
+   @Override
+   public void setIsSuccessful(boolean successful) {
+      this.successful = successful;
    }
-
 }

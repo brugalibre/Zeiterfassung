@@ -3,9 +3,10 @@ package com.adcubum.timerecording.jira.jiraapi.readresponse.read;
 import com.adcubum.timerecording.jira.data.ticket.Ticket;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfiguration;
 import com.adcubum.timerecording.jira.jiraapi.configuration.JiraApiConfigurationProvider;
-import com.adcubum.timerecording.jira.jiraapi.http.HttpClient;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.JiraApiReadTicketsResult;
 import com.adcubum.timerecording.jira.jiraapi.mapresponse.ResponseStatus;
+import com.brugalibre.common.http.service.HttpService;
+import com.brugalibre.test.http.DummyHttpServerTestCaseBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +47,7 @@ class JiraApiReaderImplIntegTest {
             .withHeaderAndResponse(getJiraBoardBaseUrl + "/" + BOARD_ID_FOR_NAME + SPRINT, READ_SPRINT_ID_RESPONSE) // Request & Response for reading the sprint id
             .withHeaderAndResponse(getJiraBoardBaseUrl + "/" + BOARD_ID_FOR_NAME + SPRINT +"/" + SPRINT_ID_FOR_BOARD + ISSUE, // Request & Response for reading the tickets for sprint
                   READ_SPRINT_ISSUES_RESPONSE)
-            .withHttpWrapper(new HttpClient())
+            .withHttpWrapper(new HttpService(10))
             .withJiraApiReader()
             .build();
 
@@ -68,7 +69,7 @@ class JiraApiReaderImplIntegTest {
             .withHost(LOCALHOST + ":" + portNumber)
             .withHeaderAndResponse(getJiraBoardBaseUrl, READ_KANBAN_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
             .withHeaderAndResponse(getJiraReadKanbanIssuesUrl, READ_KANBAN_ISSUES_RESPONSE)
-            .withHttpWrapper(new HttpClient())
+            .withHttpWrapper(new HttpService(10))
             .withJiraApiReader()
             .build();
 
@@ -89,7 +90,7 @@ class JiraApiReaderImplIntegTest {
       DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
             .withHost(LOCALHOST + ":" + portNumber)
             .withHeaderAndResponse(getJiraBoardBaseUrl, "empty response") // Request & Response for reading the board
-            .withHttpWrapper(new HttpClient())
+            .withHttpWrapper(new HttpService(10))
             .withJiraApiReader()
             .build();
 
@@ -106,8 +107,10 @@ class JiraApiReaderImplIntegTest {
    @Test
    void testReadTwoActiveSprintsFromBoard() {
       // Given
-      DummyHttpGetServerTestCaseBuilder tcb = new DummyHttpGetServerTestCaseBuilder(portNumber)
+      DummyHttpServerTestCaseBuilder tcb = new DummyHttpServerTestCaseBuilder(portNumber)
             .withHost(LOCALHOST + ":" + portNumber)
+              .withRequestResponse(getJiraBoardBaseUrl)
+              .withRequestResponse("")
             .withHeaderAndResponse(getJiraBoardBaseUrl, READ_BOARD_SUCCESSFULL_RESPONSE) // Request & Response for reading the board
             // Request & Response for reading the sprint id
             .withHeaderAndResponse(getJiraBoardBaseUrl + "/" + BOARD_ID_FOR_NAME + SPRINT, READ_SPRINT_ID_RESPONSE_TWO_ACTIVE_SPRINTS)
@@ -117,7 +120,7 @@ class JiraApiReaderImplIntegTest {
             // Request & Response for reading the tickets for 2nd active sprint
             .withHeaderAndResponse(getJiraBoardBaseUrl + "/" + BOARD_ID_FOR_NAME + SPRINT +"/" + ACTIVE_SPRINT_ID_2_FOR_BOARD + ISSUE,
                   READ_SPRINT_ISSUES_FOR_ACTIVE_SPRINT_2_RESPONSE)
-            .withHttpWrapper(new HttpClient())
+            .withHttpWrapper(new HttpService(10))
             .withJiraApiReader()
             .build();
 
